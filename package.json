@@ -1,0 +1,17 @@
+{
+  "name": "@xcheme/monorepo",
+  "private": true,
+  "version": "0.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Silas B. Domingos",
+    "url": "https://github.com/balmanth"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/balmanth/xcheme.git"
+  },
+  "devDependencies": {
+    "lerna": "^4.0.0"
+  }
+}

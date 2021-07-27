@@ -1,0 +1,5 @@
+*.log
+*.map
+*.tsbuildinfo
+**/coverage
+**/node_modules

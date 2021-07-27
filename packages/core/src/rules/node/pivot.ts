@@ -1,0 +1,82 @@
+import Base from '../../source/base';
+import Node, { Nodes } from '../../core/node';
+import Expect from '../flow/expect';
+import Pattern from '../pattern';
+
+/**
+ * Consumes all the given patterns in this pattern and, in case of success,
+ * it pivots the resulting node by the current source output node.
+ */
+export default class Pivot extends Pattern {
+  /**
+   * Test pattern.
+   */
+  #test: Pattern;
+
+  /**
+   * Target pattern.
+   */
+  #target: Pattern;
+
+  /**
+   * Node value.
+   */
+  #value: string | number;
+
+  /**
+   * Output node destination.
+   */
+  #output: Nodes;
+
+  /**
+   * Current node destination.
+   */
+  #current: Nodes;
+
+  /**
+   * Default constructor.
+   * @param value Node value.
+   * @param output Output node destination.
+   * @param current Current node destination.
+   * @param test Pivot pattern.
+   * @param patterns Sequence of patterns.
+   */
+  constructor(value: string | number, output: Nodes, current: Nodes, test: Pattern, ...patterns: Pattern[]) {
+    super();
+    if (current === output) {
+      throw "Current and Output destinations can't have the same value.";
+    }
+    this.#test = test;
+    this.#target = new Expect(...patterns);
+    this.#value = value;
+    this.#output = output;
+    this.#current = current;
+  }
+
+  /**
+   * Consume the given source.
+   * @param source Data source.
+   * @returns Returns true when the source was consumed, otherwise returns false.
+   */
+  consume(source: Base): boolean {
+    source.saveState();
+    let status = this.#test.consume(source);
+    if (status) {
+      const output = source.output;
+      const { table, value } = output;
+      const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+      const child = new Node(source.fragment, table, result);
+      const current = output.node;
+      output.node = void 0;
+      if (!(status = this.#target.consume(source))) {
+        output.node = current;
+      } else {
+        child.setChild(this.#output, output.node);
+        child.setChild(this.#current, current);
+        output.node = child;
+      }
+    }
+    source.saveState();
+    return status;
+  }
+}
