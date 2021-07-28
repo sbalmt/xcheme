@@ -3,7 +3,7 @@ import { Context, TextSource, EmitSymbolPattern, ExpectUnitPattern } from '../..
 /**
  * It can consume a sequence of characters 'a', 'b' and 'c' and emits a new symbol into the current symbol table.
  */
-const pattern = new EmitSymbolPattern(0xabc, new ExpectUnitPattern('a', 'b', 'c'));
+const pattern = new EmitSymbolPattern(0xabc, new ExpectUnitPattern('a'), new ExpectUnitPattern('b', 'c'));
 
 test('Consume success', () => {
   const context = new Context('test');
@@ -19,7 +19,7 @@ test('Consume success', () => {
   expect(table).toBeDefined();
   expect(table).toHaveLength(1);
 
-  const record = table.getRecord('abc')!;
+  const record = table.getRecord('a')!;
   expect(record).toBeDefined();
   expect(record.value).toBe(0xabc);
 });

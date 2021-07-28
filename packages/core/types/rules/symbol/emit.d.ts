@@ -8,9 +8,10 @@ export default class Emit extends Pattern {
     /**
      * Default constructor.
      * @param value Symbol value.
+     * @param test Symbol pattern.
      * @param patterns Sequence of patterns.
      */
-    constructor(value: string | number, ...patterns: Pattern[]);
+    constructor(value: string | number, test: Pattern, ...patterns: Pattern[]);
     /**
      * Consume the given source.
      * @param source Data source.

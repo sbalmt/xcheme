@@ -8,6 +8,11 @@ import Expect from '../flow/expect';
  */
 export default class Emit extends Pattern {
   /**
+   * Test pattern.
+   */
+  #test: Pattern;
+
+  /**
    * Target pattern.
    */
   #target: Pattern;
@@ -20,10 +25,12 @@ export default class Emit extends Pattern {
   /**
    * Default constructor.
    * @param value Symbol value.
+   * @param test Symbol pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, ...patterns: Pattern[]) {
+  constructor(value: string | number, test: Pattern, ...patterns: Pattern[]) {
     super();
+    this.#test = test;
     this.#target = new Expect(...patterns);
     this.#value = value;
   }
@@ -35,12 +42,15 @@ export default class Emit extends Pattern {
    */
   consume(source: Base): boolean {
     source.saveState();
-    const status = this.#target.consume(source);
+    let status = this.#test.consume(source);
     if (status) {
       const { node, value } = source.output;
-      const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-      const record = new Record(source.fragment, node, result);
-      source.emit(record);
+      const fragment = source.fragment;
+      if ((status = this.#target.consume(source))) {
+        const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+        const record = new Record(fragment, node, result);
+        source.emit(record);
+      }
     }
     source.discardState();
     return status;

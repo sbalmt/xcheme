@@ -9,6 +9,10 @@ const expect_1 = require("../flow/expect");
  */
 class Emit extends pattern_1.default {
     /**
+     * Test pattern.
+     */
+    #test;
+    /**
      * Target pattern.
      */
     #target;
@@ -19,10 +23,12 @@ class Emit extends pattern_1.default {
     /**
      * Default constructor.
      * @param value Symbol value.
+     * @param test Symbol pattern.
      * @param patterns Sequence of patterns.
      */
-    constructor(value, ...patterns) {
+    constructor(value, test, ...patterns) {
         super();
+        this.#test = test;
         this.#target = new expect_1.default(...patterns);
         this.#value = value;
     }
@@ -33,12 +39,15 @@ class Emit extends pattern_1.default {
      */
     consume(source) {
         source.saveState();
-        const status = this.#target.consume(source);
+        let status = this.#test.consume(source);
         if (status) {
             const { node, value } = source.output;
-            const result = this.#value === base_1.default.Output ? value ?? -1 : this.#value;
-            const record = new record_1.default(source.fragment, node, result);
-            source.emit(record);
+            const fragment = source.fragment;
+            if ((status = this.#target.consume(source))) {
+                const result = this.#value === base_1.default.Output ? value ?? -1 : this.#value;
+                const record = new record_1.default(fragment, node, result);
+                source.emit(record);
+            }
         }
         source.discardState();
         return status;
