@@ -64,13 +64,14 @@ export default class Pivot extends Pattern {
     if (status) {
       const output = source.output;
       const { table, value } = output;
-      const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-      const child = new Node(source.fragment, table, result);
+      const fragment = source.fragment;
       const current = output.node;
       output.node = void 0;
       if (!(status = this.#target.consume(source))) {
         output.node = current;
       } else {
+        const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+        const child = new Node(fragment, table, result);
         child.setChild(this.#output, output.node);
         child.setChild(this.#current, current);
         output.node = child;
