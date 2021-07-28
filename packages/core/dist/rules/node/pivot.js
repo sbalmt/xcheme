@@ -72,7 +72,7 @@ class Pivot extends pattern_1.default {
                 output.node = child;
             }
         }
-        source.saveState();
+        source.discardState();
         return status;
     }
 }

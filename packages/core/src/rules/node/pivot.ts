@@ -76,7 +76,7 @@ export default class Pivot extends Pattern {
         output.node = child;
       }
     }
-    source.saveState();
+    source.discardState();
     return status;
   }
 }
