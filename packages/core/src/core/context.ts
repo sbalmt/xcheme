@@ -1,3 +1,4 @@
+import type Error from './error';
 import type Token from './token';
 
 import Fragment from './fragment';
@@ -6,10 +7,15 @@ import Table from './table';
 import Node from './node';
 
 /**
- * Contains the analysis context and depending on the solution, can store tokens, symbol records and
+ * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
  * nodes of the current consumption.
  */
 export default class Context {
+  /**
+   * Context errors.
+   */
+  #errors: Error[] = [];
+
   /**
    * Context tokens.
    */
@@ -36,6 +42,13 @@ export default class Context {
    */
   constructor(name: string) {
     this.#name = name;
+  }
+
+  /**
+   * Get the error list.
+   */
+  get errors(): Error[] {
+    return this.#errors;
   }
 
   /**

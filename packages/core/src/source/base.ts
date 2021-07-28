@@ -1,9 +1,9 @@
 import type Context from '../core/context';
 import type Fragment from '../core/fragment';
 
-import Node, { Nodes } from '../core/node';
+import Error from '../core/error';
 import Token from '../core/token';
-
+import Node, { Nodes } from '../core/node';
 import Record from '../core/record';
 import Table from '../core/table';
 
@@ -133,8 +133,10 @@ export default class Base {
    * @param product Input product.
    * @throws Throws an error when the given product isn't supported.
    */
-  public emit(product: Token | Node | Record): void {
-    if (product instanceof Token) {
+  public emit(product: Error | Token | Node | Record): void {
+    if (product instanceof Error) {
+      this.#context.errors.push(product);
+    } else if (product instanceof Token) {
       this.#context.tokens.push(product);
     } else if (product instanceof Node) {
       const root = this.#context.node.getLowestChild(Nodes.Next) ?? this.#context.node;

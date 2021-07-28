@@ -5,10 +5,14 @@ const location_1 = require("./location");
 const table_1 = require("./table");
 const node_1 = require("./node");
 /**
- * Contains the analysis context and depending on the solution, can store tokens, symbol records and
+ * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
  * nodes of the current consumption.
  */
 class Context {
+    /**
+     * Context errors.
+     */
+    #errors = [];
     /**
      * Context tokens.
      */
@@ -31,6 +35,12 @@ class Context {
      */
     constructor(name) {
         this.#name = name;
+    }
+    /**
+     * Get the error list.
+     */
+    get errors() {
+        return this.#errors;
     }
     /**
      * Get the token list.

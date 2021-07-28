@@ -1,7 +1,8 @@
 import type Context from '../core/context';
 import type Fragment from '../core/fragment';
-import Node from '../core/node';
+import Error from '../core/error';
 import Token from '../core/token';
+import Node from '../core/node';
 import Record from '../core/record';
 import Table from '../core/table';
 /**
@@ -76,7 +77,7 @@ export default class Base {
      * @param product Input product.
      * @throws Throws an error when the given product isn't supported.
      */
-    emit(product: Token | Node | Record): void;
+    emit(product: Error | Token | Node | Record): void;
     /**
      * Open a new symbol table.
      */

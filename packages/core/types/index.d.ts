@@ -1,4 +1,5 @@
 export { default as Context } from './core/context';
+export { default as Error } from './core/error';
 export { default as Token } from './core/token';
 export { default as Node } from './core/node';
 export { default as Table } from './core/table';
@@ -27,6 +28,8 @@ export { default as StaticFlowPattern } from './rules/flow/static';
 export { default as MapFlowPattern } from './rules/flow/map';
 export { default as SetValueRoute } from './rules/value/route';
 export { default as SetValuePattern } from './rules/value/set';
+export { default as EmitErrorRoute } from './rules/error/route';
+export { default as EmitErrorPattern } from './rules/error/emit';
 export { default as EmitTokenRoute } from './rules/token/route';
 export { default as EmitTokenPattern } from './rules/token/emit';
 export { default as EmitNodeRoute } from './rules/node/route';

@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const node_1 = require("../core/node");
+const error_1 = require("../core/error");
 const token_1 = require("../core/token");
+const node_1 = require("../core/node");
 const record_1 = require("../core/record");
 const table_1 = require("../core/table");
 /**
@@ -97,7 +98,10 @@ class Base {
      * @throws Throws an error when the given product isn't supported.
      */
     emit(product) {
-        if (product instanceof token_1.default) {
+        if (product instanceof error_1.default) {
+            this.#context.errors.push(product);
+        }
+        else if (product instanceof token_1.default) {
             this.#context.tokens.push(product);
         }
         else if (product instanceof node_1.default) {
