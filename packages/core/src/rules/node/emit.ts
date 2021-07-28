@@ -19,14 +19,21 @@ export default class Emit extends Pattern {
   #value: string | number;
 
   /**
+   * Output node destination.
+   */
+  #output: Nodes;
+
+  /**
    * Default constructor.
    * @param value Token value.
+   * @param output Output node destination.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, ...patterns: Pattern[]) {
+  constructor(value: string | number, output: Nodes, ...patterns: Pattern[]) {
     super();
     this.#target = new Expect(...patterns);
     this.#value = value;
+    this.#output = output;
   }
 
   /**
@@ -42,7 +49,7 @@ export default class Emit extends Pattern {
       const { table, value } = source.output;
       const result = this.#value === Base.Output ? value ?? -1 : this.#value;
       const node = new Node(source.fragment, table, result);
-      node.setChild(Nodes.Left, source.output.node);
+      node.setChild(this.#output, source.output.node);
       source.output.node = void 0;
       source.emit(node);
     }

@@ -1,9 +1,12 @@
-import { Context, TextSource, MapFlowPattern, EmitNodeRoute, ExpectUnitPattern } from '../../../src/index';
+import { Context, Nodes, TextSource, MapFlowPattern, EmitNodeRoute, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * It can consume routes that contain patterns and prefixes indicating which flow should be triggered.
  */
-const pattern = new MapFlowPattern(new EmitNodeRoute(0x1aa, 'a'), new EmitNodeRoute(0x2bb, new ExpectUnitPattern('c'), 'b'));
+const pattern = new MapFlowPattern(
+  new EmitNodeRoute(0x1aa, Nodes.Right, 'a'),
+  new EmitNodeRoute(0x2bb, Nodes.Left, new ExpectUnitPattern('c'), 'b')
+);
 
 test('Consume success', () => {
   const context = new Context('test');

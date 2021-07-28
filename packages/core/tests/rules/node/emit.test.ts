@@ -1,9 +1,9 @@
-import { Context, TextSource, EmitNodePattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, Nodes, TextSource, EmitNodePattern, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * It can consume a sequence of characters 'a', 'b' and 'c' and emits a new node into the main AST.
  */
-const pattern = new EmitNodePattern(0xabc, new ExpectUnitPattern('a', 'b', 'c'));
+const pattern = new EmitNodePattern(0xabc, Nodes.Left, new ExpectUnitPattern('a', 'b', 'c'));
 
 test('Consume success', () => {
   const context = new Context('test');

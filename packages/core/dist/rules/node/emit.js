@@ -18,14 +18,20 @@ class Emit extends pattern_1.default {
      */
     #value;
     /**
+     * Output node destination.
+     */
+    #output;
+    /**
      * Default constructor.
      * @param value Token value.
+     * @param output Output node destination.
      * @param patterns Sequence of patterns.
      */
-    constructor(value, ...patterns) {
+    constructor(value, output, ...patterns) {
         super();
         this.#target = new expect_1.default(...patterns);
         this.#value = value;
+        this.#output = output;
     }
     /**
      * Consume the given source.
@@ -40,7 +46,7 @@ class Emit extends pattern_1.default {
             const { table, value } = source.output;
             const result = this.#value === base_1.default.Output ? value ?? -1 : this.#value;
             const node = new node_1.default(source.fragment, table, result);
-            node.setChild(0 /* Left */, source.output.node);
+            node.setChild(this.#output, source.output.node);
             source.output.node = void 0;
             source.emit(node);
         }

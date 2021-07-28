@@ -1,4 +1,5 @@
 import Base from '../../source/base';
+import { Nodes } from '../../core/node';
 import Pattern from '../pattern';
 /**
  * Consumes all the given patterns and, in case of success, it will emit a new node as the next child of the current node.
@@ -9,9 +10,10 @@ export default class Emit extends Pattern {
     /**
      * Default constructor.
      * @param value Token value.
+     * @param output Output node destination.
      * @param patterns Sequence of patterns.
      */
-    constructor(value: string | number, ...patterns: Pattern[]);
+    constructor(value: string | number, output: Nodes, ...patterns: Pattern[]);
     /**
      * Consume the given source.
      * @param source Data source.

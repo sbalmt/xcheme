@@ -10,15 +10,16 @@ class Route extends route_1.default {
     /**
      * Default constructor.
      * @param value Node value.
+     * @param output Output node destination.
      * @param first Route pattern or the first unit.
      * @param units Route units.
      */
-    constructor(value, first, ...units) {
+    constructor(value, output, first, ...units) {
         if (first instanceof pattern_1.default) {
-            super(new emit_1.default(value, first), ...units);
+            super(new emit_1.default(value, output, first), ...units);
         }
         else {
-            super(new emit_1.default(value), first, ...units);
+            super(new emit_1.default(value, output), first, ...units);
         }
     }
 }
