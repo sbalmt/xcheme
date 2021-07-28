@@ -56,9 +56,11 @@ class TokenSource extends base_1.default {
     get fragment() {
         if (this.#states.length > 0) {
             const state = this.#states[this.#states.length - 1];
-            const first = this.#data[state.offset].fragment;
-            const last = this.#data[Math.max(0, this.offset - 1)].fragment;
-            return new fragment_1.default(first.data, first.begin, last.end, first.location);
+            if (this.offset > state.offset) {
+                const first = this.#data[state.offset].fragment;
+                const last = this.#data[Math.max(0, this.offset - 1)].fragment;
+                return new fragment_1.default(first.source, first.begin, last.end, first.location);
+            }
         }
         const offset = Math.min(this.offset, this.#data.length - 1);
         return this.#data[offset].fragment;
