@@ -5,9 +5,9 @@ import type Location from './location';
  */
 export default class Fragment {
   /**
-   * Fragment data.
+   * Fragment source.
    */
-  #data: string;
+  #source: string;
 
   /**
    * Beginning of fragment offset.
@@ -26,23 +26,30 @@ export default class Fragment {
 
   /**
    * Default constructor.
-   * @param data Fragment data.
+   * @param source Fragment source.
    * @param offset Fragment offset.
    * @param length Fragment length.
    * @param location Fragment location.
    */
-  constructor(data: string, begin: number, end: number, location: Location) {
-    this.#data = data;
+  constructor(source: string, begin: number, end: number, location: Location) {
+    this.#source = source;
     this.#begin = begin;
     this.#end = end;
     this.#location = location;
   }
 
   /**
+   * Get the fragment source.
+   */
+  get source(): string {
+    return this.#source;
+  }
+
+  /**
    * Get the fragment data.
    */
   get data(): string {
-    return this.#data.substring(this.#begin, this.#end);
+    return this.#source.substring(this.#begin, this.#end);
   }
 
   /**

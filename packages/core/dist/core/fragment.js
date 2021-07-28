@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 class Fragment {
     /**
-     * Fragment data.
+     * Fragment source.
      */
-    #data;
+    #source;
     /**
      * Beginning of fragment offset.
      */
@@ -22,22 +22,28 @@ class Fragment {
     #location;
     /**
      * Default constructor.
-     * @param data Fragment data.
+     * @param source Fragment source.
      * @param offset Fragment offset.
      * @param length Fragment length.
      * @param location Fragment location.
      */
-    constructor(data, begin, end, location) {
-        this.#data = data;
+    constructor(source, begin, end, location) {
+        this.#source = source;
         this.#begin = begin;
         this.#end = end;
         this.#location = location;
     }
     /**
+     * Get the fragment source.
+     */
+    get source() {
+        return this.#source;
+    }
+    /**
      * Get the fragment data.
      */
     get data() {
-        return this.#data.substring(this.#begin, this.#end);
+        return this.#source.substring(this.#begin, this.#end);
     }
     /**
      * Get the beginning of the fragment offset.

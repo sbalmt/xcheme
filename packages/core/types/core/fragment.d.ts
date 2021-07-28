@@ -6,12 +6,16 @@ export default class Fragment {
     #private;
     /**
      * Default constructor.
-     * @param data Fragment data.
+     * @param source Fragment source.
      * @param offset Fragment offset.
      * @param length Fragment length.
      * @param location Fragment location.
      */
-    constructor(data: string, begin: number, end: number, location: Location);
+    constructor(source: string, begin: number, end: number, location: Location);
+    /**
+     * Get the fragment source.
+     */
+    get source(): string;
     /**
      * Get the fragment data.
      */
