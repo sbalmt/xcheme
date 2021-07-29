@@ -43,6 +43,14 @@ class Table {
         return this.#length;
     }
     /**
+     * Check whether or not there's a symbol record for the given key.
+     * @param key Symbol record key.
+     * @returns Returns true when the symbol record already exists, false otherwise.
+     */
+    hasRecord(key) {
+        return this.getRecord(key) !== void 0;
+    }
+    /**
      * Get the symbol record that corresponds to the specified key.
      * @param key Symbol record key.
      * @returns Returns the corresponding record or undefined when the record wasn't found.
