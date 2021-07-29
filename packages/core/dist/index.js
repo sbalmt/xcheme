@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptionFlowPattern = exports.NegateFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Node = exports.Token = exports.Error = exports.Context = void 0;
+exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.ScopeNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptionFlowPattern = exports.NegateFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Node = exports.Token = exports.Error = exports.Context = void 0;
 var context_1 = require("./core/context");
 Object.defineProperty(exports, "Context", { enumerable: true, get: function () { return context_1.default; } });
 var error_1 = require("./core/error");
@@ -77,10 +77,12 @@ var prepend_1 = require("./rules/node/prepend");
 Object.defineProperty(exports, "PrependNodePattern", { enumerable: true, get: function () { return prepend_1.default; } });
 var pivot_1 = require("./rules/node/pivot");
 Object.defineProperty(exports, "PivotNodePattern", { enumerable: true, get: function () { return pivot_1.default; } });
+var scope_1 = require("./rules/node/scope");
+Object.defineProperty(exports, "ScopeNodePattern", { enumerable: true, get: function () { return scope_1.default; } });
 var route_6 = require("./rules/symbol/route");
 Object.defineProperty(exports, "EmitSymbolRoute", { enumerable: true, get: function () { return route_6.default; } });
 var emit_4 = require("./rules/symbol/emit");
 Object.defineProperty(exports, "EmitSymbolPattern", { enumerable: true, get: function () { return emit_4.default; } });
-var scope_1 = require("./rules/symbol/scope");
-Object.defineProperty(exports, "ScopeSymbolPattern", { enumerable: true, get: function () { return scope_1.default; } });
+var scope_2 = require("./rules/symbol/scope");
+Object.defineProperty(exports, "ScopeSymbolPattern", { enumerable: true, get: function () { return scope_2.default; } });
 //# sourceMappingURL=index.js.map
