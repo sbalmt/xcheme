@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.ScopeNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptionFlowPattern = exports.NegateFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Node = exports.Token = exports.Error = exports.Context = void 0;
+exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.ScopeNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptionFlowPattern = exports.NegateFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Token = exports.Node = exports.Error = exports.Context = void 0;
 var context_1 = require("./core/context");
 Object.defineProperty(exports, "Context", { enumerable: true, get: function () { return context_1.default; } });
 var error_1 = require("./core/error");
 Object.defineProperty(exports, "Error", { enumerable: true, get: function () { return error_1.default; } });
-var token_1 = require("./core/token");
-Object.defineProperty(exports, "Token", { enumerable: true, get: function () { return token_1.default; } });
 var node_1 = require("./core/node");
 Object.defineProperty(exports, "Node", { enumerable: true, get: function () { return node_1.default; } });
+var token_1 = require("./core/token");
+Object.defineProperty(exports, "Token", { enumerable: true, get: function () { return token_1.default; } });
 var table_1 = require("./core/table");
 Object.defineProperty(exports, "Table", { enumerable: true, get: function () { return table_1.default; } });
 var record_1 = require("./core/record");

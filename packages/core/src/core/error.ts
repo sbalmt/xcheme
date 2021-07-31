@@ -1,6 +1,13 @@
 import type Fragment from './fragment';
 
 /**
+ * All default errors.
+ */
+export const enum Errors {
+  DUPLICATE_IDENTIFIER = -1
+}
+
+/**
  * An error product to compose the error list generated in the analysis process.
  */
 export default class Error {

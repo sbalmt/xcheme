@@ -1,14 +1,13 @@
 export { default as Context } from './core/context';
-export { default as Error } from './core/error';
+export { default as Error, Errors } from './core/error';
+export { default as Node, Nodes } from './core/node';
 export { default as Token } from './core/token';
-export { default as Node } from './core/node';
 export { default as Table } from './core/table';
 export { default as Record } from './core/record';
 export { default as Fragment } from './core/fragment';
 export { default as Location } from './core/location';
 export { default as Pattern } from './rules/pattern';
 export { default as Route } from './rules/route';
-export { Nodes } from './core/node';
 export { default as BaseSource } from './source/base';
 export { default as TextSource } from './source/text';
 export { default as TokenSource } from './source/token';

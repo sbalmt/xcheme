@@ -2,7 +2,7 @@ import Base from '../../source/base';
 import Record from '../../core/record';
 import Pattern from '../pattern';
 import Expect from '../flow/expect';
-import Error from '../../core/error';
+import Error, { Errors } from '../../core/error';
 
 /**
  * Consumes all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
@@ -49,7 +49,7 @@ export default class Emit extends Pattern {
       const fragment = source.fragment;
       if ((status = this.#target.consume(source))) {
         if (table.hasRecord(fragment)) {
-          const error = new Error(fragment, -1);
+          const error = new Error(fragment, Errors.DUPLICATE_IDENTIFIER);
           source.emit(error);
         } else {
           const result = this.#value === Base.Output ? value ?? -1 : this.#value;
