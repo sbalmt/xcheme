@@ -1,0 +1,36 @@
+{
+	"name": "@xcheme/lang",
+	"version": "0.0.1",
+	"description": "Language maker components",
+	"license": "MIT",
+	"keywords": [
+		"xcheme",
+		"lang",
+		"language"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/balmanth/xcheme.git",
+		"directory": "packages/lang"
+	},
+	"main": "./dist/index.js",
+	"types": "./types/index.d.ts",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"test": "jest --config=./jest.config.js",
+		"build": "tsc --build ./tsconfig.json",
+		"clean": "tsc --build --clean ./tsconfig.json"
+	},
+	"devDependencies": {
+		"@types/jest": "^26.0.24",
+		"jest": "^27.0.6",
+		"ts-jest": "^27.0.4",
+		"typescript": "^4.3.5"
+	},
+	"dependencies": {
+		"@xcheme/core": "^0.0.1"
+	}
+}
