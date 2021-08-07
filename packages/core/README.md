@@ -1,6 +1,6 @@
-# xcheme
+# XCHEME
 
-Provide all core components in one package.
+This package provides the XCHEME components library.
 
 ## License
 
