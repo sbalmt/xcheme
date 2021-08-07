@@ -46,7 +46,7 @@ class Emit extends pattern_1.default {
             const fragment = source.fragment;
             if ((status = this.#target.consume(source))) {
                 if (table.hasRecord(fragment)) {
-                    const error = new error_1.default(fragment, -1 /* DUPLICATE_IDENTIFIER */);
+                    const error = new error_1.default(fragment, 4096 /* DUPLICATE_IDENTIFIER */);
                     source.emit(error);
                 }
                 else {

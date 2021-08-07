@@ -3,7 +3,7 @@ import type Fragment from './fragment';
  * All default errors.
  */
 export declare const enum Errors {
-    DUPLICATE_IDENTIFIER = -1
+    DUPLICATE_IDENTIFIER = 4096
 }
 /**
  * An error product to compose the error list generated in the analysis process.

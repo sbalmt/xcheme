@@ -4,7 +4,7 @@ import type Fragment from './fragment';
  * All default errors.
  */
 export const enum Errors {
-  DUPLICATE_IDENTIFIER = -1
+  DUPLICATE_IDENTIFIER = 0x1000
 }
 
 /**
