@@ -11,6 +11,12 @@
     "type": "git",
     "url": "git+https://github.com/balmanth/xcheme.git"
   },
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "test": "lerna run test",
+    "build": "lerna run build",
+    "clean": "lerna run clean"
+  },
   "devDependencies": {
     "lerna": "^4.0.0"
   }
