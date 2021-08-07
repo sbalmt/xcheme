@@ -1,4 +1,4 @@
-# xcheme
+# XCHEME
 
 A simple compiler builder.
 
