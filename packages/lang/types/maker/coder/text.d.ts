@@ -114,28 +114,30 @@ export declare class Text extends Base {
      */
     getPivotNode(value: string | number, pivot: string, ...patterns: string[]): string;
     /**
-     * Get a new scope node pattern.
+     * Get a new place node pattern.
      * @param current Current node destination.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getScopeNode(current: Core.Nodes, ...patterns: string[]): string;
+    getPlaceNode(current: Core.Nodes, ...patterns: string[]): string;
     /**
      * Get a new append node pattern.
      * @param value Node value.
      * @param current Current node destination.
-     * @param patterns Expected patterns.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(value: string | number, current: Core.Nodes, ...patterns: string[]): string;
+    getAppendNode(value: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
     /**
      * Get a new prepend node pattern.
      * @param value Node value.
      * @param current Current node destination.
-     * @param patterns Expected patterns.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(value: string | number, current: Core.Nodes, ...patterns: string[]): string;
+    getPrependNode(value: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
     /**
      * Get a new symbol pattern.
      * @param value Symbol value.

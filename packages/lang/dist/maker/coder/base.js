@@ -118,19 +118,19 @@ class Base {
         throw "Method doesn't implemented.";
     }
     /**
-     * Should be implemented to return a scope node pattern.
+     * Should be implemented to return a place node pattern.
      * @param current Current node destination.
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getScopeNode(current, ...patterns) {
+    getPlaceNode(current, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
      * Should be implemented to return a pivot node pattern.
      * @param value Node value.
-     * @param pivot Pivot pattern.
-     * @param patterns Expected patterns.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
     getPivotNode(value, pivot, ...patterns) {
@@ -140,20 +140,22 @@ class Base {
      * Should be implemented to return an append node pattern.
      * @param value Node value.
      * @param current Current node destination.
-     * @param patterns Expected patterns.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getAppendNode(value, current, ...patterns) {
+    getAppendNode(value, current, head, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
      * Should be implemented to return a prepend node pattern.
      * @param value Node value.
      * @param current Current node destination.
-     * @param patterns Expected patterns.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getPrependNode(value, current, ...patterns) {
+    getPrependNode(value, current, head, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**

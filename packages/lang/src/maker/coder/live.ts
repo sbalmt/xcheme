@@ -151,13 +151,13 @@ export class Live extends Base {
   }
 
   /**
-   * Get a new scope node pattern.
+   * Get a new place node pattern.
    * @param current Current node destination.
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getScopeNode(current: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern {
-    return new Core.ScopeNodePattern(current, ...patterns);
+  getPlaceNode(current: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.PlaceNodePattern(current, ...patterns);
   }
 
   /**
@@ -175,22 +175,24 @@ export class Live extends Base {
    * Get a new append node pattern.
    * @param value Node value.
    * @param current Current node destination.
-   * @param patterns Expected patterns.
+   * @param head Head pattern.
+   * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  getAppendNode(value: string | number, current: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern {
-    return new Core.AppendNodePattern(value, Core.Nodes.Right, current, ...patterns);
+  getAppendNode(value: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.AppendNodePattern(value, Core.Nodes.Right, current, head, ...patterns);
   }
 
   /**
    * Get a new prepend node pattern.
    * @param value Node value.
    * @param current Current node destination.
-   * @param patterns Expected patterns.
+   * @param head Head pattern.
+   * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  getPrependNode(value: string | number, current: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern {
-    return new Core.PrependNodePattern(value, Core.Nodes.Right, current, ...patterns);
+  getPrependNode(value: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.PrependNodePattern(value, Core.Nodes.Right, current, head, ...patterns);
   }
 
   /**

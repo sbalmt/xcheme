@@ -35,7 +35,7 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
         ),
         new Core.ChooseFlowPattern(
           // Range
-          new Core.ScopeNodePattern(
+          new Core.PlaceNodePattern(
             Core.Nodes.Right,
             new Core.ExpectUnitPattern(Lexer.Tokens.From),
             new Core.AppendNodePattern(
@@ -68,7 +68,7 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
             )
           ),
           // Group
-          new Core.ScopeNodePattern(
+          new Core.PlaceNodePattern(
             Core.Nodes.Right,
             new Core.ExpectFlowPattern(
               new Core.ExpectUnitPattern(Lexer.Tokens.OpenParentheses),
@@ -123,7 +123,7 @@ const tokenStatement = new Core.ExpectFlowPattern(
     )
   ),
   new Core.ExpectUnitPattern(Lexer.Tokens.As),
-  new Core.ScopeNodePattern(Core.Nodes.Right, expression)
+  new Core.PlaceNodePattern(Core.Nodes.Right, expression)
 );
 
 const nodeStatement = new Core.ExpectFlowPattern(
@@ -137,7 +137,7 @@ const nodeStatement = new Core.ExpectFlowPattern(
     )
   ),
   new Core.ExpectUnitPattern(Lexer.Tokens.As),
-  new Core.ScopeNodePattern(Core.Nodes.Right, expression)
+  new Core.PlaceNodePattern(Core.Nodes.Right, expression)
 );
 
 export const Program = new Core.ExpectFlowPattern(

@@ -156,20 +156,20 @@ export class Base {
   }
 
   /**
-   * Should be implemented to return a scope node pattern.
+   * Should be implemented to return a place node pattern.
    * @param current Current node destination.
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  getScopeNode(current: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry {
+  getPlaceNode(current: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 
   /**
    * Should be implemented to return a pivot node pattern.
    * @param value Node value.
-   * @param pivot Pivot pattern.
-   * @param patterns Expected patterns.
+   * @param head Head pattern.
+   * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
   getPivotNode(value: string | number, pivot: PatternEntry, ...patterns: PatternEntry[]): PatternEntry {
@@ -180,10 +180,11 @@ export class Base {
    * Should be implemented to return an append node pattern.
    * @param value Node value.
    * @param current Current node destination.
-   * @param patterns Expected patterns.
+   * @param head Head pattern.
+   * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  getAppendNode(value: string | number, current: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry {
+  getAppendNode(value: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 
@@ -191,10 +192,11 @@ export class Base {
    * Should be implemented to return a prepend node pattern.
    * @param value Node value.
    * @param current Current node destination.
-   * @param patterns Expected patterns.
+   * @param head Head pattern.
+   * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  getPrependNode(value: string | number, current: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry {
+  getPrependNode(value: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 

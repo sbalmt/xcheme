@@ -14,7 +14,7 @@ const And = require("./and");
 const consume = (project, node, state, direction) => {
     const patterns = And.resolve(project, node.right, state);
     if (patterns) {
-        return project.coder.getScopeNode(direction, ...patterns);
+        return project.coder.getPlaceNode(direction, ...patterns);
     }
     return void 0;
 };

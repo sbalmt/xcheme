@@ -168,33 +168,35 @@ class Text extends base_1.Base {
         return this.#getPattern('PivotNodePattern', value, 1 /* Right */, 0 /* Left */, pivot, ...patterns);
     }
     /**
-     * Get a new scope node pattern.
+     * Get a new place node pattern.
      * @param current Current node destination.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getScopeNode(current, ...patterns) {
-        return this.#getPattern('ScopeNodePattern', current, ...patterns);
+    getPlaceNode(current, ...patterns) {
+        return this.#getPattern('PlaceNodePattern', current, ...patterns);
     }
     /**
      * Get a new append node pattern.
      * @param value Node value.
      * @param current Current node destination.
-     * @param patterns Expected patterns.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(value, current, ...patterns) {
-        return this.#getPattern('AppendNodePattern', value, 1 /* Right */, current, ...patterns);
+    getAppendNode(value, current, head, ...patterns) {
+        return this.#getPattern('AppendNodePattern', value, 1 /* Right */, current, head, ...patterns);
     }
     /**
      * Get a new prepend node pattern.
      * @param value Node value.
      * @param current Current node destination.
-     * @param patterns Expected patterns.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(value, current, ...patterns) {
-        return this.#getPattern('PrependNodePattern', value, 1 /* Right */, current, ...patterns);
+    getPrependNode(value, current, head, ...patterns) {
+        return this.#getPattern('PrependNodePattern', value, 1 /* Right */, current, head, ...patterns);
     }
     /**
      * Get a new symbol pattern.
