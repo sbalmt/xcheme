@@ -15,33 +15,33 @@ const Expression = require("./expression");
  * @returns Returns true when the merge consumption was successful, false otherwise.
  */
 const merge = (project, node, state, alphabet, patterns) => {
-    let result;
-    if (node.value !== 209 /* And */) {
-        if (node.value === 225 /* Alphabet */) {
-            alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
-            return true;
-        }
-        result = Expression.consume(project, node, state);
-    }
-    else {
+    if (node.value === 209 /* And */) {
         if (node.right.value === 225 /* Alphabet */) {
             alphabet.push(Alphabet.resolve(project, state, node.right.fragment.data));
             return merge(project, node.left, state, alphabet, patterns);
         }
-        const lhs = Expression.consume(project, node.left, state);
-        const rhs = Expression.consume(project, node.right, state);
-        if (lhs && rhs) {
-            result = project.coder.getExpect(lhs, rhs);
+        const lhs = exports.resolve(project, node.left, state);
+        const rhs = exports.resolve(project, node.right, state);
+        if (!lhs || !rhs) {
+            return false;
         }
+        patterns.push(...lhs, ...rhs);
     }
-    if (result) {
+    else {
+        if (node.value === 225 /* Alphabet */) {
+            alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
+            return true;
+        }
+        const result = Expression.consume(project, node, state);
+        if (!result) {
+            return false;
+        }
         patterns.push(result);
-        if (alphabet.length > 0) {
-            patterns.push(project.coder.getExpectAlphabet(alphabet.reverse().flat()));
-        }
-        return true;
     }
-    return false;
+    if (alphabet.length > 0) {
+        patterns.push(project.coder.getExpectAlphabet(alphabet.reverse().flat()));
+    }
+    return true;
 };
 /**
  * Resolve the specified input node as an 'AND' pattern.

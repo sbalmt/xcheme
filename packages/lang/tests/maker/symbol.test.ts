@@ -34,10 +34,8 @@ test("Output a chained 'SYMBOL' rule", () => {
   expect(rule).toBeDefined();
   expect(rule.pattern).toBe(
     `new Core.EmitSymbolPattern(0, ` +
-      /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.ExpectUnitPattern('@'), ` +
-      /******/ `new Core.RepeatFlowPattern(new Core.ExpectUnitPattern('*'))` +
-      /**/ `)` +
+      /**/ `new Core.ExpectUnitPattern('@'), ` +
+      /**/ `new Core.RepeatFlowPattern(new Core.ExpectUnitPattern('*'))` +
       `)`
   );
 });

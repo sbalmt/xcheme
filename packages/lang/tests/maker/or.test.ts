@@ -34,13 +34,9 @@ test("Output subsequent 'OR' rules (optimized)", () => {
   expect(rule).toBeDefined();
   expect(rule.pattern).toBe(
     `new Core.ChooseFlowPattern(` +
-      /**/ `new Core.ChooseFlowPattern(` +
-      /******/ `new Core.ChooseFlowPattern(` +
-      /**********/ `new Core.RepeatFlowPattern(new Core.ExpectUnitPattern('-')), ` +
-      /**********/ `new Core.ChooseUnitPattern('+')` +
-      /******/ `), ` +
-      /******/ `new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('@'), new Core.ChooseUnitPattern('1', '2'))` +
-      /**/ `), ` +
+      /**/ `new Core.RepeatFlowPattern(new Core.ExpectUnitPattern('-')), ` +
+      /**/ `new Core.ChooseUnitPattern('+'), ` +
+      /**/ `new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('@'), new Core.ChooseUnitPattern('1', '2')), ` +
       /**/ `new Core.ChooseUnitPattern('A', 'B')` +
       `)`
   );

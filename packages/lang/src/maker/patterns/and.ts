@@ -26,32 +26,32 @@ type Alphabet = (string | number)[];
  * @returns Returns true when the merge consumption was successful, false otherwise.
  */
 const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphabet[], patterns: PatternEntry[]): boolean => {
-  let result: PatternEntry | undefined;
-  if (node.value !== Parser.Nodes.And) {
-    if (node.value === Parser.Nodes.Alphabet) {
-      alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
-      return true;
-    }
-    result = Expression.consume(project, node, state);
-  } else {
+  if (node.value === Parser.Nodes.And) {
     if (node.right!.value === Parser.Nodes.Alphabet) {
       alphabet.push(Alphabet.resolve(project, state, node.right!.fragment.data));
       return merge(project, node.left!, state, alphabet, patterns);
     }
-    const lhs = Expression.consume(project, node.left!, state);
-    const rhs = Expression.consume(project, node.right!, state);
-    if (lhs && rhs) {
-      result = project.coder.getExpect(lhs, rhs);
+    const lhs = resolve(project, node.left!, state);
+    const rhs = resolve(project, node.right!, state);
+    if (!lhs || !rhs) {
+      return false;
     }
-  }
-  if (result) {
+    patterns.push(...lhs, ...rhs);
+  } else {
+    if (node.value === Parser.Nodes.Alphabet) {
+      alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
+      return true;
+    }
+    const result = Expression.consume(project, node, state);
+    if (!result) {
+      return false;
+    }
     patterns.push(result);
-    if (alphabet.length > 0) {
-      patterns.push(project.coder.getExpectAlphabet(alphabet.reverse().flat()));
-    }
-    return true;
   }
-  return false;
+  if (alphabet.length > 0) {
+    patterns.push(project.coder.getExpectAlphabet(alphabet.reverse().flat()));
+  }
+  return true;
 };
 
 /**

@@ -34,10 +34,8 @@ test("Output subsequent 'AND' rules (optimized)", () => {
   expect(rule).toBeDefined();
   expect(rule.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
-      /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.ExpectUnitPattern('-', '+'), ` +
-      /******/ `new Core.RepeatFlowPattern(new Core.ChooseUnitPattern('@', 'A'))` +
-      /**/ `), ` +
+      /**/ `new Core.ExpectUnitPattern('-', '+'), ` +
+      /**/ `new Core.RepeatFlowPattern(new Core.ChooseUnitPattern('@', 'A')), ` +
       /**/ `new Core.ExpectUnitPattern('1', '2')` +
       `)`
   );

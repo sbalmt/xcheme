@@ -34,10 +34,8 @@ test("Output a chained 'PIVOT' rule", () => {
   expect(rule).toBeDefined();
   expect(rule.pattern).toBe(
     `new Core.PivotNodePattern(0, 1, 0, ` +
-      /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.ExpectUnitPattern('@'), ` +
-      /******/ `new Core.RepeatFlowPattern(new Core.ExpectUnitPattern('*'))` +
-      /**/ `)` +
+      /**/ `new Core.ExpectUnitPattern('@'), ` +
+      /**/ `new Core.RepeatFlowPattern(new Core.ExpectUnitPattern('*'))` +
       `)`
   );
 });

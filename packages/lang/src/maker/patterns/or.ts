@@ -27,31 +27,32 @@ type Alphabet = (string | number)[];
  */
 const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphabet[], patterns: PatternEntry[]): boolean => {
   let result: PatternEntry | undefined;
-  if (node.value !== Parser.Nodes.Or) {
+  if (node.value === Parser.Nodes.Or) {
+    if (node.right!.value === Parser.Nodes.Alphabet) {
+      alphabet.push(Alphabet.resolve(project, state, node.right!.fragment.data));
+      return merge(project, node.left!, state, alphabet, patterns);
+    }
+    const lhs = resolve(project, node.left!, state);
+    const rhs = resolve(project, node.right!, state);
+    if (!lhs || !rhs) {
+      return false;
+    }
+    patterns.push(...lhs, ...rhs);
+  } else {
     if (node.value === Parser.Nodes.Alphabet) {
       alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
       return true;
     }
     result = Expression.consume(project, node, state);
-  } else {
-    if (node.right!.value === Parser.Nodes.Alphabet) {
-      alphabet.push(Alphabet.resolve(project, state, node.right!.fragment.data));
-      return merge(project, node.left!, state, alphabet, patterns);
+    if (!result) {
+      return false;
     }
-    const lhs = Expression.consume(project, node.left!, state);
-    const rhs = Expression.consume(project, node.right!, state);
-    if (lhs && rhs) {
-      result = project.coder.getChoose(lhs, rhs);
-    }
-  }
-  if (result) {
     patterns.push(result);
-    if (alphabet.length > 0) {
-      patterns.push(project.coder.getChooseAlphabet(alphabet.reverse().flat()));
-    }
-    return true;
   }
-  return false;
+  if (alphabet.length > 0) {
+    patterns.push(project.coder.getChooseAlphabet(alphabet.reverse().flat()));
+  }
+  return true;
 };
 
 /**
