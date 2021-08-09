@@ -41,7 +41,7 @@ const consume = (project, node, pointers, counters, alias) => {
             emit(project, id, name, entry, 1 /* Alias */, referenced);
         }
         else {
-            const pattern = project.coder.getNode(id, 2 /* Next */, entry);
+            const pattern = project.coder.getNode(id, 1 /* Right */, entry);
             emit(project, id, name, pattern, 0 /* Normal */, referenced);
         }
     }

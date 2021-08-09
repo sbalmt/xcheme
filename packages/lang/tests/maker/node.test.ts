@@ -63,7 +63,7 @@ test("Output a 'NODE' rule with a loose token reference", () => {
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
   expect(node.pattern).toBe(
-    `new Core.EmitNodePattern(${node.id}, 2, ` +
+    `new Core.EmitNodePattern(${node.id}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern(${token.id}), ` +
       /******/ `new Core.OptionFlowPattern(new Core.ExpectUnitPattern(${token.id}))` +
@@ -100,7 +100,7 @@ test("Output a 'NODE' rule with a loose range rule", () => {
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 2, new Core.ExpectUnitPattern(${token.id}))`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, new Core.ExpectUnitPattern(${token.id}))`);
 });
 
 test("Parse a 'NODE' rule with a token reference", () => {
@@ -131,7 +131,7 @@ test("Output a 'NODE' rule with a token reference", () => {
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 2, new Core.ExpectUnitPattern(${token.id}))`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, new Core.ExpectUnitPattern(${token.id}))`);
 });
 
 test("Parse a 'NODE' rule with an alias node reference", () => {
@@ -160,7 +160,7 @@ test("Output a 'NODE' rule with an alias node reference", () => {
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
 
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 2, ALIAS)`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, ALIAS)`);
 });
 
 test("Parse a 'NODE' rule with a reference to itself", () => {
@@ -192,7 +192,7 @@ test("Output a 'NODE' rule with a reference to itself", () => {
   const pointer = project.nodePointerEntries.get('NODE')!;
   expect(pointer).toBeDefined();
   expect(pointer.pattern).toBe(
-    `new Core.EmitNodePattern(${pointer.id}, 2, ` +
+    `new Core.EmitNodePattern(${pointer.id}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern(${token.id}), ` +
       /******/ `new Core.OptionFlowPattern(new Core.RunFlowPattern(() => NODE))` +
@@ -243,5 +243,5 @@ test("Output a 'NODE' rule with an alias node that has a reference to itself", (
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 2, ALIAS)`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, ALIAS)`);
 });

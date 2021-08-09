@@ -45,7 +45,7 @@ export const consume = (project: Project, node: Core.Node, pointers: Pointers, c
     if (alias) {
       emit(project, id, name, entry, Entries.Types.Alias, referenced);
     } else {
-      const pattern = project.coder.getNode(id, Core.Nodes.Next, entry);
+      const pattern = project.coder.getNode(id, Core.Nodes.Right, entry);
       emit(project, id, name, pattern, Entries.Types.Normal, referenced);
     }
   }
