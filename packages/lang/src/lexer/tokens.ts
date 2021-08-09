@@ -28,7 +28,5 @@ export const enum Tokens {
   As,
   Semicolon,
   OpenParentheses,
-  CloseParentheses,
-  OpenChevron,
-  CloseChevron
+  CloseParentheses
 }

@@ -57,14 +57,15 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
               )
             )
           ),
-          // Any & Alphabet
+          // Any, Alphabet & Reference
           new Core.AppendNodePattern(
             Core.BaseSource.Output,
             Core.Nodes.Right,
             Core.Nodes.Right,
             new Core.MapFlowPattern(
               new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Any),
-              new Core.SetValueRoute(Nodes.Alphabet, Lexer.Tokens.Alphabet)
+              new Core.SetValueRoute(Nodes.Alphabet, Lexer.Tokens.Alphabet),
+              new Core.SetValueRoute(Nodes.Reference, Lexer.Tokens.Identifier)
             )
           ),
           // Group
@@ -75,17 +76,6 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
               new Core.RunFlowPattern(() => expression),
               new Core.ExpectUnitPattern(Lexer.Tokens.CloseParentheses)
             )
-          ),
-          // Reference
-          new Core.ExpectFlowPattern(
-            new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
-            new Core.AppendNodePattern(
-              Nodes.Reference,
-              Core.Nodes.Right,
-              Core.Nodes.Right,
-              new Core.ExpectUnitPattern(Lexer.Tokens.Identifier)
-            ),
-            new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
           )
         )
       )

@@ -4,7 +4,7 @@ import { Lexer, Parser } from '../../src/index';
 
 test("Consume expected 'SYMBOL' rule", () => {
   const context = new Core.Context('test');
-  const text = 'skip symbol <REFERENCE>;';
+  const text = 'skip symbol REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -28,7 +28,7 @@ test("Consume expected 'SYMBOL' rule", () => {
   const ref = expr.right!;
   expect(ref).toBeDefined();
   expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REFERENCE');
+  expect(ref.fragment.data).toBe('REF');
   expect(ref.left).toBeUndefined();
   expect(ref.right).toBeUndefined();
   expect(ref.next).toBeUndefined();

@@ -28,7 +28,5 @@ export declare const enum Tokens {
     As = 123,
     Semicolon = 124,
     OpenParentheses = 125,
-    CloseParentheses = 126,
-    OpenChevron = 127,
-    CloseChevron = 128
+    CloseParentheses = 126
 }

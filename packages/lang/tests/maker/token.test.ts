@@ -13,15 +13,15 @@ const checkTokens = (context: Core.Context, id: number): number => {
 };
 
 test('Token referring an undefined identifier', () => {
-  Helper.makeError(new LiveCoder(), 'token TOKEN as <ALIAS>;', [Errors.UNDEFINED_IDENTIFIER]);
+  Helper.makeError(new LiveCoder(), 'token TOKEN as ALIAS;', [Errors.UNDEFINED_IDENTIFIER]);
 });
 
 test('Token referring a node (reference error)', () => {
-  Helper.makeError(new LiveCoder(), "node NODE as '@'; token TOKEN as <NODE>;", [Errors.INVALID_NODE_REFERENCE]);
+  Helper.makeError(new LiveCoder(), "node NODE as '@'; token TOKEN as NODE;", [Errors.INVALID_NODE_REFERENCE]);
 });
 
 test('Token referring an alias node (reference error)', () => {
-  Helper.makeError(new LiveCoder(), "alias node NODE as '@'; token TOKEN as <NODE>;", [Errors.INVALID_NODE_REFERENCE]);
+  Helper.makeError(new LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Errors.INVALID_NODE_REFERENCE]);
 });
 
 test("Parse a 'TOKEN' rule", () => {
@@ -46,7 +46,7 @@ test("Output a 'TOKEN' rule", () => {
 });
 
 test("Parse a 'TOKEN' rule with an alias token reference", () => {
-  const project = Helper.makeParser(new LiveCoder(), "alias token ALIAS as '@'; token TOKEN as <ALIAS>;");
+  const project = Helper.makeParser(new LiveCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
@@ -58,7 +58,7 @@ test("Parse a 'TOKEN' rule with an alias token reference", () => {
 });
 
 test("Output a 'TOKEN' rule with an alias token reference", () => {
-  const project = Helper.makeParser(new TextCoder(), "alias token ALIAS as '@'; token TOKEN as <ALIAS>;");
+  const project = Helper.makeParser(new TextCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
 
   // Check the output code.
   const token = project.tokenEntries.get('TOKEN')!;
@@ -67,7 +67,7 @@ test("Output a 'TOKEN' rule with an alias token reference", () => {
 });
 
 test("Parse a 'TOKEN' rule with a reference to itself", () => {
-  const project = Helper.makeParser(new LiveCoder(), "token TOKEN as '@' & opt <TOKEN>;");
+  const project = Helper.makeParser(new LiveCoder(), "token TOKEN as '@' & opt TOKEN;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
@@ -79,7 +79,7 @@ test("Parse a 'TOKEN' rule with a reference to itself", () => {
 });
 
 test("Output a 'TOKEN' rule with a reference to itself", () => {
-  const project = Helper.makeParser(new TextCoder(), "token TOKEN as '@' & opt <TOKEN>;");
+  const project = Helper.makeParser(new TextCoder(), "token TOKEN as '@' & opt TOKEN;");
 
   // Check the output code.
   const pointer = project.tokenPointerEntries.get('TOKEN')!;
@@ -101,7 +101,7 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
 });
 
 test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", () => {
-  const project = Helper.makeParser(new LiveCoder(), "alias token ALIAS as '@' & opt <ALIAS>; token TOKEN as <ALIAS>;");
+  const project = Helper.makeParser(new LiveCoder(), "alias token ALIAS as '@' & opt ALIAS; token TOKEN as ALIAS;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
@@ -113,7 +113,7 @@ test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", 
 });
 
 test("Output a 'TOKEN' rule with an alias token that has a reference to itself", () => {
-  const project = Helper.makeParser(new TextCoder(), "alias token ALIAS as '@' & opt <ALIAS>; token TOKEN as <ALIAS>;");
+  const project = Helper.makeParser(new TextCoder(), "alias token ALIAS as '@' & opt ALIAS; token TOKEN as ALIAS;");
 
   // Check the output code.
   const pointer = project.tokenPointerEntries.get('ALIAS')!;

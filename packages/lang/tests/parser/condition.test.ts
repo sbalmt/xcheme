@@ -4,7 +4,7 @@ import { Lexer, Parser } from '../../src/index';
 
 test("Consume expected 'THEN' rule (half condition)", () => {
   const context = new Core.Context('test');
-  const text = 'skip <REFERENCE> then <TRUE>;';
+  const text = 'skip REF then TRUE;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -28,6 +28,7 @@ test("Consume expected 'THEN' rule (half condition)", () => {
   const cond = expr.left!;
   expect(cond).toBeDefined();
   expect(cond.value).toBe(Parser.Nodes.Reference);
+  expect(cond.fragment.data).toBe('REF');
   expect(cond.left).toBeUndefined();
   expect(cond.right).toBeUndefined();
   expect(cond.next).toBeUndefined();
@@ -43,7 +44,7 @@ test("Consume expected 'THEN' rule (half condition)", () => {
 
 test("Consume expected 'THEN' rule with 'ELSE' rule (full condition)", () => {
   const context = new Core.Context('test');
-  const text = 'skip <REFERENCE> then <TRUE> else <FALSE>;';
+  const text = 'skip REF then TRUE else FALSE;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -67,6 +68,7 @@ test("Consume expected 'THEN' rule with 'ELSE' rule (full condition)", () => {
   const cond = expr.left!;
   expect(cond).toBeDefined();
   expect(cond.value).toBe(Parser.Nodes.Reference);
+  expect(cond.fragment.data).toBe('REF');
   expect(cond.left).toBeUndefined();
   expect(cond.right).toBeUndefined();
   expect(cond.next).toBeUndefined();

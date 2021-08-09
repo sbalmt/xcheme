@@ -4,7 +4,7 @@ import { Lexer, Parser } from '../../src/index';
 
 test("Consume expected 'PLACE' rule", () => {
   const context = new Core.Context('test');
-  const text = 'skip place <REFERENCE>;';
+  const text = 'skip place REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -28,7 +28,7 @@ test("Consume expected 'PLACE' rule", () => {
   const ref = expr.right!;
   expect(ref).toBeDefined();
   expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REFERENCE');
+  expect(ref.fragment.data).toBe('REF');
   expect(ref.left).toBeUndefined();
   expect(ref.right).toBeUndefined();
   expect(ref.next).toBeUndefined();
@@ -36,7 +36,7 @@ test("Consume expected 'PLACE' rule", () => {
 
 test("Consume expected 'place next' rule", () => {
   const context = new Core.Context('test');
-  const text = 'skip place next <REFERENCE>;';
+  const text = 'skip place next REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -60,7 +60,7 @@ test("Consume expected 'place next' rule", () => {
   const ref = expr.right!;
   expect(ref).toBeDefined();
   expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REFERENCE');
+  expect(ref.fragment.data).toBe('REF');
   expect(ref.left).toBeUndefined();
   expect(ref.right).toBeUndefined();
   expect(ref.next).toBeUndefined();

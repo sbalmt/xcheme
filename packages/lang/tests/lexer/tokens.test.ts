@@ -52,9 +52,7 @@ const tokens = [
   ...[
     { name: ';', value: Lexer.Tokens.Semicolon },
     { name: '(', value: Lexer.Tokens.OpenParentheses },
-    { name: ')', value: Lexer.Tokens.CloseParentheses },
-    { name: '<', value: Lexer.Tokens.OpenChevron },
-    { name: '>', value: Lexer.Tokens.CloseChevron }
+    { name: ')', value: Lexer.Tokens.CloseParentheses }
   ]
 ];
 

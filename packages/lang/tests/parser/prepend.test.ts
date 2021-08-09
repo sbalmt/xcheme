@@ -4,7 +4,7 @@ import { Lexer, Parser } from '../../src/index';
 
 test("Consume expected 'PREPEND' rule", () => {
   const context = new Core.Context('test');
-  const text = 'skip prepend <REFERENCE>;';
+  const text = 'skip prepend REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -28,7 +28,7 @@ test("Consume expected 'PREPEND' rule", () => {
   const ref = expr.right!;
   expect(ref).toBeDefined();
   expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REFERENCE');
+  expect(ref.fragment.data).toBe('REF');
   expect(ref.left).toBeUndefined();
   expect(ref.right).toBeUndefined();
   expect(ref.next).toBeUndefined();
@@ -36,7 +36,7 @@ test("Consume expected 'PREPEND' rule", () => {
 
 test("Consume expected 'prepend next'", () => {
   const context = new Core.Context('test');
-  const text = 'skip prepend next <REFERENCE>;';
+  const text = 'skip prepend next REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -60,7 +60,7 @@ test("Consume expected 'prepend next'", () => {
   const ref = expr.right!;
   expect(ref).toBeDefined();
   expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REFERENCE');
+  expect(ref.fragment.data).toBe('REF');
   expect(ref.left).toBeUndefined();
   expect(ref.right).toBeUndefined();
   expect(ref.next).toBeUndefined();

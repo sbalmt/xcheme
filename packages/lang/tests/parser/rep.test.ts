@@ -4,7 +4,7 @@ import { Lexer, Parser } from '../../src/index';
 
 test("Consume expected 'REP' rule", () => {
   const context = new Core.Context('test');
-  const text = 'skip rep <REFERENCE>;';
+  const text = 'skip rep REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -28,7 +28,7 @@ test("Consume expected 'REP' rule", () => {
   const ref = expr.right!;
   expect(ref).toBeDefined();
   expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REFERENCE');
+  expect(ref.fragment.data).toBe('REF');
   expect(ref.left).toBeUndefined();
   expect(ref.right).toBeUndefined();
   expect(ref.next).toBeUndefined();

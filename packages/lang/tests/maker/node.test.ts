@@ -23,15 +23,15 @@ const checkNodes = (context: Core.Context, id: number): number => {
 };
 
 test('Node referring an undefined identifier', () => {
-  Helper.makeError(new LiveCoder(), 'node NODE as <TOKEN>;', [Errors.UNDEFINED_IDENTIFIER]);
+  Helper.makeError(new LiveCoder(), 'node NODE as TOKEN;', [Errors.UNDEFINED_IDENTIFIER]);
 });
 
 test('Node referring an alias token (reference error)', () => {
-  Helper.makeError(new LiveCoder(), "alias token TOKEN as '@'; node NODE as <TOKEN>;", [Errors.INVALID_TOKEN_REFERENCE]);
+  Helper.makeError(new LiveCoder(), "alias token TOKEN as '@'; node NODE as TOKEN;", [Errors.INVALID_TOKEN_REFERENCE]);
 });
 
 test('Node referring an unresolved token (reference error)', () => {
-  Helper.makeError(new LiveCoder(), "node NODE as <TOKEN>; token TOKEN as '@';", [Errors.UNRESOLVED_TOKEN_REFERENCE]);
+  Helper.makeError(new LiveCoder(), "node NODE as TOKEN; token TOKEN as '@';", [Errors.UNRESOLVED_TOKEN_REFERENCE]);
 });
 
 test("Parse a 'NODE' rule with a loose token reference", () => {
@@ -104,7 +104,7 @@ test("Output a 'NODE' rule with a loose range rule", () => {
 });
 
 test("Parse a 'NODE' rule with a token reference", () => {
-  const project = Helper.makeParser(new LiveCoder(), "token TOKEN as '@'; node NODE as <TOKEN>;");
+  const project = Helper.makeParser(new LiveCoder(), "token TOKEN as '@'; node NODE as TOKEN;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
@@ -123,7 +123,7 @@ test("Parse a 'NODE' rule with a token reference", () => {
 });
 
 test("Output a 'NODE' rule with a token reference", () => {
-  const project = Helper.makeParser(new TextCoder(), "token TOKEN as '@'; node NODE as <TOKEN>;");
+  const project = Helper.makeParser(new TextCoder(), "token TOKEN as '@'; node NODE as TOKEN;");
 
   // Check the output code.
   const token = project.tokenEntries.get('TOKEN')!;
@@ -135,7 +135,7 @@ test("Output a 'NODE' rule with a token reference", () => {
 });
 
 test("Parse a 'NODE' rule with an alias node reference", () => {
-  const project = Helper.makeParser(new LiveCoder(), "alias node ALIAS as '@'; node NODE as <ALIAS>;");
+  const project = Helper.makeParser(new LiveCoder(), "alias node ALIAS as '@'; node NODE as ALIAS;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
@@ -154,7 +154,7 @@ test("Parse a 'NODE' rule with an alias node reference", () => {
 });
 
 test("Output a 'NODE' rule with an alias node reference", () => {
-  const project = Helper.makeParser(new TextCoder(), "alias node ALIAS as '@'; node NODE as <ALIAS>;");
+  const project = Helper.makeParser(new TextCoder(), "alias node ALIAS as '@'; node NODE as ALIAS;");
 
   // Check the output code.
   const node = project.nodeEntries.get('NODE')!;
@@ -164,7 +164,7 @@ test("Output a 'NODE' rule with an alias node reference", () => {
 });
 
 test("Parse a 'NODE' rule with a reference to itself", () => {
-  const project = Helper.makeParser(new LiveCoder(), "node NODE as '@' & opt <NODE>;");
+  const project = Helper.makeParser(new LiveCoder(), "node NODE as '@' & opt NODE;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
@@ -183,7 +183,7 @@ test("Parse a 'NODE' rule with a reference to itself", () => {
 });
 
 test("Output a 'NODE' rule with a reference to itself", () => {
-  const project = Helper.makeParser(new TextCoder(), "node NODE as '@' & opt <NODE>;");
+  const project = Helper.makeParser(new TextCoder(), "node NODE as '@' & opt NODE;");
 
   // Check the output code.
   const token = project.tokenEntries.get("'@'")!;
@@ -206,7 +206,7 @@ test("Output a 'NODE' rule with a reference to itself", () => {
 });
 
 test("Parse a 'NODE' rule with an alias node that has a reference to itself", () => {
-  const project = Helper.makeParser(new LiveCoder(), "alias node ALIAS as '@' & opt <ALIAS>; node NODE as <ALIAS>;");
+  const project = Helper.makeParser(new LiveCoder(), "alias node ALIAS as '@' & opt ALIAS; node NODE as ALIAS;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
@@ -225,7 +225,7 @@ test("Parse a 'NODE' rule with an alias node that has a reference to itself", ()
 });
 
 test("Output a 'NODE' rule with an alias node that has a reference to itself", () => {
-  const project = Helper.makeParser(new TextCoder(), "alias node ALIAS as '@' & opt <ALIAS>; node NODE as <ALIAS>;");
+  const project = Helper.makeParser(new TextCoder(), "alias node ALIAS as '@' & opt ALIAS; node NODE as ALIAS;");
 
   // Check the output code.
   const token = project.tokenEntries.get("'@'")!;

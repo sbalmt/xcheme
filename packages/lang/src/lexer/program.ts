@@ -66,9 +66,7 @@ export const Program = new Core.ExpectFlowPattern(
               new Core.SetValueRoute(Tokens.And, '&'),
               new Core.SetValueRoute(Tokens.Semicolon, ';'),
               new Core.SetValueRoute(Tokens.OpenParentheses, '('),
-              new Core.SetValueRoute(Tokens.CloseParentheses, ')'),
-              new Core.SetValueRoute(Tokens.OpenChevron, '<'),
-              new Core.SetValueRoute(Tokens.CloseChevron, '>')
+              new Core.SetValueRoute(Tokens.CloseParentheses, ')')
             ),
             // String
             new Core.SetValuePattern(

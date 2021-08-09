@@ -4,7 +4,7 @@ import { Lexer, Parser } from '../../src/index';
 
 test("Consume expected 'ALIAS NODE' rule", () => {
   const context = new Core.Context('test');
-  const text = 'alias node TOKEN as <REFERENCE>;';
+  const text = 'alias node TOKEN as REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -28,7 +28,7 @@ test("Consume expected 'ALIAS NODE' rule", () => {
   const expr = iden.right!;
   expect(expr).toBeDefined();
   expect(expr.value).toBe(Parser.Nodes.Reference);
-  expect(expr.fragment.data).toBe('REFERENCE');
+  expect(expr.fragment.data).toBe('REF');
   expect(expr.left).toBeUndefined();
   expect(expr.right).toBeUndefined();
   expect(expr.next).toBeUndefined();
@@ -36,7 +36,7 @@ test("Consume expected 'ALIAS NODE' rule", () => {
 
 test("Consume expected 'NODE' rule", () => {
   const context = new Core.Context('test');
-  const text = 'node TOKEN as <REFERENCE>;';
+  const text = 'node TOKEN as REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -60,7 +60,7 @@ test("Consume expected 'NODE' rule", () => {
   const expr = iden.right!;
   expect(expr).toBeDefined();
   expect(expr.value).toBe(Parser.Nodes.Reference);
-  expect(expr.fragment.data).toBe('REFERENCE');
+  expect(expr.fragment.data).toBe('REF');
   expect(expr.left).toBeUndefined();
   expect(expr.right).toBeUndefined();
   expect(expr.next).toBeUndefined();
