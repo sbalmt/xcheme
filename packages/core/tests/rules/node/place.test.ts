@@ -1,9 +1,9 @@
-import { Context, Nodes, Node, TextSource, ScopeNodePattern, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, Nodes, Node, TextSource, PlaceNodePattern, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * It can consume a sequence of characters 'a', 'b' and 'c' and append a new node into the current AST.
  */
-const pattern = new ScopeNodePattern(
+const pattern = new PlaceNodePattern(
   Nodes.Right,
   new AppendNodePattern(0xabc, Nodes.Right, Nodes.Left, new ExpectUnitPattern('a', 'b', 'c'))
 );

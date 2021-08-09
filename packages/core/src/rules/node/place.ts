@@ -6,9 +6,9 @@ import Expect from '../flow/expect';
 
 /**
  * Consumes all the given patterns and, in case of success,
- * it appends the resulting node into the current source output node.
+ * it places the resulting node into the current source output node.
  */
-export default class Scope extends Pattern {
+export default class Place extends Pattern {
   /**
    * Target pattern.
    */

@@ -4,9 +4,9 @@ const pattern_1 = require("../pattern");
 const expect_1 = require("../flow/expect");
 /**
  * Consumes all the given patterns and, in case of success,
- * it appends the resulting node into the current source output node.
+ * it places the resulting node into the current source output node.
  */
-class Scope extends pattern_1.default {
+class Place extends pattern_1.default {
     /**
      * Target pattern.
      */
@@ -49,5 +49,5 @@ class Scope extends pattern_1.default {
         return status;
     }
 }
-exports.default = Scope;
-//# sourceMappingURL=scope.js.map
+exports.default = Place;
+//# sourceMappingURL=place.js.map

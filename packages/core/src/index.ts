@@ -43,7 +43,7 @@ export { default as EmitNodePattern } from './rules/node/emit';
 export { default as AppendNodePattern } from './rules/node/append';
 export { default as PrependNodePattern } from './rules/node/prepend';
 export { default as PivotNodePattern } from './rules/node/pivot';
-export { default as ScopeNodePattern } from './rules/node/scope';
+export { default as PlaceNodePattern } from './rules/node/place';
 
 export { default as EmitSymbolRoute } from './rules/symbol/route';
 export { default as EmitSymbolPattern } from './rules/symbol/emit';
