@@ -1,4 +1,5 @@
 import * as Core from '@xcheme/core';
+import * as Helper from './common/helper';
 
 import { Lexer, Parser } from '../../src/index';
 
@@ -11,57 +12,41 @@ test("Consume expected 'PLACE' rule", () => {
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
-
-  const expr = stmt.right!;
-  expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.Place);
-  expect(expr.left).toBeUndefined();
-  expect(expr.right).toBeDefined();
-  expect(expr.next).toBeUndefined();
-
-  const ref = expr.right!;
-  expect(ref).toBeDefined();
-  expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REF');
-  expect(ref.left).toBeUndefined();
-  expect(ref.right).toBeUndefined();
-  expect(ref.next).toBeUndefined();
+  Helper.testSkipNode(context.node, Parser.Nodes.Place, 'REF');
 });
 
-test("Consume expected 'place next' rule", () => {
+test("Consume expected 'PLACE NEXT' rule", () => {
   const context = new Core.Context('test');
-  const text = 'skip place next REF;';
+  const text = 'skip place next REF_NEXT;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
+  Helper.testSkipNode(context.node, Parser.Nodes.PlaceNext, 'REF_NEXT');
+});
 
-  const expr = stmt.right!;
-  expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.PlaceNext);
-  expect(expr.left).toBeUndefined();
-  expect(expr.right).toBeDefined();
-  expect(expr.next).toBeUndefined();
+test("Consume expected 'PLACE LEFT' rule", () => {
+  const context = new Core.Context('test');
+  const text = 'skip place left REF_LEFT;';
 
-  const ref = expr.right!;
-  expect(ref).toBeDefined();
-  expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REF');
-  expect(ref.left).toBeUndefined();
-  expect(ref.right).toBeUndefined();
-  expect(ref.next).toBeUndefined();
+  // Test the consumption.
+  expect(Lexer.consumeText(text, context)).toBeTruthy();
+  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
+
+  // Check the resulting nodes.
+  Helper.testSkipNode(context.node, Parser.Nodes.PlaceLeft, 'REF_LEFT');
+});
+
+test("Consume expected 'PLACE RIGHT' rule", () => {
+  const context = new Core.Context('test');
+  const text = 'skip place right REF_RIGHT;';
+
+  // Test the consumption.
+  expect(Lexer.consumeText(text, context)).toBeTruthy();
+  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
+
+  // Check the resulting nodes.
+  Helper.testSkipNode(context.node, Parser.Nodes.PlaceRight, 'REF_RIGHT');
 });

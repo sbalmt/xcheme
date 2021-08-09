@@ -22,10 +22,16 @@ export declare const enum Nodes {
     PlaceNext = 217,
     AppendNext = 218,
     PrependNext = 219,
-    Symbol = 220,
-    Scope = 221,
-    Reference = 222,
-    Any = 223,
-    Range = 224,
-    Alphabet = 225
+    PlaceLeft = 220,
+    AppendLeft = 221,
+    PrependLeft = 222,
+    PlaceRight = 223,
+    AppendRight = 224,
+    PrependRight = 225,
+    Symbol = 226,
+    Scope = 227,
+    Reference = 228,
+    Any = 229,
+    Range = 230,
+    Alphabet = 231
 }

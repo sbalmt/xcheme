@@ -43,10 +43,13 @@ const consume = (project, node, state) => {
         case 214 /* Pivot */:
             return Pivot.consume(project, node, state);
         case 213 /* Place */:
+        case 223 /* PlaceRight */:
             return Place.consume(project, node, state, 1 /* Right */);
         case 215 /* Append */:
+        case 224 /* AppendRight */:
             return Append.consume(project, node, state, 1 /* Right */);
         case 216 /* Prepend */:
+        case 225 /* PrependRight */:
             return Prepend.consume(project, node, state, 1 /* Right */);
         case 217 /* PlaceNext */:
             return Place.consume(project, node, state, 2 /* Next */);
@@ -54,17 +57,23 @@ const consume = (project, node, state) => {
             return Append.consume(project, node, state, 2 /* Next */);
         case 219 /* PrependNext */:
             return Prepend.consume(project, node, state, 2 /* Next */);
-        case 220 /* Symbol */:
+        case 220 /* PlaceLeft */:
+            return Place.consume(project, node, state, 0 /* Left */);
+        case 221 /* AppendLeft */:
+            return Append.consume(project, node, state, 0 /* Left */);
+        case 222 /* PrependLeft */:
+            return Prepend.consume(project, node, state, 0 /* Left */);
+        case 226 /* Symbol */:
             return Symbol.consume(project, node, state);
-        case 221 /* Scope */:
+        case 227 /* Scope */:
             return Scope.consume(project, node, state);
-        case 222 /* Reference */:
+        case 228 /* Reference */:
             return Reference.consume(project, node, state);
-        case 223 /* Any */:
+        case 229 /* Any */:
             return project.coder.getAny();
-        case 224 /* Range */:
+        case 230 /* Range */:
             return Range.consume(project, node, state);
-        case 225 /* Alphabet */:
+        case 231 /* Alphabet */:
             return Alphabet.consume(project, node, state);
         default:
             project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));

@@ -15,6 +15,8 @@ export const enum Tokens {
   Append,
   Prepend,
   Next,
+  Left,
+  Right,
   Symbol,
   Scope,
   And,

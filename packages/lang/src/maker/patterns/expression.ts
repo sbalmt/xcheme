@@ -49,10 +49,13 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
     case Parser.Nodes.Pivot:
       return Pivot.consume(project, node, state);
     case Parser.Nodes.Place:
+    case Parser.Nodes.PlaceRight:
       return Place.consume(project, node, state, Core.Nodes.Right);
     case Parser.Nodes.Append:
+    case Parser.Nodes.AppendRight:
       return Append.consume(project, node, state, Core.Nodes.Right);
     case Parser.Nodes.Prepend:
+    case Parser.Nodes.PrependRight:
       return Prepend.consume(project, node, state, Core.Nodes.Right);
     case Parser.Nodes.PlaceNext:
       return Place.consume(project, node, state, Core.Nodes.Next);
@@ -60,6 +63,12 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
       return Append.consume(project, node, state, Core.Nodes.Next);
     case Parser.Nodes.PrependNext:
       return Prepend.consume(project, node, state, Core.Nodes.Next);
+    case Parser.Nodes.PlaceLeft:
+      return Place.consume(project, node, state, Core.Nodes.Left);
+    case Parser.Nodes.AppendLeft:
+      return Append.consume(project, node, state, Core.Nodes.Left);
+    case Parser.Nodes.PrependLeft:
+      return Prepend.consume(project, node, state, Core.Nodes.Left);
     case Parser.Nodes.Symbol:
       return Symbol.consume(project, node, state);
     case Parser.Nodes.Scope:

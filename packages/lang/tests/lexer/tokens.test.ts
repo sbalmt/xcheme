@@ -28,6 +28,8 @@ const tokens = [
     { name: 'append', value: Lexer.Tokens.Append },
     { name: 'prepend', value: Lexer.Tokens.Prepend },
     { name: 'next', value: Lexer.Tokens.Next },
+    { name: 'left', value: Lexer.Tokens.Left },
+    { name: 'right', value: Lexer.Tokens.Right },
     // Symbol
     { name: 'symbol', value: Lexer.Tokens.Symbol },
     { name: 'scope', value: Lexer.Tokens.Scope },
