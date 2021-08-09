@@ -51,7 +51,7 @@
 				},
 				{
 					"name": "keyword.control.xcheme",
-					"match": "\\b(not|opt|rep)\\b"
+					"match": "\\b(not|opt|rep|place)\\b"
 				},
 				{
 					"name": "keyword.control.condition.xcheme",
@@ -63,7 +63,7 @@
 			"patterns": [
 				{
 					"name": "storage.modifier.xcheme",
-					"match": "\\b(alias|next)\\b"
+					"match": "\\b(alias|next|left|right)\\b"
 				}
 			]
 		},
@@ -71,7 +71,7 @@
 			"patterns": [
 				{
 					"name": "keyword.operator.new.node.xcheme",
-					"match": "\\b(place|pivot|append|prepend)\\b"
+					"match": "\\b(pivot|append|prepend)\\b"
 				},
 				{
 					"name": "keyword.operator.new.symbol.xcheme",
@@ -79,7 +79,7 @@
 				},
 				{
 					"name": "keyword.operator.logical.xcheme",
-					"match": "\b(and|or)\b"
+					"match": "\\b(and|or)\\b"
 				},
 				{
 					"name": "keyword.operator.logical.symbol.xcheme",
