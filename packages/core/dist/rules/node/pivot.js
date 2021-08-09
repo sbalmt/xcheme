@@ -10,9 +10,9 @@ const pattern_1 = require("../pattern");
  */
 class Pivot extends pattern_1.default {
     /**
-     * Test pattern.
+     * Head pattern.
      */
-    #test;
+    #head;
     /**
      * Target pattern.
      */
@@ -34,15 +34,15 @@ class Pivot extends pattern_1.default {
      * @param value Node value.
      * @param output Output node destination.
      * @param current Current node destination.
-     * @param test Pivot pattern.
+     * @param head Pivot head pattern.
      * @param patterns Sequence of patterns.
      */
-    constructor(value, output, current, test, ...patterns) {
+    constructor(value, output, current, head, ...patterns) {
         super();
         if (current === output) {
             throw "Current and Output destinations can't have the same value.";
         }
-        this.#test = test;
+        this.#head = head;
         this.#target = new expect_1.default(...patterns);
         this.#value = value;
         this.#output = output;
@@ -55,7 +55,7 @@ class Pivot extends pattern_1.default {
      */
     consume(source) {
         source.saveState();
-        let status = this.#test.consume(source);
+        let status = this.#head.consume(source);
         if (status) {
             const output = source.output;
             const { table, value } = output;

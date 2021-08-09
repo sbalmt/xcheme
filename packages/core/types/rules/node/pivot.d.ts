@@ -12,10 +12,10 @@ export default class Pivot extends Pattern {
      * @param value Node value.
      * @param output Output node destination.
      * @param current Current node destination.
-     * @param test Pivot pattern.
+     * @param head Pivot head pattern.
      * @param patterns Sequence of patterns.
      */
-    constructor(value: string | number, output: Nodes, current: Nodes, test: Pattern, ...patterns: Pattern[]);
+    constructor(value: string | number, output: Nodes, current: Nodes, head: Pattern, ...patterns: Pattern[]);
     /**
      * Consume the given source.
      * @param source Data source.

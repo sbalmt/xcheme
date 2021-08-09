@@ -9,9 +9,9 @@ import Pattern from '../pattern';
  */
 export default class Pivot extends Pattern {
   /**
-   * Test pattern.
+   * Head pattern.
    */
-  #test: Pattern;
+  #head: Pattern;
 
   /**
    * Target pattern.
@@ -38,15 +38,15 @@ export default class Pivot extends Pattern {
    * @param value Node value.
    * @param output Output node destination.
    * @param current Current node destination.
-   * @param test Pivot pattern.
+   * @param head Pivot head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, output: Nodes, current: Nodes, test: Pattern, ...patterns: Pattern[]) {
+  constructor(value: string | number, output: Nodes, current: Nodes, head: Pattern, ...patterns: Pattern[]) {
     super();
     if (current === output) {
       throw "Current and Output destinations can't have the same value.";
     }
-    this.#test = test;
+    this.#head = head;
     this.#target = new Expect(...patterns);
     this.#value = value;
     this.#output = output;
@@ -60,7 +60,7 @@ export default class Pivot extends Pattern {
    */
   consume(source: Base): boolean {
     source.saveState();
-    let status = this.#test.consume(source);
+    let status = this.#head.consume(source);
     if (status) {
       const output = source.output;
       const { table, value } = output;
