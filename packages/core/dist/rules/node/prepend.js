@@ -10,6 +10,10 @@ const pattern_1 = require("../pattern");
  */
 class Prepend extends pattern_1.default {
     /**
+     * Head pattern.
+     */
+    #head;
+    /**
      * Target pattern.
      */
     #target;
@@ -30,10 +34,12 @@ class Prepend extends pattern_1.default {
      * @param value Node value.
      * @param output Output node destination.
      * @param current Current node destination.
+     * @param head Prepend head pattern.
      * @param patterns Sequence of patterns.
      */
-    constructor(value, output, current, ...patterns) {
+    constructor(value, output, current, head, ...patterns) {
         super();
+        this.#head = head;
         this.#target = new expect_1.default(...patterns);
         this.#value = value;
         this.#output = output;
@@ -49,17 +55,20 @@ class Prepend extends pattern_1.default {
         const output = source.output;
         let current = output.node;
         output.node = void 0;
-        const status = this.#target.consume(source);
+        let status = this.#head.consume(source);
         if (status) {
-            const { table, value } = output;
-            const result = this.#value === base_1.default.Output ? value ?? -1 : this.#value;
-            const child = new node_1.default(source.fragment, table, result);
-            child.setChild(this.#output, output.node);
-            if (current) {
-                const parent = child.getLowestChild(this.#current) ?? child;
-                parent.setChild(this.#current, current);
+            const fragment = source.fragment;
+            if ((status = this.#target.consume(source))) {
+                const { table, value } = output;
+                const result = this.#value === base_1.default.Output ? value ?? -1 : this.#value;
+                const child = new node_1.default(fragment, table, result);
+                child.setChild(this.#output, output.node);
+                if (current) {
+                    const parent = child.getLowestChild(this.#current) ?? child;
+                    parent.setChild(this.#current, current);
+                }
+                current = child;
             }
-            current = child;
         }
         output.node = current;
         source.discardState();

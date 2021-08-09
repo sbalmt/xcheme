@@ -1,13 +1,13 @@
 import { Context, Nodes, Node, TextSource, PrependNodePattern, ExpectUnitPattern } from '../../../src/index';
 
 /**
- * It can consume a sequence of characters 'a', 'b' and 'c' and prepend a new node into the current AST.
+ * It can consume a sequence of characters '@', 'a' and 'b' and prepend a new node '@' into the current AST.
  */
-const pattern = new PrependNodePattern(0xabc, Nodes.Right, Nodes.Next, new ExpectUnitPattern('a', 'b', 'c'));
+const pattern = new PrependNodePattern(0xabc, Nodes.Right, Nodes.Next, new ExpectUnitPattern('@'), new ExpectUnitPattern('a', 'b'));
 
 test('Consume success', () => {
   const context = new Context('test');
-  const source = new TextSource('abc', context);
+  const source = new TextSource('@ab', context);
   let fragment;
 
   // Set the fake node before starting.
@@ -29,9 +29,9 @@ test('Consume success', () => {
 
   fragment = child.fragment;
   expect(fragment).toBeDefined();
-  expect(fragment.data).toBe('abc');
+  expect(fragment.data).toBe('@');
   expect(fragment.begin).toBe(0);
-  expect(fragment.end).toBe(3);
+  expect(fragment.end).toBe(1);
   expect(fragment.location.column).toBe(0);
   expect(fragment.location.line).toBe(0);
 
@@ -47,12 +47,12 @@ test('Consume success', () => {
 
 test('Consume failure', () => {
   const context = new Context('test');
-  const source = new TextSource('azc', context);
+  const source = new TextSource('@az', context);
 
   // Test the consumption.
   expect(pattern.consume(source)).toBeFalsy();
-  expect(source.offset).toBe(1);
-  expect(source.length).toBe(2);
+  expect(source.offset).toBe(2);
+  expect(source.length).toBe(1);
 
   // Check the generated node.
   expect(context.node.next).toBeUndefined();

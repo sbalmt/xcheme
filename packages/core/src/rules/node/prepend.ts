@@ -9,6 +9,11 @@ import Pattern from '../pattern';
  */
 export default class Prepend extends Pattern {
   /**
+   * Head pattern.
+   */
+  #head: Pattern;
+
+  /**
    * Target pattern.
    */
   #target: Pattern;
@@ -33,10 +38,12 @@ export default class Prepend extends Pattern {
    * @param value Node value.
    * @param output Output node destination.
    * @param current Current node destination.
+   * @param head Prepend head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, output: Nodes, current: Nodes, ...patterns: Pattern[]) {
+  constructor(value: string | number, output: Nodes, current: Nodes, head: Pattern, ...patterns: Pattern[]) {
     super();
+    this.#head = head;
     this.#target = new Expect(...patterns);
     this.#value = value;
     this.#output = output;
@@ -53,17 +60,20 @@ export default class Prepend extends Pattern {
     const output = source.output;
     let current = output.node;
     output.node = void 0;
-    const status = this.#target.consume(source);
+    let status = this.#head.consume(source);
     if (status) {
-      const { table, value } = output;
-      const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-      const child = new Node(source.fragment, table, result);
-      child.setChild(this.#output, output.node);
-      if (current) {
-        const parent = child.getLowestChild(this.#current) ?? child;
-        parent.setChild(this.#current, current);
+      const fragment = source.fragment;
+      if ((status = this.#target.consume(source))) {
+        const { table, value } = output;
+        const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+        const child = new Node(fragment, table, result);
+        child.setChild(this.#output, output.node);
+        if (current) {
+          const parent = child.getLowestChild(this.#current) ?? child;
+          parent.setChild(this.#current, current);
+        }
+        current = child;
       }
-      current = child;
     }
     output.node = current;
     source.discardState();
