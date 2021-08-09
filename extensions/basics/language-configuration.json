@@ -1,0 +1,16 @@
+{
+  "comments": {
+    "lineComment": "//",
+    "blockComment": ["/*", "*/"]
+  },
+  "autoClosingPairs": [
+    ["'", "'"],
+    ["<", ">"],
+    ["(", ")"]
+  ],
+  "surroundingPairs": [
+    ["'", "'"],
+    ["<", ">"],
+    ["(", ")"]
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "name": "xcheme-basics",
+  "displayName": "XCHEME Basics",
+  "description": "Provides syntax highlighting, bracket matching and folding in XCHEME files.",
+  "publisher": "balmanth",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.59.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/balmanth/xcheme.git",
+    "directory": "extensions/basics"
+  },
+  "contributes": {
+    "languages": [
+      {
+        "id": "xcheme",
+        "aliases": [
+          "XCHEME",
+          "xcheme"
+        ],
+        "extensions": [
+          ".xcm"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "xcheme",
+        "scopeName": "source.xcheme",
+        "path": "./syntaxes/xcheme.tmLanguage.json"
+      }
+    ]
+  }
+}
