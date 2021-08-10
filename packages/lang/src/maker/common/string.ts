@@ -60,7 +60,7 @@ const addSlashes = (text: string): string => {
         return '\\r';
       case '\n':
         return '\\n';
-      case "\\'":
+      case "'":
         return "\\'";
     }
     return match;
