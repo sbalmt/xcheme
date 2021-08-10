@@ -28,11 +28,11 @@ const resolveToken = (project: Project, node: Core.Node, state: State, symbol: C
     return project.coder.getReference(project.tokenPointerEntries, name);
   }
   const token = project.tokenEntries.get(name);
-  if (!token) {
-    state.pointers.add(name);
-    return project.coder.getReference(project.tokenPointerEntries, name);
+  if (token) {
+    project.tokenPointerEntries.add(token.id, name, token.pattern, Entries.Types.Normal);
   }
-  return token.pattern;
+  state.pointers.add(name);
+  return project.coder.getReference(project.tokenPointerEntries, name);
 };
 
 /**

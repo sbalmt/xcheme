@@ -22,11 +22,11 @@ const resolveToken = (project, node, state, symbol) => {
         return project.coder.getReference(project.tokenPointerEntries, name);
     }
     const token = project.tokenEntries.get(name);
-    if (!token) {
-        state.pointers.add(name);
-        return project.coder.getReference(project.tokenPointerEntries, name);
+    if (token) {
+        project.tokenPointerEntries.add(token.id, name, token.pattern, 0 /* Normal */);
     }
-    return token.pattern;
+    state.pointers.add(name);
+    return project.coder.getReference(project.tokenPointerEntries, name);
 };
 /**
  * Resolve the corresponding reference for the specified symbol in a 'NODE' pattern context.

@@ -61,9 +61,13 @@ test("Output a 'TOKEN' rule with an alias token reference", () => {
   const project = Helper.makeParser(new TextCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
 
   // Check the output code.
+  const pointer = project.tokenPointerEntries.get('ALIAS')!;
+  expect(pointer).toBeDefined();
+  expect(pointer.pattern).toBe(`new Core.ExpectUnitPattern('@')`);
+
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.id}, new Core.ExpectUnitPattern('@'))`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.id}, ALIAS)`);
 });
 
 test("Parse a 'TOKEN' rule with a reference to itself", () => {
