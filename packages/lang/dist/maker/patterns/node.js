@@ -6,45 +6,47 @@ const Expression = require("./expression");
 /**
  * Emit a new node entry into the given project.
  * @param project Input project.
- * @param id Node Id.
+ * @param identity Node identity.
  * @param name Node name.
  * @param pattern Node pattern.
  * @param type Node type.
- * @param referenced Determines whether or not the node is referenced by another one.
+ * @param ref Determines whether or not the node is referenced by another one.
  */
-const emit = (project, id, name, pattern, type, referenced) => {
-    if (referenced) {
+const emit = (project, identity, name, pattern, type, ref) => {
+    if (ref) {
         const reference = project.coder.getReference(project.nodePointerEntries, name);
-        project.nodePointerEntries.add(id, name, pattern, 0 /* Normal */);
-        project.nodeEntries.add(id, name, reference, type);
+        project.nodePointerEntries.add(identity, name, pattern, 0 /* Normal */);
+        project.nodeEntries.add(identity, name, reference, type);
     }
     else {
-        project.nodeEntries.add(id, name, pattern, type);
+        project.nodeEntries.add(identity, name, pattern, type);
     }
 };
 /**
  * Consume the specified input node resolving its 'NODE' pattern.
  * @param project Input project.
  * @param node Input node.
+ * @param identity Pattern identity.
  * @param pointers Initial context pointers.
- * @param counters Initial context counters.
+ * @param counter Initial context counter.
  * @param alias Determines whether or not the node is an alias.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @returns Returns the consumption state.
  */
-const consume = (project, node, pointers, counters, alias) => {
-    const id = counters.node;
-    const entry = Expression.consume(project, node.right, { id, pointers, counters, type: 2 /* Node */ });
+const consume = (project, node, identity, pointers, counter, alias) => {
+    const state = { identity, pointers, counter, type: 2 /* Node */ };
+    const entry = Expression.consume(project, node.right, state);
     if (entry) {
         const name = node.fragment.data;
         const referenced = pointers.has(name);
         if (alias) {
-            emit(project, id, name, entry, 1 /* Alias */, referenced);
+            emit(project, identity, name, entry, 1 /* Alias */, referenced);
         }
         else {
-            const pattern = project.coder.getNode(id, 1 /* Right */, entry);
-            emit(project, id, name, pattern, 0 /* Normal */, referenced);
+            const pattern = project.coder.getNode(identity, 1 /* Right */, entry);
+            emit(project, identity, name, pattern, 0 /* Normal */, referenced);
         }
     }
+    return state;
 };
 exports.consume = consume;
 //# sourceMappingURL=node.js.map

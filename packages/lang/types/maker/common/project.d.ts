@@ -1,15 +1,14 @@
 import * as Core from '@xcheme/core';
 import * as Entries from './entries';
-import { Counters } from './context';
 import { Base } from '../coder/base';
 /**
  * Project options.
  */
 export declare type Options = {
     /**
-     * Initial counters.
+     * Initial identity number for tokens, nodes and symbols.
      */
-    counters?: Counters;
+    initialIdentity?: number;
 };
 /**
  * Store the project entries, errors and options during the making process.

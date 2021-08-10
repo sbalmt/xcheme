@@ -68,7 +68,15 @@ export const Program = new Core.ExpectFlowPattern(
               new Core.SetValueRoute(Tokens.And, '&'),
               new Core.SetValueRoute(Tokens.Semicolon, ';'),
               new Core.SetValueRoute(Tokens.OpenParentheses, '('),
-              new Core.SetValueRoute(Tokens.CloseParentheses, ')')
+              new Core.SetValueRoute(Tokens.CloseParentheses, ')'),
+              new Core.SetValueRoute(Tokens.OpenChevron, '<'),
+              new Core.SetValueRoute(Tokens.CloseChevron, '>')
+            ),
+            // Number
+            new Core.SetValuePattern(
+              Tokens.Number,
+              new Core.RangeUnitPattern('1', '9'),
+              new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))
             ),
             // String
             new Core.SetValuePattern(

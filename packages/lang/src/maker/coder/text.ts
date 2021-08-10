@@ -108,23 +108,23 @@ export class Text extends Base {
 
   /**
    * Get a new token pattern.
-   * @param value Token value.
+   * @param identity Token identity.
    * @param patterns Token patterns.
    * @returns Returns the pattern.
    */
-  getToken(value: string | number, ...patterns: string[]): string {
-    return this.#getPattern('EmitTokenPattern', value, ...patterns);
+  getToken(identity: string | number, ...patterns: string[]): string {
+    return this.#getPattern('EmitTokenPattern', identity, ...patterns);
   }
 
   /**
    * Get a new node pattern.
-   * @param value Node value.
+   * @param identity Node identity.
    * @param output Output node direction.
    * @param patterns Node patterns.
    * @returns Returns the pattern.
    */
-  getNode(value: string | number, output: Core.Nodes, ...patterns: string[]): string {
-    return this.#getPattern('EmitNodePattern', value, output, ...patterns);
+  getNode(identity: string | number, output: Core.Nodes, ...patterns: string[]): string {
+    return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
   }
 
   /**
@@ -203,13 +203,13 @@ export class Text extends Base {
 
   /**
    * Get a new pivot node pattern.
-   * @param value Node value.
+   * @param identity Node identity.
    * @param pivot Pivot pattern.
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getPivotNode(value: string | number, pivot: string, ...patterns: string[]): string {
-    return this.#getPattern('PivotNodePattern', value, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
+  getPivotNode(identity: string | number, pivot: string, ...patterns: string[]): string {
+    return this.#getPattern('PivotNodePattern', identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
   }
 
   /**
@@ -224,37 +224,37 @@ export class Text extends Base {
 
   /**
    * Get a new append node pattern.
-   * @param value Node value.
+   * @param identity Node identity.
    * @param current Current node destination.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  getAppendNode(value: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
-    return this.#getPattern('AppendNodePattern', value, Core.Nodes.Right, current, head, ...patterns);
+  getAppendNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
+    return this.#getPattern('AppendNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
   /**
    * Get a new prepend node pattern.
-   * @param value Node value.
+   * @param identity Node identity.
    * @param current Current node destination.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  getPrependNode(value: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
-    return this.#getPattern('PrependNodePattern', value, Core.Nodes.Right, current, head, ...patterns);
+  getPrependNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
+    return this.#getPattern('PrependNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
   /**
    * Get a new symbol pattern.
-   * @param value Symbol value.
+   * @param identity Symbol identity.
    * @param symbol Symbol pattern.
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getSymbol(value: string | number, symbol: string, ...patterns: string[]): string {
-    return this.#getPattern('EmitSymbolPattern', value, symbol, ...patterns);
+  getSymbol(identity: string | number, symbol: string, ...patterns: string[]): string {
+    return this.#getPattern('EmitSymbolPattern', identity, symbol, ...patterns);
   }
 
   /**

@@ -29,7 +29,7 @@ const resolveToken = (project: Project, node: Core.Node, state: State, symbol: C
   }
   const token = project.tokenEntries.get(name);
   if (token) {
-    project.tokenPointerEntries.add(token.id, name, token.pattern, Entries.Types.Normal);
+    project.tokenPointerEntries.add(token.identity, name, token.pattern, Entries.Types.Normal);
   }
   state.pointers.add(name);
   return project.coder.getReference(project.tokenPointerEntries, name);
@@ -52,7 +52,7 @@ const resolveNode = (project: Project, node: Core.Node, state: State, symbol: Co
     }
     const node = project.nodeEntries.get(name);
     if (node) {
-      project.nodePointerEntries.add(node.id, name, node.pattern, Entries.Types.Normal);
+      project.nodePointerEntries.add(node.identity, name, node.pattern, Entries.Types.Normal);
     }
     state.pointers.add(name);
     return project.coder.getReference(project.nodePointerEntries, name);
@@ -62,7 +62,7 @@ const resolveNode = (project: Project, node: Core.Node, state: State, symbol: Co
     project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
   } else {
     if (token.type !== Entries.Types.Alias) {
-      return project.coder.getAlphabet([token.id]);
+      return project.coder.getAlphabet([token.identity]);
     }
     project.errors.push(new Core.Error(node.fragment, Errors.INVALID_TOKEN_REFERENCE));
   }

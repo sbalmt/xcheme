@@ -18,7 +18,7 @@ import * as And from './and';
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   const patterns = And.resolve(project, node.right!, state);
   if (patterns) {
-    return project.coder.getSymbol(state.id, patterns[0], ...patterns.slice(1));
+    return project.coder.getSymbol(state.identity, patterns[0], ...patterns.slice(1));
   }
   return void 0;
 };

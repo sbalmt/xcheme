@@ -3,7 +3,6 @@ import * as Core from '@xcheme/core';
 import * as String from './string';
 import * as Entries from './entries';
 
-import { Counters } from './context';
 import { Base, PointerEntry, PatternEntry, RouteEntry } from '../coder/base';
 
 /**
@@ -11,9 +10,9 @@ import { Base, PointerEntry, PatternEntry, RouteEntry } from '../coder/base';
  */
 export type Options = {
   /**
-   * Initial counters.
+   * Initial identity number for tokens, nodes and symbols.
    */
-  counters?: Counters;
+  initialIdentity?: number;
 };
 
 /**
@@ -75,7 +74,7 @@ export class Project {
    * @returns Returns the array of routes.
    */
   #getRoutes(entries: Entries.Entry[]): RouteEntry[] {
-    return entries.map((entry) => this.#coder.getRoute(entry.id, String.extract(entry.name).split('')));
+    return entries.map((entry) => this.#coder.getRoute(entry.identity, String.extract(entry.name).split('')));
   }
 
   /**

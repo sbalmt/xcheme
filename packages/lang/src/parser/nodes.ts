@@ -3,6 +3,7 @@
  */
 export const enum Nodes {
   Identifier = 200,
+  Identity,
   Skip,
   Node,
   Token,

@@ -9,22 +9,22 @@ import { State, Types } from '../common/context';
 import type { PatternEntry } from '../coder/base';
 
 /**
- * Get the Id of the token that corresponds to the specified alphabet.
+ * Get the identity of the token that corresponds to the specified alphabet.
  * When there's no token matching the given alphabet, a new one will be created.
  * @param project Input project.
  * @param state Context state.
  * @param alphabet Alphabet value.
- * @returns Returns the corresponding token Id.
+ * @returns Returns the corresponding token identity.
  */
 const getTokenId = (project: Project, state: State, alphabet: string): string | number => {
   const token = project.tokenEntries.get(alphabet);
   if (!token) {
-    const id = state.counters.token++;
-    const pattern = project.coder.getAlphabet([id]);
-    project.tokenEntries.add(id, alphabet, pattern, Entries.Types.Loose);
-    return id;
+    const identity = state.counter++;
+    const pattern = project.coder.getAlphabet([identity]);
+    project.tokenEntries.add(identity, alphabet, pattern, Entries.Types.Loose);
+    return identity;
   }
-  return token.id;
+  return token.identity;
 };
 
 /**
@@ -33,7 +33,7 @@ const getTokenId = (project: Project, state: State, alphabet: string): string | 
  * @param project Input project.
  * @param state Context state.
  * @param value Alphabet value.
- * @returns Returns the alphabet resolution which is a token Id or an escaped string.
+ * @returns Returns the alphabet resolution which is a token identity or an escaped string.
  */
 export const resolve = (project: Project, state: State, value: string): (string | number)[] => {
   if (state.type === Types.Node) {

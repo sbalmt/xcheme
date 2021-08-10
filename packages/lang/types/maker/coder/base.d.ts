@@ -48,19 +48,19 @@ export declare class Base {
     getSkip(...patterns: RouteEntry[]): PatternEntry;
     /**
      * Should be implemented to return a token pattern.
-     * @param value Token value.
+     * @param identity Token identity.
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getToken(value: string | number, ...patterns: PatternEntry[]): PatternEntry;
+    getToken(identity: string | number, ...patterns: PatternEntry[]): PatternEntry;
     /**
      * Should be implemented to return a node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param output Output node direction.
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getNode(value: string | number, output: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry;
+    getNode(identity: string | number, output: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry;
     /**
      * Should be implemented to return a condition pattern.
      * @param test Test pattern.
@@ -120,30 +120,30 @@ export declare class Base {
     getPlaceNode(current: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry;
     /**
      * Should be implemented to return a pivot node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getPivotNode(value: string | number, pivot: PatternEntry, ...patterns: PatternEntry[]): PatternEntry;
+    getPivotNode(identity: string | number, pivot: PatternEntry, ...patterns: PatternEntry[]): PatternEntry;
     /**
      * Should be implemented to return an append node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getAppendNode(value: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry;
+    getAppendNode(identity: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry;
     /**
      * Should be implemented to return a prepend node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getPrependNode(value: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry;
+    getPrependNode(identity: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry;
     /**
      * Should be implemented to return a symbol pattern.
      * @param value Symbol value.

@@ -15,10 +15,10 @@ const consume = (project, node, state) => {
     const to = node.right.fragment.data;
     const pattern = project.coder.getRange(String.extract(from), String.extract(to));
     if (state.type === 2 /* Node */) {
-        const id = state.counters.token++;
-        const result = project.coder.getToken(id, pattern);
-        project.tokenEntries.add(id, `${from}-${to}`, result, 0 /* Normal */);
-        return project.coder.getAlphabet([id]);
+        const identity = state.counter++;
+        const result = project.coder.getToken(identity, pattern);
+        project.tokenEntries.add(identity, `${from}-${to}`, result, 0 /* Normal */);
+        return project.coder.getAlphabet([identity]);
     }
     return pattern;
 };

@@ -3,22 +3,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = exports.resolve = void 0;
 const String = require("../common/string");
 /**
- * Get the Id of the token that corresponds to the specified alphabet.
+ * Get the identity of the token that corresponds to the specified alphabet.
  * When there's no token matching the given alphabet, a new one will be created.
  * @param project Input project.
  * @param state Context state.
  * @param alphabet Alphabet value.
- * @returns Returns the corresponding token Id.
+ * @returns Returns the corresponding token identity.
  */
 const getTokenId = (project, state, alphabet) => {
     const token = project.tokenEntries.get(alphabet);
     if (!token) {
-        const id = state.counters.token++;
-        const pattern = project.coder.getAlphabet([id]);
-        project.tokenEntries.add(id, alphabet, pattern, 2 /* Loose */);
-        return id;
+        const identity = state.counter++;
+        const pattern = project.coder.getAlphabet([identity]);
+        project.tokenEntries.add(identity, alphabet, pattern, 2 /* Loose */);
+        return identity;
     }
-    return token.id;
+    return token.identity;
 };
 /**
  * Resolve the specified input node as an alphabet pattern.
@@ -26,7 +26,7 @@ const getTokenId = (project, state, alphabet) => {
  * @param project Input project.
  * @param state Context state.
  * @param value Alphabet value.
- * @returns Returns the alphabet resolution which is a token Id or an escaped string.
+ * @returns Returns the alphabet resolution which is a token identity or an escaped string.
  */
 const resolve = (project, state, value) => {
     if (state.type === 2 /* Node */) {

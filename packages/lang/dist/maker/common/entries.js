@@ -45,18 +45,18 @@ class Aggregator {
     }
     /**
      * Add a new pattern entry.
-     * @param id Entry Id.
+     * @param identity Entry identity.
      * @param name Entry name.
      * @param pattern Entry patterns.
      * @param type Entry type.
      * @throws Throws an error when the specified entry already exists.
      */
-    add(id, name, pattern, type) {
+    add(identity, name, pattern, type) {
         if (this.#map[name]) {
             throw `Pattern entry '${name}' already exists.`;
         }
         this.#map[name] = {
-            id,
+            identity,
             name,
             pattern,
             type

@@ -8,7 +8,7 @@ import type { PatternEntry } from '../coder/base';
  * @param project Input project.
  * @param state Context state.
  * @param value Alphabet value.
- * @returns Returns the alphabet resolution which is a token Id or an escaped string.
+ * @returns Returns the alphabet resolution which is a token identity or an escaped string.
  */
 export declare const resolve: (project: Project, state: State, value: string) => (string | number)[];
 /**

@@ -42,19 +42,19 @@ export declare class Text extends Base {
     getSkip(...patterns: string[]): string;
     /**
      * Get a new token pattern.
-     * @param value Token value.
+     * @param identity Token identity.
      * @param patterns Token patterns.
      * @returns Returns the pattern.
      */
-    getToken(value: string | number, ...patterns: string[]): string;
+    getToken(identity: string | number, ...patterns: string[]): string;
     /**
      * Get a new node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param output Output node direction.
      * @param patterns Node patterns.
      * @returns Returns the pattern.
      */
-    getNode(value: string | number, output: Core.Nodes, ...patterns: string[]): string;
+    getNode(identity: string | number, output: Core.Nodes, ...patterns: string[]): string;
     /**
      * Get a new condition pattern.
      * @param test Test pattern.
@@ -107,12 +107,12 @@ export declare class Text extends Base {
     getRepeat(...patterns: string[]): string;
     /**
      * Get a new pivot node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param pivot Pivot pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getPivotNode(value: string | number, pivot: string, ...patterns: string[]): string;
+    getPivotNode(identity: string | number, pivot: string, ...patterns: string[]): string;
     /**
      * Get a new place node pattern.
      * @param current Current node destination.
@@ -122,30 +122,30 @@ export declare class Text extends Base {
     getPlaceNode(current: Core.Nodes, ...patterns: string[]): string;
     /**
      * Get a new append node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(value: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
+    getAppendNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
     /**
      * Get a new prepend node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(value: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
+    getPrependNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
     /**
      * Get a new symbol pattern.
-     * @param value Symbol value.
+     * @param identity Symbol identity.
      * @param symbol Symbol pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSymbol(value: string | number, symbol: string, ...patterns: string[]): string;
+    getSymbol(identity: string | number, symbol: string, ...patterns: string[]): string;
     /**
      * Get a new scope symbol pattern.
      * @param patterns Expected patterns.

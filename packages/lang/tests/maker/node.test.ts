@@ -3,20 +3,20 @@ import * as Helper from './common/helper';
 
 import { Errors, LiveCoder, TextCoder } from '../../src/index';
 
-const checkTokens = (context: Core.Context, id: number): number => {
+const checkTokens = (context: Core.Context, identity: number): number => {
   let total = 0;
   for (const current of context.tokens) {
-    expect(current.value).toBe(id);
+    expect(current.value).toBe(identity);
     total++;
   }
   return total;
 };
 
-const checkNodes = (context: Core.Context, id: number): number => {
+const checkNodes = (context: Core.Context, identity: number): number => {
   let current = context.node;
   let total = 0;
   while ((current = current.next!)) {
-    expect(current.value).toBe(id);
+    expect(current.value).toBe(identity);
     total++;
   }
   return total;
@@ -43,14 +43,14 @@ test("Parse a 'NODE' rule with a loose token reference", () => {
 
   const token = project.tokenEntries.get("'@'")!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(checkNodes(context, node.id)).toBe(2);
+  expect(checkNodes(context, node.identity)).toBe(2);
 });
 
 test("Output a 'NODE' rule with a loose token reference", () => {
@@ -63,10 +63,10 @@ test("Output a 'NODE' rule with a loose token reference", () => {
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
   expect(node.pattern).toBe(
-    `new Core.EmitNodePattern(${node.id}, 1, ` +
+    `new Core.EmitNodePattern(${node.identity}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.ExpectUnitPattern(${token.id}), ` +
-      /******/ `new Core.OptionFlowPattern(new Core.ExpectUnitPattern(${token.id}))` +
+      /******/ `new Core.ExpectUnitPattern(${token.identity}), ` +
+      /******/ `new Core.OptionFlowPattern(new Core.ExpectUnitPattern(${token.identity}))` +
       /**/ `)` +
       `)`
   );
@@ -81,14 +81,14 @@ test("Parse a 'NODE' rule with a loose range rule", () => {
 
   const token = project.tokenEntries.get("'0'-'9'")!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(10);
+  expect(checkTokens(context, token.identity)).toBe(10);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(checkNodes(context, node.id)).toBe(10);
+  expect(checkNodes(context, node.identity)).toBe(10);
 });
 
 test("Output a 'NODE' rule with a loose range rule", () => {
@@ -100,7 +100,7 @@ test("Output a 'NODE' rule with a loose range rule", () => {
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, new Core.ExpectUnitPattern(${token.id}))`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, new Core.ExpectUnitPattern(${token.identity}))`);
 });
 
 test("Parse a 'NODE' rule with a token reference", () => {
@@ -112,14 +112,14 @@ test("Parse a 'NODE' rule with a token reference", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(checkNodes(context, node.id)).toBe(3);
+  expect(checkNodes(context, node.identity)).toBe(3);
 });
 
 test("Output a 'NODE' rule with a token reference", () => {
@@ -131,7 +131,7 @@ test("Output a 'NODE' rule with a token reference", () => {
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, new Core.ExpectUnitPattern(${token.id}))`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, new Core.ExpectUnitPattern(${token.identity}))`);
 });
 
 test("Parse a 'NODE' rule with an alias node reference", () => {
@@ -143,14 +143,14 @@ test("Parse a 'NODE' rule with an alias node reference", () => {
 
   const token = project.tokenEntries.get("'@'")!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(checkNodes(context, node.id)).toBe(3);
+  expect(checkNodes(context, node.identity)).toBe(3);
 });
 
 test("Output a 'NODE' rule with an alias node reference", () => {
@@ -160,7 +160,7 @@ test("Output a 'NODE' rule with an alias node reference", () => {
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
 
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, ALIAS)`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, ALIAS)`);
 });
 
 test("Parse a 'NODE' rule with a reference to itself", () => {
@@ -172,14 +172,14 @@ test("Parse a 'NODE' rule with a reference to itself", () => {
 
   const token = project.tokenEntries.get("'@'")!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(checkNodes(context, node.id)).toBe(3);
+  expect(checkNodes(context, node.identity)).toBe(3);
 });
 
 test("Output a 'NODE' rule with a reference to itself", () => {
@@ -192,9 +192,9 @@ test("Output a 'NODE' rule with a reference to itself", () => {
   const pointer = project.nodePointerEntries.get('NODE')!;
   expect(pointer).toBeDefined();
   expect(pointer.pattern).toBe(
-    `new Core.EmitNodePattern(${pointer.id}, 1, ` +
+    `new Core.EmitNodePattern(${pointer.identity}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.ExpectUnitPattern(${token.id}), ` +
+      /******/ `new Core.ExpectUnitPattern(${token.identity}), ` +
       /******/ `new Core.OptionFlowPattern(new Core.RunFlowPattern(() => NODE))` +
       /**/ `)` +
       `)`
@@ -214,14 +214,14 @@ test("Parse a 'NODE' rule with an alias node that has a reference to itself", ()
 
   const token = project.tokenEntries.get("'@'")!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(checkNodes(context, node.id)).toBe(1);
+  expect(checkNodes(context, node.identity)).toBe(1);
 });
 
 test("Output a 'NODE' rule with an alias node that has a reference to itself", () => {
@@ -235,7 +235,7 @@ test("Output a 'NODE' rule with an alias node that has a reference to itself", (
   expect(pointer).toBeDefined();
   expect(pointer.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
-      /**/ `new Core.ExpectUnitPattern(${token.id}), ` +
+      /**/ `new Core.ExpectUnitPattern(${token.identity}), ` +
       /******/ `new Core.OptionFlowPattern(new Core.RunFlowPattern(() => ALIAS)` +
       /**/ `)` +
       `)`
@@ -243,5 +243,5 @@ test("Output a 'NODE' rule with an alias node that has a reference to itself", (
 
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.id}, 1, ALIAS)`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, ALIAS)`);
 });

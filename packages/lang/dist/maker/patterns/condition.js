@@ -16,7 +16,7 @@ const consume = (project, node, state) => {
     if (test) {
         const content = node.right;
         let success, failure;
-        if (content.value === 207 /* Else */) {
+        if (content.value === 208 /* Else */) {
             success = Expression.consume(project, content.left, state);
             failure = Expression.consume(project, content.right, state);
         }

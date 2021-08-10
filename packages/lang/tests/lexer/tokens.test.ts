@@ -7,6 +7,8 @@ const tokens = [
   ...[
     // Identifier
     { name: 'NAME', value: Lexer.Tokens.Identifier },
+    // Number
+    { name: "1234567890", value: Lexer.Tokens.Number },
     // Alphabet
     { name: "'text'", value: Lexer.Tokens.Alphabet },
     // Any unit
@@ -54,7 +56,9 @@ const tokens = [
   ...[
     { name: ';', value: Lexer.Tokens.Semicolon },
     { name: '(', value: Lexer.Tokens.OpenParentheses },
-    { name: ')', value: Lexer.Tokens.CloseParentheses }
+    { name: ')', value: Lexer.Tokens.CloseParentheses },
+    { name: '<', value: Lexer.Tokens.OpenChevron },
+    { name: '>', value: Lexer.Tokens.CloseChevron }
   ]
 ];
 
@@ -77,9 +81,9 @@ test('Consume expected tokens', () => {
   }
 });
 
-test('Consume unexpected token (random numbers)', () => {
+test('Consume unexpected token', () => {
   const context = new Core.Context('test');
-  const text = 'any 12345 any';
+  const text = 'any @ any';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeFalsy();
@@ -96,7 +100,7 @@ test('Consume unexpected token (random numbers)', () => {
 
   const fragment = error.fragment;
   expect(fragment).toBeDefined();
-  expect(fragment.data).toBe('1');
+  expect(fragment.data).toBe('@');
   expect(fragment.begin).toBe(4);
   expect(fragment.end).toBe(5);
   expect(fragment.location.column).toBe(4);

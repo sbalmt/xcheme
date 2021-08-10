@@ -53,7 +53,7 @@ class Project {
      * @returns Returns the array of routes.
      */
     #getRoutes(entries) {
-        return entries.map((entry) => this.#coder.getRoute(entry.id, String.extract(entry.name).split('')));
+        return entries.map((entry) => this.#coder.getRoute(entry.identity, String.extract(entry.name).split('')));
     }
     /**
      * Get an array of pointers entry from the patterns of the specified pointers entry aggregator.

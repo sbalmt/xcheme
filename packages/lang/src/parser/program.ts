@@ -7,9 +7,6 @@ import UnaryExpression from './patterns/unary';
 import { Symbols } from './symbols';
 import { Nodes } from './nodes';
 
-/**
- * Main parser program.
- */
 const expression: Core.Pattern = new Core.ExpectFlowPattern(
   // Or expressions
   new BinaryExpression(
@@ -108,34 +105,50 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
   )
 );
 
-const tokenStatement = new Core.ExpectFlowPattern(
+const identity = new Core.ExpectFlowPattern(
+  new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
+  new Core.AppendNodePattern(
+    Nodes.Identity,
+    Core.Nodes.Left,
+    Core.Nodes.Right,
+    new Core.ExpectUnitPattern(Lexer.Tokens.Number),
+    new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
+  )
+);
+
+const token = new Core.ExpectFlowPattern(
+  new Core.OptionFlowPattern(identity),
   new Core.EmitSymbolPattern(
     Symbols.Token,
-    new Core.AppendNodePattern(
+    new Core.PivotNodePattern(
       Nodes.Identifier,
       Core.Nodes.Right,
-      Core.Nodes.Right,
+      Core.Nodes.Left,
       new Core.ExpectUnitPattern(Lexer.Tokens.Identifier)
-    )
-  ),
-  new Core.ExpectUnitPattern(Lexer.Tokens.As),
-  new Core.PlaceNodePattern(Core.Nodes.Right, expression)
+    ),
+    new Core.ExpectUnitPattern(Lexer.Tokens.As),
+    new Core.PlaceNodePattern(Core.Nodes.Right, expression)
+  )
 );
 
-const nodeStatement = new Core.ExpectFlowPattern(
+const node = new Core.ExpectFlowPattern(
+  new Core.OptionFlowPattern(identity),
   new Core.EmitSymbolPattern(
     Symbols.Node,
-    new Core.AppendNodePattern(
+    new Core.PivotNodePattern(
       Nodes.Identifier,
       Core.Nodes.Right,
-      Core.Nodes.Right,
+      Core.Nodes.Left,
       new Core.ExpectUnitPattern(Lexer.Tokens.Identifier)
-    )
-  ),
-  new Core.ExpectUnitPattern(Lexer.Tokens.As),
-  new Core.PlaceNodePattern(Core.Nodes.Right, expression)
+    ),
+    new Core.ExpectUnitPattern(Lexer.Tokens.As),
+    new Core.PlaceNodePattern(Core.Nodes.Right, expression)
+  )
 );
 
+/**
+ * Main parser program.
+ */
 export const Program = new Core.ExpectFlowPattern(
   new Core.OptionFlowPattern(
     new Core.RepeatFlowPattern(
@@ -145,15 +158,10 @@ export const Program = new Core.ExpectFlowPattern(
           Core.Nodes.Right,
           new Core.MapFlowPattern(
             new Core.SetValueRoute(Nodes.Skip, expression, Lexer.Tokens.Skip),
-            new Core.SetValueRoute(Nodes.Token, tokenStatement, Lexer.Tokens.Token),
-            new Core.SetValueRoute(Nodes.Node, nodeStatement, Lexer.Tokens.Node),
-            new Core.Route(
-              new Core.MapFlowPattern(
-                new Core.SetValueRoute(Nodes.AliasToken, tokenStatement, Lexer.Tokens.Token),
-                new Core.SetValueRoute(Nodes.AliasNode, nodeStatement, Lexer.Tokens.Node)
-              ),
-              Lexer.Tokens.Alias
-            )
+            new Core.SetValueRoute(Nodes.Token, token, Lexer.Tokens.Token),
+            new Core.SetValueRoute(Nodes.Node, node, Lexer.Tokens.Node),
+            new Core.SetValueRoute(Nodes.AliasToken, token, Lexer.Tokens.Alias, Lexer.Tokens.Token),
+            new Core.SetValueRoute(Nodes.AliasNode, node, Lexer.Tokens.Alias, Lexer.Tokens.Node)
           )
         ),
         new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)

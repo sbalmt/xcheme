@@ -74,22 +74,22 @@ class Text extends base_1.Base {
     }
     /**
      * Get a new token pattern.
-     * @param value Token value.
+     * @param identity Token identity.
      * @param patterns Token patterns.
      * @returns Returns the pattern.
      */
-    getToken(value, ...patterns) {
-        return this.#getPattern('EmitTokenPattern', value, ...patterns);
+    getToken(identity, ...patterns) {
+        return this.#getPattern('EmitTokenPattern', identity, ...patterns);
     }
     /**
      * Get a new node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param output Output node direction.
      * @param patterns Node patterns.
      * @returns Returns the pattern.
      */
-    getNode(value, output, ...patterns) {
-        return this.#getPattern('EmitNodePattern', value, output, ...patterns);
+    getNode(identity, output, ...patterns) {
+        return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
     }
     /**
      * Get a new condition pattern.
@@ -159,13 +159,13 @@ class Text extends base_1.Base {
     }
     /**
      * Get a new pivot node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param pivot Pivot pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getPivotNode(value, pivot, ...patterns) {
-        return this.#getPattern('PivotNodePattern', value, 1 /* Right */, 0 /* Left */, pivot, ...patterns);
+    getPivotNode(identity, pivot, ...patterns) {
+        return this.#getPattern('PivotNodePattern', identity, 1 /* Right */, 0 /* Left */, pivot, ...patterns);
     }
     /**
      * Get a new place node pattern.
@@ -178,35 +178,35 @@ class Text extends base_1.Base {
     }
     /**
      * Get a new append node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(value, current, head, ...patterns) {
-        return this.#getPattern('AppendNodePattern', value, 1 /* Right */, current, head, ...patterns);
+    getAppendNode(identity, current, head, ...patterns) {
+        return this.#getPattern('AppendNodePattern', identity, 1 /* Right */, current, head, ...patterns);
     }
     /**
      * Get a new prepend node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(value, current, head, ...patterns) {
-        return this.#getPattern('PrependNodePattern', value, 1 /* Right */, current, head, ...patterns);
+    getPrependNode(identity, current, head, ...patterns) {
+        return this.#getPattern('PrependNodePattern', identity, 1 /* Right */, current, head, ...patterns);
     }
     /**
      * Get a new symbol pattern.
-     * @param value Symbol value.
+     * @param identity Symbol identity.
      * @param symbol Symbol pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSymbol(value, symbol, ...patterns) {
-        return this.#getPattern('EmitSymbolPattern', value, symbol, ...patterns);
+    getSymbol(identity, symbol, ...patterns) {
+        return this.#getPattern('EmitSymbolPattern', identity, symbol, ...patterns);
     }
     /**
      * Get a new scope symbol pattern.

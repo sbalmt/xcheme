@@ -3,10 +3,10 @@ import * as Helper from './common/helper';
 
 import { Errors, LiveCoder, TextCoder } from '../../src/index';
 
-const checkTokens = (context: Core.Context, id: number): number => {
+const checkTokens = (context: Core.Context, identity: number): number => {
   let total = 0;
   for (const current of context.tokens) {
-    expect(current.value).toBe(id);
+    expect(current.value).toBe(identity);
     total++;
   }
   return total;
@@ -33,7 +33,7 @@ test("Parse a 'TOKEN' rule", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 });
 
 test("Output a 'TOKEN' rule", () => {
@@ -42,7 +42,7 @@ test("Output a 'TOKEN' rule", () => {
   // Check the output code.
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.id}, new Core.ExpectUnitPattern('@'))`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, new Core.ExpectUnitPattern('@'))`);
 });
 
 test("Parse a 'TOKEN' rule with an alias token reference", () => {
@@ -54,7 +54,7 @@ test("Parse a 'TOKEN' rule with an alias token reference", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 });
 
 test("Output a 'TOKEN' rule with an alias token reference", () => {
@@ -67,7 +67,7 @@ test("Output a 'TOKEN' rule with an alias token reference", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.id}, ALIAS)`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
 });
 
 test("Parse a 'TOKEN' rule with a reference to itself", () => {
@@ -79,7 +79,7 @@ test("Parse a 'TOKEN' rule with a reference to itself", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(3);
+  expect(checkTokens(context, token.identity)).toBe(3);
 });
 
 test("Output a 'TOKEN' rule with a reference to itself", () => {
@@ -89,7 +89,7 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
   const pointer = project.tokenPointerEntries.get('TOKEN')!;
   expect(pointer).toBeDefined();
   expect(pointer.pattern).toBe(
-    `new Core.EmitTokenPattern(${pointer.id}, ` +
+    `new Core.EmitTokenPattern(${pointer.identity}, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern('@'), ` +
       /******/ `new Core.OptionFlowPattern(` +
@@ -113,7 +113,7 @@ test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", 
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.id)).toBe(1);
+  expect(checkTokens(context, token.identity)).toBe(1);
 });
 
 test("Output a 'TOKEN' rule with an alias token that has a reference to itself", () => {
@@ -133,5 +133,5 @@ test("Output a 'TOKEN' rule with an alias token that has a reference to itself",
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.id}, ALIAS)`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
 });

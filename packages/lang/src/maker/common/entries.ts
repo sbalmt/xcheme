@@ -26,9 +26,9 @@ export const enum Types {
  */
 export type Entry = {
   /**
-   * Entry Id.
+   * Entry identity.
    */
-  id: number;
+  identity: number;
   /**
    * Entry type.
    */
@@ -93,18 +93,18 @@ export class Aggregator {
 
   /**
    * Add a new pattern entry.
-   * @param id Entry Id.
+   * @param identity Entry identity.
    * @param name Entry name.
    * @param pattern Entry patterns.
    * @param type Entry type.
    * @throws Throws an error when the specified entry already exists.
    */
-  add(id: number, name: string, pattern: Pattern, type: Types): void {
+  add(identity: number, name: string, pattern: Pattern, type: Types): void {
     if (this.#map[name]) {
       throw `Pattern entry '${name}' already exists.`;
     }
     this.#map[name] = {
-      id,
+      identity,
       name,
       pattern,
       type

@@ -3,19 +3,6 @@
  */
 export declare type Pointers = Set<string>;
 /**
- * Context Id counters.
- */
-export declare type Counters = {
-    /**
-     * Token entries counter.
-     */
-    token: number;
-    /**
-     * Node entries counter.
-     */
-    node: number;
-};
-/**
  * Context types.
  */
 export declare const enum Types {
@@ -28,17 +15,17 @@ export declare const enum Types {
  */
 export declare type State = {
     /**
-     * Current Id.
+     * Current identity.
      */
-    id: number;
+    identity: number;
     /**
      * Context pointers.
      */
     pointers: Pointers;
     /**
-     * Context Id counters.
+     * Current counter.
      */
-    counters: Counters;
+    counter: number;
     /**
      * Context type.
      */

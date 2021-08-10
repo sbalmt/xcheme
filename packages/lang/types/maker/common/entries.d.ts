@@ -16,9 +16,9 @@ export declare const enum Types {
  */
 export declare type Entry = {
     /**
-     * Entry Id.
+     * Entry identity.
      */
-    id: number;
+    identity: number;
     /**
      * Entry type.
      */
@@ -63,12 +63,12 @@ export declare class Aggregator {
     get(name: string): Entry | undefined;
     /**
      * Add a new pattern entry.
-     * @param id Entry Id.
+     * @param identity Entry identity.
      * @param name Entry name.
      * @param pattern Entry patterns.
      * @param type Entry type.
      * @throws Throws an error when the specified entry already exists.
      */
-    add(id: number, name: string, pattern: Pattern, type: Types): void;
+    add(identity: number, name: string, pattern: Pattern, type: Types): void;
 }
 export {};

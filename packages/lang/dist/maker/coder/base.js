@@ -34,21 +34,21 @@ class Base {
     }
     /**
      * Should be implemented to return a token pattern.
-     * @param value Token value.
+     * @param identity Token identity.
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getToken(value, ...patterns) {
+    getToken(identity, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
      * Should be implemented to return a node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param output Output node direction.
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getNode(value, output, ...patterns) {
+    getNode(identity, output, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -128,34 +128,34 @@ class Base {
     }
     /**
      * Should be implemented to return a pivot node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getPivotNode(value, pivot, ...patterns) {
+    getPivotNode(identity, pivot, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
      * Should be implemented to return an append node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getAppendNode(value, current, head, ...patterns) {
+    getAppendNode(identity, current, head, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
      * Should be implemented to return a prepend node pattern.
-     * @param value Node value.
+     * @param identity Node identity.
      * @param current Current node destination.
      * @param head Head pattern.
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getPrependNode(value, current, head, ...patterns) {
+    getPrependNode(identity, current, head, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**

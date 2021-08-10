@@ -3,6 +3,7 @@
  */
 export const enum Tokens {
   Identifier = 100,
+  Number,
   Alphabet,
   Any,
   From,
@@ -30,5 +31,7 @@ export const enum Tokens {
   As,
   Semicolon,
   OpenParentheses,
-  CloseParentheses
+  CloseParentheses,
+  OpenChevron,
+  CloseChevron
 }

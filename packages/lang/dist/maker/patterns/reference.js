@@ -23,7 +23,7 @@ const resolveToken = (project, node, state, symbol) => {
     }
     const token = project.tokenEntries.get(name);
     if (token) {
-        project.tokenPointerEntries.add(token.id, name, token.pattern, 0 /* Normal */);
+        project.tokenPointerEntries.add(token.identity, name, token.pattern, 0 /* Normal */);
     }
     state.pointers.add(name);
     return project.coder.getReference(project.tokenPointerEntries, name);
@@ -45,7 +45,7 @@ const resolveNode = (project, node, state, symbol) => {
         }
         const node = project.nodeEntries.get(name);
         if (node) {
-            project.nodePointerEntries.add(node.id, name, node.pattern, 0 /* Normal */);
+            project.nodePointerEntries.add(node.identity, name, node.pattern, 0 /* Normal */);
         }
         state.pointers.add(name);
         return project.coder.getReference(project.nodePointerEntries, name);
@@ -56,7 +56,7 @@ const resolveNode = (project, node, state, symbol) => {
     }
     else {
         if (token.type !== 1 /* Alias */) {
-            return project.coder.getAlphabet([token.id]);
+            return project.coder.getAlphabet([token.identity]);
         }
         project.errors.push(new Core.Error(node.fragment, 4101 /* INVALID_TOKEN_REFERENCE */));
     }

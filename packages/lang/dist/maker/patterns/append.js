@@ -14,7 +14,7 @@ const And = require("./and");
 const consume = (project, node, state, direction) => {
     const patterns = And.resolve(project, node.right, state);
     if (patterns) {
-        return project.coder.getAppendNode(state.id, direction, patterns[0], ...patterns.slice(1));
+        return project.coder.getAppendNode(state.identity, direction, patterns[0], ...patterns.slice(1));
     }
     return void 0;
 };

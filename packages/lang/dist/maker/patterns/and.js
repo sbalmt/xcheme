@@ -15,8 +15,8 @@ const Expression = require("./expression");
  * @returns Returns true when the merge consumption was successful, false otherwise.
  */
 const merge = (project, node, state, alphabet, patterns) => {
-    if (node.value === 209 /* And */) {
-        if (node.right.value === 225 /* Alphabet */) {
+    if (node.value === 210 /* And */) {
+        if (node.right.value === 232 /* Alphabet */) {
             alphabet.push(Alphabet.resolve(project, state, node.right.fragment.data));
             return merge(project, node.left, state, alphabet, patterns);
         }
@@ -28,7 +28,7 @@ const merge = (project, node, state, alphabet, patterns) => {
         patterns.push(...lhs, ...rhs);
     }
     else {
-        if (node.value === 225 /* Alphabet */) {
+        if (node.value === 232 /* Alphabet */) {
             alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
             return true;
         }
