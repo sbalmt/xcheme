@@ -32,6 +32,10 @@ export { default as MapFlowPattern } from './rules/flow/map';
 export { default as SetValueRoute } from './rules/value/route';
 export { default as SetValuePattern } from './rules/value/set';
 
+export { default as SetStateRoute } from './rules/state/route';
+export { default as HasStatePattern } from './rules/state/has';
+export { default as SetStatePattern } from './rules/state/set';
+
 export { default as EmitErrorRoute } from './rules/error/route';
 export { default as EmitErrorPattern } from './rules/error/emit';
 

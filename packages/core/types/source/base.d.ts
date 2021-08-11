@@ -10,6 +10,10 @@ import Table from '../core/table';
  */
 declare type Output = {
     /**
+     * Output state.
+     */
+    state: number;
+    /**
      * Output table.
      */
     table: Table;

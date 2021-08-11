@@ -12,6 +12,11 @@ import Table from '../core/table';
  */
 type Output = {
   /**
+   * Output state.
+   */
+  state: number;
+
+  /**
    * Output table.
    */
   table: Table;
@@ -61,6 +66,7 @@ export default class Base {
     this.#context = context;
     this.#table = context.table;
     this.#output = {
+      state: 0,
       table: this.#table
     };
   }
