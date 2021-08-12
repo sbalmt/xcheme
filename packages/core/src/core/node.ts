@@ -65,7 +65,7 @@ export default class Node {
   /**
    * Get the symbol table associated to this node.
    */
-  get table(): Table | undefined {
+  get table(): Table {
     return this.#table;
   }
 
