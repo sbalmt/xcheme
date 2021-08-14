@@ -56,21 +56,21 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
             Core.Nodes.Right,
             new Core.ExpectUnitPattern(Lexer.Tokens.From),
             new Core.AppendNodePattern(
-              Core.BaseSource.Output,
+              Nodes.Alphabet,
               Core.Nodes.Right,
               Core.Nodes.Right,
-              new Core.SetValuePattern(Nodes.Alphabet, new Core.ExpectUnitPattern(Lexer.Tokens.Alphabet))
+              new Core.ExpectUnitPattern(Lexer.Tokens.Alphabet)
             ),
             new Core.PivotNodePattern(
               Nodes.Range,
               Core.Nodes.Right,
               Core.Nodes.Left,
-              new Core.SetValuePattern(Nodes.Range, new Core.ExpectUnitPattern(Lexer.Tokens.To)),
+              new Core.ExpectUnitPattern(Lexer.Tokens.To),
               new Core.AppendNodePattern(
-                Core.BaseSource.Output,
+                Nodes.Alphabet,
                 Core.Nodes.Right,
                 Core.Nodes.Right,
-                new Core.SetValuePattern(Nodes.Alphabet, new Core.ExpectUnitPattern(Lexer.Tokens.Alphabet))
+                new Core.ExpectUnitPattern(Lexer.Tokens.Alphabet)
               )
             )
           ),
