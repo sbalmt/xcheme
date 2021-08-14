@@ -51,26 +51,26 @@ const consume = (project, node, state) => {
             return Option.consume(project, node, state);
         case 212 /* Rep */:
             return Repeat.consume(project, node, state);
-        case 213 /* Place */:
-        case 216 /* PlaceRight */:
+        case 216 /* Place */:
+        case 215 /* PlaceRight */:
             return Place.consume(project, node, state, 1 /* Right */);
-        case 214 /* PlaceNext */:
+        case 213 /* PlaceNext */:
             return Place.consume(project, node, state, 2 /* Next */);
-        case 215 /* PlaceLeft */:
+        case 214 /* PlaceLeft */:
             return Place.consume(project, node, state, 0 /* Left */);
-        case 217 /* Append */:
-        case 220 /* AppendRight */:
+        case 220 /* Append */:
+        case 219 /* AppendRight */:
             return Append.consume(project, node, state, 1 /* Right */);
-        case 218 /* AppendNext */:
+        case 217 /* AppendNext */:
             return Append.consume(project, node, state, 2 /* Next */);
-        case 219 /* AppendLeft */:
+        case 218 /* AppendLeft */:
             return Append.consume(project, node, state, 0 /* Left */);
-        case 221 /* Prepend */:
-        case 224 /* PrependRight */:
+        case 224 /* Prepend */:
+        case 223 /* PrependRight */:
             return Prepend.consume(project, node, state, 1 /* Right */);
-        case 222 /* PrependNext */:
+        case 221 /* PrependNext */:
             return Prepend.consume(project, node, state, 2 /* Next */);
-        case 223 /* PrependLeft */:
+        case 222 /* PrependLeft */:
             return Prepend.consume(project, node, state, 0 /* Left */);
         case 225 /* Pivot */:
             return Pivot.consume(project, node, state);
