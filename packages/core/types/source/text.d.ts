@@ -2,6 +2,23 @@ import type Context from '../core/context';
 import Fragment from '../core/fragment';
 import Base from './base';
 /**
+ * Internal source state.
+ */
+declare type State = {
+    /**
+     * Line state.
+     */
+    line: number;
+    /**
+     * Column state.
+     */
+    column: number;
+    /**
+     * Offset state.
+     */
+    offset: number;
+};
+/**
  * Data source for processing texts during the analysis process.
  */
 export default class Text extends Base {
@@ -31,6 +48,14 @@ export default class Text extends Base {
      */
     get fragment(): Fragment;
     /**
+     * Get the current state.
+     */
+    get currentState(): State;
+    /**
+     * Get the longest state.
+     */
+    get longestState(): State;
+    /**
      * Save the current source state.
      */
     saveState(): void;
@@ -48,3 +73,4 @@ export default class Text extends Base {
      */
     move(): void;
 }
+export {};

@@ -17,7 +17,11 @@ class TokenSource extends base_1.default {
     /**
      * Current source state.
      */
-    #state = { offset: 0 };
+    #current = { offset: 0 };
+    /**
+     * Longest source state.
+     */
+    #longest = { ...this.#current };
     /**
      * Default constructor.
      * @param data Source data.
@@ -31,7 +35,7 @@ class TokenSource extends base_1.default {
      * Get the current source offset.
      */
     get offset() {
-        return this.#state.offset;
+        return this.#current.offset;
     }
     /**
      * Get the current source length.
@@ -66,17 +70,29 @@ class TokenSource extends base_1.default {
         return this.#data[offset].fragment;
     }
     /**
+     * Get the current state.
+     */
+    get currentState() {
+        return this.#current;
+    }
+    /**
+     * Get the longest state.
+     */
+    get longestState() {
+        return this.#longest;
+    }
+    /**
      * Save the current source state.
      */
     saveState() {
-        this.#states.push({ ...this.#state });
+        this.#states.push({ ...this.#current });
     }
     /**
      * Restore the previous source state.
      * @throws Throws an error when there's no state to restore.
      */
     restoreState() {
-        if ((this.#state = this.#states[this.#states.length - 1]) === void 0) {
+        if ((this.#current = this.#states[this.#states.length - 1]) === void 0) {
             throw "There's no state to restore.";
         }
     }
@@ -90,7 +106,10 @@ class TokenSource extends base_1.default {
      * Move to the next source state.
      */
     move() {
-        this.#state.offset++;
+        this.#current.offset++;
+        if (this.#current.offset > this.#longest.offset) {
+            this.#longest = { ...this.#current };
+        }
     }
 }
 exports.default = TokenSource;

@@ -18,7 +18,11 @@ class Text extends base_1.default {
     /**
      * Current source state.
      */
-    #state = { line: 0, column: 0, offset: 0 };
+    #current = { line: 0, column: 0, offset: 0 };
+    /**
+     * Longest source state.
+     */
+    #longest = { ...this.#current };
     /**
      * Default constructor.
      * @param data Source data.
@@ -32,7 +36,7 @@ class Text extends base_1.default {
      * Get the current source offset.
      */
     get offset() {
-        return this.#state.offset;
+        return this.#current.offset;
     }
     /**
      * Get the available source length.
@@ -64,21 +68,33 @@ class Text extends base_1.default {
             }
         }
         const length = this.offset + (this.length > 0 ? 1 : 0);
-        const location = new location_1.default(this.#state.line, this.#state.column);
+        const location = new location_1.default(this.#current.line, this.#current.column);
         return new fragment_1.default(this.#data, this.offset, length, location);
+    }
+    /**
+     * Get the current state.
+     */
+    get currentState() {
+        return this.#current;
+    }
+    /**
+     * Get the longest state.
+     */
+    get longestState() {
+        return this.#longest;
     }
     /**
      * Save the current source state.
      */
     saveState() {
-        this.#states.push({ ...this.#state });
+        this.#states.push({ ...this.#current });
     }
     /**
      * Restore the previous source state.
      * @throws Throws an error when there's no state to restore.
      */
     restoreState() {
-        if ((this.#state = this.#states[this.#states.length - 1]) === void 0) {
+        if ((this.#current = this.#states[this.#states.length - 1]) === void 0) {
             throw "There's no state to restore.";
         }
     }
@@ -93,13 +109,16 @@ class Text extends base_1.default {
      */
     move() {
         if (this.value !== '\n') {
-            this.#state.column++;
+            this.#current.column++;
         }
         else {
-            this.#state.column = 0;
-            this.#state.line++;
+            this.#current.column = 0;
+            this.#current.line++;
         }
-        this.#state.offset++;
+        this.#current.offset++;
+        if (this.#current.offset > this.#longest.offset) {
+            this.#longest = { ...this.#current };
+        }
     }
 }
 exports.default = Text;

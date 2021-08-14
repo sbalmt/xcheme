@@ -3,6 +3,15 @@ import Token from '../core/token';
 import Fragment from '../core/fragment';
 import Base from './base';
 /**
+ * Internal source state.
+ */
+declare type State = {
+    /**
+     * Offset state.
+     */
+    offset: number;
+};
+/**
  * Data source for processing tokens during the analysis.
  */
 export default class TokenSource extends Base {
@@ -31,6 +40,14 @@ export default class TokenSource extends Base {
      */
     get fragment(): Fragment;
     /**
+     * Get the current state.
+     */
+    get currentState(): State;
+    /**
+     * Get the longest state.
+     */
+    get longestState(): State;
+    /**
      * Save the current source state.
      */
     saveState(): void;
@@ -48,3 +65,4 @@ export default class TokenSource extends Base {
      */
     move(): void;
 }
+export {};

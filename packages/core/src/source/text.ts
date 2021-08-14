@@ -41,7 +41,12 @@ export default class Text extends Base {
   /**
    * Current source state.
    */
-  #state: State = { line: 0, column: 0, offset: 0 };
+  #current: State = { line: 0, column: 0, offset: 0 };
+
+  /**
+   * Longest source state.
+   */
+  #longest: State = { ...this.#current };
 
   /**
    * Default constructor.
@@ -57,7 +62,7 @@ export default class Text extends Base {
    * Get the current source offset.
    */
   get offset(): number {
-    return this.#state.offset;
+    return this.#current.offset;
   }
 
   /**
@@ -92,15 +97,29 @@ export default class Text extends Base {
       }
     }
     const length = this.offset + (this.length > 0 ? 1 : 0);
-    const location = new Location(this.#state.line, this.#state.column);
+    const location = new Location(this.#current.line, this.#current.column);
     return new Fragment(this.#data, this.offset, length, location);
+  }
+
+  /**
+   * Get the current state.
+   */
+  get currentState(): State {
+    return this.#current;
+  }
+
+  /**
+   * Get the longest state.
+   */
+  get longestState(): State {
+    return this.#longest;
   }
 
   /**
    * Save the current source state.
    */
   saveState(): void {
-    this.#states.push({ ...this.#state });
+    this.#states.push({ ...this.#current });
   }
 
   /**
@@ -108,7 +127,7 @@ export default class Text extends Base {
    * @throws Throws an error when there's no state to restore.
    */
   restoreState(): void {
-    if ((this.#state = this.#states[this.#states.length - 1]) === void 0) {
+    if ((this.#current = this.#states[this.#states.length - 1]) === void 0) {
       throw "There's no state to restore.";
     }
   }
@@ -125,11 +144,14 @@ export default class Text extends Base {
    */
   move(): void {
     if (this.value !== '\n') {
-      this.#state.column++;
+      this.#current.column++;
     } else {
-      this.#state.column = 0;
-      this.#state.line++;
+      this.#current.column = 0;
+      this.#current.line++;
     }
-    this.#state.offset++;
+    this.#current.offset++;
+    if (this.#current.offset > this.#longest.offset) {
+      this.#longest = { ...this.#current };
+    }
   }
 }
