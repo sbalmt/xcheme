@@ -18,8 +18,11 @@ const merge = (project, node, state, alphabet, patterns) => {
     let result;
     if (node.value === 208 /* Or */) {
         if (node.right.value === 203 /* Alphabet */) {
-            alphabet.push(Alphabet.resolve(project, state, node.right.fragment.data));
-            return merge(project, node.left, state, alphabet, patterns);
+            const result = Alphabet.resolve(project, state, node.right.fragment.data);
+            if (result.length === 1) {
+                alphabet.push(result);
+                return merge(project, node.left, state, alphabet, patterns);
+            }
         }
         const lhs = exports.resolve(project, node.left, state);
         const rhs = exports.resolve(project, node.right, state);
@@ -30,8 +33,11 @@ const merge = (project, node, state, alphabet, patterns) => {
     }
     else {
         if (node.value === 203 /* Alphabet */) {
-            alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
-            return true;
+            const result = Alphabet.resolve(project, state, node.fragment.data);
+            if (result.length === 1) {
+                alphabet.push(result);
+                return true;
+            }
         }
         result = Expression.consume(project, node, state);
         if (!result) {

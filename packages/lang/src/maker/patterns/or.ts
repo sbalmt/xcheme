@@ -29,8 +29,11 @@ const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphab
   let result: PatternEntry | undefined;
   if (node.value === Parser.Nodes.Or) {
     if (node.right!.value === Parser.Nodes.Alphabet) {
-      alphabet.push(Alphabet.resolve(project, state, node.right!.fragment.data));
-      return merge(project, node.left!, state, alphabet, patterns);
+      const result = Alphabet.resolve(project, state, node.right!.fragment.data);
+      if (result.length === 1) {
+        alphabet.push(result);
+        return merge(project, node.left!, state, alphabet, patterns);
+      }
     }
     const lhs = resolve(project, node.left!, state);
     const rhs = resolve(project, node.right!, state);
@@ -40,8 +43,11 @@ const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphab
     patterns.push(...lhs, ...rhs);
   } else {
     if (node.value === Parser.Nodes.Alphabet) {
-      alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
-      return true;
+      const result = Alphabet.resolve(project, state, node.fragment.data);
+      if (result.length === 1) {
+        alphabet.push(result);
+        return true;
+      }
     }
     result = Expression.consume(project, node, state);
     if (!result) {
