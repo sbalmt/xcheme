@@ -12,7 +12,7 @@ const program_1 = require("./program");
 const consumeTokens = (tokens, context) => {
     const source = new Core.TokenSource(tokens, context);
     if (!program_1.Program.consume(source)) {
-        const fragment = tokens[source.offset]?.fragment ?? source.fragment;
+        const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
         context.errors.push(new Core.Error(fragment, 4098 /* UNEXPECTED_SYNTAX */));
         return false;
     }

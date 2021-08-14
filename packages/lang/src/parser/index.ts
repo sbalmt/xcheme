@@ -15,7 +15,7 @@ export { Nodes } from './nodes';
 export const consumeTokens = (tokens: Core.Token[], context: Core.Context): boolean => {
   const source = new Core.TokenSource(tokens, context);
   if (!Program.consume(source)) {
-    const fragment = tokens[source.offset]?.fragment ?? source.fragment;
+    const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
     context.errors.push(new Core.Error(fragment, Errors.UNEXPECTED_SYNTAX));
     return false;
   }
