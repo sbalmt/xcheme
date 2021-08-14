@@ -37,6 +37,14 @@ import * as Alphabet from './alphabet';
  */
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   switch (node.value) {
+    case Parser.Nodes.Reference:
+      return Reference.consume(project, node, state);
+    case Parser.Nodes.Alphabet:
+      return Alphabet.consume(project, node, state);
+    case Parser.Nodes.Any:
+      return project.coder.getAny();
+    case Parser.Nodes.Range:
+      return Range.consume(project, node, state);
     case Parser.Nodes.Then:
       return Condition.consume(project, node, state);
     case Parser.Nodes.Or:
@@ -49,29 +57,29 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
       return Option.consume(project, node, state);
     case Parser.Nodes.Rep:
       return Repeat.consume(project, node, state);
-    case Parser.Nodes.Pivot:
-      return Pivot.consume(project, node, state);
     case Parser.Nodes.Place:
     case Parser.Nodes.PlaceRight:
       return Place.consume(project, node, state, Core.Nodes.Right);
+    case Parser.Nodes.PlaceNext:
+      return Place.consume(project, node, state, Core.Nodes.Next);
+    case Parser.Nodes.PlaceLeft:
+      return Place.consume(project, node, state, Core.Nodes.Left);
     case Parser.Nodes.Append:
     case Parser.Nodes.AppendRight:
       return Append.consume(project, node, state, Core.Nodes.Right);
+    case Parser.Nodes.AppendNext:
+      return Append.consume(project, node, state, Core.Nodes.Next);
+    case Parser.Nodes.AppendLeft:
+      return Append.consume(project, node, state, Core.Nodes.Left);
     case Parser.Nodes.Prepend:
     case Parser.Nodes.PrependRight:
       return Prepend.consume(project, node, state, Core.Nodes.Right);
-    case Parser.Nodes.PlaceNext:
-      return Place.consume(project, node, state, Core.Nodes.Next);
-    case Parser.Nodes.AppendNext:
-      return Append.consume(project, node, state, Core.Nodes.Next);
     case Parser.Nodes.PrependNext:
       return Prepend.consume(project, node, state, Core.Nodes.Next);
-    case Parser.Nodes.PlaceLeft:
-      return Place.consume(project, node, state, Core.Nodes.Left);
-    case Parser.Nodes.AppendLeft:
-      return Append.consume(project, node, state, Core.Nodes.Left);
     case Parser.Nodes.PrependLeft:
       return Prepend.consume(project, node, state, Core.Nodes.Left);
+    case Parser.Nodes.Pivot:
+      return Pivot.consume(project, node, state);
     case Parser.Nodes.Symbol:
       return Symbol.consume(project, node, state);
     case Parser.Nodes.Scope:
@@ -82,14 +90,6 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
       return Has.consume(project, node, state);
     case Parser.Nodes.Set:
       return Set.consume(project, node, state);
-    case Parser.Nodes.Reference:
-      return Reference.consume(project, node, state);
-    case Parser.Nodes.Any:
-      return project.coder.getAny();
-    case Parser.Nodes.Range:
-      return Range.consume(project, node, state);
-    case Parser.Nodes.Alphabet:
-      return Alphabet.consume(project, node, state);
     default:
       project.errors.push(new Core.Error(node.fragment, Errors.UNEXPECTED_NODE));
   }

@@ -31,59 +31,59 @@ const Alphabet = require("./alphabet");
  */
 const consume = (project, node, state) => {
     switch (node.value) {
-        case 207 /* Then */:
+        case 201 /* Reference */:
+            return Reference.consume(project, node, state);
+        case 203 /* Alphabet */:
+            return Alphabet.consume(project, node, state);
+        case 204 /* Any */:
+            return project.coder.getAny();
+        case 205 /* Range */:
+            return Range.consume(project, node, state);
+        case 206 /* Then */:
             return Condition.consume(project, node, state);
-        case 209 /* Or */:
+        case 208 /* Or */:
             return Or.consume(project, node, state);
-        case 210 /* And */:
+        case 209 /* And */:
             return And.consume(project, node, state);
-        case 211 /* Not */:
+        case 210 /* Not */:
             return Negate.consume(project, node, state);
-        case 212 /* Opt */:
+        case 211 /* Opt */:
             return Option.consume(project, node, state);
-        case 213 /* Rep */:
+        case 212 /* Rep */:
             return Repeat.consume(project, node, state);
-        case 215 /* Pivot */:
-            return Pivot.consume(project, node, state);
-        case 214 /* Place */:
-        case 224 /* PlaceRight */:
+        case 213 /* Place */:
+        case 216 /* PlaceRight */:
             return Place.consume(project, node, state, 1 /* Right */);
-        case 216 /* Append */:
-        case 225 /* AppendRight */:
-            return Append.consume(project, node, state, 1 /* Right */);
-        case 217 /* Prepend */:
-        case 226 /* PrependRight */:
-            return Prepend.consume(project, node, state, 1 /* Right */);
-        case 218 /* PlaceNext */:
+        case 214 /* PlaceNext */:
             return Place.consume(project, node, state, 2 /* Next */);
-        case 219 /* AppendNext */:
-            return Append.consume(project, node, state, 2 /* Next */);
-        case 220 /* PrependNext */:
-            return Prepend.consume(project, node, state, 2 /* Next */);
-        case 221 /* PlaceLeft */:
+        case 215 /* PlaceLeft */:
             return Place.consume(project, node, state, 0 /* Left */);
-        case 222 /* AppendLeft */:
+        case 217 /* Append */:
+        case 220 /* AppendRight */:
+            return Append.consume(project, node, state, 1 /* Right */);
+        case 218 /* AppendNext */:
+            return Append.consume(project, node, state, 2 /* Next */);
+        case 219 /* AppendLeft */:
             return Append.consume(project, node, state, 0 /* Left */);
+        case 221 /* Prepend */:
+        case 224 /* PrependRight */:
+            return Prepend.consume(project, node, state, 1 /* Right */);
+        case 222 /* PrependNext */:
+            return Prepend.consume(project, node, state, 2 /* Next */);
         case 223 /* PrependLeft */:
             return Prepend.consume(project, node, state, 0 /* Left */);
-        case 227 /* Symbol */:
+        case 225 /* Pivot */:
+            return Pivot.consume(project, node, state);
+        case 226 /* Symbol */:
             return Symbol.consume(project, node, state);
-        case 228 /* Scope */:
+        case 227 /* Scope */:
             return Scope.consume(project, node, state);
-        case 229 /* Error */:
+        case 228 /* Error */:
             return Error.consume(project, node, state);
-        case 230 /* Has */:
+        case 229 /* Has */:
             return Has.consume(project, node, state);
-        case 231 /* Set */:
+        case 230 /* Set */:
             return Set.consume(project, node, state);
-        case 232 /* Reference */:
-            return Reference.consume(project, node, state);
-        case 233 /* Any */:
-            return project.coder.getAny();
-        case 234 /* Range */:
-            return Range.consume(project, node, state);
-        case 235 /* Alphabet */:
-            return Alphabet.consume(project, node, state);
         default:
             project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));
     }

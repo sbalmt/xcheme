@@ -29,22 +29,22 @@ const consumeNodes = (node, project) => {
     for (let counter = project.options.initialIdentity ?? 0; (node = node.next); counter++) {
         const current = node.right;
         let state;
-        if (node.value === 202 /* Skip */) {
+        if (node.value === 231 /* Skip */) {
             state = Skip.consume(project, current, pointer, counter);
         }
         else {
             const identity = getIdentity(current, counter);
             switch (node.value) {
-                case 204 /* Token */:
+                case 233 /* Token */:
                     state = Token.consume(project, current, identity, pointer, counter, false);
                     break;
-                case 206 /* AliasToken */:
+                case 235 /* AliasToken */:
                     state = Token.consume(project, current, identity, pointer, counter, true);
                     break;
-                case 203 /* Node */:
+                case 232 /* Node */:
                     state = Node.consume(project, current, identity, pointer, counter, false);
                     break;
-                case 205 /* AliasNode */:
+                case 234 /* AliasNode */:
                     state = Node.consume(project, current, identity, pointer, counter, true);
                     break;
                 default:
