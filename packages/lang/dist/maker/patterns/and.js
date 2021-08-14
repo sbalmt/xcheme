@@ -16,7 +16,7 @@ const Expression = require("./expression");
  */
 const merge = (project, node, state, alphabet, patterns) => {
     if (node.value === 210 /* And */) {
-        if (node.right.value === 232 /* Alphabet */) {
+        if (node.right.value === 235 /* Alphabet */) {
             alphabet.push(Alphabet.resolve(project, state, node.right.fragment.data));
             return merge(project, node.left, state, alphabet, patterns);
         }
@@ -28,7 +28,7 @@ const merge = (project, node, state, alphabet, patterns) => {
         patterns.push(...lhs, ...rhs);
     }
     else {
-        if (node.value === 232 /* Alphabet */) {
+        if (node.value === 235 /* Alphabet */) {
             alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
             return true;
         }

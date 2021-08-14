@@ -216,6 +216,36 @@ export class Live extends Base {
   }
 
   /**
+   * Get a new error pattern.
+   * @param value Error value.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  getError(value: number, ...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.EmitErrorPattern(value, ...patterns);
+  }
+
+  /**
+   * Get a new has pattern.
+   * @param state Expected state value.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  getHas(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.HasStatePattern(state, ...patterns);
+  }
+
+  /**
+   * Get a new set pattern.
+   * @param state New state value.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  getSet(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.SetStatePattern(state, ...patterns);
+  }
+
+  /**
    * Get a new reference pattern.
    * @param entries Pointer entries.
    * @param name Reference name.

@@ -20,6 +20,9 @@ import * as Append from './append';
 import * as Prepend from './prepend';
 import * as Symbol from './symbol';
 import * as Scope from './scope';
+import * as Error from './error';
+import * as Has from './has';
+import * as Set from './set';
 import * as Reference from './reference';
 import * as Range from './range';
 import * as Alphabet from './alphabet';
@@ -73,6 +76,12 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
       return Symbol.consume(project, node, state);
     case Parser.Nodes.Scope:
       return Scope.consume(project, node, state);
+    case Parser.Nodes.Error:
+      return Error.consume(project, node, state);
+    case Parser.Nodes.Has:
+      return Has.consume(project, node, state);
+    case Parser.Nodes.Set:
+      return Set.consume(project, node, state);
     case Parser.Nodes.Reference:
       return Reference.consume(project, node, state);
     case Parser.Nodes.Any:

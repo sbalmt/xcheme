@@ -31,6 +31,7 @@ export const enum Nodes {
   PrependRight,
   Symbol,
   Scope,
+  Error,
   Has,
   Set,
   Reference,

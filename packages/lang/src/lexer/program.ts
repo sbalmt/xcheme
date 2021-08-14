@@ -37,7 +37,7 @@ export const Program = new Core.ExpectFlowPattern(
         new Core.EmitTokenPattern(
           Core.TextSource.Output,
           new Core.ChooseFlowPattern(
-            // Keywords and Symbols
+            // Keywords, Functions and Symbols
             new Core.MapFlowPattern(
               new Core.SetValueRoute(Tokens.Any, 'a', 'n', 'y'),
               new Core.SetValueRoute(Tokens.From, 'f', 'r', 'o', 'm'),
@@ -54,6 +54,9 @@ export const Program = new Core.ExpectFlowPattern(
               new Core.SetValueRoute(Tokens.Right, 'r', 'i', 'g', 'h', 't'),
               new Core.SetValueRoute(Tokens.Symbol, 's', 'y', 'm', 'b', 'o', 'l'),
               new Core.SetValueRoute(Tokens.Scope, 's', 'c', 'o', 'p', 'e'),
+              new Core.SetValueRoute(Tokens.Error, 'e', 'r', 'r', 'o', 'r'),
+              new Core.SetValueRoute(Tokens.Has, 'h', 'a', 's'),
+              new Core.SetValueRoute(Tokens.Set, 's', 'e', 't'),
               new Core.SetValueRoute(Tokens.Or, 'o', 'r'),
               new Core.SetValueRoute(Tokens.And, 'a', 'n', 'd'),
               new Core.SetValueRoute(Tokens.Then, 't', 'h', 'e', 'n'),
@@ -75,8 +78,13 @@ export const Program = new Core.ExpectFlowPattern(
             // Number
             new Core.SetValuePattern(
               Tokens.Number,
-              new Core.RangeUnitPattern('1', '9'),
-              new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))
+              new Core.ChooseFlowPattern(
+                new Core.ExpectUnitPattern('0'),
+                new Core.ExpectFlowPattern(
+                  new Core.RangeUnitPattern('1', '9'),
+                  new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))
+                )
+              )
             ),
             // String
             new Core.SetValuePattern(

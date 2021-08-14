@@ -8,7 +8,7 @@ const tokens = [
     // Identifier
     { name: 'NAME', value: Lexer.Tokens.Identifier },
     // Number
-    { name: "1234567890", value: Lexer.Tokens.Number },
+    { name: '1234567890', value: Lexer.Tokens.Number },
     // Alphabet
     { name: "'text'", value: Lexer.Tokens.Alphabet },
     // Any unit
@@ -17,6 +17,14 @@ const tokens = [
     // Unit range
     { name: 'from', value: Lexer.Tokens.From },
     { name: 'to', value: Lexer.Tokens.To }
+  ],
+  // Functions
+  ...[
+    // Error
+    { name: 'error', value: Lexer.Tokens.Error },
+    // State
+    { name: 'has', value: Lexer.Tokens.Has },
+    { name: 'set', value: Lexer.Tokens.Set }
   ],
   // Operators
   ...[

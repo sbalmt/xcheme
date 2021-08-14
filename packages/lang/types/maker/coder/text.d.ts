@@ -153,6 +153,27 @@ export declare class Text extends Base {
      */
     getScopeSymbol(...patterns: string[]): string;
     /**
+     * Get a new error pattern.
+     * @param value Error value.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    getError(value: number, ...patterns: string[]): string;
+    /**
+     * Get a new has pattern.
+     * @param state Expected state value.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    getHas(state: number, ...patterns: string[]): string;
+    /**
+     * Get a new set pattern.
+     * @param state New state value.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    getSet(state: number, ...patterns: string[]): string;
+    /**
      * Get a new reference pattern.
      * @param entries Pointer entries.
      * @param name Reference name.

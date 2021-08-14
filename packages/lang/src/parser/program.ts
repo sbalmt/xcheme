@@ -7,6 +7,17 @@ import UnaryExpression from './patterns/unary';
 import { Symbols } from './symbols';
 import { Nodes } from './nodes';
 
+const identity = new Core.ExpectFlowPattern(
+  new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
+  new Core.AppendNodePattern(
+    Nodes.Identity,
+    Core.Nodes.Left,
+    Core.Nodes.Right,
+    new Core.ExpectUnitPattern(Lexer.Tokens.Number),
+    new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
+  )
+);
+
 const expression: Core.Pattern = new Core.ExpectFlowPattern(
   // Or expressions
   new BinaryExpression(
@@ -34,7 +45,10 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
           new Core.SetValueRoute(Nodes.AppendRight, Lexer.Tokens.Append, Lexer.Tokens.Right),
           new Core.SetValueRoute(Nodes.PrependRight, Lexer.Tokens.Prepend, Lexer.Tokens.Right),
           new Core.SetValueRoute(Nodes.Symbol, Lexer.Tokens.Symbol),
-          new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope)
+          new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
+          new Core.SetValueRoute(Nodes.Error, identity, Lexer.Tokens.Error),
+          new Core.SetValueRoute(Nodes.Has, identity, Lexer.Tokens.Has),
+          new Core.SetValueRoute(Nodes.Set, identity, Lexer.Tokens.Set)
         ),
         new Core.ChooseFlowPattern(
           // Range
@@ -105,17 +119,6 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
   )
 );
 
-const identity = new Core.ExpectFlowPattern(
-  new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
-  new Core.AppendNodePattern(
-    Nodes.Identity,
-    Core.Nodes.Left,
-    Core.Nodes.Right,
-    new Core.ExpectUnitPattern(Lexer.Tokens.Number),
-    new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
-  )
-);
-
 const token = new Core.ExpectFlowPattern(
   new Core.OptionFlowPattern(identity),
   new Core.EmitSymbolPattern(
@@ -162,9 +165,9 @@ export const Program = new Core.ExpectFlowPattern(
             new Core.SetValueRoute(Nodes.Node, node, Lexer.Tokens.Node),
             new Core.SetValueRoute(Nodes.AliasToken, token, Lexer.Tokens.Alias, Lexer.Tokens.Token),
             new Core.SetValueRoute(Nodes.AliasNode, node, Lexer.Tokens.Alias, Lexer.Tokens.Node)
-          )
-        ),
-        new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)
+          ),
+          new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)
+        )
       )
     )
   ),

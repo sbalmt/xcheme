@@ -220,6 +220,36 @@ export class Base {
   }
 
   /**
+   * Should be implemented to return an error pattern.
+   * @param value Error value.
+   * @param patterns Expected patterns.
+   * @returns Should return the pattern.
+   */
+  getError(value: number, ...patterns: PatternEntry[]): PatternEntry {
+    throw "Method doesn't implemented.";
+  }
+
+  /**
+   * Should be implemented to return a has pattern.
+   * @param state Expected state value.
+   * @param patterns Expected patterns.
+   * @returns Should return the pattern.
+   */
+  getHas(state: number, ...patterns: PatternEntry[]): PatternEntry {
+    throw "Method doesn't implemented.";
+  }
+
+  /**
+   * Should be implemented to return a set pattern.
+   * @param state New state value.
+   * @param patterns Expected patterns.
+   * @returns Should return the pattern.
+   */
+  getSet(state: number, ...patterns: PatternEntry[]): PatternEntry {
+    throw "Method doesn't implemented.";
+  }
+
+  /**
    * Should be implemented to return a reference pattern.
    * @param entries Pointer entries.
    * @param name Reference name.

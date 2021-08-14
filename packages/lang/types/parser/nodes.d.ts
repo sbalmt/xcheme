@@ -31,8 +31,11 @@ export declare const enum Nodes {
     PrependRight = 226,
     Symbol = 227,
     Scope = 228,
-    Reference = 229,
-    Any = 230,
-    Range = 231,
-    Alphabet = 232
+    Error = 229,
+    Has = 230,
+    Set = 231,
+    Reference = 232,
+    Any = 233,
+    Range = 234,
+    Alphabet = 235
 }

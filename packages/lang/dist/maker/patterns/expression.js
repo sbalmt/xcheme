@@ -15,6 +15,9 @@ const Append = require("./append");
 const Prepend = require("./prepend");
 const Symbol = require("./symbol");
 const Scope = require("./scope");
+const Error = require("./error");
+const Has = require("./has");
+const Set = require("./set");
 const Reference = require("./reference");
 const Range = require("./range");
 const Alphabet = require("./alphabet");
@@ -67,13 +70,19 @@ const consume = (project, node, state) => {
             return Symbol.consume(project, node, state);
         case 228 /* Scope */:
             return Scope.consume(project, node, state);
-        case 229 /* Reference */:
+        case 229 /* Error */:
+            return Error.consume(project, node, state);
+        case 230 /* Has */:
+            return Has.consume(project, node, state);
+        case 231 /* Set */:
+            return Set.consume(project, node, state);
+        case 232 /* Reference */:
             return Reference.consume(project, node, state);
-        case 230 /* Any */:
+        case 233 /* Any */:
             return project.coder.getAny();
-        case 231 /* Range */:
+        case 234 /* Range */:
             return Range.consume(project, node, state);
-        case 232 /* Alphabet */:
+        case 235 /* Alphabet */:
             return Alphabet.consume(project, node, state);
         default:
             project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));

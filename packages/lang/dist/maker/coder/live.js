@@ -179,6 +179,33 @@ class Live extends base_1.Base {
         return new Core.ScopeSymbolPattern(...patterns);
     }
     /**
+     * Get a new error pattern.
+     * @param value Error value.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    getError(value, ...patterns) {
+        return new Core.EmitErrorPattern(value, ...patterns);
+    }
+    /**
+     * Get a new has pattern.
+     * @param state Expected state value.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    getHas(state, ...patterns) {
+        return new Core.HasStatePattern(state, ...patterns);
+    }
+    /**
+     * Get a new set pattern.
+     * @param state New state value.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    getSet(state, ...patterns) {
+        return new Core.SetStatePattern(state, ...patterns);
+    }
+    /**
      * Get a new reference pattern.
      * @param entries Pointer entries.
      * @param name Reference name.
