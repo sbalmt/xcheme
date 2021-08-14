@@ -9,6 +9,9 @@
 			"include": "#keywords"
 		},
 		{
+			"include": "#functions"
+		},
+		{
 			"include": "#modifiers"
 		},
 		{
@@ -56,6 +59,14 @@
 				{
 					"name": "keyword.control.condition.xcheme",
 					"match": "\\b(then|else)\\b"
+				}
+			]
+		},
+		"functions": {
+			"patterns": [
+				{
+					"name": "support.function.xcheme",
+					"match": "\\b(set|has|error)\\b"
 				}
 			]
 		},
