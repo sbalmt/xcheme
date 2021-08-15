@@ -1,0 +1,39 @@
+/**
+ * A basic HTML parser.
+ */
+skip ' ' | '\t' | '\v' | '\f' | '\r' | '\n';
+skip '<!--' & opt rep (not '-->' then *) & '-->';
+
+// Lexer
+alias token ALPHA as from 'a' to 'z' | from 'A' to 'Z';
+alias token DIGIT as from '0' to '9';
+
+token T_OPEN    as set<1> '<';
+token T_END     as has<1> '/' | has<2> '/';
+token T_NAME    as has<1> set<2> (ALPHA & opt rep (ALPHA | DIGIT | '-' | '_' | ':'));
+token T_CLOSE   as has<2> set<0> '>';
+token T_DATA    as has<0> rep (not ('<') then *);
+
+token D_START   as has<1> set<3> '!';
+token D_END     as has<3> set<0> '>';
+token D_TYPE    as has<3> rep (not ('>') then *);
+
+token A_NAME    as has<2> (ALPHA & opt rep (ALPHA | DIGIT | '-' | '_' | ':'));
+token A_ASSIGN  as has<2> '=';
+token A_S_STR   as has<2> ('\'' & rep ('\\' then * else not '\'' then *) & '\'');
+token A_D_STR   as has<2> ('"' & rep ('\\' then * else not '"' then *) & '"');
+
+// Parser
+alias node<110> A_VALUE   as append (A_S_STR | A_D_STR);
+alias node<111> A_ENTRY   as append (A_NAME & opt (A_ASSIGN & A_VALUE));
+alias node      A_LIST    as opt rep A_ENTRY;
+
+alias node<120> C_DATA    as append rep T_DATA;
+alias node<130> E_CLOSED  as T_OPEN & append (T_NAME & A_LIST & T_END & T_CLOSE);
+alias node<131> E_GROUPED as T_OPEN & append (T_NAME & A_LIST & T_CLOSE & opt CHILDREN) & opt (T_OPEN & T_END & T_NAME & T_CLOSE);
+
+alias node<100> DOCUMENT  as T_OPEN & D_START & append (rep D_TYPE & D_END);
+alias node      CHILDREN  as rep place next (C_DATA | E_CLOSED | E_GROUPED);
+
+node<200> TYPE as DOCUMENT;
+node<201> ROOT as CHILDREN;
