@@ -1,0 +1,31 @@
+{
+  "name": "@xcheme/cli",
+  "version": "0.0.1",
+  "description": "Command Line Interface.",
+  "license": "MIT",
+  "keywords": [
+    "xcheme",
+    "lang",
+    "cli"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/balmanth/xcheme.git",
+    "directory": "packages/cli"
+  },
+  "main": "bin/index.js",
+  "bin": {
+    "xcm": "./bin/index.js"
+  },
+  "scripts": {
+    "build": "tsc --build ./tsconfig.json",
+    "clean": "tsc --build --clean ./tsconfig.json"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.5"
+  },
+  "dependencies": {
+    "@xcheme/core": "^0.0.1",
+    "@xcheme/lang": "^0.0.1"
+  }
+}
