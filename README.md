@@ -2,6 +2,12 @@
 
 A simple compiler builder.
 
+## Documentation
+
+Learn more about using XCHEME.
+
+- [Get started](./docs/basics.md)
+
 ## Packages
 
 See each package index for more information.
