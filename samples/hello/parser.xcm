@@ -1,0 +1,11 @@
+/**
+ * A basic "Hello world" parser.
+ */
+skip ' ' | '\r' | '\n';
+
+token T_HELLO       as 'Hello';
+token T_WORLD       as 'world';
+token T_EXCL_POINT  as '!';
+token T_PERIOD      as '.';
+
+node HELLO_WORLD    as T_HELLO & T_WORLD & opt (T_EXCL_POINT | T_PERIOD);
