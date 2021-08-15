@@ -1,7 +1,15 @@
-# XCHEME
+# XCHEME Core
 
-This package provides the XCHEME components library.
+This package provides all the XCHEME Core components.
+
+## Get started
+
+Install using npm:
+
+```sh
+npm i @xcheme/core
+```
 
 ## License
 
-[MIT &copy; Silas B. Domingos](https://balmante.eti.br)
+[MIT](https://balmante.eti.br)

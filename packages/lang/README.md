@@ -1,7 +1,15 @@
 # XCHEME Lang
 
-This package provides the lexer, parser and maker for the XCHEME language.
+This package provides the Lexer, Parser and Maker for the XCHEME Lang.
+
+## Get started
+
+Install using npm:
+
+```sh
+npm i @xcheme/lang
+```
 
 ## License
 
-[MIT &copy; Silas B. Domingos](https://balmante.eti.br)
+[MIT](https://balmante.eti.br)
