@@ -1,4 +1,8 @@
-# XCHEME
+# XCHEME CLI
+
+![ts](https://badgen.net/badge/-/TypeScript?icon=typescript&label&labelColor=blue&color=555555)
+![npm](https://badgen.net/npm/v/@xcheme/cli)
+![license](https://badgen.net/github/license/balmanth/xcheme)
 
 This package provides the XCHEME CLI.
 
