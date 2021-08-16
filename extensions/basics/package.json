@@ -2,6 +2,7 @@
   "name": "xcheme-basics",
   "displayName": "XCHEME Basics",
   "description": "Provides syntax highlighting, bracket matching and folding in XCHEME files.",
+  "icon": "media/icon.png",
   "publisher": "balmanth",
   "version": "0.0.1",
   "engines": {
