@@ -3,141 +3,252 @@
 	"name": "XCHEME",
 	"patterns": [
 		{
+			"include": "#directives"
+		},
+		{
 			"include": "#comments"
-		},
-		{
-			"include": "#keywords"
-		},
-		{
-			"include": "#functions"
-		},
-		{
-			"include": "#modifiers"
-		},
-		{
-			"include": "#operators"
-		},
-		{
-			"include": "#literals"
-		},
-		{
-			"include": "#entities"
-		},
-		{
-			"include": "#strings"
 		}
 	],
 	"repository": {
+		"named-directives": {
+			"begin": "\\b(token|node)\\b",
+			"end": "(?=\\;)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#identity-expression"
+				},
+				{
+					"name": "keyword.control.xcheme",
+					"match": "\\b(as)\\b"
+				},
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"aliased-directives": {
+			"begin": "\\b(alias)\\b",
+			"end": "(?=\\;)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.modifier.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#named-directives"
+				}
+			]
+		},
+		"unnamed-directives": {
+			"begin": "\\b(skip)\\b",
+			"end": "(?=\\;)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"condition-expression": {
+			"begin": "\\b(then)\\b",
+			"end": "(?<=\\b(else)\\b)|(?=\\)|\\;)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"name": "keyword.control.xcheme",
+					"match": "\\b(else)\\b"
+				},
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"operator-expression": {
+			"name": "keyword.operator.xcheme",
+			"match": "(\\||\\&|\\*)"
+		},
+		"control-expression": {
+			"name": "keyword.control.xcheme",
+			"match": "\\b(or|and|not|opt|rep|has)\\b"
+		},
+		"new-node-expression": {
+			"match": "\\b(place|append|prepend)\\b(\\s*\\b(next|left|right)\\b)?",
+			"captures": {
+				"1": {
+					"name": "keyword.operator.new.xcheme"
+				},
+				"2": {
+					"name": "storage.modifier.xcheme"
+				}
+			}
+		},
+		"new-expression": {
+			"name": "keyword.operator.new.xcheme",
+			"match": "\\b(pivot|symbol|scope|error|set)\\b"
+		},
+		"constant-expression": {
+			"name": "constant.language.xcheme",
+			"match": "\\b(any)\\b"
+		},
+		"range-expression": {
+			"begin": "\\b(from)\\b",
+			"end": "(?<=\\b(to)\\b)",
+			"beginCaptures": {
+				"1": {
+					"name": "constant.language.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"name": "constant.language.xcheme",
+					"match": "\\b(to)\\b"
+				},
+				{
+					"include": "#alphabet-expression"
+				}
+			]
+		},
+		"alphabet-expression": {
+			"name": "string.quoted.single.xcheme",
+			"begin": "'",
+			"end": "'",
+			"patterns": [
+				{
+					"name": "constant.character.escape.xcheme",
+					"match": "\\\\."
+				}
+			]
+		},
+		"reference-expression": {
+			"name": "entity.name.type.xcheme",
+			"match": "[_[:alpha:]][_[:alnum:]]*"
+		},
+		"identity-expression": {
+			"begin": "\\<",
+			"end": "\\>",
+			"beginCaptures": {
+				"1": {
+					"name": "meta.brace.angled.xcheme"
+				}
+			},
+			"endCaptures": {
+				"1": {
+					"name": "meta.brace.angled.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"name": "constant.numeric",
+					"match": "[[:digit:]]*"
+				}
+			]
+		},
+		"group-expression": {
+			"begin": "\\(",
+			"end": "\\)",
+			"beginCaptures": {
+				"0": {
+					"name": "meta.brace.round.xcheme"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "meta.brace.round.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#expression"
+				}
+			]
+		},
+		"directives": {
+			"patterns": [
+				{
+					"include": "#named-directives"
+				},
+				{
+					"include": "#aliased-directives"
+				},
+				{
+					"include": "#unnamed-directives"
+				}
+			]
+		},
+		"expression": {
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#condition-expression"
+				},
+				{
+					"include": "#operator-expression"
+				},
+				{
+					"include": "#control-expression"
+				},
+				{
+					"include": "#new-node-expression"
+				},
+				{
+					"include": "#new-expression"
+				},
+				{
+					"include": "#constant-expression"
+				},
+				{
+					"include": "#range-expression"
+				},
+				{
+					"include": "#alphabet-expression"
+				},
+				{
+					"include": "#reference-expression"
+				},
+				{
+					"include": "#identity-expression"
+				},
+				{
+					"include": "#group-expression"
+				}
+			]
+		},
 		"comments": {
 			"patterns": [
 				{
 					"name": "comment.line.double-slash.xcheme",
 					"begin": "//",
-					"end": "\\n"
+					"end": "(?=$)"
 				},
 				{
 					"name": "comment.block.xcheme",
 					"begin": "/\\*",
 					"end": "\\*/"
-				}
-			]
-		},
-		"keywords": {
-			"patterns": [
-				{
-					"name": "keyword.xcheme",
-					"match": "\\b(skip|node|token)\\b"
-				},
-				{
-					"name": "keyword.assignment.xcheme",
-					"match": "\\b(as)\\b"
-				},
-				{
-					"name": "keyword.control.xcheme",
-					"match": "\\b(not|opt|rep|place)\\b"
-				},
-				{
-					"name": "keyword.control.condition.xcheme",
-					"match": "\\b(then|else)\\b"
-				}
-			]
-		},
-		"functions": {
-			"patterns": [
-				{
-					"name": "support.function.xcheme",
-					"match": "\\b(set|has|error)\\b"
-				}
-			]
-		},
-		"modifiers": {
-			"patterns": [
-				{
-					"name": "storage.modifier.xcheme",
-					"match": "\\b(alias|next|left|right)\\b"
-				}
-			]
-		},
-		"operators": {
-			"patterns": [
-				{
-					"name": "keyword.operator.new.node.xcheme",
-					"match": "\\b(pivot|append|prepend)\\b"
-				},
-				{
-					"name": "keyword.operator.new.symbol.xcheme",
-					"match": "\\b(symbol|scope)\\b"
-				},
-				{
-					"name": "keyword.operator.logical.xcheme",
-					"match": "\\b(and|or)\\b"
-				},
-				{
-					"name": "keyword.operator.logical.symbol.xcheme",
-					"match": "(\\||&)"
-				}
-			]
-		},
-		"literals": {
-			"patterns": [
-				{
-					"name": "constant.language.any.xcheme",
-					"match": "\\b(any)\\b"
-				},
-				{
-					"name": "constant.language.any.symbol.xcheme",
-					"match": "(\\*)"
-				},
-				{
-					"name": "constant.language.range.xcheme",
-					"match": "\\b(from|to)\\b"
-				},
-				{
-					"name": "constant.numeric.xcheme",
-					"match": "\\b((0x[0-9A-F-a-f]*)|([1-9][0-9]*))\\b"
-				}
-			]
-		},
-		"entities": {
-			"patterns": [
-				{
-					"name": "entity.name.type.xcheme",
-					"match": "\\b([a-zA-Z_]([a-zA-Z0-9_]*)?)\\b"
-				}
-			]
-		},
-		"strings": {
-			"patterns": [
-				{
-					"name": "string.quoted.single.xcheme",
-					"begin": "'",
-					"end": "'",
-					"patterns": [
-						{
-							"name": "constant.character.escape.xcheme",
-							"match": "\\\\."
-						}
-					]
 				}
 			]
 		}
