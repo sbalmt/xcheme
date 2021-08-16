@@ -25,6 +25,7 @@
           "xcheme"
         ],
         "extensions": [
+          ".xm",
           ".xcm"
         ],
         "configuration": "./language-configuration.json"
