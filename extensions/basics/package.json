@@ -6,7 +6,7 @@
   "publisher": "balmanth",
   "version": "0.0.1",
   "engines": {
-    "vscode": "^1.59.0"
+    "vscode": "*"
   },
   "categories": [
     "Programming Languages"
