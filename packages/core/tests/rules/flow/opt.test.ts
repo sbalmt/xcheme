@@ -1,9 +1,9 @@
-import { Context, TextSource, OptionFlowPattern, RangeUnitPattern } from '../../../src/index';
+import { Context, TextSource, OptFlowPattern, RangeUnitPattern } from '../../../src/index';
 
 /**
  * It can make the consumption of a number between '0' and '9' optional.
  */
-const pattern = new OptionFlowPattern(new RangeUnitPattern('0', '9'));
+const pattern = new OptFlowPattern(new RangeUnitPattern('0', '9'));
 
 test('Consume success', () => {
   const context = new Context('test');

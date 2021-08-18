@@ -3,9 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 const try_1 = require("./try");
 /**
- * Consumes all the given patterns in this pattern without raising a consumption failure.
+ * Consumes all the given patterns and invert the consumption result.
  */
-class Option extends pattern_1.default {
+class Not extends pattern_1.default {
     /**
      * Target pattern.
      */
@@ -21,12 +21,14 @@ class Option extends pattern_1.default {
     /**
      * Consume the given source.
      * @param source Data source.
-     * @returns Returns true anyways.
+     * @returns Returns the negated consumption result.
      */
     consume(source) {
-        this.#target.consume(source);
-        return true;
+        if (source.length > 0) {
+            return !this.#target.consume(source);
+        }
+        return false;
     }
 }
-exports.default = Option;
-//# sourceMappingURL=option.js.map
+exports.default = Not;
+//# sourceMappingURL=not.js.map

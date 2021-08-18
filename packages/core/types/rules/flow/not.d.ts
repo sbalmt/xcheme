@@ -1,9 +1,9 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns and negate the consumption result.
+ * Consumes all the given patterns and invert the consumption result.
  */
-export default class Negate extends Pattern {
+export default class Not extends Pattern {
     #private;
     /**
      * Default constructor.

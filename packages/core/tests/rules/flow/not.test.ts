@@ -1,9 +1,9 @@
-import { Context, TextSource, NegateFlowPattern, RangeUnitPattern } from '../../../src/index';
+import { Context, TextSource, NotFlowPattern, RangeUnitPattern } from '../../../src/index';
 
 /**
- * It can consume a number between '0' and '9', and negate the result of the consumption.
+ * It can consume a number between '0' and '9', and invert the consumption result.
  */
-const pattern = new NegateFlowPattern(new RangeUnitPattern('0', '9'));
+const pattern = new NotFlowPattern(new RangeUnitPattern('0', '9'));
 
 test('Consume success', () => {
   const context = new Context('test');

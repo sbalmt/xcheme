@@ -4,9 +4,9 @@ import Pattern from '../pattern';
 import Try from './try';
 
 /**
- * Consumes all the given patterns and negate the consumption result.
+ * Consumes all the given patterns and invert the consumption result.
  */
-export default class Negate extends Pattern {
+export default class Not extends Pattern {
   /**
    * Target pattern.
    */
