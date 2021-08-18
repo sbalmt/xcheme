@@ -1,5 +1,5 @@
-import { Error } from '@xcheme/core';
-import { Errors } from '@xcheme/lang';
+import * as Core from '@xcheme/core';
+import * as Lang from '@xcheme/lang';
 
 import * as Console from './console';
 
@@ -7,23 +7,24 @@ import * as Console from './console';
  * All supported errors.
  */
 const errorMessages = {
-  [Errors.DUPLICATE_IDENTIFIER]: "Duplicate identifier '{0}' at line {1}, column {2}.",
-  [Errors.UNEXPECTED_TOKEN]: "Unexpected token '{0}' at line {1}, column {2}.",
-  [Errors.UNEXPECTED_SYNTAX]: "Unexpected syntax '{0}' at line {1}, column {2}.",
-  [Errors.UNEXPECTED_NODE]: "Unexpected node '{0}' at line {1}, column {2}.",
-  [Errors.INVALID_NODE_REFERENCE]: "Invalid node reference '{0}' at line {1}, column {2}.",
-  [Errors.INVALID_TOKEN_REFERENCE]: "Invalid token reference '{0}' at line {1}, column {2}.",
-  [Errors.UNRESOLVED_TOKEN_REFERENCE]: "Unresolved token reference '{0}' at line {1}, column {2}.",
-  [Errors.UNDEFINED_IDENTIFIER]: "Undefined identifier '{0}' at line {1}, column {2}."
+  [Lang.Errors.DUPLICATE_IDENTIFIER]: "Duplicate identifier '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNEXPECTED_TOKEN]: "Unexpected token '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNEXPECTED_SYNTAX]: "Unexpected syntax '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNEXPECTED_NODE]: "Unexpected node '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_NODE_REFERENCE]: "Tokens cannot have node references, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_TOKEN_REFERENCE]: "Nodes cannot reference aliased tokens, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]: "Token reference is not resolved yet, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNDEFINED_IDENTIFIER]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}."
 };
 
 /**
- * Get the corresponding error message based on the given input error.
+ * Get the corresponding error message based on the given error object.
  * @param error Input error.
  * @returns Returns the corresponding error message.
+ * @throws Throws an error when the specified error isn't supported.
  */
-export const getMessage = (error: Error): string => {
-  const template = errorMessages[error.value as Errors];
+export const getMessage = (error: Core.Error): string => {
+  const template = errorMessages[error.value as Lang.Errors];
   if (!template) {
     throw `Error value ${error.value} is not supported.`;
   }
@@ -46,7 +47,7 @@ export const getMessage = (error: Error): string => {
  * Print all the given errors.
  * @param errors Error list.
  */
-export const print = (errors: Error[]): void => {
+export const print = (errors: Core.Error[]): void => {
   Console.printLine('Errors:');
   for (const error of errors) {
     Console.printLine(`  ${getMessage(error)}`);

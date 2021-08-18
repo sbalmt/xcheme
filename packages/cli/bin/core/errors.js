@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.print = exports.getMessage = void 0;
+const Lang = require("@xcheme/lang");
 const Console = require("./console");
 /**
  * All supported errors.
@@ -10,15 +11,16 @@ const errorMessages = {
     [4097 /* UNEXPECTED_TOKEN */]: "Unexpected token '{0}' at line {1}, column {2}.",
     [4098 /* UNEXPECTED_SYNTAX */]: "Unexpected syntax '{0}' at line {1}, column {2}.",
     [4099 /* UNEXPECTED_NODE */]: "Unexpected node '{0}' at line {1}, column {2}.",
-    [4100 /* INVALID_NODE_REFERENCE */]: "Invalid node reference '{0}' at line {1}, column {2}.",
-    [4101 /* INVALID_TOKEN_REFERENCE */]: "Invalid token reference '{0}' at line {1}, column {2}.",
-    [4102 /* UNRESOLVED_TOKEN_REFERENCE */]: "Unresolved token reference '{0}' at line {1}, column {2}.",
-    [4103 /* UNDEFINED_IDENTIFIER */]: "Undefined identifier '{0}' at line {1}, column {2}."
+    [4100 /* INVALID_NODE_REFERENCE */]: "Tokens cannot have node references, '{0}' at line {1}, column {2}.",
+    [4101 /* INVALID_TOKEN_REFERENCE */]: "Nodes cannot reference aliased tokens, '{0}' at line {1}, column {2}.",
+    [4102 /* UNRESOLVED_TOKEN_REFERENCE */]: "Token reference is not resolved yet, '{0}' at line {1}, column {2}.",
+    [4103 /* UNDEFINED_IDENTIFIER */]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}."
 };
 /**
- * Get the corresponding error message based on the given input error.
+ * Get the corresponding error message based on the given error object.
  * @param error Input error.
  * @returns Returns the corresponding error message.
+ * @throws Throws an error when the specified error isn't supported.
  */
 const getMessage = (error) => {
     const template = errorMessages[error.value];
