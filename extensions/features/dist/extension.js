@@ -97,7 +97,7 @@ exports.update = update;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.PlaceNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetStatePattern = exports.HasStatePattern = exports.SetStateRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptionFlowPattern = exports.NegateFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Token = exports.Node = exports.Error = exports.Context = void 0;
+exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.PlaceNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetStatePattern = exports.HasStatePattern = exports.SetStateRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptFlowPattern = exports.NotFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Token = exports.Node = exports.Error = exports.Context = void 0;
 var context_1 = __webpack_require__(4);
 Object.defineProperty(exports, "Context", ({ enumerable: true, get: function () { return context_1.default; } }));
 var error_1 = __webpack_require__(9);
@@ -142,10 +142,10 @@ var expect_2 = __webpack_require__(23);
 Object.defineProperty(exports, "ExpectFlowPattern", ({ enumerable: true, get: function () { return expect_2.default; } }));
 var end_1 = __webpack_require__(26);
 Object.defineProperty(exports, "EndFlowPattern", ({ enumerable: true, get: function () { return end_1.default; } }));
-var negate_1 = __webpack_require__(27);
-Object.defineProperty(exports, "NegateFlowPattern", ({ enumerable: true, get: function () { return negate_1.default; } }));
-var option_1 = __webpack_require__(28);
-Object.defineProperty(exports, "OptionFlowPattern", ({ enumerable: true, get: function () { return option_1.default; } }));
+var not_1 = __webpack_require__(27);
+Object.defineProperty(exports, "NotFlowPattern", ({ enumerable: true, get: function () { return not_1.default; } }));
+var opt_1 = __webpack_require__(28);
+Object.defineProperty(exports, "OptFlowPattern", ({ enumerable: true, get: function () { return opt_1.default; } }));
 var repeat_1 = __webpack_require__(29);
 Object.defineProperty(exports, "RepeatFlowPattern", ({ enumerable: true, get: function () { return repeat_1.default; } }));
 var static_1 = __webpack_require__(30);
@@ -1572,9 +1572,9 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const pattern_1 = __webpack_require__(12);
 const try_1 = __webpack_require__(22);
 /**
- * Consumes all the given patterns and negate the consumption result.
+ * Consumes all the given patterns and invert the consumption result.
  */
-class Negate extends pattern_1.default {
+class Not extends pattern_1.default {
     /**
      * Target pattern.
      */
@@ -1599,8 +1599,8 @@ class Negate extends pattern_1.default {
         return false;
     }
 }
-exports.default = Negate;
-//# sourceMappingURL=negate.js.map
+exports.default = Not;
+//# sourceMappingURL=not.js.map
 
 /***/ }),
 /* 28 */
@@ -1637,7 +1637,7 @@ class Option extends pattern_1.default {
     }
 }
 exports.default = Option;
-//# sourceMappingURL=option.js.map
+//# sourceMappingURL=opt.js.map
 
 /***/ }),
 /* 29 */
@@ -2750,23 +2750,23 @@ const Core = __webpack_require__(3);
 /**
  * Main lexer program.
  */
-exports.Program = new Core.ExpectFlowPattern(new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(
+exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(
 // White space
 new Core.ChooseUnitPattern(' ', '\t', '\v', '\f', '\r', '\n'), 
 // Comment
-new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('/', '/'), new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ConditionFlowPattern(new Core.NegateFlowPattern(new Core.ExpectUnitPattern('\n')), new Core.AnyUnitPattern())))), 
+new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('/', '/'), new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern('\n')), new Core.AnyUnitPattern())))), 
 // Comment block
-new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('/', '*'), new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ConditionFlowPattern(new Core.NegateFlowPattern(new Core.ExpectUnitPattern('*', '/')), new Core.AnyUnitPattern()))), new Core.ExpectUnitPattern('*', '/')), 
+new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('/', '*'), new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern('*', '/')), new Core.AnyUnitPattern()))), new Core.ExpectUnitPattern('*', '/')), 
 // Tokens
 new Core.EmitTokenPattern(Core.TextSource.Output, new Core.ChooseFlowPattern(
 // Keywords, Functions and Symbols
-new Core.MapFlowPattern(new Core.SetValueRoute(103 /* Any */, 'a', 'n', 'y'), new Core.SetValueRoute(104 /* From */, 'f', 'r', 'o', 'm'), new Core.SetValueRoute(105 /* To */, 't', 'o'), new Core.SetValueRoute(110 /* Not */, 'n', 'o', 't'), new Core.SetValueRoute(111 /* Opt */, 'o', 'p', 't'), new Core.SetValueRoute(112 /* Rep */, 'r', 'e', 'p'), new Core.SetValueRoute(113 /* Place */, 'p', 'l', 'a', 'c', 'e'), new Core.SetValueRoute(116 /* Pivot */, 'p', 'i', 'v', 'o', 't'), new Core.SetValueRoute(114 /* Append */, 'a', 'p', 'p', 'e', 'n', 'd'), new Core.SetValueRoute(115 /* Prepend */, 'p', 'r', 'e', 'p', 'e', 'n', 'd'), new Core.SetValueRoute(117 /* Next */, 'n', 'e', 'x', 't'), new Core.SetValueRoute(118 /* Left */, 'l', 'e', 'f', 't'), new Core.SetValueRoute(119 /* Right */, 'r', 'i', 'g', 'h', 't'), new Core.SetValueRoute(120 /* Symbol */, 's', 'y', 'm', 'b', 'o', 'l'), new Core.SetValueRoute(121 /* Scope */, 's', 'c', 'o', 'p', 'e'), new Core.SetValueRoute(122 /* Error */, 'e', 'r', 'r', 'o', 'r'), new Core.SetValueRoute(123 /* Has */, 'h', 'a', 's'), new Core.SetValueRoute(124 /* Set */, 's', 'e', 't'), new Core.SetValueRoute(108 /* Or */, 'o', 'r'), new Core.SetValueRoute(109 /* And */, 'a', 'n', 'd'), new Core.SetValueRoute(106 /* Then */, 't', 'h', 'e', 'n'), new Core.SetValueRoute(107 /* Else */, 'e', 'l', 's', 'e'), new Core.SetValueRoute(125 /* Skip */, 's', 'k', 'i', 'p'), new Core.SetValueRoute(128 /* Alias */, 'a', 'l', 'i', 'a', 's'), new Core.SetValueRoute(126 /* Token */, 't', 'o', 'k', 'e', 'n'), new Core.SetValueRoute(127 /* Node */, 'n', 'o', 'd', 'e'), new Core.SetValueRoute(129 /* As */, 'a', 's'), new Core.SetValueRoute(103 /* Any */, '*'), new Core.SetValueRoute(108 /* Or */, '|'), new Core.SetValueRoute(109 /* And */, '&'), new Core.SetValueRoute(130 /* Semicolon */, ';'), new Core.SetValueRoute(131 /* OpenParentheses */, '('), new Core.SetValueRoute(132 /* CloseParentheses */, ')'), new Core.SetValueRoute(133 /* OpenChevron */, '<'), new Core.SetValueRoute(134 /* CloseChevron */, '>')), 
+new Core.MapFlowPattern(new Core.SetValueRoute(103 /* Any */, 'a', 'n', 'y'), new Core.SetValueRoute(104 /* From */, 'f', 'r', 'o', 'm'), new Core.SetValueRoute(105 /* To */, 't', 'o'), new Core.SetValueRoute(110 /* Not */, 'n', 'o', 't'), new Core.SetValueRoute(111 /* Opt */, 'o', 'p', 't'), new Core.SetValueRoute(112 /* Repeat */, 'r', 'e', 'p', 'e', 'a', 't'), new Core.SetValueRoute(113 /* Place */, 'p', 'l', 'a', 'c', 'e'), new Core.SetValueRoute(116 /* Pivot */, 'p', 'i', 'v', 'o', 't'), new Core.SetValueRoute(114 /* Append */, 'a', 'p', 'p', 'e', 'n', 'd'), new Core.SetValueRoute(115 /* Prepend */, 'p', 'r', 'e', 'p', 'e', 'n', 'd'), new Core.SetValueRoute(117 /* Next */, 'n', 'e', 'x', 't'), new Core.SetValueRoute(118 /* Left */, 'l', 'e', 'f', 't'), new Core.SetValueRoute(119 /* Right */, 'r', 'i', 'g', 'h', 't'), new Core.SetValueRoute(120 /* Symbol */, 's', 'y', 'm', 'b', 'o', 'l'), new Core.SetValueRoute(121 /* Scope */, 's', 'c', 'o', 'p', 'e'), new Core.SetValueRoute(122 /* Error */, 'e', 'r', 'r', 'o', 'r'), new Core.SetValueRoute(123 /* Has */, 'h', 'a', 's'), new Core.SetValueRoute(124 /* Set */, 's', 'e', 't'), new Core.SetValueRoute(108 /* Or */, 'o', 'r'), new Core.SetValueRoute(109 /* And */, 'a', 'n', 'd'), new Core.SetValueRoute(106 /* Then */, 't', 'h', 'e', 'n'), new Core.SetValueRoute(107 /* Else */, 'e', 'l', 's', 'e'), new Core.SetValueRoute(125 /* Skip */, 's', 'k', 'i', 'p'), new Core.SetValueRoute(128 /* Alias */, 'a', 'l', 'i', 'a', 's'), new Core.SetValueRoute(126 /* Token */, 't', 'o', 'k', 'e', 'n'), new Core.SetValueRoute(127 /* Node */, 'n', 'o', 'd', 'e'), new Core.SetValueRoute(129 /* As */, 'a', 's'), new Core.SetValueRoute(103 /* Any */, '*'), new Core.SetValueRoute(108 /* Or */, '|'), new Core.SetValueRoute(109 /* And */, '&'), new Core.SetValueRoute(130 /* Semicolon */, ';'), new Core.SetValueRoute(131 /* OpenParentheses */, '('), new Core.SetValueRoute(132 /* CloseParentheses */, ')'), new Core.SetValueRoute(133 /* OpenChevron */, '<'), new Core.SetValueRoute(134 /* CloseChevron */, '>')), 
 // Number
-new Core.SetValuePattern(101 /* Number */, new Core.ChooseFlowPattern(new Core.ExpectUnitPattern('0'), new Core.ExpectFlowPattern(new Core.RangeUnitPattern('1', '9'), new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))))), 
+new Core.SetValuePattern(101 /* Number */, new Core.ChooseFlowPattern(new Core.ExpectUnitPattern('0'), new Core.ExpectFlowPattern(new Core.RangeUnitPattern('1', '9'), new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))))), 
 // String
-new Core.SetValuePattern(102 /* Alphabet */, new Core.ExpectUnitPattern("'"), new Core.RepeatFlowPattern(new Core.ConditionFlowPattern(new Core.ExpectUnitPattern('\\'), new Core.AnyUnitPattern(), new Core.ConditionFlowPattern(new Core.NegateFlowPattern(new Core.ExpectUnitPattern("'")), new Core.AnyUnitPattern()))), new Core.ExpectUnitPattern("'")), 
+new Core.SetValuePattern(102 /* Alphabet */, new Core.ExpectUnitPattern("'"), new Core.RepeatFlowPattern(new Core.ConditionFlowPattern(new Core.ExpectUnitPattern('\\'), new Core.AnyUnitPattern(), new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern("'")), new Core.AnyUnitPattern()))), new Core.ExpectUnitPattern("'")), 
 // Identifier
-new Core.SetValuePattern(100 /* Identifier */, new Core.ChooseFlowPattern(new Core.RangeUnitPattern('A', 'Z'), new Core.RangeUnitPattern('a', 'z'), new Core.ExpectUnitPattern('_')), new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.RangeUnitPattern('A', 'Z'), new Core.RangeUnitPattern('a', 'z'), new Core.RangeUnitPattern('0', '9'), new Core.ExpectUnitPattern('_')))))))))), new Core.EndFlowPattern());
+new Core.SetValuePattern(100 /* Identifier */, new Core.ChooseFlowPattern(new Core.RangeUnitPattern('A', 'Z'), new Core.RangeUnitPattern('a', 'z'), new Core.ExpectUnitPattern('_')), new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.RangeUnitPattern('A', 'Z'), new Core.RangeUnitPattern('a', 'z'), new Core.RangeUnitPattern('0', '9'), new Core.ExpectUnitPattern('_')))))))))), new Core.EndFlowPattern());
 //# sourceMappingURL=program.js.map
 
 /***/ }),
@@ -2823,7 +2823,7 @@ new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(208 /* Or */
 // And expressions
 new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(209 /* And */, 109 /* And */)), 
 // Unary operations
-new unary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(210 /* Not */, 110 /* Not */), new Core.SetValueRoute(211 /* Opt */, 111 /* Opt */), new Core.SetValueRoute(212 /* Rep */, 112 /* Rep */), new Core.SetValueRoute(216 /* Place */, 113 /* Place */), new Core.SetValueRoute(225 /* Pivot */, 116 /* Pivot */), new Core.SetValueRoute(220 /* Append */, 114 /* Append */), new Core.SetValueRoute(224 /* Prepend */, 115 /* Prepend */), new Core.SetValueRoute(213 /* PlaceNext */, 113 /* Place */, 117 /* Next */), new Core.SetValueRoute(217 /* AppendNext */, 114 /* Append */, 117 /* Next */), new Core.SetValueRoute(221 /* PrependNext */, 115 /* Prepend */, 117 /* Next */), new Core.SetValueRoute(214 /* PlaceLeft */, 113 /* Place */, 118 /* Left */), new Core.SetValueRoute(218 /* AppendLeft */, 114 /* Append */, 118 /* Left */), new Core.SetValueRoute(222 /* PrependLeft */, 115 /* Prepend */, 118 /* Left */), new Core.SetValueRoute(215 /* PlaceRight */, 113 /* Place */, 119 /* Right */), new Core.SetValueRoute(219 /* AppendRight */, 114 /* Append */, 119 /* Right */), new Core.SetValueRoute(223 /* PrependRight */, 115 /* Prepend */, 119 /* Right */), new Core.SetValueRoute(226 /* Symbol */, 120 /* Symbol */), new Core.SetValueRoute(227 /* Scope */, 121 /* Scope */), new Core.SetValueRoute(228 /* Error */, identity, 122 /* Error */), new Core.SetValueRoute(229 /* Has */, identity, 123 /* Has */), new Core.SetValueRoute(230 /* Set */, identity, 124 /* Set */)), new Core.ChooseFlowPattern(
+new unary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(210 /* Not */, 110 /* Not */), new Core.SetValueRoute(211 /* Opt */, 111 /* Opt */), new Core.SetValueRoute(212 /* Repeat */, 112 /* Repeat */), new Core.SetValueRoute(216 /* Place */, 113 /* Place */), new Core.SetValueRoute(225 /* Pivot */, 116 /* Pivot */), new Core.SetValueRoute(220 /* Append */, 114 /* Append */), new Core.SetValueRoute(224 /* Prepend */, 115 /* Prepend */), new Core.SetValueRoute(213 /* PlaceNext */, 113 /* Place */, 117 /* Next */), new Core.SetValueRoute(217 /* AppendNext */, 114 /* Append */, 117 /* Next */), new Core.SetValueRoute(221 /* PrependNext */, 115 /* Prepend */, 117 /* Next */), new Core.SetValueRoute(214 /* PlaceLeft */, 113 /* Place */, 118 /* Left */), new Core.SetValueRoute(218 /* AppendLeft */, 114 /* Append */, 118 /* Left */), new Core.SetValueRoute(222 /* PrependLeft */, 115 /* Prepend */, 118 /* Left */), new Core.SetValueRoute(215 /* PlaceRight */, 113 /* Place */, 119 /* Right */), new Core.SetValueRoute(219 /* AppendRight */, 114 /* Append */, 119 /* Right */), new Core.SetValueRoute(223 /* PrependRight */, 115 /* Prepend */, 119 /* Right */), new Core.SetValueRoute(226 /* Symbol */, 120 /* Symbol */), new Core.SetValueRoute(227 /* Scope */, 121 /* Scope */), new Core.SetValueRoute(228 /* Error */, identity, 122 /* Error */), new Core.SetValueRoute(229 /* Has */, identity, 123 /* Has */), new Core.SetValueRoute(230 /* Set */, identity, 124 /* Set */)), new Core.ChooseFlowPattern(
 // Range
 new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectUnitPattern(104 /* From */), new Core.AppendNodePattern(203 /* Alphabet */, 1 /* Right */, 1 /* Right */, new Core.ExpectUnitPattern(102 /* Alphabet */)), new Core.PivotNodePattern(205 /* Range */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(105 /* To */), new Core.AppendNodePattern(203 /* Alphabet */, 1 /* Right */, 1 /* Right */, new Core.ExpectUnitPattern(102 /* Alphabet */)))), 
 // Any, Alphabet & Reference
@@ -2831,13 +2831,13 @@ new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */,
 // Group
 new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(131 /* OpenParentheses */), new Core.RunFlowPattern(() => expression), new Core.ExpectUnitPattern(132 /* CloseParentheses */))))))), 
 // Condition
-new Core.OptionFlowPattern(new Core.PivotNodePattern(206 /* Then */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(106 /* Then */), new Core.RunFlowPattern(() => expression), new Core.OptionFlowPattern(new Core.PivotNodePattern(207 /* Else */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(107 /* Else */), new Core.RunFlowPattern(() => expression))))));
-const token = new Core.ExpectFlowPattern(new Core.OptionFlowPattern(identity), new Core.EmitSymbolPattern(300 /* Token */, new Core.PivotNodePattern(200 /* Identifier */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(100 /* Identifier */)), new Core.ExpectUnitPattern(129 /* As */), new Core.PlaceNodePattern(1 /* Right */, expression)));
-const node = new Core.ExpectFlowPattern(new Core.OptionFlowPattern(identity), new Core.EmitSymbolPattern(301 /* Node */, new Core.PivotNodePattern(200 /* Identifier */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(100 /* Identifier */)), new Core.ExpectUnitPattern(129 /* As */), new Core.PlaceNodePattern(1 /* Right */, expression)));
+new Core.OptFlowPattern(new Core.PivotNodePattern(206 /* Then */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(106 /* Then */), new Core.RunFlowPattern(() => expression), new Core.OptFlowPattern(new Core.PivotNodePattern(207 /* Else */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(107 /* Else */), new Core.RunFlowPattern(() => expression))))));
+const token = new Core.ExpectFlowPattern(new Core.OptFlowPattern(identity), new Core.EmitSymbolPattern(300 /* Token */, new Core.PivotNodePattern(200 /* Identifier */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(100 /* Identifier */)), new Core.ExpectUnitPattern(129 /* As */), new Core.PlaceNodePattern(1 /* Right */, expression)));
+const node = new Core.ExpectFlowPattern(new Core.OptFlowPattern(identity), new Core.EmitSymbolPattern(301 /* Node */, new Core.PivotNodePattern(200 /* Identifier */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(100 /* Identifier */)), new Core.ExpectUnitPattern(129 /* As */), new Core.PlaceNodePattern(1 /* Right */, expression)));
 /**
  * Main parser program.
  */
-exports.Program = new Core.ExpectFlowPattern(new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(new Core.SetValueRoute(231 /* Skip */, expression, 125 /* Skip */), new Core.SetValueRoute(233 /* Token */, token, 126 /* Token */), new Core.SetValueRoute(232 /* Node */, node, 127 /* Node */), new Core.SetValueRoute(235 /* AliasToken */, token, 128 /* Alias */, 126 /* Token */), new Core.SetValueRoute(234 /* AliasNode */, node, 128 /* Alias */, 127 /* Node */)), new Core.ExpectUnitPattern(130 /* Semicolon */))))), new Core.EndFlowPattern());
+exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(new Core.SetValueRoute(231 /* Skip */, expression, 125 /* Skip */), new Core.SetValueRoute(233 /* Token */, token, 126 /* Token */), new Core.SetValueRoute(232 /* Node */, node, 127 /* Node */), new Core.SetValueRoute(235 /* AliasToken */, token, 128 /* Alias */, 126 /* Token */), new Core.SetValueRoute(234 /* AliasNode */, node, 128 /* Alias */, 127 /* Node */)), new Core.ExpectUnitPattern(130 /* Semicolon */))))), new Core.EndFlowPattern());
 //# sourceMappingURL=program.js.map
 
 /***/ }),
@@ -2862,7 +2862,7 @@ class Binary extends Core.Pattern {
      */
     constructor(operator, expression) {
         super();
-        this.#pattern = new Core.ExpectFlowPattern(expression, new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.PivotNodePattern(Core.BaseSource.Output, 1 /* Right */, 0 /* Left */, operator, expression))));
+        this.#pattern = new Core.ExpectFlowPattern(expression, new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.PivotNodePattern(Core.BaseSource.Output, 1 /* Right */, 0 /* Left */, operator, expression))));
     }
     /**
      * Consume the given source.
@@ -2898,7 +2898,7 @@ class Unary extends Core.Pattern {
      */
     constructor(operator, expression) {
         super();
-        this.#pattern = new Core.ExpectFlowPattern(new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */, operator))), expression);
+        this.#pattern = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */, operator))), expression);
     }
     /**
      * Consume the given source.
@@ -3060,7 +3060,7 @@ const consume = (project, node, state) => {
             return Negate.consume(project, node, state);
         case 211 /* Opt */:
             return Option.consume(project, node, state);
-        case 212 /* Rep */:
+        case 212 /* Repeat */:
             return Repeat.consume(project, node, state);
         case 216 /* Place */:
         case 215 /* PlaceRight */:
@@ -4302,7 +4302,7 @@ class Live extends base_1.Base {
      * @returns Returns the pattern.
      */
     getEntry(name, pointers, ...patterns) {
-        return new Core.ExpectFlowPattern(new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))), new Core.EndFlowPattern());
+        return new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))), new Core.EndFlowPattern());
     }
     /**
      * Get a new route.
@@ -4388,7 +4388,7 @@ class Live extends base_1.Base {
      * @returns Returns the pattern.
      */
     getNegate(...patterns) {
-        return new Core.NegateFlowPattern(...patterns);
+        return new Core.NotFlowPattern(...patterns);
     }
     /**
      * get a new option pattern.
@@ -4396,7 +4396,7 @@ class Live extends base_1.Base {
      * @returns Returns the pattern.
      */
     getOption(...patterns) {
-        return new Core.OptionFlowPattern(...patterns);
+        return new Core.OptFlowPattern(...patterns);
     }
     /**
      * Get a new repeat pattern.
@@ -4592,7 +4592,7 @@ class Text extends base_1.Base {
     getEntry(name, pointers, ...patterns) {
         const deps = pointers.map((entry) => this.#getPointerEntry(entry.name, entry.pattern)).join('');
         return (deps +
-            this.#getExportEntry(name, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptionFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
+            this.#getExportEntry(name, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
     }
     /**
      * Get a new route.
@@ -4678,7 +4678,7 @@ class Text extends base_1.Base {
      * @returns Returns the pattern.
      */
     getNegate(...patterns) {
-        return this.#getPattern('NegateFlowPattern', ...patterns);
+        return this.#getPattern('NotFlowPattern', ...patterns);
     }
     /**
      * get a new option pattern.
@@ -4686,7 +4686,7 @@ class Text extends base_1.Base {
      * @returns Returns the pattern.
      */
     getOption(...patterns) {
-        return this.#getPattern('OptionFlowPattern', ...patterns);
+        return this.#getPattern('OptFlowPattern', ...patterns);
     }
     /**
      * Get a new repeat pattern.
