@@ -89,7 +89,7 @@
 		},
 		"control-expression": {
 			"name": "keyword.control.xcheme",
-			"match": "\\b(or|and|not|opt|rep|has)\\b"
+			"match": "\\b(or|and|not|opt|repeat|has)\\b"
 		},
 		"new-node-expression": {
 			"match": "\\b(place|append|prepend)\\b(\\s*\\b(next|left|right)\\b)?",
