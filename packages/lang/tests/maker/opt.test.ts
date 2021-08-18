@@ -19,7 +19,7 @@ test("Output an 'OPT' rule", () => {
   expect(rule.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern('.'), ` +
-      /**/ `new Core.OptionFlowPattern(` +
+      /**/ `new Core.OptFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern('@')` +
       /**/ `)` +
       `)`

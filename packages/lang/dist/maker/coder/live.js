@@ -15,7 +15,7 @@ class Live extends base_1.Base {
      * @returns Returns the pattern.
      */
     getEntry(name, pointers, ...patterns) {
-        return new Core.ExpectFlowPattern(new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))), new Core.EndFlowPattern());
+        return new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))), new Core.EndFlowPattern());
     }
     /**
      * Get a new route.
@@ -101,7 +101,7 @@ class Live extends base_1.Base {
      * @returns Returns the pattern.
      */
     getNegate(...patterns) {
-        return new Core.NegateFlowPattern(...patterns);
+        return new Core.NotFlowPattern(...patterns);
     }
     /**
      * get a new option pattern.
@@ -109,7 +109,7 @@ class Live extends base_1.Base {
      * @returns Returns the pattern.
      */
     getOption(...patterns) {
-        return new Core.OptionFlowPattern(...patterns);
+        return new Core.OptFlowPattern(...patterns);
     }
     /**
      * Get a new repeat pattern.

@@ -17,7 +17,7 @@ export default class Unary extends Core.Pattern {
   constructor(operator: Core.Pattern, expression: Core.Pattern) {
     super();
     this.#pattern = new Core.ExpectFlowPattern(
-      new Core.OptionFlowPattern(
+      new Core.OptFlowPattern(
         new Core.RepeatFlowPattern(new Core.AppendNodePattern(Core.BaseSource.Output, Core.Nodes.Right, Core.Nodes.Right, operator))
       ),
       expression

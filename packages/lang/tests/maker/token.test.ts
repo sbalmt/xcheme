@@ -92,7 +92,7 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
     `new Core.EmitTokenPattern(${pointer.identity}, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern('@'), ` +
-      /******/ `new Core.OptionFlowPattern(` +
+      /******/ `new Core.OptFlowPattern(` +
       /**********/ `new Core.RunFlowPattern(() => TOKEN)` +
       /******/ `)` +
       /**/ `)` +
@@ -125,7 +125,7 @@ test("Output a 'TOKEN' rule with an alias token that has a reference to itself",
   expect(pointer.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +
-      /**/ `new Core.OptionFlowPattern(` +
+      /**/ `new Core.OptFlowPattern(` +
       /******/ `new Core.RunFlowPattern(() => ALIAS)` +
       /**/ `)` +
       `)`

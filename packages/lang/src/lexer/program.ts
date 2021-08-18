@@ -6,7 +6,7 @@ import { Tokens } from './tokens';
  * Main lexer program.
  */
 export const Program = new Core.ExpectFlowPattern(
-  new Core.OptionFlowPattern(
+  new Core.OptFlowPattern(
     new Core.RepeatFlowPattern(
       new Core.ChooseFlowPattern(
         // White space
@@ -14,21 +14,18 @@ export const Program = new Core.ExpectFlowPattern(
         // Comment
         new Core.ExpectFlowPattern(
           new Core.ExpectUnitPattern('/', '/'),
-          new Core.OptionFlowPattern(
+          new Core.OptFlowPattern(
             new Core.RepeatFlowPattern(
-              new Core.ConditionFlowPattern(new Core.NegateFlowPattern(new Core.ExpectUnitPattern('\n')), new Core.AnyUnitPattern())
+              new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern('\n')), new Core.AnyUnitPattern())
             )
           )
         ),
         // Comment block
         new Core.ExpectFlowPattern(
           new Core.ExpectUnitPattern('/', '*'),
-          new Core.OptionFlowPattern(
+          new Core.OptFlowPattern(
             new Core.RepeatFlowPattern(
-              new Core.ConditionFlowPattern(
-                new Core.NegateFlowPattern(new Core.ExpectUnitPattern('*', '/')),
-                new Core.AnyUnitPattern()
-              )
+              new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern('*', '/')), new Core.AnyUnitPattern())
             )
           ),
           new Core.ExpectUnitPattern('*', '/')
@@ -82,7 +79,7 @@ export const Program = new Core.ExpectFlowPattern(
                 new Core.ExpectUnitPattern('0'),
                 new Core.ExpectFlowPattern(
                   new Core.RangeUnitPattern('1', '9'),
-                  new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))
+                  new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))
                 )
               )
             ),
@@ -94,7 +91,7 @@ export const Program = new Core.ExpectFlowPattern(
                 new Core.ConditionFlowPattern(
                   new Core.ExpectUnitPattern('\\'),
                   new Core.AnyUnitPattern(),
-                  new Core.ConditionFlowPattern(new Core.NegateFlowPattern(new Core.ExpectUnitPattern("'")), new Core.AnyUnitPattern())
+                  new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern("'")), new Core.AnyUnitPattern())
                 )
               ),
               new Core.ExpectUnitPattern("'")
@@ -107,7 +104,7 @@ export const Program = new Core.ExpectFlowPattern(
                 new Core.RangeUnitPattern('a', 'z'),
                 new Core.ExpectUnitPattern('_')
               ),
-              new Core.OptionFlowPattern(
+              new Core.OptFlowPattern(
                 new Core.RepeatFlowPattern(
                   new Core.ChooseFlowPattern(
                     new Core.RangeUnitPattern('A', 'Z'),

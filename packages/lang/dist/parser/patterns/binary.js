@@ -16,7 +16,7 @@ class Binary extends Core.Pattern {
      */
     constructor(operator, expression) {
         super();
-        this.#pattern = new Core.ExpectFlowPattern(expression, new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.PivotNodePattern(Core.BaseSource.Output, 1 /* Right */, 0 /* Left */, operator, expression))));
+        this.#pattern = new Core.ExpectFlowPattern(expression, new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.PivotNodePattern(Core.BaseSource.Output, 1 /* Right */, 0 /* Left */, operator, expression))));
     }
     /**
      * Consume the given source.

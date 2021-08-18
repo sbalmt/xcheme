@@ -66,7 +66,7 @@ test("Output a 'NODE' rule with a loose token reference", () => {
     `new Core.EmitNodePattern(${node.identity}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern(${token.identity}), ` +
-      /******/ `new Core.OptionFlowPattern(new Core.ExpectUnitPattern(${token.identity}))` +
+      /******/ `new Core.OptFlowPattern(new Core.ExpectUnitPattern(${token.identity}))` +
       /**/ `)` +
       `)`
   );
@@ -195,7 +195,7 @@ test("Output a 'NODE' rule with a reference to itself", () => {
     `new Core.EmitNodePattern(${pointer.identity}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern(${token.identity}), ` +
-      /******/ `new Core.OptionFlowPattern(new Core.RunFlowPattern(() => NODE))` +
+      /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => NODE))` +
       /**/ `)` +
       `)`
   );
@@ -236,7 +236,7 @@ test("Output a 'NODE' rule with an alias node that has a reference to itself", (
   expect(pointer.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern(${token.identity}), ` +
-      /******/ `new Core.OptionFlowPattern(new Core.RunFlowPattern(() => ALIAS)` +
+      /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => ALIAS)` +
       /**/ `)` +
       `)`
   );

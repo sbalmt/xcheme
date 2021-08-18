@@ -99,14 +99,14 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
     )
   ),
   // Condition
-  new Core.OptionFlowPattern(
+  new Core.OptFlowPattern(
     new Core.PivotNodePattern(
       Nodes.Then,
       Core.Nodes.Right,
       Core.Nodes.Left,
       new Core.ExpectUnitPattern(Lexer.Tokens.Then),
       new Core.RunFlowPattern(() => expression),
-      new Core.OptionFlowPattern(
+      new Core.OptFlowPattern(
         new Core.PivotNodePattern(
           Nodes.Else,
           Core.Nodes.Right,
@@ -120,7 +120,7 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
 );
 
 const token = new Core.ExpectFlowPattern(
-  new Core.OptionFlowPattern(identity),
+  new Core.OptFlowPattern(identity),
   new Core.EmitSymbolPattern(
     Symbols.Token,
     new Core.PivotNodePattern(
@@ -135,7 +135,7 @@ const token = new Core.ExpectFlowPattern(
 );
 
 const node = new Core.ExpectFlowPattern(
-  new Core.OptionFlowPattern(identity),
+  new Core.OptFlowPattern(identity),
   new Core.EmitSymbolPattern(
     Symbols.Node,
     new Core.PivotNodePattern(
@@ -153,7 +153,7 @@ const node = new Core.ExpectFlowPattern(
  * Main parser program.
  */
 export const Program = new Core.ExpectFlowPattern(
-  new Core.OptionFlowPattern(
+  new Core.OptFlowPattern(
     new Core.RepeatFlowPattern(
       new Core.ChooseFlowPattern(
         new Core.EmitNodePattern(

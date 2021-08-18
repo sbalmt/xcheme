@@ -18,7 +18,7 @@ test("Output a 'NOT' rule", () => {
   expect(rule).toBeDefined();
   expect(rule.pattern).toBe(
     `new Core.ConditionFlowPattern(` +
-      /**/ `new Core.NegateFlowPattern(` +
+      /**/ `new Core.NotFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern('@')` +
       /**/ `), ` +
       /**/ `new Core.AnyUnitPattern(), ` +

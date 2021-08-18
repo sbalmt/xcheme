@@ -18,7 +18,7 @@ export default class Binary extends Core.Pattern {
     super();
     this.#pattern = new Core.ExpectFlowPattern(
       expression,
-      new Core.OptionFlowPattern(
+      new Core.OptFlowPattern(
         new Core.RepeatFlowPattern(
           new Core.PivotNodePattern(Core.BaseSource.Output, Core.Nodes.Right, Core.Nodes.Left, operator, expression)
         )

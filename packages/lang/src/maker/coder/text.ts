@@ -78,7 +78,7 @@ export class Text extends Base {
         this.#getPattern(
           'ExpectFlowPattern',
           this.#getPattern(
-            'OptionFlowPattern',
+            'OptFlowPattern',
             this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))
           ),
           this.#getPattern('EndFlowPattern')
@@ -180,7 +180,7 @@ export class Text extends Base {
    * @returns Returns the pattern.
    */
   getNegate(...patterns: string[]): string {
-    return this.#getPattern('NegateFlowPattern', ...patterns);
+    return this.#getPattern('NotFlowPattern', ...patterns);
   }
 
   /**
@@ -189,7 +189,7 @@ export class Text extends Base {
    * @returns Returns the pattern.
    */
   getOption(...patterns: string[]): string {
-    return this.#getPattern('OptionFlowPattern', ...patterns);
+    return this.#getPattern('OptFlowPattern', ...patterns);
   }
 
   /**

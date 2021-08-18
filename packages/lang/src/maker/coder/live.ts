@@ -31,7 +31,7 @@ export class Live extends Base {
    */
   getEntry(name: string, pointers: PointerEntry[], ...patterns: Core.Pattern[]): Core.Pattern {
     return new Core.ExpectFlowPattern(
-      new Core.OptionFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))),
+      new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))),
       new Core.EndFlowPattern()
     );
   }
@@ -129,7 +129,7 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   getNegate(...patterns: Core.Pattern[]): Core.Pattern {
-    return new Core.NegateFlowPattern(...patterns);
+    return new Core.NotFlowPattern(...patterns);
   }
 
   /**
@@ -138,7 +138,7 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   getOption(...patterns: Core.Pattern[]): Core.Pattern {
-    return new Core.OptionFlowPattern(...patterns);
+    return new Core.OptFlowPattern(...patterns);
   }
 
   /**

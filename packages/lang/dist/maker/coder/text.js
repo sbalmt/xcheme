@@ -53,7 +53,7 @@ class Text extends base_1.Base {
     getEntry(name, pointers, ...patterns) {
         const deps = pointers.map((entry) => this.#getPointerEntry(entry.name, entry.pattern)).join('');
         return (deps +
-            this.#getExportEntry(name, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptionFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
+            this.#getExportEntry(name, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
     }
     /**
      * Get a new route.
@@ -139,7 +139,7 @@ class Text extends base_1.Base {
      * @returns Returns the pattern.
      */
     getNegate(...patterns) {
-        return this.#getPattern('NegateFlowPattern', ...patterns);
+        return this.#getPattern('NotFlowPattern', ...patterns);
     }
     /**
      * get a new option pattern.
@@ -147,7 +147,7 @@ class Text extends base_1.Base {
      * @returns Returns the pattern.
      */
     getOption(...patterns) {
-        return this.#getPattern('OptionFlowPattern', ...patterns);
+        return this.#getPattern('OptFlowPattern', ...patterns);
     }
     /**
      * Get a new repeat pattern.
