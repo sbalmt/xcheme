@@ -15,7 +15,7 @@ test('Consume success', () => {
   expect(source.length).toBe(1);
 
   // Check the first output state.
-  expect(source.output.state).toBe(0x1aa);
+  expect(source.output.state).toBe(0x2bb);
 
   // Test the final consumption.
   expect(pattern.consume(source)).toBeTruthy();
@@ -23,7 +23,7 @@ test('Consume success', () => {
   expect(source.length).toBe(0);
 
   // Check the final output state.
-  expect(source.output.state).toBe(0x2bb);
+  expect(source.output.state).toBe(0x1aa);
 });
 
 test('Consume failure', () => {
@@ -36,7 +36,7 @@ test('Consume failure', () => {
   expect(source.length).toBe(2);
 
   // Check the output state.
-  expect(source.output.state).toBeUndefined();
+  expect(source.output.state).toBe(0);
 });
 
 test('Consume eof', () => {
@@ -49,5 +49,5 @@ test('Consume eof', () => {
   expect(source.length).toBe(0);
 
   // Check the output state.
-  expect(source.output.state).toBeUndefined();
+  expect(source.output.state).toBe(0);
 });

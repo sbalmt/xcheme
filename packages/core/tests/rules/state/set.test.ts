@@ -28,7 +28,7 @@ test('Consume failure', () => {
   expect(source.length).toBe(2);
 
   // Check the output state.
-  expect(source.output.state).toBeUndefined();
+  expect(source.output.state).toBe(0);
 });
 
 test('Consume eof', () => {
@@ -41,5 +41,5 @@ test('Consume eof', () => {
   expect(source.length).toBe(0);
 
   // Check the output state.
-  expect(source.output.state).toBeUndefined();
+  expect(source.output.state).toBe(0);
 });
