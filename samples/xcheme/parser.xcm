@@ -2,15 +2,15 @@
  * A XCHEME Lang parser.
  */
 skip ' ' | '\t' | '\v' | '\f' | '\r' | '\n';
-skip '/*' & opt rep (not '*/' then *) & '*/';
-skip '//' & opt rep (not '\n' then *);
+skip '/*' & opt repeat (not '*/' then *) & '*/';
+skip '//' & opt repeat (not '\n' then *);
 
 // Lexer
 alias token T_ALPHA as from 'A' to 'Z' | from 'a' to 'z';
 alias token T_DIGIT as from '0' to '9';
 
-token<101> T_NUMBER as '0' | from '1' to '9' & opt rep T_DIGIT;
-token<102> T_STRING as '\'' & rep ('\\' then * else not '\'' then *) & '\'';
+token<101> T_NUMBER as '0' | from '1' to '9' & opt repeat T_DIGIT;
+token<102> T_STRING as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
 
 token<103> T_ANY    as 'any' | '*';
 token<104> T_FROM   as 'from';
@@ -23,7 +23,7 @@ token<109> T_AND    as 'and' | '&';
 
 token<110> T_NOT    as 'not';
 token<111> T_OPT    as 'opt';
-token<112> T_REP    as 'rep';
+token<112> T_REPEAT as 'repeat';
 
 token<113> T_PLACE  as 'place';
 token<114> T_APPEND as 'append';
@@ -55,7 +55,7 @@ token<132> T_GROUP_CLOSE    as ')';
 token<133> T_IDENTITY_OPEN  as '<';
 token<134> T_IDENTITY_CLOSE as '>';
 
-token<100> T_IDENTIFIER as (T_ALPHA | '_') & opt rep (T_ALPHA | T_DIGIT | '_');
+token<100> T_IDENTIFIER as (T_ALPHA | '_') & opt repeat (T_ALPHA | T_DIGIT | '_');
 
 // Parser
 alias node GROUP      as place (T_GROUP_OPEN & EXPRESSION & T_GROUP_CLOSE);
@@ -90,18 +90,18 @@ alias node<215> PLACE_R     as append (T_PLACE & T_RIGHT);
 alias node<214> PLACE_L     as append (T_PLACE & T_LEFT);
 alias node<213> PLACE_N     as append (T_PLACE & T_NEXT);
 
-alias node<212> REPEAT      as append T_REP;
+alias node<212> REPEAT      as append T_REPEAT;
 alias node<211> OPTIONAL    as append T_OPT;
 alias node<210> NOT         as append T_NOT;
 
-alias node UNARY  as  opt rep (NOT | OPTIONAL | REPEAT |
+alias node UNARY  as  opt repeat (NOT | OPTIONAL | REPEAT |
                       PLACE_N | PLACE_L | PLACE_R | PLACE |
                       APPEND_N | APPEND_L | APPEND_R | APPEND |
                       PREPEND_N | PREPEND_L | PREPEND_R | PREPEND |
                       PIVOT | SYMBOL | SCOPE | ERROR | SET | HAS) & OPERAND;
 
-alias node<209> AND   as UNARY & opt rep pivot (T_AND & UNARY);
-alias node<208> OR    as AND & opt rep pivot (T_OR & AND);
+alias node<209> AND   as UNARY & opt repeat pivot (T_AND & UNARY);
+alias node<208> OR    as AND & opt repeat pivot (T_OR & AND);
 
 alias node<207> ELSE  as pivot (T_ELSE & EXPRESSION);
 alias node<206> THEN  as pivot (T_THEN & EXPRESSION & opt ELSE);
