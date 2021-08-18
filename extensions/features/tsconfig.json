@@ -1,0 +1,14 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./out",
+    "declarationDir": "./types",
+    "paths": {
+      "@xcheme/core": ["../../packages/core/src"],
+      "@xcheme/lang": ["../../packages/lang/src"]
+    }
+  },
+  "exclude": ["node_modules"],
+  "references": [{ "path": "../../packages/core" }, { "path": "../../packages/lang" }]
+}

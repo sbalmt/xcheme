@@ -1,0 +1,43 @@
+{
+	"name": "xcheme-language-features",
+	"displayName": "XCHEME Language Features",
+	"description": "Provides rich language support for XCHEME Lang.",
+	"icon": "media/icon.png",
+	"publisher": "balmanth",
+	"version": "0.0.1",
+	"main": "./dist/extension.js",
+	"engines": {
+		"vscode": "^1.30.0"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/balmanth/xcheme.git",
+		"directory": "extensions/features"
+	},
+	"activationEvents": [
+		"onLanguage:xcheme"
+	],
+	"capabilities": {},
+	"contributes": {},
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"clean": "tsc --build --clean ./tsconfig.json",
+		"build": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map"
+	},
+	"devDependencies": {
+		"@types/node": "14.x",
+		"@types/vscode": "^1.30.0",
+		"@xcheme/core": "^0.0.1",
+		"@xcheme/lang": "^0.0.1",
+		"ts-loader": "^9.2.2",
+		"typescript": "^4.3.2",
+		"vscode-test": "^1.5.2",
+		"webpack": "^5.38.1",
+		"webpack-cli": "^4.7.0"
+	}
+}
