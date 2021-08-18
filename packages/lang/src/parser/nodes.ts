@@ -14,7 +14,7 @@ export const enum Nodes {
   And,
   Not,
   Opt,
-  Rep,
+  Repeat,
   PlaceNext,
   PlaceLeft,
   PlaceRight,

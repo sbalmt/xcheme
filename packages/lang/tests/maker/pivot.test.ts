@@ -20,14 +20,14 @@ test("Output a 'PIVOT' rule", () => {
 });
 
 test("Parse a chained 'PIVOT' rule", () => {
-  const project = Helper.makeParser(new LiveCoder(), "skip pivot ('@' & rep '*');");
+  const project = Helper.makeParser(new LiveCoder(), "skip pivot ('@' & repeat '*');");
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '@**');
 });
 
 test("Output a chained 'PIVOT' rule", () => {
-  const project = Helper.makeParser(new TextCoder(), "skip pivot ('@' & rep '*');");
+  const project = Helper.makeParser(new TextCoder(), "skip pivot ('@' & repeat '*');");
 
   // Check the output code.
   const rule = project.skipEntries.get('SKIP0')!;

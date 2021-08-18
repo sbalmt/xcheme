@@ -55,7 +55,7 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
       return Negate.consume(project, node, state);
     case Parser.Nodes.Opt:
       return Option.consume(project, node, state);
-    case Parser.Nodes.Rep:
+    case Parser.Nodes.Repeat:
       return Repeat.consume(project, node, state);
     case Parser.Nodes.Place:
     case Parser.Nodes.PlaceRight:

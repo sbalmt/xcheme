@@ -31,7 +31,7 @@ const tokens = [
     // Unary
     { name: 'not', value: Lexer.Tokens.Not },
     { name: 'opt', value: Lexer.Tokens.Opt },
-    { name: 'rep', value: Lexer.Tokens.Rep },
+    { name: 'repeat', value: Lexer.Tokens.Repeat },
     // Node
     { name: 'place', value: Lexer.Tokens.Place },
     { name: 'pivot', value: Lexer.Tokens.Pivot },

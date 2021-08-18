@@ -49,7 +49,7 @@ const consume = (project, node, state) => {
             return Negate.consume(project, node, state);
         case 211 /* Opt */:
             return Option.consume(project, node, state);
-        case 212 /* Rep */:
+        case 212 /* Repeat */:
             return Repeat.consume(project, node, state);
         case 216 /* Place */:
         case 215 /* PlaceRight */:

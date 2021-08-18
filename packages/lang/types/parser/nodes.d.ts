@@ -14,7 +14,7 @@ export declare const enum Nodes {
     And = 209,
     Not = 210,
     Opt = 211,
-    Rep = 212,
+    Repeat = 212,
     PlaceNext = 213,
     PlaceLeft = 214,
     PlaceRight = 215,

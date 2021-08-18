@@ -3,15 +3,15 @@ import * as Helper from './common/helper';
 
 import { LiveCoder, TextCoder } from '../../src/index';
 
-test("Parse a 'REP' rule", () => {
-  const project = Helper.makeParser(new LiveCoder(), "skip rep '@';");
+test("Parse a 'REPEAT' rule", () => {
+  const project = Helper.makeParser(new LiveCoder(), "skip repeat '@';");
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '@@@');
 });
 
-test("Output a 'REP' rule", () => {
-  const project = Helper.makeParser(new TextCoder(), "skip rep '@';");
+test("Output a 'REPEAT' rule", () => {
+  const project = Helper.makeParser(new TextCoder(), "skip repeat '@';");
 
   // Check the output code.
   const rule = project.skipEntries.get('SKIP0')!;

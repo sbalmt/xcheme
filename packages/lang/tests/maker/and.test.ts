@@ -20,14 +20,14 @@ test("Output an 'AND' rule", () => {
 });
 
 test("Parse subsequent 'AND' rules (optimized)", () => {
-  const project = Helper.makeParser(new LiveCoder(), "skip '-' & '+' & rep ('@' | 'A') & '1' & '2';");
+  const project = Helper.makeParser(new LiveCoder(), "skip '-' & '+' & repeat ('@' | 'A') & '1' & '2';");
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '-+@A12-+@@AA12');
 });
 
 test("Output subsequent 'AND' rules (optimized)", () => {
-  const project = Helper.makeParser(new TextCoder(), "skip '-' & '+' & rep ('@' | 'A') & '1' & '2';");
+  const project = Helper.makeParser(new TextCoder(), "skip '-' & '+' & repeat ('@' | 'A') & '1' & '2';");
 
   // Check the output code.
   const rule = project.skipEntries.get('SKIP0')!;

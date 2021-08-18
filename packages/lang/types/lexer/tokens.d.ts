@@ -14,7 +14,7 @@ export declare const enum Tokens {
     And = 109,
     Not = 110,
     Opt = 111,
-    Rep = 112,
+    Repeat = 112,
     Place = 113,
     Append = 114,
     Prepend = 115,

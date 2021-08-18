@@ -30,7 +30,7 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
         new Core.MapFlowPattern(
           new Core.SetValueRoute(Nodes.Not, Lexer.Tokens.Not),
           new Core.SetValueRoute(Nodes.Opt, Lexer.Tokens.Opt),
-          new Core.SetValueRoute(Nodes.Rep, Lexer.Tokens.Rep),
+          new Core.SetValueRoute(Nodes.Repeat, Lexer.Tokens.Repeat),
           new Core.SetValueRoute(Nodes.Place, Lexer.Tokens.Place),
           new Core.SetValueRoute(Nodes.Pivot, Lexer.Tokens.Pivot),
           new Core.SetValueRoute(Nodes.Append, Lexer.Tokens.Append),

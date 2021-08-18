@@ -20,14 +20,14 @@ test("Output a 'SYMBOL' rule", () => {
 });
 
 test("Parse a chained 'SYMBOL' rule", () => {
-  const project = Helper.makeParser(new LiveCoder(), "skip symbol ('@' & rep '*');");
+  const project = Helper.makeParser(new LiveCoder(), "skip symbol ('@' & repeat '*');");
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '@**');
 });
 
 test("Output a chained 'SYMBOL' rule", () => {
-  const project = Helper.makeParser(new TextCoder(), "skip symbol ('@' & rep '*');");
+  const project = Helper.makeParser(new TextCoder(), "skip symbol ('@' & repeat '*');");
 
   // Check the output code.
   const rule = project.skipEntries.get('SKIP0')!;

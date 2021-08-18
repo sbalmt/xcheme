@@ -42,14 +42,14 @@ test("Output subsequent 'OR' rules (complex)", () => {
 });
 
 test("Parse subsequent 'OR' rules (optimized)", () => {
-  const project = Helper.makeParser(new LiveCoder(), "skip rep '-' | '+' | '@' & ('1' | '2') | 'A' | 'B';");
+  const project = Helper.makeParser(new LiveCoder(), "skip repeat '-' | '+' | '@' & ('1' | '2') | 'A' | 'B';");
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '---+@1AB@2');
 });
 
 test("Output subsequent 'OR' rules (optimized)", () => {
-  const project = Helper.makeParser(new TextCoder(), "skip rep '-' | '+' | '@' & ('1' | '2') | 'A' | 'B';");
+  const project = Helper.makeParser(new TextCoder(), "skip repeat '-' | '+' | '@' & ('1' | '2') | 'A' | 'B';");
 
   // Check the output code.
   const rule = project.skipEntries.get('SKIP0')!;

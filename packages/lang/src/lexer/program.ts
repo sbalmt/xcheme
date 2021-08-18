@@ -41,7 +41,7 @@ export const Program = new Core.ExpectFlowPattern(
               new Core.SetValueRoute(Tokens.To, 't', 'o'),
               new Core.SetValueRoute(Tokens.Not, 'n', 'o', 't'),
               new Core.SetValueRoute(Tokens.Opt, 'o', 'p', 't'),
-              new Core.SetValueRoute(Tokens.Rep, 'r', 'e', 'p'),
+              new Core.SetValueRoute(Tokens.Repeat, 'r', 'e', 'p', 'e', 'a', 't'),
               new Core.SetValueRoute(Tokens.Place, 'p', 'l', 'a', 'c', 'e'),
               new Core.SetValueRoute(Tokens.Pivot, 'p', 'i', 'v', 'o', 't'),
               new Core.SetValueRoute(Tokens.Append, 'a', 'p', 'p', 'e', 'n', 'd'),
