@@ -12,3 +12,12 @@ test('Node referring an alias token (reference error)', () => {
 test('Node referring an unresolved token (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "node NODE as TOKEN; token TOKEN as '@';", [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]);
 });
+
+test('Node with an identity', () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "node <2020> NODE as '@';");
+
+  // Check the resulting node.
+  const node = project.nodeEntries.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.identity).toBe(2020);
+});
