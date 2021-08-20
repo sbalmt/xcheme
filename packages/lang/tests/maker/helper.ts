@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import { Lexer, Parser, Maker, Errors, Project, BaseCoder } from '../../../src/index';
+import { Lexer, Parser, Maker, Errors, Project, BaseCoder } from '../../src/index';
 
 /**
  * Print all errors in the given list.

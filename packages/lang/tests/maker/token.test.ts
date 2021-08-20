@@ -1,137 +1,14 @@
-import * as Core from '@xcheme/core';
-import * as Helper from './common/helper';
-
-import { Errors, LiveCoder, TextCoder } from '../../src/index';
-
-const checkTokens = (context: Core.Context, identity: number): number => {
-  let total = 0;
-  for (const current of context.tokens) {
-    expect(current.value).toBe(identity);
-    total++;
-  }
-  return total;
-};
+import * as Helper from './helper';
+import * as Lang from '../../src/index';
 
 test('Token referring an undefined identifier', () => {
-  Helper.makeError(new LiveCoder(), 'token TOKEN as ALIAS;', [Errors.UNDEFINED_IDENTIFIER]);
+  Helper.makeError(new Lang.LiveCoder(), 'token TOKEN as ALIAS;', [Lang.Errors.UNDEFINED_IDENTIFIER]);
 });
 
 test('Token referring a node (reference error)', () => {
-  Helper.makeError(new LiveCoder(), "node NODE as '@'; token TOKEN as NODE;", [Errors.INVALID_NODE_REFERENCE]);
+  Helper.makeError(new Lang.LiveCoder(), "node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_NODE_REFERENCE]);
 });
 
 test('Token referring an alias node (reference error)', () => {
-  Helper.makeError(new LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Errors.INVALID_NODE_REFERENCE]);
-});
-
-test("Parse a 'TOKEN' rule", () => {
-  const project = Helper.makeParser(new LiveCoder(), "token TOKEN as '@';");
-  const context = new Core.Context('test');
-
-  // Check the resulting tokens.
-  Helper.testLexer(project, context, '@@@');
-
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(3);
-});
-
-test("Output a 'TOKEN' rule", () => {
-  const project = Helper.makeParser(new TextCoder(), "token TOKEN as '@';");
-
-  // Check the output code.
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, new Core.ExpectUnitPattern('@'))`);
-});
-
-test("Parse a 'TOKEN' rule with an alias token reference", () => {
-  const project = Helper.makeParser(new LiveCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
-  const context = new Core.Context('test');
-
-  // Check the resulting tokens.
-  Helper.testLexer(project, context, '@@@');
-
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(3);
-});
-
-test("Output a 'TOKEN' rule with an alias token reference", () => {
-  const project = Helper.makeParser(new TextCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
-
-  // Check the output code.
-  const pointer = project.tokenPointerEntries.get('ALIAS')!;
-  expect(pointer).toBeDefined();
-  expect(pointer.pattern).toBe(`new Core.ExpectUnitPattern('@')`);
-
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
-});
-
-test("Parse a 'TOKEN' rule with a reference to itself", () => {
-  const project = Helper.makeParser(new LiveCoder(), "token TOKEN as '@' & opt TOKEN;");
-  const context = new Core.Context('test');
-
-  // Check the resulting tokens.
-  Helper.testLexer(project, context, '@@@');
-
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(3);
-});
-
-test("Output a 'TOKEN' rule with a reference to itself", () => {
-  const project = Helper.makeParser(new TextCoder(), "token TOKEN as '@' & opt TOKEN;");
-
-  // Check the output code.
-  const pointer = project.tokenPointerEntries.get('TOKEN')!;
-  expect(pointer).toBeDefined();
-  expect(pointer.pattern).toBe(
-    `new Core.EmitTokenPattern(${pointer.identity}, ` +
-      /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.ExpectUnitPattern('@'), ` +
-      /******/ `new Core.OptFlowPattern(` +
-      /**********/ `new Core.RunFlowPattern(() => TOKEN)` +
-      /******/ `)` +
-      /**/ `)` +
-      `)`
-  );
-
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.RunFlowPattern(() => TOKEN)`);
-});
-
-test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", () => {
-  const project = Helper.makeParser(new LiveCoder(), "alias token ALIAS as '@' & opt ALIAS; token TOKEN as ALIAS;");
-  const context = new Core.Context('test');
-
-  // Check the resulting tokens.
-  Helper.testLexer(project, context, '@@@');
-
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(1);
-});
-
-test("Output a 'TOKEN' rule with an alias token that has a reference to itself", () => {
-  const project = Helper.makeParser(new TextCoder(), "alias token ALIAS as '@' & opt ALIAS; token TOKEN as ALIAS;");
-
-  // Check the output code.
-  const pointer = project.tokenPointerEntries.get('ALIAS')!;
-  expect(pointer).toBeDefined();
-  expect(pointer.pattern).toBe(
-    `new Core.ExpectFlowPattern(` +
-      /**/ `new Core.ExpectUnitPattern('@'), ` +
-      /**/ `new Core.OptFlowPattern(` +
-      /******/ `new Core.RunFlowPattern(() => ALIAS)` +
-      /**/ `)` +
-      `)`
-  );
-
-  const token = project.tokenEntries.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
+  Helper.makeError(new Lang.LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_NODE_REFERENCE]);
 });
