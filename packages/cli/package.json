@@ -1,31 +1,37 @@
 {
-  "name": "@xcheme/cli",
-  "version": "0.0.1",
-  "description": "Command Line Interface.",
-  "license": "MIT",
-  "keywords": [
-    "xcheme",
-    "lang",
-    "cli"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/balmanth/xcheme.git",
-    "directory": "packages/cli"
-  },
-  "main": "bin/index.js",
-  "bin": {
-    "xcm": "./bin/index.js"
-  },
-  "scripts": {
-    "build": "tsc --build ./tsconfig.json",
-    "clean": "tsc --build --clean ./tsconfig.json"
-  },
-  "devDependencies": {
-    "typescript": "^4.3.5"
-  },
-  "dependencies": {
-    "@xcheme/core": "^0.0.1",
-    "@xcheme/lang": "^0.0.1"
-  }
+	"name": "@xcheme/cli",
+	"version": "0.0.1",
+	"description": "Command Line Interface.",
+	"license": "MIT",
+	"keywords": [
+		"xcheme",
+		"lang",
+		"cli"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/balmanth/xcheme.git",
+		"directory": "packages/cli"
+	},
+	"main": "bin/xcm.js",
+	"bin": {
+		"xcm": "./bin/xcm.js"
+	},
+	"scripts": {
+		"clean": "tsc --build --clean ./tsconfig.json",
+		"build": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map"
+	},
+	"devDependencies": {
+		"ts-loader": "^9.2.5",
+		"typescript": "^4.3.5",
+		"webpack": "^5.51.1",
+		"webpack-cli": "^4.8.0",
+		"webpack-shebang-plugin": "^1.1.6"
+	},
+	"dependencies": {
+		"@xcheme/core": "^0.0.1",
+		"@xcheme/lang": "^0.0.1"
+	}
 }
