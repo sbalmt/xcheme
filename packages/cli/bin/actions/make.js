@@ -9,6 +9,12 @@ const Parser = require("../core/parser");
 const Console = require("../core/console");
 const Errors = require("../core/errors");
 /**
+ * Global language options.
+ */
+const globalOptions = {
+    initialIdentity: 0
+};
+/**
  * Make a new project based on the specified input nodes.
  * @param project Input project.
  * @param node Input node.
@@ -67,14 +73,14 @@ const perform = (source, target, run, state) => {
     if (Lexer.tokenize(Lang.Lexer, text, context, !run && state.tokens)) {
         if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols, !run && state.nodes)) {
             if (run) {
-                const project = new Lang.Project(new Lang.LiveCoder());
+                const project = new Lang.Project(new Lang.LiveCoder(), globalOptions);
                 if (make(project, context.node)) {
                     const content = FS.readFileSync(target).toString();
                     test(project, content, state);
                     return true;
                 }
             }
-            const project = new Lang.Project(new Lang.TextCoder());
+            const project = new Lang.Project(new Lang.TextCoder(), globalOptions);
             if (make(project, context.node)) {
                 save(project, target);
                 return true;
