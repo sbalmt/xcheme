@@ -25,11 +25,11 @@ class Base {
         throw "Method doesn't implemented.";
     }
     /**
-     * Should be implemented to return a skip pattern.
-     * @param patterns Skip patterns.
+     * Should be implemented to return a map pattern.
+     * @param routes Map routes.
      * @returns Should return the pattern.
      */
-    getSkip(...patterns) {
+    getMap(...routes) {
         throw "Method doesn't implemented.";
     }
     /**

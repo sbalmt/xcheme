@@ -27,11 +27,11 @@ class Live extends base_1.Base {
         return new Core.Route(new Core.SetValuePattern(value), ...path);
     }
     /**
-     * Get a new skip pattern.
-     * @param routes Skip routes.
+     * Get a new map pattern.
+     * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getSkip(...routes) {
+    getMap(...routes) {
         return new Core.EmitTokenPattern(Core.BaseSource.Output, new Core.MapFlowPattern(...routes));
     }
     /**

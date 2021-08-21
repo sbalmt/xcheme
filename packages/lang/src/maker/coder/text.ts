@@ -93,17 +93,17 @@ export class Text extends Base {
    * @param path Route path.
    * @returns Returns the route.
    */
-  getRoute(value: number, path: string[]): string {
+  getRoute(value: number, path: (string | number)[]): string {
     return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
   }
 
   /**
-   * Get a new skip pattern.
-   * @param routes Skip routes.
+   * Get a new map pattern.
+   * @param routes Map routes.
    * @returns Returns the pattern.
    */
-  getSkip(...patterns: string[]): string {
-    return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...patterns));
+  getMap(...routes: string[]): string {
+    return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...routes));
   }
 
   /**

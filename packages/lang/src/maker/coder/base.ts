@@ -47,16 +47,16 @@ export class Base {
    * @param path Route path.
    * @returns Should return the route.
    */
-  getRoute(value: number, path: string[]): RouteEntry {
+  getRoute(value: number, path: (string | number)[]): RouteEntry {
     throw "Method doesn't implemented.";
   }
 
   /**
-   * Should be implemented to return a skip pattern.
-   * @param patterns Skip patterns.
+   * Should be implemented to return a map pattern.
+   * @param routes Map routes.
    * @returns Should return the pattern.
    */
-  getSkip(...patterns: RouteEntry[]): PatternEntry {
+  getMap(...routes: RouteEntry[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 

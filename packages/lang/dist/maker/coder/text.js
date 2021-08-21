@@ -65,12 +65,12 @@ class Text extends base_1.Base {
         return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
     }
     /**
-     * Get a new skip pattern.
-     * @param routes Skip routes.
+     * Get a new map pattern.
+     * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getSkip(...patterns) {
-        return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...patterns));
+    getMap(...routes) {
+        return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...routes));
     }
     /**
      * Get a new token pattern.

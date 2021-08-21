@@ -165,7 +165,7 @@ export class Project {
       this.#getPointers(this.#tokenPointerEntries),
       ...this.#getPatterns(this.#skipEntries.patterns),
       ...(routes.length > 0
-        ? [this.#coder.getSkip(...routes), ...this.#getPatterns(this.#tokenEntries.patterns)]
+        ? [this.#coder.getMap(...routes), ...this.#getPatterns(this.#tokenEntries.patterns)]
         : this.#getPatterns(this.#tokenEntries.patterns))
     );
   }

@@ -32,13 +32,13 @@ export declare class Live extends Base {
      * @param path Route path.
      * @returns Returns the route.
      */
-    getRoute(value: number, path: string[]): Core.Route;
+    getRoute(value: number, path: (string | number)[]): Core.Route;
     /**
-     * Get a new skip pattern.
-     * @param routes Skip routes.
+     * Get a new map pattern.
+     * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getSkip(...routes: Core.Route[]): Core.Pattern;
+    getMap(...routes: Core.Route[]): Core.Pattern;
     /**
      * Get a new token pattern.
      * @param identity Token identity.

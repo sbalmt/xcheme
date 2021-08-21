@@ -33,13 +33,13 @@ export declare class Text extends Base {
      * @param path Route path.
      * @returns Returns the route.
      */
-    getRoute(value: number, path: string[]): string;
+    getRoute(value: number, path: (string | number)[]): string;
     /**
-     * Get a new skip pattern.
-     * @param routes Skip routes.
+     * Get a new map pattern.
+     * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getSkip(...patterns: string[]): string;
+    getMap(...routes: string[]): string;
     /**
      * Get a new token pattern.
      * @param identity Token identity.
