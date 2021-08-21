@@ -8,46 +8,48 @@ skip '//' & opt repeat (not '\n' then *);
 // Lexer
 alias token T_ALPHA as from 'A' to 'Z' | from 'a' to 'z';
 alias token T_DIGIT as from '0' to '9';
+alias token T_EXTRA as '_';
+alias token T_WORD  as T_ALPHA | T_DIGIT | T_EXTRA;
+alias token T_END   as not T_WORD;
 
 token<101> T_NUMBER as '0' | from '1' to '9' & opt repeat T_DIGIT;
 token<102> T_STRING as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
 
-token<103> T_ANY    as 'any' | '*';
-token<104> T_FROM   as 'from';
+token<103> T_ANY    as ('any' & T_END) | '*';
+token<104> T_FROM   as 'from' & T_END;
+token<105> T_TO     as 'to' & T_END;
 
-token<106> T_THEN   as 'then';
-token<107> T_ELSE   as 'else';
+token<106> T_THEN   as 'then' & T_END;
+token<107> T_ELSE   as 'else' & T_END;
 
-token<108> T_OR     as 'or' | '|';
-token<109> T_AND    as 'and' | '&';
+token<108> T_OR     as ('or' & T_END) | '|';
+token<109> T_AND    as ('and' & T_END) | '&';
 
-token<110> T_NOT    as 'not';
-token<111> T_OPT    as 'opt';
-token<112> T_REPEAT as 'repeat';
+token<110> T_NOT    as 'not' & T_END;
+token<111> T_OPT    as 'opt' & T_END;
+token<112> T_REPEAT as 'repeat' & T_END;
 
-token<113> T_PLACE  as 'place';
-token<114> T_APPEND as 'append';
-token<115> T_PRPEND as 'prepend';
-token<116> T_PIVOT  as 'pivot';
-token<117> T_NEXT   as 'next';
-token<118> T_LEFT   as 'left';
-token<119> T_RIGHT  as 'right';
+token<113> T_PLACE  as 'place' & T_END;
+token<114> T_APPEND as 'append' & T_END;
+token<115> T_PRPEND as 'prepend' & T_END;
+token<116> T_PIVOT  as 'pivot' & T_END;
+token<117> T_NEXT   as 'next' & T_END;
+token<118> T_LEFT   as 'left' & T_END;
+token<119> T_RIGHT  as 'right' & T_END;
 
-token<120> T_SYMBOL as 'symbol';
-token<121> T_SCOPE  as 'scope';
+token<120> T_SYMBOL as 'symbol' & T_END;
+token<121> T_SCOPE  as 'scope' & T_END;
 
-token<122> T_ERROR  as 'error';
+token<122> T_ERROR  as 'error' & T_END;
 
-token<123> T_HAS    as 'has';
-token<124> T_SET    as 'set';
+token<123> T_HAS    as 'has' & T_END;
+token<124> T_SET    as 'set' & T_END;
 
-token<125> T_SKIP   as 'skip';
-token<126> T_ALIAS  as 'alias';
-token<127> T_TOKEN  as 'token';
-token<128> T_NODE   as 'node';
-token<129> T_AS     as 'as';
-
-token<105> T_TO     as 'to';
+token<125> T_SKIP   as 'skip' & T_END;
+token<126> T_ALIAS  as 'alias' & T_END;
+token<127> T_TOKEN  as 'token' & T_END;
+token<128> T_NODE   as 'node' & T_END;
+token<129> T_AS     as 'as' & T_END;
 
 token<130> T_SEMICOLON      as ';';
 token<131> T_GROUP_OPEN     as '(';
@@ -55,7 +57,7 @@ token<132> T_GROUP_CLOSE    as ')';
 token<133> T_IDENTITY_OPEN  as '<';
 token<134> T_IDENTITY_CLOSE as '>';
 
-token<100> T_IDENTIFIER as (T_ALPHA | '_') & opt repeat (T_ALPHA | T_DIGIT | '_');
+token<100> T_IDENTIFIER as (T_ALPHA | T_EXTRA) & opt repeat T_WORD;
 
 // Parser
 alias node GROUP      as place (T_GROUP_OPEN & EXPRESSION & T_GROUP_CLOSE);

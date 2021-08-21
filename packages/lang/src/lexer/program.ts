@@ -3,6 +3,31 @@ import * as Core from '@xcheme/core';
 import { Tokens } from './tokens';
 
 /**
+ * Alpha characters.
+ */
+const alpha = new Core.ChooseFlowPattern(new Core.RangeUnitPattern('a', 'z'), new Core.RangeUnitPattern('A', 'Z'));
+
+/**
+ * Digit characters.
+ */
+const digit = new Core.RangeUnitPattern('0', '9');
+
+/**
+ * Extra characters for identifiers.
+ */
+const extra = new Core.ExpectUnitPattern('_');
+
+/**
+ * Word characters.
+ */
+const word = new Core.ChooseFlowPattern(alpha, digit, extra);
+
+/**
+ * Word boundary pattern.
+ */
+const end = new Core.NotFlowPattern(word);
+
+/**
  * Main lexer program.
  */
 export const Program = new Core.ExpectFlowPattern(
@@ -36,33 +61,33 @@ export const Program = new Core.ExpectFlowPattern(
           new Core.ChooseFlowPattern(
             // Keywords, Functions and Symbols
             new Core.MapFlowPattern(
-              new Core.SetValueRoute(Tokens.Any, 'a', 'n', 'y'),
-              new Core.SetValueRoute(Tokens.From, 'f', 'r', 'o', 'm'),
-              new Core.SetValueRoute(Tokens.To, 't', 'o'),
-              new Core.SetValueRoute(Tokens.Not, 'n', 'o', 't'),
-              new Core.SetValueRoute(Tokens.Opt, 'o', 'p', 't'),
-              new Core.SetValueRoute(Tokens.Repeat, 'r', 'e', 'p', 'e', 'a', 't'),
-              new Core.SetValueRoute(Tokens.Place, 'p', 'l', 'a', 'c', 'e'),
-              new Core.SetValueRoute(Tokens.Pivot, 'p', 'i', 'v', 'o', 't'),
-              new Core.SetValueRoute(Tokens.Append, 'a', 'p', 'p', 'e', 'n', 'd'),
-              new Core.SetValueRoute(Tokens.Prepend, 'p', 'r', 'e', 'p', 'e', 'n', 'd'),
-              new Core.SetValueRoute(Tokens.Next, 'n', 'e', 'x', 't'),
-              new Core.SetValueRoute(Tokens.Left, 'l', 'e', 'f', 't'),
-              new Core.SetValueRoute(Tokens.Right, 'r', 'i', 'g', 'h', 't'),
-              new Core.SetValueRoute(Tokens.Symbol, 's', 'y', 'm', 'b', 'o', 'l'),
-              new Core.SetValueRoute(Tokens.Scope, 's', 'c', 'o', 'p', 'e'),
-              new Core.SetValueRoute(Tokens.Error, 'e', 'r', 'r', 'o', 'r'),
-              new Core.SetValueRoute(Tokens.Has, 'h', 'a', 's'),
-              new Core.SetValueRoute(Tokens.Set, 's', 'e', 't'),
-              new Core.SetValueRoute(Tokens.Or, 'o', 'r'),
-              new Core.SetValueRoute(Tokens.And, 'a', 'n', 'd'),
-              new Core.SetValueRoute(Tokens.Then, 't', 'h', 'e', 'n'),
-              new Core.SetValueRoute(Tokens.Else, 'e', 'l', 's', 'e'),
-              new Core.SetValueRoute(Tokens.Skip, 's', 'k', 'i', 'p'),
-              new Core.SetValueRoute(Tokens.Alias, 'a', 'l', 'i', 'a', 's'),
-              new Core.SetValueRoute(Tokens.Token, 't', 'o', 'k', 'e', 'n'),
-              new Core.SetValueRoute(Tokens.Node, 'n', 'o', 'd', 'e'),
-              new Core.SetValueRoute(Tokens.As, 'a', 's'),
+              new Core.SetValueRoute(Tokens.Any, end, 'a', 'n', 'y'),
+              new Core.SetValueRoute(Tokens.From, end, 'f', 'r', 'o', 'm'),
+              new Core.SetValueRoute(Tokens.To, end, 't', 'o'),
+              new Core.SetValueRoute(Tokens.Not, end, 'n', 'o', 't'),
+              new Core.SetValueRoute(Tokens.Opt, end, 'o', 'p', 't'),
+              new Core.SetValueRoute(Tokens.Repeat, end, 'r', 'e', 'p', 'e', 'a', 't'),
+              new Core.SetValueRoute(Tokens.Place, end, 'p', 'l', 'a', 'c', 'e'),
+              new Core.SetValueRoute(Tokens.Pivot, end, 'p', 'i', 'v', 'o', 't'),
+              new Core.SetValueRoute(Tokens.Append, end, 'a', 'p', 'p', 'e', 'n', 'd'),
+              new Core.SetValueRoute(Tokens.Prepend, end, 'p', 'r', 'e', 'p', 'e', 'n', 'd'),
+              new Core.SetValueRoute(Tokens.Next, end, 'n', 'e', 'x', 't'),
+              new Core.SetValueRoute(Tokens.Left, end, 'l', 'e', 'f', 't'),
+              new Core.SetValueRoute(Tokens.Right, end, 'r', 'i', 'g', 'h', 't'),
+              new Core.SetValueRoute(Tokens.Symbol, end, 's', 'y', 'm', 'b', 'o', 'l'),
+              new Core.SetValueRoute(Tokens.Scope, end, 's', 'c', 'o', 'p', 'e'),
+              new Core.SetValueRoute(Tokens.Error, end, 'e', 'r', 'r', 'o', 'r'),
+              new Core.SetValueRoute(Tokens.Has, end, 'h', 'a', 's'),
+              new Core.SetValueRoute(Tokens.Set, end, 's', 'e', 't'),
+              new Core.SetValueRoute(Tokens.Or, end, 'o', 'r'),
+              new Core.SetValueRoute(Tokens.And, end, 'a', 'n', 'd'),
+              new Core.SetValueRoute(Tokens.Then, end, 't', 'h', 'e', 'n'),
+              new Core.SetValueRoute(Tokens.Else, end, 'e', 'l', 's', 'e'),
+              new Core.SetValueRoute(Tokens.Skip, end, 's', 'k', 'i', 'p'),
+              new Core.SetValueRoute(Tokens.Alias, end, 'a', 'l', 'i', 'a', 's'),
+              new Core.SetValueRoute(Tokens.Token, end, 't', 'o', 'k', 'e', 'n'),
+              new Core.SetValueRoute(Tokens.Node, end, 'n', 'o', 'd', 'e'),
+              new Core.SetValueRoute(Tokens.As, end, 'a', 's'),
               new Core.SetValueRoute(Tokens.Any, '*'),
               new Core.SetValueRoute(Tokens.Or, '|'),
               new Core.SetValueRoute(Tokens.And, '&'),
@@ -79,7 +104,7 @@ export const Program = new Core.ExpectFlowPattern(
                 new Core.ExpectUnitPattern('0'),
                 new Core.ExpectFlowPattern(
                   new Core.RangeUnitPattern('1', '9'),
-                  new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.RangeUnitPattern('0', '9')))
+                  new Core.OptFlowPattern(new Core.RepeatFlowPattern(digit))
                 )
               )
             ),
@@ -99,21 +124,8 @@ export const Program = new Core.ExpectFlowPattern(
             // Identifier
             new Core.SetValuePattern(
               Tokens.Identifier,
-              new Core.ChooseFlowPattern(
-                new Core.RangeUnitPattern('A', 'Z'),
-                new Core.RangeUnitPattern('a', 'z'),
-                new Core.ExpectUnitPattern('_')
-              ),
-              new Core.OptFlowPattern(
-                new Core.RepeatFlowPattern(
-                  new Core.ChooseFlowPattern(
-                    new Core.RangeUnitPattern('A', 'Z'),
-                    new Core.RangeUnitPattern('a', 'z'),
-                    new Core.RangeUnitPattern('0', '9'),
-                    new Core.ExpectUnitPattern('_')
-                  )
-                )
-              )
+              new Core.ChooseFlowPattern(alpha, extra),
+              new Core.OptFlowPattern(new Core.RepeatFlowPattern(word))
             )
           )
         )
