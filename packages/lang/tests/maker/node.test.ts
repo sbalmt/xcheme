@@ -6,7 +6,7 @@ test('Node referring an undefined identifier', () => {
 });
 
 test('Node referring an alias token (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "alias token TOKEN as '@'; node NODE as TOKEN;", [Lang.Errors.INVALID_TOKEN_REFERENCE]);
+  Helper.makeError(new Lang.LiveCoder(), "alias token TOKEN as '@'; node NODE as TOKEN;", [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]);
 });
 
 test('Node referring an unresolved token (reference error)', () => {
