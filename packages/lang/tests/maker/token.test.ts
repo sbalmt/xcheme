@@ -1,4 +1,3 @@
-import * as Core from '@xcheme/core';
 import * as Helper from './helper';
 import * as Lang from '../../src/index';
 
