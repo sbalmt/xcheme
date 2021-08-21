@@ -11,10 +11,11 @@ const errorMessages = {
     [4097 /* UNEXPECTED_TOKEN */]: "Unexpected token '{0}' at line {1}, column {2}.",
     [4098 /* UNEXPECTED_SYNTAX */]: "Unexpected syntax '{0}' at line {1}, column {2}.",
     [4099 /* UNEXPECTED_NODE */]: "Unexpected node '{0}' at line {1}, column {2}.",
-    [4100 /* INVALID_NODE_REFERENCE */]: "Tokens cannot have node references, '{0}' at line {1}, column {2}.",
-    [4101 /* INVALID_TOKEN_REFERENCE */]: "Nodes cannot reference aliased tokens, '{0}' at line {1}, column {2}.",
-    [4102 /* UNRESOLVED_TOKEN_REFERENCE */]: "Token reference is not resolved yet, '{0}' at line {1}, column {2}.",
-    [4103 /* UNDEFINED_IDENTIFIER */]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}."
+    [4100 /* INVALID_NODE_REFERENCE */]: "Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
+    [4101 /* INVALID_TOKEN_REFERENCE */]: "Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
+    [4102 /* INVALID_ALIAS_TOKEN_REFERENCE */]: "Alias Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
+    [4103 /* UNRESOLVED_TOKEN_REFERENCE */]: "Token reference is not resolved yet, '{0}' at line {1}, column {2}.",
+    [4104 /* UNDEFINED_IDENTIFIER */]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}."
 };
 /**
  * Get the corresponding error message based on the given error object.
