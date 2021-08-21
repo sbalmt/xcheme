@@ -18,6 +18,7 @@
 		"xcm": "./bin/xcm.js"
 	},
 	"scripts": {
+		"prepublishOnly": "npm run package",
 		"clean": "tsc --build --clean ./tsconfig.json",
 		"build": "webpack",
 		"watch": "webpack --watch",
