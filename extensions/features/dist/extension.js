@@ -27,9 +27,10 @@ const errorMessages = {
     [4099 /* UNEXPECTED_NODE */]: 'Unexpected node.',
     [4100 /* INVALID_NODE_REFERENCE */]: 'Node reference cannot be in use here.',
     [4101 /* INVALID_TOKEN_REFERENCE */]: 'Token reference cannot be in use here.',
-    [4102 /* INVALID_ALIAS_TOKEN_REFERENCE */]: 'Alias Token reference cannot be in use here.',
-    [4103 /* UNRESOLVED_TOKEN_REFERENCE */]: 'Token reference is not resolved yet.',
-    [4104 /* UNDEFINED_IDENTIFIER */]: 'Undefined identifiers cannot be referenced.'
+    [4102 /* INVALID_ALIAS_NODE_REFERENCE */]: 'Alias Node reference cannot be in use here.',
+    [4103 /* INVALID_ALIAS_TOKEN_REFERENCE */]: 'Alias Token reference cannot be in use here.',
+    [4104 /* UNRESOLVED_TOKEN_REFERENCE */]: 'Token reference is not resolved yet.',
+    [4105 /* UNDEFINED_IDENTIFIER */]: 'Undefined identifiers cannot be referenced.'
 };
 /**
  * Get the corresponding error message based on the given error object.
@@ -1729,28 +1730,142 @@ exports.default = Static;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const pattern_1 = __webpack_require__(12);
-const expect_1 = __webpack_require__(19);
-const try_1 = __webpack_require__(22);
 /**
  * Consumes the first route that match in the list of routes given for this pattern.
  */
 class Map extends pattern_1.default {
     /**
-     * List of routes.
+     * Root map node.
      */
-    #routes;
+    #root;
+    /**
+     * Compare the given inputs and returns the difference between both of them.
+     * @param a Input A.
+     * @param b Input B.
+     * @returns Returns less than zero when input A is less than input B.
+     *          Returns greater than zero when input A is greater than input B.
+     *          Returns zero when input A is equals to input B.
+     */
+    #compare(a, b) {
+        return (typeof a === 'string' ? a.charCodeAt(0) : a) - (typeof b === 'string' ? b.charCodeAt(0) : b);
+    }
+    /**
+     * Get the node that correspond to the given input units.
+     * @param units Input units.
+     * @returns Returns the corresponding node or undefined when it wasn't found.
+     */
+    #get(units) {
+        let current = this.#root;
+        let previous = void 0;
+        for (let index = 0; index < units.length;) {
+            if (!current) {
+                return void 0;
+            }
+            const diff = this.#compare(current.value, units[index]);
+            if (diff < 0) {
+                current = current.left;
+            }
+            else if (diff > 0) {
+                current = current.right;
+            }
+            else {
+                previous = current;
+                current = current.next;
+                index++;
+            }
+        }
+        return previous;
+    }
+    /**
+     * Set new nodes based on the given input units.
+     * @param units Input units.
+     * @returns Returns the terminal node or undefined when the given units are empty.
+     */
+    #set(units) {
+        let current = this.#root;
+        let previous = current;
+        let selected = current;
+        let diff = 0;
+        for (let index = 0; index < units.length;) {
+            if (current) {
+                diff = this.#compare(current.value, units[index]);
+                if (diff < 0) {
+                    previous = current;
+                    current = current.left;
+                    continue;
+                }
+                else if (diff > 0) {
+                    previous = current;
+                    current = current.right;
+                    continue;
+                }
+            }
+            else {
+                const node = { value: units[index] };
+                if (previous) {
+                    if (diff < 0) {
+                        previous.left = current = node;
+                    }
+                    else if (diff > 0) {
+                        previous.right = current = node;
+                    }
+                    else {
+                        previous.next = current = node;
+                    }
+                    diff = 0;
+                }
+                else {
+                    this.#root = previous = current = node;
+                }
+            }
+            selected = current;
+            previous = current;
+            current = current.next;
+            index++;
+        }
+        return selected;
+    }
+    /**
+     * Find the next terminal node in the given data source starting from the specified node.
+     * @param source Data source.
+     * @param current Current node.
+     * @returns Returns the corresponding terminal node or undefined when it wasn't found.
+     */
+    #find(source, current) {
+        source.saveState();
+        while (source.length > 0 && current !== void 0) {
+            const diff = this.#compare(current.value, source.value);
+            if (diff < 0) {
+                current = current.left;
+            }
+            else if (diff > 0) {
+                current = current.right;
+            }
+            else {
+                if (current.pattern) {
+                    source.discardState();
+                    return current;
+                }
+                source.move();
+                current = current.next;
+            }
+        }
+        source.restoreState();
+        source.discardState();
+        return void 0;
+    }
     /**
      * Default constructor.
      * @param routes List of routes.
      */
     constructor(...routes) {
         super();
-        this.#routes = routes
-            .sort((a, b) => b.units.length - a.units.length)
-            .map((route) => ({
-            test: new try_1.default(new expect_1.default(...route.units)),
-            target: route.pattern
-        }));
+        for (const route of routes) {
+            const node = this.#get(route.units) ?? this.#set(route.units);
+            if (node) {
+                node.pattern = route.pattern;
+            }
+        }
     }
     /**
      * Consume the given source.
@@ -1758,10 +1873,15 @@ class Map extends pattern_1.default {
      * @returns Returns true when the source was consumed, otherwise returns false.
      */
     consume(source) {
-        for (const route of this.#routes) {
-            if (route.test.consume(source)) {
-                return route.target.consume(source);
-            }
+        let current = this.#root;
+        let longest;
+        while ((current = this.#find(source, current)) !== void 0) {
+            longest = current;
+            current = current.next;
+            source.move();
+        }
+        if (longest !== void 0) {
+            return longest.pattern.consume(source);
         }
         return false;
     }
@@ -3880,13 +4000,13 @@ const resolveNode = (project, node, state, symbol) => {
     }
     const token = project.tokenEntries.get(name);
     if (!token) {
-        project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_TOKEN_REFERENCE */));
+        project.errors.push(new Core.Error(node.fragment, 4104 /* UNRESOLVED_TOKEN_REFERENCE */));
     }
     else {
         if (token.type !== 1 /* Alias */) {
             return project.coder.getAlphabet([token.identity]);
         }
-        project.errors.push(new Core.Error(node.fragment, 4102 /* INVALID_ALIAS_TOKEN_REFERENCE */));
+        project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_ALIAS_TOKEN_REFERENCE */));
     }
     return void 0;
 };
@@ -3907,7 +4027,7 @@ const resolveSkip = (project, node, state, symbol) => {
     else {
         const token = project.tokenEntries.get(name);
         if (!token) {
-            project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_TOKEN_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4104 /* UNRESOLVED_TOKEN_REFERENCE */));
         }
         else {
             if (token.type === 1 /* Alias */) {
@@ -3945,7 +4065,7 @@ const consume = (project, node, state) => {
             return resolveSkip(project, node, state, symbol);
         }
     }
-    project.errors.push(new Core.Error(node.fragment, 4104 /* UNDEFINED_IDENTIFIER */));
+    project.errors.push(new Core.Error(node.fragment, 4105 /* UNDEFINED_IDENTIFIER */));
     return void 0;
 };
 exports.consume = consume;

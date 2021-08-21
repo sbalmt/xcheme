@@ -13,6 +13,7 @@ const errorMessages = {
   [Lang.Errors.UNEXPECTED_NODE]: "Unexpected node '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_NODE_REFERENCE]: "Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_TOKEN_REFERENCE]: "Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: "Alias Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]: "Alias Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]: "Token reference is not resolved yet, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNDEFINED_IDENTIFIER]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}."

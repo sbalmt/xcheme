@@ -52,13 +52,13 @@ const resolveNode = (project, node, state, symbol) => {
     }
     const token = project.tokenEntries.get(name);
     if (!token) {
-        project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_TOKEN_REFERENCE */));
+        project.errors.push(new Core.Error(node.fragment, 4104 /* UNRESOLVED_TOKEN_REFERENCE */));
     }
     else {
         if (token.type !== 1 /* Alias */) {
             return project.coder.getAlphabet([token.identity]);
         }
-        project.errors.push(new Core.Error(node.fragment, 4102 /* INVALID_ALIAS_TOKEN_REFERENCE */));
+        project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_ALIAS_TOKEN_REFERENCE */));
     }
     return void 0;
 };
@@ -79,7 +79,7 @@ const resolveSkip = (project, node, state, symbol) => {
     else {
         const token = project.tokenEntries.get(name);
         if (!token) {
-            project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_TOKEN_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4104 /* UNRESOLVED_TOKEN_REFERENCE */));
         }
         else {
             if (token.type === 1 /* Alias */) {
@@ -117,7 +117,7 @@ const consume = (project, node, state) => {
             return resolveSkip(project, node, state, symbol);
         }
     }
-    project.errors.push(new Core.Error(node.fragment, 4104 /* UNDEFINED_IDENTIFIER */));
+    project.errors.push(new Core.Error(node.fragment, 4105 /* UNDEFINED_IDENTIFIER */));
     return void 0;
 };
 exports.consume = consume;
