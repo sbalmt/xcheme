@@ -16,7 +16,8 @@ const config = {
     extensions: ['.ts', '.js']
   },
   watchOptions: {
-    aggregateTimeout: 30,
+    poll: 2000,
+    aggregateTimeout: 1000,
     ignored: /node_modules/
   },
   module: {

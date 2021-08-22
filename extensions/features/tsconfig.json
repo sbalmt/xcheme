@@ -9,6 +9,6 @@
       "@xcheme/lang": ["../../packages/lang/src"]
     }
   },
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules/**/*", "types/**/*"],
   "references": [{ "path": "../../packages/core" }, { "path": "../../packages/lang" }]
 }
