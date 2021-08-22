@@ -48,28 +48,42 @@ class Provider {
      * @param table Input table.
      * @returns Returns the completion list.
      */
-    #getSymbols(table) {
+    #getSymbolList(table) {
         const list = [];
         for (const name of table.keys) {
             const record = table.getRecord(name);
-            const item = new VSCode.CompletionItem(name, VSCode.CompletionItemKind.Reference);
-            item.documentation = `Insert a ${record.value === 301 /* Node */ ? 'node' : 'token'} reference.`;
+            const type = record.value === 301 /* Node */ ? 'node' : 'token';
+            const item = Items.getItem(name, `Insert a ${type} reference.`, {
+                kind: VSCode.CompletionItemKind.Reference
+            });
             list.push(item);
         }
         return list;
     }
     /**
+     * Get the token index that corresponds to the specified position in the given document.
+     * @param tokens Input tokens.
+     * @param document Input document.
+     * @param position Position in the document.
+     * @returns Returns the corresponding token index.
+     */
+    #getTokenIndex(tokens, document, position) {
+        const offset = document.offsetAt(position);
+        const index = tokens.findIndex((token) => token.fragment.end >= offset);
+        return index < 0 ? tokens.length - 1 : index;
+    }
+    /**
      * Provide completion items for the given position and document.
      * @param document Input document.
+     * @param position Position in the document.
      * @returns Returns the completion items list.
      */
-    provideCompletionItems(document) {
+    provideCompletionItems(document, position) {
         const context = Analysis.consume(document);
         const tokens = context.tokens;
         if (tokens.length > 0) {
-            const index = tokens.length - 1;
-            const last = tokens[index];
-            switch (last.value) {
+            const index = this.#getTokenIndex(tokens, document, position);
+            switch (tokens[index].value) {
                 case 125 /* Skip */:
                     return Items.operandList;
                 case 128 /* Alias */:
@@ -77,6 +91,8 @@ class Provider {
                 case 126 /* Token */:
                 case 127 /* Node */:
                     return [Items.identityItem, Items.identifierItem];
+                case 133 /* OpenChevron */:
+                    return [];
                 case 134 /* CloseChevron */:
                     return this.#isIdentity(tokens, index) ? [Items.identifierItem] : [];
                 case 100 /* Identifier */:
@@ -86,7 +102,7 @@ class Provider {
                 case 107 /* Else */:
                 case 108 /* Or */:
                 case 109 /* And */:
-                    return [...this.#getSymbols(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+                    return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.unaryOperatorList];
                 case 110 /* Not */:
                 case 111 /* Opt */:
                 case 112 /* Repeat */:
@@ -99,16 +115,18 @@ class Provider {
                 case 122 /* Error */:
                 case 123 /* Has */:
                 case 124 /* Set */:
-                    return [...this.#getSymbols(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+                case 131 /* OpenParentheses */:
+                    return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.unaryOperatorList];
                 case 113 /* Place */:
                 case 114 /* Append */:
                 case 115 /* Prepend */:
-                    return [...this.#getSymbols(context.table), ...Items.operandList, ...Items.directionList, ...Items.unaryOperatorList];
+                    return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.directionList, ...Items.unaryOperatorList];
                 case 104 /* From */:
                     return [Items.wordItem];
                 case 105 /* To */:
                 case 102 /* Alphabet */:
                 case 103 /* Any */:
+                case 132 /* CloseParentheses */:
                     return Items.binaryOperatorList;
             }
         }
@@ -5323,8 +5341,15 @@ exports.update = update;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.operandList = exports.directionList = exports.unaryOperatorList = exports.binaryOperatorList = exports.rangeItem = exports.anyItem = exports.wordItem = exports.setItem = exports.hasItem = exports.errorItem = exports.scopeItem = exports.symbolItem = exports.pivotItem = exports.nextItem = exports.rightItem = exports.leftItem = exports.prependItem = exports.appendItem = exports.placeItem = exports.repeatItem = exports.optItem = exports.notItem = exports.andItem = exports.orItem = exports.thenElseItem = exports.thenItem = exports.asItem = exports.identifierItem = exports.identityItem = exports.nodeItem = exports.tokenItem = exports.aliasItem = exports.skipItem = void 0;
+exports.operandList = exports.directionList = exports.unaryOperatorList = exports.binaryOperatorList = exports.rangeItem = exports.anyItem = exports.wordItem = exports.setItem = exports.hasItem = exports.errorItem = exports.scopeItem = exports.symbolItem = exports.pivotItem = exports.nextItem = exports.rightItem = exports.leftItem = exports.prependItem = exports.appendItem = exports.placeItem = exports.repeatItem = exports.optItem = exports.notItem = exports.andItem = exports.orItem = exports.thenElseItem = exports.thenItem = exports.asItem = exports.identifierItem = exports.identityItem = exports.nodeItem = exports.tokenItem = exports.aliasItem = exports.skipItem = exports.getItem = void 0;
 const VSCode = __webpack_require__(1);
+/**
+ * Reusable trigger command.
+ */
+const retriggerCommand = {
+    command: 'editor.action.triggerSuggest',
+    title: 'Re-trigger completions...'
+};
 /**
  * Get a new completion item based on the given label, documentation and options.
  * @param label Completion item label.
@@ -5333,38 +5358,43 @@ const VSCode = __webpack_require__(1);
  * @returns Returns the new completion item.
  */
 const getItem = (label, documentation, options) => {
-    const kind = options?.kind ?? VSCode.CompletionItemKind.Keyword;
     const text = options?.text ?? label;
-    const item = new VSCode.CompletionItem(label, kind);
-    item.insertText = new VSCode.SnippetString(kind === VSCode.CompletionItemKind.Keyword ? `${text} ` : text);
+    const item = new VSCode.CompletionItem(label, options.kind);
+    item.insertText = new VSCode.SnippetString(options.kind === VSCode.CompletionItemKind.Text ? text : `${text} `);
     item.commitCharacters = options?.commit;
     item.documentation = documentation;
-    item.command = {
-        command: 'editor.action.triggerSuggest',
-        title: 'Re-trigger completions...'
-    };
+    item.command = retriggerCommand;
     return item;
 };
+exports.getItem = getItem;
 /**
  * Completion item for a 'SKIP' directive.
  */
-exports.skipItem = getItem('skip', 'Create a skip directive.');
+exports.skipItem = exports.getItem('skip', 'Create a skip directive.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for an 'ALIAS' directive.
  */
-exports.aliasItem = getItem('alias', 'Create an alias directive for a token or node.');
+exports.aliasItem = exports.getItem('alias', 'Create an alias directive for a token or node.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'TOKEN' directive.
  */
-exports.tokenItem = getItem('token', 'Create a token directive.');
+exports.tokenItem = exports.getItem('token', 'Create a token directive.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'NODE' directive.
  */
-exports.nodeItem = getItem('node', 'Create a node directive.');
+exports.nodeItem = exports.getItem('node', 'Create a node directive.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for an identity.
  */
-exports.identityItem = getItem('IDENTITY', 'Set an identity for the current directive.', {
+exports.identityItem = exports.getItem('IDENTITY', 'Set an identity for the current directive.', {
     text: '<${1}>',
     commit: ['>'],
     kind: VSCode.CompletionItemKind.Text
@@ -5372,7 +5402,7 @@ exports.identityItem = getItem('IDENTITY', 'Set an identity for the current dire
 /**
  * Completion item for an identifier.
  */
-exports.identifierItem = getItem('IDENTIFIER', 'Set an identifier for the current directive.', {
+exports.identifierItem = exports.getItem('IDENTIFIER', 'Set an identifier for the current directive.', {
     text: '${1}',
     commit: [' ', '\n'],
     kind: VSCode.CompletionItemKind.Text
@@ -5380,116 +5410,153 @@ exports.identifierItem = getItem('IDENTIFIER', 'Set an identifier for the curren
 /**
  * Completion item for an 'AS' operator.
  */
-exports.asItem = getItem('as', 'Set an expression for the current directive.');
+exports.asItem = exports.getItem('as', 'Set an expression for the current directive.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'THEN' operator.
  */
-exports.thenItem = getItem('then', 'Set a condition based on the last consumption state.');
+exports.thenItem = exports.getItem('then', 'Set a condition based on the last consumption state.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'THEN/ELSE' operator.
  */
-exports.thenElseItem = getItem('then else', 'Set a condition based on the last consumption state.', {
+exports.thenElseItem = exports.getItem('then else', 'Set a condition based on the last consumption state.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: 'then ${1} else ${2}',
     commit: [' ', '\n']
 });
 /**
  * Completion item for an 'OR' operator.
  */
-exports.orItem = getItem('or', 'Set another consumption option.', {
+exports.orItem = exports.getItem('or', 'Set another consumption option.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: '|'
 });
 /**
  * Completion item for an 'AND' operator.
  */
-exports.andItem = getItem('and', 'Set another expected consumption.', {
+exports.andItem = exports.getItem('and', 'Set another expected consumption.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: '&'
 });
 /**
  * Completion item for a 'NOT' operator.
  */
-exports.notItem = getItem('not', 'Invert the next consumption result (true to false and vice versa).');
+exports.notItem = exports.getItem('not', 'Invert the next consumption result (true to false and vice versa).', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for an 'OPT' operator.
  */
-exports.optItem = getItem('opt', 'Set as optional the next consumption.');
+exports.optItem = exports.getItem('opt', 'Set as optional the next consumption.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'REPEAT' operator.
  */
-exports.repeatItem = getItem('repeat', 'Repeat the next consumption in case of success in the first try.');
+exports.repeatItem = exports.getItem('repeat', 'Repeat the next consumption in case of success in the first try.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'PLACE' operator.
  */
-exports.placeItem = getItem('place', 'Place any resulting node from the next consumption in another direction.');
+exports.placeItem = exports.getItem('place', 'Place any resulting node from the next consumption in another direction.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for an 'APPEND' operator.
  */
-exports.appendItem = getItem('append', 'Create and append a new node if the next consumption is successful.');
+exports.appendItem = exports.getItem('append', 'Create and append a new node if the next consumption is successful.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'PREPEND' operator.
  */
-exports.prependItem = getItem('prepend', 'Create and prepend a new node if the next consumption is successful.');
+exports.prependItem = exports.getItem('prepend', 'Create and prepend a new node if the next consumption is successful.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'LEFT' modifier.
  */
-exports.leftItem = getItem('left', 'Modify the current node direction to left.');
+exports.leftItem = exports.getItem('left', 'Modify the current node direction to left.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'RIGHT' modifier.
  */
-exports.rightItem = getItem('right', 'Modify the current node direction to right.');
+exports.rightItem = exports.getItem('right', 'Modify the current node direction to right.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'NEXT' modifier.
  */
-exports.nextItem = getItem('next', 'Modify the current node direction to next.');
+exports.nextItem = exports.getItem('next', 'Modify the current node direction to next.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'PIVOT' operator.
  */
-exports.pivotItem = getItem('pivot', 'Create a new node and pivot the current ones if the next consumption is successful.');
+exports.pivotItem = exports.getItem('pivot', 'Create a new node and pivot the current ones if the next consumption is successful.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'SYMBOL' operator.
  */
-exports.symbolItem = getItem('symbol', 'Create a new symbol if the next consumption is successful.');
+exports.symbolItem = exports.getItem('symbol', 'Create a new symbol if the next consumption is successful.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for a 'SCOPE' operator.
  */
-exports.scopeItem = getItem('scope', 'Create a new symbol scope for the next consumption.');
+exports.scopeItem = exports.getItem('scope', 'Create a new symbol scope for the next consumption.', {
+    kind: VSCode.CompletionItemKind.Keyword
+});
 /**
  * Completion item for an 'ERROR' operator.
  */
-exports.errorItem = getItem('error', 'Create a new error if the next consumption is successful.', {
+exports.errorItem = exports.getItem('error', 'Create a new error if the next consumption is successful.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: 'error <${1}>',
     commit: ['>']
 });
 /**
  * Completion item for a 'HAS' operator.
  */
-exports.hasItem = getItem('has', 'Set a state condition for the next consumption.', {
+exports.hasItem = exports.getItem('has', 'Set a state condition for the next consumption.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: 'has <${1}>',
     commit: ['>']
 });
 /**
  * Completion item for a 'SET' operator.
  */
-exports.setItem = getItem('set', 'Set the state if the next consumption is successful.', {
+exports.setItem = exports.getItem('set', 'Set the state if the next consumption is successful.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: 'set <${1}>',
     commit: ['>']
 });
 /**
  * Completion item for a word.
  */
-exports.wordItem = getItem('WORD', 'Accept a sequence of units.', {
+exports.wordItem = exports.getItem('WORD', 'Accept a sequence of units.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: "'${1}'",
     commit: ["'"]
 });
 /**
  * Completion item for an 'ANY' operand.
  */
-exports.anyItem = getItem('any', 'Accept any unit.', {
+exports.anyItem = exports.getItem('any', 'Accept any unit.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: '*'
 });
 /**
  * Completion item for a 'FROM/TO' operand.
  */
-exports.rangeItem = getItem('from to', 'Accept an unit range.', {
+exports.rangeItem = exports.getItem('from to', 'Accept an unit range.', {
+    kind: VSCode.CompletionItemKind.Keyword,
     text: "from '${1}' to '${2}'",
     commit: ["'"]
 });
