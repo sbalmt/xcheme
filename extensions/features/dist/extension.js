@@ -13,84 +13,109 @@ module.exports = require("vscode");
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.update = void 0;
+exports.Provider = void 0;
 const VSCode = __webpack_require__(1);
-const Core = __webpack_require__(3);
 const Lang = __webpack_require__(50);
+const Items = __webpack_require__(88);
+const Analysis = __webpack_require__(86);
 /**
- * All error messages.
+ * Completion provider.
  */
-const errorMessages = {
-    [4096 /* DUPLICATE_IDENTIFIER */]: 'Duplicate identifier.',
-    [4097 /* UNEXPECTED_TOKEN */]: 'Unexpected token.',
-    [4098 /* UNEXPECTED_SYNTAX */]: 'Unexpected syntax.',
-    [4099 /* UNEXPECTED_NODE */]: 'Unexpected node.',
-    [4100 /* INVALID_NODE_REFERENCE */]: 'Node reference cannot be in use here.',
-    [4101 /* INVALID_TOKEN_REFERENCE */]: 'Token reference cannot be in use here.',
-    [4102 /* INVALID_ALIAS_NODE_REFERENCE */]: 'Alias Node reference cannot be in use here.',
-    [4103 /* INVALID_ALIAS_TOKEN_REFERENCE */]: 'Alias Token reference cannot be in use here.',
-    [4104 /* UNRESOLVED_TOKEN_REFERENCE */]: 'Token reference is not resolved yet.',
-    [4105 /* UNDEFINED_IDENTIFIER */]: 'Undefined identifiers cannot be referenced.'
-};
-/**
- * Get the corresponding error message based on the given error object.
- * @param error Input error.
- * @returns Returns the corresponding error message.
- * @throws Throws an error when the specified error isn't supported.
- */
-const getMessage = (error) => {
-    const message = errorMessages[error.value];
-    if (!message) {
-        throw `Error value ${error.value} is not supported.`;
+class Provider {
+    /**
+     * Determines whether or not the specified tokens before the given offset compound a valid identity.
+     * @param tokens Input tokens.
+     * @param offset Current offset.
+     * @returns Returns true in case of success, false otherwise.
+     */
+    #isIdentity(tokens, offset) {
+        return tokens[offset - 1]?.value === 101 /* Number */ && tokens[offset - 2]?.value === 133 /* OpenChevron */;
     }
-    return message;
-};
-/**
- * Push the specified error into the given diagnostics list.
- * @param list Diagnostics list.
- * @param error Input error.
- */
-const pushMessage = (list, error) => {
-    const location = error.fragment.location;
-    const start = new VSCode.Position(location.line, location.column);
-    const end = new VSCode.Position(location.line, location.column);
-    const range = new VSCode.Range(start, end);
-    list.push(new VSCode.Diagnostic(range, getMessage(error), VSCode.DiagnosticSeverity.Error));
-};
-/**
- * Get all the text from the given document.
- * @param document Input document.
- * @returns Returns the text.
- */
-const getText = (document) => {
-    const first = document.lineAt(0);
-    const last = document.lineAt(document.lineCount - 1);
-    return document.getText(new VSCode.Range(first.range.start, last.range.end));
-};
-/**
- * Update the specified diagnostics collection based on the given document.
- * @param document Input document.
- * @param collection Diagnostics collection.
- */
-const update = (document, collection) => {
-    collection.clear();
-    if (document && document.languageId === 'xcheme') {
-        const context = new Core.Context('diagnostics');
-        const project = new Lang.Project(new Lang.TextCoder());
-        const text = getText(document);
-        Lang.Lexer.consumeText(text, context);
-        Lang.Parser.consumeTokens(context.tokens, context);
-        if (context.errors.length === 0) {
-            Lang.Maker.consumeNodes(context.node, project);
-        }
+    /**
+     * Determines whether or not the specified tokens before the given offset compound a valid identifier.
+     * @param tokens Input tokens.
+     * @param offset Current offset.
+     * @returns Returns true in case of success, false otherwise.
+     */
+    #isIdentifier(tokens, offset) {
+        const index = offset - 1;
+        return ((tokens[index]?.value === 134 /* CloseChevron */ && this.#isIdentity(tokens, index)) ||
+            tokens[index]?.value === 126 /* Token */ ||
+            tokens[index]?.value === 127 /* Node */);
+    }
+    /**
+     * Get a completion list for all the symbols in the specified table.
+     * @param table Input table.
+     * @returns Returns the completion list.
+     */
+    #getSymbols(table) {
         const list = [];
-        for (const error of [...context.errors, ...project.errors]) {
-            pushMessage(list, error);
+        for (const name of table.keys) {
+            const record = table.getRecord(name);
+            const item = new VSCode.CompletionItem(name, VSCode.CompletionItemKind.Reference);
+            item.documentation = `Insert a ${record.value === 301 /* Node */ ? 'node' : 'token'} reference.`;
+            list.push(item);
         }
-        collection.set(document.uri, list);
+        return list;
     }
-};
-exports.update = update;
+    /**
+     * Provide completion items for the given position and document.
+     * @param document Input document.
+     * @returns Returns the completion items list.
+     */
+    provideCompletionItems(document) {
+        const context = Analysis.consume(document);
+        const tokens = context.tokens;
+        if (tokens.length > 0) {
+            const index = tokens.length - 1;
+            const last = tokens[index];
+            switch (last.value) {
+                case 125 /* Skip */:
+                    return Items.operandList;
+                case 128 /* Alias */:
+                    return [Items.tokenItem, Items.nodeItem];
+                case 126 /* Token */:
+                case 127 /* Node */:
+                    return [Items.identityItem, Items.identifierItem];
+                case 134 /* CloseChevron */:
+                    return this.#isIdentity(tokens, index) ? [Items.identifierItem] : [];
+                case 100 /* Identifier */:
+                    return this.#isIdentifier(tokens, index) ? [Items.asItem] : Items.binaryOperatorList;
+                case 129 /* As */:
+                case 106 /* Then */:
+                case 107 /* Else */:
+                case 108 /* Or */:
+                case 109 /* And */:
+                    return [...this.#getSymbols(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+                case 110 /* Not */:
+                case 111 /* Opt */:
+                case 112 /* Repeat */:
+                case 118 /* Left */:
+                case 119 /* Right */:
+                case 117 /* Next */:
+                case 116 /* Pivot */:
+                case 120 /* Symbol */:
+                case 121 /* Scope */:
+                case 122 /* Error */:
+                case 123 /* Has */:
+                case 124 /* Set */:
+                    return [...this.#getSymbols(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+                case 113 /* Place */:
+                case 114 /* Append */:
+                case 115 /* Prepend */:
+                    return [...this.#getSymbols(context.table), ...Items.operandList, ...Items.directionList, ...Items.unaryOperatorList];
+                case 104 /* From */:
+                    return [Items.wordItem];
+                case 105 /* To */:
+                case 102 /* Alphabet */:
+                case 103 /* Any */:
+                    return Items.binaryOperatorList;
+            }
+        }
+        return [Items.skipItem, Items.aliasItem, Items.tokenItem, Items.nodeItem];
+    }
+}
+exports.Provider = Provider;
 
 
 /***/ }),
@@ -1735,7 +1760,7 @@ const pattern_1 = __webpack_require__(12);
  */
 class Map extends pattern_1.default {
     /**
-     * Root map node.
+     * Root node.
      */
     #root;
     /**
@@ -1747,14 +1772,16 @@ class Map extends pattern_1.default {
      *          Returns zero when input A is equals to input B.
      */
     #compare(a, b) {
-        return (typeof a === 'string' ? a.charCodeAt(0) : a) - (typeof b === 'string' ? b.charCodeAt(0) : b);
+        const x = typeof a === 'string' ? a.charCodeAt(0) : a;
+        const y = typeof b === 'string' ? b.charCodeAt(0) : b;
+        return x - y;
     }
     /**
      * Get the node that correspond to the given input units.
      * @param units Input units.
      * @returns Returns the corresponding node or undefined when it wasn't found.
      */
-    #get(units) {
+    #getNode(units) {
         let current = this.#root;
         let previous = void 0;
         for (let index = 0; index < units.length;) {
@@ -1777,11 +1804,11 @@ class Map extends pattern_1.default {
         return previous;
     }
     /**
-     * Set new nodes based on the given input units.
+     * Set a new node based on the given input units.
      * @param units Input units.
      * @returns Returns the terminal node or undefined when the given units are empty.
      */
-    #set(units) {
+    #setNode(units) {
         let current = this.#root;
         let previous = current;
         let selected = current;
@@ -1826,12 +1853,12 @@ class Map extends pattern_1.default {
         return selected;
     }
     /**
-     * Find the next terminal node in the given data source starting from the specified node.
+     * Find the terminal node in the given data source starting from the specified node.
      * @param source Data source.
      * @param current Current node.
      * @returns Returns the corresponding terminal node or undefined when it wasn't found.
      */
-    #find(source, current) {
+    #findNode(source, current) {
         source.saveState();
         while (source.length > 0 && current !== void 0) {
             const diff = this.#compare(current.value, source.value);
@@ -1861,7 +1888,7 @@ class Map extends pattern_1.default {
     constructor(...routes) {
         super();
         for (const route of routes) {
-            const node = this.#get(route.units) ?? this.#set(route.units);
+            const node = this.#getNode(route.units) ?? this.#setNode(route.units);
             if (node) {
                 node.pattern = route.pattern;
             }
@@ -1875,7 +1902,7 @@ class Map extends pattern_1.default {
     consume(source) {
         let current = this.#root;
         let longest;
-        while ((current = this.#find(source, current)) !== void 0) {
+        while ((current = this.#findNode(source, current)) !== void 0) {
             longest = current;
             current = current.next;
             source.move();
@@ -5221,6 +5248,337 @@ class Aggregator {
 exports.Aggregator = Aggregator;
 //# sourceMappingURL=entries.js.map
 
+/***/ }),
+/* 86 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.consume = void 0;
+const VSCode = __webpack_require__(1);
+const Core = __webpack_require__(3);
+const Lang = __webpack_require__(50);
+/**
+ * Get all the text from the given document.
+ * @param document Input document.
+ * @returns Returns the text.
+ */
+const getText = (document) => {
+    const first = document.lineAt(0);
+    const last = document.lineAt(document.lineCount - 1);
+    return document.getText(new VSCode.Range(first.range.start, last.range.end));
+};
+/**
+ * Consume the specified document.
+ * @param document Input document.
+ * @returns Returns the consumption context.
+ */
+const consume = (document) => {
+    const context = new Core.Context(document.uri.path);
+    const text = getText(document);
+    Lang.Lexer.consumeText(text, context);
+    Lang.Parser.consumeTokens(context.tokens, context);
+    return context;
+};
+exports.consume = consume;
+
+
+/***/ }),
+/* 87 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.update = void 0;
+const Lang = __webpack_require__(50);
+const Analysis = __webpack_require__(86);
+const Errors = __webpack_require__(89);
+/**
+ * Update the specified diagnostics collection based on the given document.
+ * @param document Input document.
+ * @param collection Diagnostics collection.
+ */
+const update = (document, collection) => {
+    collection.clear();
+    if (document && document.languageId === 'xcheme') {
+        const context = Analysis.consume(document);
+        if (context.errors.length > 0) {
+            const errors = Errors.getDiagnostics(context.errors);
+            collection.set(document.uri, errors);
+        }
+        else {
+            const project = new Lang.Project(new Lang.TextCoder());
+            Lang.Maker.consumeNodes(context.node, project);
+            const errors = Errors.getDiagnostics(project.errors);
+            collection.set(document.uri, errors);
+        }
+    }
+};
+exports.update = update;
+
+
+/***/ }),
+/* 88 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.operandList = exports.directionList = exports.unaryOperatorList = exports.binaryOperatorList = exports.rangeItem = exports.anyItem = exports.wordItem = exports.setItem = exports.hasItem = exports.errorItem = exports.scopeItem = exports.symbolItem = exports.pivotItem = exports.nextItem = exports.rightItem = exports.leftItem = exports.prependItem = exports.appendItem = exports.placeItem = exports.repeatItem = exports.optItem = exports.notItem = exports.andItem = exports.orItem = exports.thenElseItem = exports.thenItem = exports.asItem = exports.identifierItem = exports.identityItem = exports.nodeItem = exports.tokenItem = exports.aliasItem = exports.skipItem = void 0;
+const VSCode = __webpack_require__(1);
+/**
+ * Get a new completion item based on the given label, documentation and options.
+ * @param label Completion item label.
+ * @param documentation Completion item documentation.
+ * @param options Completion item options.
+ * @returns Returns the new completion item.
+ */
+const getItem = (label, documentation, options) => {
+    const kind = options?.kind ?? VSCode.CompletionItemKind.Keyword;
+    const text = options?.text ?? label;
+    const item = new VSCode.CompletionItem(label, kind);
+    item.insertText = new VSCode.SnippetString(kind === VSCode.CompletionItemKind.Keyword ? `${text} ` : text);
+    item.commitCharacters = options?.commit;
+    item.documentation = documentation;
+    item.command = {
+        command: 'editor.action.triggerSuggest',
+        title: 'Re-trigger completions...'
+    };
+    return item;
+};
+/**
+ * Completion item for a 'SKIP' directive.
+ */
+exports.skipItem = getItem('skip', 'Create a skip directive.');
+/**
+ * Completion item for an 'ALIAS' directive.
+ */
+exports.aliasItem = getItem('alias', 'Create an alias directive for a token or node.');
+/**
+ * Completion item for a 'TOKEN' directive.
+ */
+exports.tokenItem = getItem('token', 'Create a token directive.');
+/**
+ * Completion item for a 'NODE' directive.
+ */
+exports.nodeItem = getItem('node', 'Create a node directive.');
+/**
+ * Completion item for an identity.
+ */
+exports.identityItem = getItem('IDENTITY', 'Set an identity for the current directive.', {
+    text: '<${1}>',
+    commit: ['>'],
+    kind: VSCode.CompletionItemKind.Text
+});
+/**
+ * Completion item for an identifier.
+ */
+exports.identifierItem = getItem('IDENTIFIER', 'Set an identifier for the current directive.', {
+    text: '${1}',
+    commit: [' ', '\n'],
+    kind: VSCode.CompletionItemKind.Text
+});
+/**
+ * Completion item for an 'AS' operator.
+ */
+exports.asItem = getItem('as', 'Set an expression for the current directive.');
+/**
+ * Completion item for a 'THEN' operator.
+ */
+exports.thenItem = getItem('then', 'Set a condition based on the last consumption state.');
+/**
+ * Completion item for a 'THEN/ELSE' operator.
+ */
+exports.thenElseItem = getItem('then else', 'Set a condition based on the last consumption state.', {
+    text: 'then ${1} else ${2}',
+    commit: [' ', '\n']
+});
+/**
+ * Completion item for an 'OR' operator.
+ */
+exports.orItem = getItem('or', 'Set another consumption option.', {
+    text: '|'
+});
+/**
+ * Completion item for an 'AND' operator.
+ */
+exports.andItem = getItem('and', 'Set another expected consumption.', {
+    text: '&'
+});
+/**
+ * Completion item for a 'NOT' operator.
+ */
+exports.notItem = getItem('not', 'Invert the next consumption result (true to false and vice versa).');
+/**
+ * Completion item for an 'OPT' operator.
+ */
+exports.optItem = getItem('opt', 'Set as optional the next consumption.');
+/**
+ * Completion item for a 'REPEAT' operator.
+ */
+exports.repeatItem = getItem('repeat', 'Repeat the next consumption in case of success in the first try.');
+/**
+ * Completion item for a 'PLACE' operator.
+ */
+exports.placeItem = getItem('place', 'Place any resulting node from the next consumption in another direction.');
+/**
+ * Completion item for an 'APPEND' operator.
+ */
+exports.appendItem = getItem('append', 'Create and append a new node if the next consumption is successful.');
+/**
+ * Completion item for a 'PREPEND' operator.
+ */
+exports.prependItem = getItem('prepend', 'Create and prepend a new node if the next consumption is successful.');
+/**
+ * Completion item for a 'LEFT' modifier.
+ */
+exports.leftItem = getItem('left', 'Modify the current node direction to left.');
+/**
+ * Completion item for a 'RIGHT' modifier.
+ */
+exports.rightItem = getItem('right', 'Modify the current node direction to right.');
+/**
+ * Completion item for a 'NEXT' modifier.
+ */
+exports.nextItem = getItem('next', 'Modify the current node direction to next.');
+/**
+ * Completion item for a 'PIVOT' operator.
+ */
+exports.pivotItem = getItem('pivot', 'Create a new node and pivot the current ones if the next consumption is successful.');
+/**
+ * Completion item for a 'SYMBOL' operator.
+ */
+exports.symbolItem = getItem('symbol', 'Create a new symbol if the next consumption is successful.');
+/**
+ * Completion item for a 'SCOPE' operator.
+ */
+exports.scopeItem = getItem('scope', 'Create a new symbol scope for the next consumption.');
+/**
+ * Completion item for an 'ERROR' operator.
+ */
+exports.errorItem = getItem('error', 'Create a new error if the next consumption is successful.', {
+    text: 'error <${1}>',
+    commit: ['>']
+});
+/**
+ * Completion item for a 'HAS' operator.
+ */
+exports.hasItem = getItem('has', 'Set a state condition for the next consumption.', {
+    text: 'has <${1}>',
+    commit: ['>']
+});
+/**
+ * Completion item for a 'SET' operator.
+ */
+exports.setItem = getItem('set', 'Set the state if the next consumption is successful.', {
+    text: 'set <${1}>',
+    commit: ['>']
+});
+/**
+ * Completion item for a word.
+ */
+exports.wordItem = getItem('WORD', 'Accept a sequence of units.', {
+    text: "'${1}'",
+    commit: ["'"]
+});
+/**
+ * Completion item for an 'ANY' operand.
+ */
+exports.anyItem = getItem('any', 'Accept any unit.', {
+    text: '*'
+});
+/**
+ * Completion item for a 'FROM/TO' operand.
+ */
+exports.rangeItem = getItem('from to', 'Accept an unit range.', {
+    text: "from '${1}' to '${2}'",
+    commit: ["'"]
+});
+/**
+ * Completion list containing all binary operators.
+ */
+exports.binaryOperatorList = [exports.thenItem, exports.thenElseItem, exports.orItem, exports.andItem];
+/**
+ * Completion list containing all unary operators.
+ */
+exports.unaryOperatorList = [
+    exports.notItem,
+    exports.optItem,
+    exports.repeatItem,
+    exports.placeItem,
+    exports.appendItem,
+    exports.prependItem,
+    exports.pivotItem,
+    exports.symbolItem,
+    exports.scopeItem,
+    exports.errorItem,
+    exports.hasItem,
+    exports.setItem
+];
+/**
+ * Completion list direction modifiers.
+ */
+exports.directionList = [exports.leftItem, exports.rightItem, exports.nextItem];
+/**
+ * Completion list containing all operands.
+ */
+exports.operandList = [exports.wordItem, exports.anyItem, exports.rangeItem];
+
+
+/***/ }),
+/* 89 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getDiagnostics = void 0;
+const VSCode = __webpack_require__(1);
+const Lang = __webpack_require__(50);
+/**
+ * All error messages.
+ */
+const errorMessages = {
+    [4096 /* DUPLICATE_IDENTIFIER */]: 'Duplicate identifier.',
+    [4097 /* UNEXPECTED_TOKEN */]: 'Unexpected token.',
+    [4098 /* UNEXPECTED_SYNTAX */]: 'Unexpected syntax.',
+    [4099 /* UNEXPECTED_NODE */]: 'Unexpected node.',
+    [4100 /* INVALID_NODE_REFERENCE */]: 'Node reference cannot be in use here.',
+    [4101 /* INVALID_TOKEN_REFERENCE */]: 'Token reference cannot be in use here.',
+    [4102 /* INVALID_ALIAS_NODE_REFERENCE */]: 'Alias Node reference cannot be in use here.',
+    [4103 /* INVALID_ALIAS_TOKEN_REFERENCE */]: 'Alias Token reference cannot be in use here.',
+    [4104 /* UNRESOLVED_TOKEN_REFERENCE */]: 'Token reference is not resolved yet.',
+    [4105 /* UNDEFINED_IDENTIFIER */]: 'Undefined identifiers cannot be referenced.'
+};
+/**
+ * Get the corresponding error message based on the given error object.
+ * @param error Input error.
+ * @returns Returns the corresponding error message.
+ * @throws Throws an exception when the specified error isn't supported.
+ */
+const getMessage = (error) => {
+    const message = errorMessages[error.value];
+    if (!message) {
+        throw new Error(`Error value ${error.value} is not supported.`);
+    }
+    return message;
+};
+/**
+ * Get a new diagnostics list based on the specified errors.
+ * @param error Inputs errors.
+ * @returns Returns the diagnostics list.
+ */
+const getDiagnostics = (errors) => {
+    const list = [];
+    for (const error of errors) {
+        const location = error.fragment.location;
+        const severity = VSCode.DiagnosticSeverity.Error;
+        const range = new VSCode.Range(new VSCode.Position(location.line, location.column), new VSCode.Position(location.line, location.column));
+        list.push(new VSCode.Diagnostic(range, getMessage(error), severity));
+    }
+    return list;
+};
+exports.getDiagnostics = getDiagnostics;
+
+
 /***/ })
 /******/ 	]);
 /************************************************************************/
@@ -5257,7 +5615,15 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.deactivate = exports.activate = void 0;
 const VSCode = __webpack_require__(1);
-const Diagnostics = __webpack_require__(2);
+const Diagnostics = __webpack_require__(87);
+const Completion = __webpack_require__(2);
+/**
+ * Returns a new disposable with an auto completion prover.
+ * @returns Returns the disposable.
+ */
+const registerAutoCompletion = () => {
+    return VSCode.languages.registerCompletionItemProvider('xcheme', new Completion.Provider());
+};
 /**
  * Returns a new disposable for detecting editor changes and update the given diagnostics collection.
  * @param collection Diagnostics collection.
@@ -5286,6 +5652,7 @@ const detectTextChanges = (collection) => {
  */
 function activate(context) {
     const collection = VSCode.languages.createDiagnosticCollection('xcheme');
+    context.subscriptions.push(registerAutoCompletion());
     context.subscriptions.push(detectTextChanges(collection), detectEditorChanges(collection));
     if (VSCode.window.activeTextEditor) {
         Diagnostics.update(VSCode.window.activeTextEditor.document, collection);
