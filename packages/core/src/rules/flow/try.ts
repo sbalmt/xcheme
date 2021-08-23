@@ -4,7 +4,7 @@ import Pattern from '../pattern';
 import Expect from './expect';
 
 /**
- * Consumes all the given patterns and, in case of failure, it preserves the current source state.
+ * Consume all the given patterns and, in case of failure, it preserves the current source state.
  */
 export default class Try extends Pattern {
   /**

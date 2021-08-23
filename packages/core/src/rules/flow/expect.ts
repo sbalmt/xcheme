@@ -3,7 +3,7 @@ import type Base from '../../source/base';
 import Pattern from '../pattern';
 
 /**
- * Consumes all patterns that are expected by this pattern.
+ * Consume all patterns that are expected by this pattern.
  */
 export default class Expect extends Pattern {
   /**

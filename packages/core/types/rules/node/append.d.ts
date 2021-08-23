@@ -2,8 +2,8 @@ import Base from '../../source/base';
 import { Nodes } from '../../core/node';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns in this pattern and, in case of success,
- * it appends the resulting node in the current source output node.
+ * Consume all the given patterns in this pattern and, in case of success,
+ * it appends a new node in the source output node.
  */
 export default class Append extends Pattern {
     #private;

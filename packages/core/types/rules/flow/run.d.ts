@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes the pattern object returned by the callback given for this pattern.
+ * Consume the pattern object returned by the callback given for this pattern.
  */
 export default class Run extends Pattern {
     #private;

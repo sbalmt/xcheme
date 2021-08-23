@@ -4,7 +4,8 @@ const route_1 = require("../route");
 const pattern_1 = require("../pattern");
 const emit_1 = require("./emit");
 /**
- * Produce a route to consume units and in case of success it emits a new node.
+ * Produce a route to consume units and, in case of success, it emits a new node.
+ * Any working node in the source output will be attached as the left child from the new node.
  */
 class Route extends route_1.default {
     /**

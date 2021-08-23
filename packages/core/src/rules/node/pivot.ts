@@ -4,8 +4,8 @@ import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
 /**
- * Consumes all the given patterns in this pattern and, in case of success,
- * it pivots the resulting node by the current source output node.
+ * Consume all the given patterns in this pattern and, in case of success,
+ * it creates a new node in the source output and pivot current ones.
  */
 export default class Pivot extends Pattern {
   /**

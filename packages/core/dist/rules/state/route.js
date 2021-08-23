@@ -4,7 +4,7 @@ const route_1 = require("../route");
 const pattern_1 = require("../pattern");
 const set_1 = require("./set");
 /**
- * Produce a route to consume units and in case of success it set a new state value.
+ * Produce a route to consume units and, in case of success, it set a new state value.
  */
 class Route extends route_1.default {
     /**

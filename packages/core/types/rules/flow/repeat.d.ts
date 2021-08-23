@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns in this pattern and, in case of success, retry the consumption.
+ * Consume all the given patterns in this pattern and, in case of success, retry the consumption.
  */
 export default class Repeat extends Pattern {
     #private;

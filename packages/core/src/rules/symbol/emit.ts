@@ -5,7 +5,7 @@ import Expect from '../flow/expect';
 import Error, { Errors } from '../../core/error';
 
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
+ * Consume all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
  */
 export default class Emit extends Pattern {
   /**
@@ -48,7 +48,7 @@ export default class Emit extends Pattern {
       const { node, table, value } = source.output;
       const fragment = source.fragment;
       if ((status = this.#target.consume(source))) {
-        if (table.hasRecord(fragment)) {
+        if (table.has(fragment)) {
           const error = new Error(fragment, Errors.DUPLICATE_IDENTIFIER);
           source.emit(error);
         } else {

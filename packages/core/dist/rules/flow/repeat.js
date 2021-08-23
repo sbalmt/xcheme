@@ -4,7 +4,7 @@ const pattern_1 = require("../pattern");
 const expect_1 = require("./expect");
 const try_1 = require("./try");
 /**
- * Consumes all the given patterns in this pattern and, in case of success, retry the consumption.
+ * Consume all the given patterns in this pattern and, in case of success, retry the consumption.
  */
 class Repeat extends pattern_1.default {
     /**

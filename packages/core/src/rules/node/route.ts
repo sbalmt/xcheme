@@ -4,7 +4,8 @@ import { Nodes } from '../../core/node';
 import Emit from './emit';
 
 /**
- * Produce a route to consume units and in case of success it emits a new node.
+ * Produce a route to consume units and, in case of success, it emits a new node.
+ * Any working node in the source output will be attached as the left child from the new node.
  */
 export default class Route extends Base {
   /**

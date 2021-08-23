@@ -4,7 +4,7 @@ import Pattern from '../pattern';
 import Expect from '../flow/expect';
 
 /**
- * Consumes all the given patterns behind a new symbol table.
+ * Consume all the given patterns behind a new symbol table.
  */
 export default class Scope extends Pattern {
   /**

@@ -30,7 +30,7 @@ type Node = {
 };
 
 /**
- * Consumes the first route that match in the list of routes given for this pattern.
+ * Consume the first route that match in the list of routes given for this pattern.
  */
 export default class Map extends Pattern {
   /**
@@ -124,10 +124,10 @@ export default class Map extends Pattern {
   }
 
   /**
-   * Find the terminal node in the given data source starting from the specified node.
+   * Find a node with pattern in the given data source starting from the specified node.
    * @param source Data source.
    * @param current Current node.
-   * @returns Returns the corresponding terminal node or undefined when it wasn't found.
+   * @returns Returns the corresponding node or undefined when it wasn't found.
    */
   #findNode(source: Base, current: Node | undefined): Node | undefined {
     source.saveState();

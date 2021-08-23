@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 const try_1 = require("./try");
 /**
- * Consumes the test pattern and, in case of success, it also consumes the success pattern,
- * otherwise, it will consume the failure pattern (when provided).
+ * Consume the test pattern and, in case of success, it also consumes the success pattern.
+ * Otherwise, it will consume the failure pattern (when specified).
  */
 class Condition extends pattern_1.default {
     /**

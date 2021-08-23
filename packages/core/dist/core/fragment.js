@@ -9,11 +9,11 @@ class Fragment {
      */
     #source;
     /**
-     * Beginning of fragment offset.
+     * Beginning of the fragment offset.
      */
     #begin;
     /**
-     * End of fragment offset
+     * End of the fragment offset
      */
     #end;
     /**

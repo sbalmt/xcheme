@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 const expect_1 = require("../flow/expect");
 /**
- * Consumes all the given patterns behind a new symbol table.
+ * Consume all the given patterns behind a new symbol table.
  */
 class Scope extends pattern_1.default {
     /**

@@ -3,7 +3,7 @@ import type Base from '../../source/base';
 import Pattern from '../pattern';
 
 /**
- * Consumes one unit that is in the range accepted by the pattern.
+ * Consume one unit that is in the range accepted by the pattern.
  */
 export default class Range extends Pattern {
   /**

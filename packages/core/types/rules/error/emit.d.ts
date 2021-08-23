@@ -1,7 +1,7 @@
 import Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new error into the current error list.
+ * Consume all the given patterns and, in case of success, it will emit a new error into the current error list.
  */
 export default class Emit extends Pattern {
     #private;

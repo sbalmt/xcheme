@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Consumes one unit that is in the range accepted by the pattern.
+ * Consume one unit that is in the range accepted by the pattern.
  */
 class Range extends pattern_1.default {
     /**

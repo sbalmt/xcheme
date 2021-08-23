@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const expect_1 = require("../flow/expect");
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the given patterns and, in case of success, it will change the current output value.
+ * Consume all the given patterns and, in case of success, it will change the current output value.
  */
 class Set extends pattern_1.default {
     /**

@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Doesn't consume anything, but it expects the end of the source.
+ * Doesn't consume anything, but it expects the end of the given data source.
  */
 class End extends pattern_1.default {
     /**

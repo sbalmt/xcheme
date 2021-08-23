@@ -148,7 +148,7 @@ export default class Base {
       const root = this.#context.node.getLowestChild(Nodes.Next) ?? this.#context.node;
       root.setChild(Nodes.Next, product);
     } else if (product instanceof Record) {
-      this.#table.addRecord(product);
+      this.#table.add(product);
     } else {
       throw 'Unsupported product type.';
     }

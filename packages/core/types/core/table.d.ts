@@ -15,29 +15,29 @@ export default class Table {
      */
     get parent(): Table | undefined;
     /**
-     * Get all record keys in this table.
+     * Get all the record names in the table.
      */
-    get keys(): string[];
+    get names(): string[];
     /**
-     * Get the number of entries in this table.
+     * Get the number of entries in the table.
      */
     get length(): number;
     /**
-     * Check whether or not there's a symbol record for the given key.
-     * @param key Symbol record key.
+     * Check whether or not there's a symbol record for the given name.
+     * @param name Symbol record name.
      * @returns Returns true when the symbol record already exists, false otherwise.
      */
-    hasRecord(key: Fragment | string): boolean;
+    has(name: Fragment | string): boolean;
     /**
-     * Get the symbol record that corresponds to the specified key.
-     * @param key Symbol record key.
+     * Get the symbol record that corresponds to the specified name.
+     * @param name Symbol record name.
      * @returns Returns the corresponding record or undefined when the record wasn't found.
      */
-    getRecord(key: Fragment | string): Record | undefined;
+    get(name: Fragment | string): Record | undefined;
     /**
      * Add a new symbol record into the symbol table.
      * @param record Symbol record.
      * @throw Throws an error when a symbol record with the same fragment data already exists.
      */
-    addRecord(record: Record): void;
+    add(record: Record): void;
 }

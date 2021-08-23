@@ -6,7 +6,7 @@ const pattern_1 = require("../pattern");
 const expect_1 = require("../flow/expect");
 const error_1 = require("../../core/error");
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
+ * Consume all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
  */
 class Emit extends pattern_1.default {
     /**
@@ -45,7 +45,7 @@ class Emit extends pattern_1.default {
             const { node, table, value } = source.output;
             const fragment = source.fragment;
             if ((status = this.#target.consume(source))) {
-                if (table.hasRecord(fragment)) {
+                if (table.has(fragment)) {
                     const error = new error_1.default(fragment, 4096 /* DUPLICATE_IDENTIFIER */);
                     source.emit(error);
                 }

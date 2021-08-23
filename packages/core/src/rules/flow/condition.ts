@@ -4,8 +4,8 @@ import Pattern from '../pattern';
 import Try from './try';
 
 /**
- * Consumes the test pattern and, in case of success, it also consumes the success pattern,
- * otherwise, it will consume the failure pattern (when provided).
+ * Consume the test pattern and, in case of success, it also consumes the success pattern.
+ * Otherwise, it will consume the failure pattern (when specified).
  */
 export default class Condition extends Pattern {
   /**

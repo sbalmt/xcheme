@@ -3,7 +3,7 @@ import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
 /**
- * Consumes all the given patterns and, in case of success, it will change the current output value.
+ * Consume all the given patterns and, in case of success, it will change the current output value.
  */
 export default class Set extends Pattern {
   /**

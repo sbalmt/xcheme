@@ -4,7 +4,7 @@ import Pattern from '../pattern';
 import Try from './try';
 
 /**
- * Consumes the first matching pattern in the list of patterns.
+ * Consume the first matching pattern in the list of patterns.
  */
 export default class Choose extends Pattern {
   /**

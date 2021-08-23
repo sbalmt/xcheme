@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the units that are expected by the pattern.
+ * Consume all the units that are expected by the pattern.
  */
 class Expect extends pattern_1.default {
     /**

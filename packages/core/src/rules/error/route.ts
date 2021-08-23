@@ -3,7 +3,7 @@ import Pattern from '../pattern';
 import Emit from './emit';
 
 /**
- * Produce a route to consume units and in case of success it emits a new error.
+ * Produce a route to consume units and, in case of success, it emits a new error.
  */
 export default class Route extends Base {
   /**

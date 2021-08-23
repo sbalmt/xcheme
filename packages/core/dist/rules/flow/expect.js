@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Consumes all patterns that are expected by this pattern.
+ * Consume all patterns that are expected by this pattern.
  */
 class Expect extends pattern_1.default {
     /**

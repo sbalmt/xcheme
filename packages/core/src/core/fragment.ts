@@ -10,12 +10,12 @@ export default class Fragment {
   #source: string;
 
   /**
-   * Beginning of fragment offset.
+   * Beginning of the fragment offset.
    */
   #begin: number;
 
   /**
-   * End of fragment offset
+   * End of the fragment offset
    */
   #end: number;
 

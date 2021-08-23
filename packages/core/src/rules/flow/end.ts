@@ -3,7 +3,7 @@ import type Base from '../../source/base';
 import Pattern from '../pattern';
 
 /**
- * Doesn't consume anything, but it expects the end of the source.
+ * Doesn't consume anything, but it expects the end of the given data source.
  */
 export default class End extends Pattern {
   /**

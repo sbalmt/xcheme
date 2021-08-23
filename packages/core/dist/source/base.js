@@ -110,7 +110,7 @@ class Base {
             root.setChild(2 /* Next */, product);
         }
         else if (product instanceof record_1.default) {
-            this.#table.addRecord(product);
+            this.#table.add(product);
         }
         else {
             throw 'Unsupported product type.';

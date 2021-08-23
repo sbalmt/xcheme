@@ -5,7 +5,7 @@ import Expect from './expect';
 import Try from './try';
 
 /**
- * Consumes all the given patterns in this pattern and, in case of success, retry the consumption.
+ * Consume all the given patterns in this pattern and, in case of success, retry the consumption.
  */
 export default class Repeat extends Pattern {
   /**

@@ -38,7 +38,7 @@ class Node {
         return this.#fragment;
     }
     /**
-     * Get the symbol table associated to this node.
+     * Get the symbol table associated to the node.
      */
     get table() {
         return this.#table;
@@ -50,42 +50,42 @@ class Node {
         return this.#value;
     }
     /**
-     * Get the left child node.
+     * Get the child node on the left.
      */
     get left() {
         return this.#children[0 /* Left */];
     }
     /**
-     * Get the right child node.
+     * Get the child node on the right.
      */
     get right() {
         return this.#children[1 /* Right */];
     }
     /**
-     * Get the next child node.
+     * Get the child node on the next.
      */
     get next() {
         return this.#children[2 /* Next */];
     }
     /**
-     * Get a child node.
-     * @param child Expected child.
+     * Get a child node in the specified direction.
+     * @param child Child node direction.
      * @returns Return the corresponding child node.
      */
     getChild(child) {
         return this.#children[child];
     }
     /**
-     * Set a new child node.
-     * @param child Expected child.
+     * Set the specified child node in the given direction.
+     * @param child Child node direction.
      * @param node New child node.
      */
     setChild(child, node) {
         this.#children[child] = node;
     }
     /**
-     * Get the lowest child node.
-     * @param child Expected child.
+     * Get the lowest child node in the given direction.
+     * @param child Child node direction.
      * @returns Returns the corresponding child node.
      */
     getLowestChild(child) {

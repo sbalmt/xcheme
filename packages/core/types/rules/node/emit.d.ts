@@ -2,8 +2,8 @@ import Base from '../../source/base';
 import { Nodes } from '../../core/node';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new node as the next child of the current node.
- * Any working node in the current source output will be attached as the left child from the new node.
+ * Consume all the given patterns and, in case of success, it will emit a new node as the next child of the current one.
+ * Any working node in the source output will be attached as the left child from the new node.
  */
 export default class Emit extends Pattern {
     #private;

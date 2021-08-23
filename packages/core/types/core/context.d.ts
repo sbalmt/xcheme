@@ -4,7 +4,7 @@ import Table from './table';
 import Node from './node';
 /**
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
- * nodes of the current consumption.
+ * nodes from the current consumption.
  */
 export default class Context {
     #private;

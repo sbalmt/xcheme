@@ -19,7 +19,7 @@ test('Consume success', () => {
   expect(table).toBeDefined();
   expect(table).toHaveLength(1);
 
-  const record = table.getRecord('a')!;
+  const record = table.get('a')!;
   expect(record).toBeDefined();
   expect(record.value).toBe(0xabc);
 });

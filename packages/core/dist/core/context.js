@@ -6,7 +6,7 @@ const table_1 = require("./table");
 const node_1 = require("./node");
 /**
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
- * nodes of the current consumption.
+ * nodes from the current consumption.
  */
 class Context {
     /**

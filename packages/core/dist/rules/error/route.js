@@ -4,7 +4,7 @@ const route_1 = require("../route");
 const pattern_1 = require("../pattern");
 const emit_1 = require("./emit");
 /**
- * Produce a route to consume units and in case of success it emits a new error.
+ * Produce a route to consume units and, in case of success, it emits a new error.
  */
 class Route extends route_1.default {
     /**

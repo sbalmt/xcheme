@@ -4,8 +4,8 @@ import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
 /**
- * Consumes all the given patterns in this pattern and, in case of success,
- * it prepends the resulting node in the current source output node.
+ * Consume all the given patterns in this pattern and, in case of success,
+ * it prepends a new node in the source output node.
  */
 export default class Prepend extends Pattern {
   /**

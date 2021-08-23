@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns behind a new symbol table.
+ * Consume all the given patterns behind a new symbol table.
  */
 export default class Scope extends Pattern {
     #private;

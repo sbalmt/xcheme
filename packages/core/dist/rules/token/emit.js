@@ -5,7 +5,7 @@ const token_1 = require("../../core/token");
 const expect_1 = require("../flow/expect");
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new token into the current token list.
+ * Consume all the given patterns and, in case of success, it will emit a new token into the current token list.
  */
 class Emit extends pattern_1.default {
     /**

@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns and, in case of failure, it preserves the current source state.
+ * Consume all the given patterns and, in case of failure, it preserves the current source state.
  */
 export default class Try extends Pattern {
     #private;

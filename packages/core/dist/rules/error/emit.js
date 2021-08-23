@@ -5,7 +5,7 @@ const error_1 = require("../../core/error");
 const expect_1 = require("../flow/expect");
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new error into the current error list.
+ * Consume all the given patterns and, in case of success, it will emit a new error into the current error list.
  */
 class Emit extends pattern_1.default {
     /**

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 const try_1 = require("./try");
 /**
- * Consumes all the given patterns in this pattern without raising a consumption failure.
+ * Consume all the given patterns in this pattern as an optional behavior.
  */
 class Option extends pattern_1.default {
     /**

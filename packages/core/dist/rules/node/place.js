@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 const expect_1 = require("../flow/expect");
 /**
- * Consumes all the given patterns and, in case of success,
- * it places the resulting node into the current source output node.
+ * Consume all the given patterns and, in case of success,
+ * it places the resulting node into the source output node.
  */
 class Place extends pattern_1.default {
     /**

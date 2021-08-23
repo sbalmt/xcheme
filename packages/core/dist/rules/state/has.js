@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const expect_1 = require("../flow/expect");
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the given patterns when the specified state value is defined.
+ * Consume all the given patterns when the specified state value is defined.
  */
 class Emit extends pattern_1.default {
     /**

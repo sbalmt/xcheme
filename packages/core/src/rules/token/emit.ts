@@ -4,7 +4,7 @@ import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new token into the current token list.
+ * Consume all the given patterns and, in case of success, it will emit a new token into the current token list.
  */
 export default class Emit extends Pattern {
   /**

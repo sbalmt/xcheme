@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Doesn't consume anything and returns the static value given for this pattern.
+ * Doesn't consume anything and returns the static state given for this pattern.
  */
 export default class Static extends Pattern {
     #private;

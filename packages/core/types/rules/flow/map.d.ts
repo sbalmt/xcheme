@@ -2,7 +2,7 @@ import type Base from '../../source/base';
 import type Route from '../route';
 import Pattern from '../pattern';
 /**
- * Consumes the first route that match in the list of routes given for this pattern.
+ * Consume the first route that match in the list of routes given for this pattern.
  */
 export default class Map extends Pattern {
     #private;

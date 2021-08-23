@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes all the units that are expected by the pattern.
+ * Consume all the units that are expected by the pattern.
  */
 export default class Expect extends Pattern {
     #private;

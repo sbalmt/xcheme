@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Consumes the pattern object returned by the callback given for this pattern.
+ * Consume the pattern object returned by the callback given for this pattern.
  */
 class Run extends pattern_1.default {
     /**

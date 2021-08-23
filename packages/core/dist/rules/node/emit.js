@@ -5,8 +5,8 @@ const node_1 = require("../../core/node");
 const expect_1 = require("../flow/expect");
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the given patterns and, in case of success, it will emit a new node as the next child of the current node.
- * Any working node in the current source output will be attached as the left child from the new node.
+ * Consume all the given patterns and, in case of success, it will emit a new node as the next child of the current one.
+ * Any working node in the source output will be attached as the left child from the new node.
  */
 class Emit extends pattern_1.default {
     /**

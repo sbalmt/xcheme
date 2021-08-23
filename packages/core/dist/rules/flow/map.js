@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Consumes the first route that match in the list of routes given for this pattern.
+ * Consume the first route that match in the list of routes given for this pattern.
  */
 class Map extends pattern_1.default {
     /**
@@ -99,10 +99,10 @@ class Map extends pattern_1.default {
         return selected;
     }
     /**
-     * Find the terminal node in the given data source starting from the specified node.
+     * Find a node with pattern in the given data source starting from the specified node.
      * @param source Data source.
      * @param current Current node.
-     * @returns Returns the corresponding terminal node or undefined when it wasn't found.
+     * @returns Returns the corresponding node or undefined when it wasn't found.
      */
     #findNode(source, current) {
         source.saveState();

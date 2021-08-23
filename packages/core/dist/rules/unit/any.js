@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Consumes one unit.
+ * Consume one unit.
  */
 class Any extends pattern_1.default {
     /**

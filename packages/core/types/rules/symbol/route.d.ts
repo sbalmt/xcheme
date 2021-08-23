@@ -1,7 +1,7 @@
 import Base from '../route';
 import Pattern from '../pattern';
 /**
- * Produce a route to consume units and in case of success it emits a new symbol record.
+ * Produce a route to consume units and, in case of success, it emits a new symbol record.
  */
 export default class Route extends Base {
     /**

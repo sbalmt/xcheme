@@ -1,8 +1,8 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes the test pattern and, in case of success, it also consumes the success pattern,
- * otherwise, it will consume the failure pattern (when provided).
+ * Consume the test pattern and, in case of success, it also consumes the success pattern.
+ * Otherwise, it will consume the failure pattern (when specified).
  */
 export default class Condition extends Pattern {
     #private;

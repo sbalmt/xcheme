@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Doesn't consume anything and returns the static value given for this pattern.
+ * Doesn't consume anything and returns the static state given for this pattern.
  */
 class Static extends pattern_1.default {
     /**

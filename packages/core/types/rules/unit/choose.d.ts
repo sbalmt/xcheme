@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes one unit that is between all the acceptable units in the pattern.
+ * Consume one unit that is between all the acceptable units in the pattern.
  */
 export default class Choose extends Pattern {
     #private;

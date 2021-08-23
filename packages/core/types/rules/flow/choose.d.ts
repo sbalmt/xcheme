@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes the first matching pattern in the list of patterns.
+ * Consume the first matching pattern in the list of patterns.
  */
 export default class Choose extends Pattern {
     #private;

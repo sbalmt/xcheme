@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 /**
- * Consumes one unit that is between all the acceptable units in the pattern.
+ * Consume one unit that is between all the acceptable units in the pattern.
  */
 class Choose extends pattern_1.default {
     /**

@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes one unit.
+ * Consume one unit.
  */
 export default class Any extends Pattern {
     /**

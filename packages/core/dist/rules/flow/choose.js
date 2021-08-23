@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
 const try_1 = require("./try");
 /**
- * Consumes the first matching pattern in the list of patterns.
+ * Consume the first matching pattern in the list of patterns.
  */
 class Choose extends pattern_1.default {
     /**

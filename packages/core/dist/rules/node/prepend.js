@@ -5,8 +5,8 @@ const node_1 = require("../../core/node");
 const expect_1 = require("../flow/expect");
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the given patterns in this pattern and, in case of success,
- * it prepends the resulting node in the current source output node.
+ * Consume all the given patterns in this pattern and, in case of success,
+ * it prepends a new node in the source output node.
  */
 class Prepend extends pattern_1.default {
     /**

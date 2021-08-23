@@ -1,7 +1,7 @@
 import type Base from '../../source/base';
 import Pattern from '../pattern';
 /**
- * Consumes all the given patterns in this pattern without raising a consumption failure.
+ * Consume all the given patterns in this pattern as an optional behavior.
  */
 export default class Option extends Pattern {
     #private;

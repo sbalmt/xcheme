@@ -173,7 +173,7 @@ test('Open/Close symbol table', () => {
   // Test the default symbol table state.
   table = context.table;
   expect(table.parent).toBeUndefined();
-  expect(table.keys).toHaveLength(0);
+  expect(table.names).toHaveLength(0);
 
   // Open symbol table.
   source.openTable();
@@ -184,7 +184,7 @@ test('Open/Close symbol table', () => {
   // Test the output symbol table state.
   table = source.output.table!;
   expect(table.parent).toBeDefined();
-  expect(table.keys).toHaveLength(1);
+  expect(table.names).toHaveLength(1);
 
   // Close the current symbol table.
   source.closeTable();
@@ -192,7 +192,7 @@ test('Open/Close symbol table', () => {
   // Test the default symbol table state.
   table = context.table;
   expect(table.parent).toBeUndefined();
-  expect(table.keys).toHaveLength(0);
+  expect(table.names).toHaveLength(0);
 
   // Test no more symbol tabes to close.
   expect(() => source.closeTable()).toThrow("There's no parent symbol table to collapse.");
@@ -256,10 +256,10 @@ test('Emit record', () => {
   // Test symbol table state.
   const table = context.table;
   expect(table.parent).toBeUndefined();
-  expect(table.keys).toHaveLength(1);
+  expect(table.names).toHaveLength(1);
 
   // Test resulting record.
-  const record = table.getRecord('a')!;
+  const record = table.get('a')!;
   expect(record.fragment).toBeDefined();
   expect(record.node).toBeDefined();
   expect(record.value).toBe(123);
@@ -273,5 +273,7 @@ test('Emit record', () => {
   expect(fragment.location.line).toBe(0);
 
   // Test duplicate record.
-  expect(() => source.emit(new Record(source.fragment, context.node, 123))).toThrow('Unable to add records with duplicate fragment data.');
+  expect(() => source.emit(new Record(source.fragment, context.node, 123))).toThrow(
+    'Unable to add records with duplicate fragment data.'
+  );
 });
