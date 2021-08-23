@@ -46,19 +46,39 @@ class Provider {
     /**
      * Get a completion list for all the symbols in the specified table.
      * @param table Input table.
+     * @param types Symbol type filter.
      * @returns Returns the completion list.
      */
-    #getSymbolList(table) {
+    #getSymbolList(table, types) {
         const list = [];
         for (const name of table.keys) {
             const record = table.getRecord(name);
-            const type = record.value === 301 /* Node */ ? 'node' : 'token';
-            const item = Items.getItem(name, `Insert a ${type} reference.`, {
-                kind: VSCode.CompletionItemKind.Reference
-            });
-            list.push(item);
+            const label = record.value === 301 /* Node */ ? 'node' : 'token';
+            if (types.includes(record.value)) {
+                const item = Items.getItem(name, `Insert a ${label} reference.`, {
+                    kind: VSCode.CompletionItemKind.Reference
+                });
+                list.push(item);
+            }
         }
         return list;
+    }
+    /**
+     * Get the symbol filters according to the node or token behind the given offset.
+     * @param tokens Input tokens.
+     * @param offset Current offset.
+     * @returns Returns the corresponding filters.
+     */
+    #getSymbolFilters(tokens, offset) {
+        for (let index = offset - 1; index >= 0; --index) {
+            if (tokens[index].value === 126 /* Token */) {
+                return [300 /* Token */];
+            }
+            if (tokens[index].value === 127 /* Node */) {
+                return [300 /* Token */, 301 /* Node */];
+            }
+        }
+        return [];
     }
     /**
      * Get the token index that corresponds to the specified position in the given document.
@@ -69,7 +89,7 @@ class Provider {
      */
     #getTokenIndex(tokens, document, position) {
         const offset = document.offsetAt(position);
-        const index = tokens.findIndex((token) => token.fragment.end >= offset);
+        const index = tokens.findIndex((token) => token.fragment.end >= offset) - 1;
         return index < 0 ? tokens.length - 1 : index;
     }
     /**
@@ -102,7 +122,11 @@ class Provider {
                 case 107 /* Else */:
                 case 108 /* Or */:
                 case 109 /* And */:
-                    return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+                    return [
+                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+                        ...Items.operandList,
+                        ...Items.unaryOperatorList
+                    ];
                 case 110 /* Not */:
                 case 111 /* Opt */:
                 case 112 /* Repeat */:
@@ -116,11 +140,20 @@ class Provider {
                 case 123 /* Has */:
                 case 124 /* Set */:
                 case 131 /* OpenParentheses */:
-                    return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+                    return [
+                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+                        ...Items.operandList,
+                        ...Items.unaryOperatorList
+                    ];
                 case 113 /* Place */:
                 case 114 /* Append */:
                 case 115 /* Prepend */:
-                    return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.directionList, ...Items.unaryOperatorList];
+                    return [
+                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+                        ...Items.operandList,
+                        ...Items.directionList,
+                        ...Items.unaryOperatorList
+                    ];
                 case 104 /* From */:
                     return [Items.wordItem];
                 case 105 /* To */:

@@ -38,19 +38,40 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   /**
    * Get a completion list for all the symbols in the specified table.
    * @param table Input table.
+   * @param types Symbol type filter.
    * @returns Returns the completion list.
    */
-  #getSymbolList(table: Core.Table): VSCode.CompletionItem[] {
+  #getSymbolList(table: Core.Table, types: Lang.Parser.Symbols[]): VSCode.CompletionItem[] {
     const list = [];
     for (const name of table.keys) {
       const record = table.getRecord(name)!;
-      const type = record.value === Lang.Parser.Symbols.Node ? 'node' : 'token';
-      const item = Items.getItem(name, `Insert a ${type} reference.`, {
-        kind: VSCode.CompletionItemKind.Reference
-      });
-      list.push(item);
+      const label = record.value === Lang.Parser.Symbols.Node ? 'node' : 'token';
+      if (types.includes(record.value as Lang.Parser.Symbols)) {
+        const item = Items.getItem(name, `Insert a ${label} reference.`, {
+          kind: VSCode.CompletionItemKind.Reference
+        });
+        list.push(item);
+      }
     }
     return list;
+  }
+
+  /**
+   * Get the symbol filters according to the node or token behind the given offset.
+   * @param tokens Input tokens.
+   * @param offset Current offset.
+   * @returns Returns the corresponding filters.
+   */
+  #getSymbolFilters(tokens: Core.Token[], offset: number): Lang.Parser.Symbols[] {
+    for (let index = offset - 1; index >= 0; --index) {
+      if (tokens[index].value === Lang.Lexer.Tokens.Token) {
+        return [Lang.Parser.Symbols.Token];
+      }
+      if (tokens[index].value === Lang.Lexer.Tokens.Node) {
+        return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.Node];
+      }
+    }
+    return [];
   }
 
   /**
@@ -62,7 +83,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    */
   #getTokenIndex(tokens: Core.Token[], document: VSCode.TextDocument, position: VSCode.Position): number {
     const offset = document.offsetAt(position);
-    const index = tokens.findIndex((token) => token.fragment.end >= offset);
+    const index = tokens.findIndex((token) => token.fragment.end >= offset) - 1;
     return index < 0 ? tokens.length - 1 : index;
   }
 
@@ -96,7 +117,11 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lang.Lexer.Tokens.Else:
         case Lang.Lexer.Tokens.Or:
         case Lang.Lexer.Tokens.And:
-          return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+          return [
+            ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+            ...Items.operandList,
+            ...Items.unaryOperatorList
+          ];
         case Lang.Lexer.Tokens.Not:
         case Lang.Lexer.Tokens.Opt:
         case Lang.Lexer.Tokens.Repeat:
@@ -110,11 +135,20 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lang.Lexer.Tokens.Has:
         case Lang.Lexer.Tokens.Set:
         case Lang.Lexer.Tokens.OpenParentheses:
-          return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.unaryOperatorList];
+          return [
+            ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+            ...Items.operandList,
+            ...Items.unaryOperatorList
+          ];
         case Lang.Lexer.Tokens.Place:
         case Lang.Lexer.Tokens.Append:
         case Lang.Lexer.Tokens.Prepend:
-          return [...this.#getSymbolList(context.table), ...Items.operandList, ...Items.directionList, ...Items.unaryOperatorList];
+          return [
+            ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+            ...Items.operandList,
+            ...Items.directionList,
+            ...Items.unaryOperatorList
+          ];
         case Lang.Lexer.Tokens.From:
           return [Items.wordItem];
         case Lang.Lexer.Tokens.To:
