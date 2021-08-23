@@ -3,7 +3,7 @@
 Provides rich language support for XCHEME Lang.
 
 <p>
-  <img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/preview.gif" alt="Preview" width="500">
+  <img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/preview.gif" alt="Preview" width="560">
 </p>
 
 ## License

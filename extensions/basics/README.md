@@ -3,7 +3,7 @@
 Provides syntax highlighting, bracket matching and folding in XCHEME files.
 
 <p>
-  <img src="./extensions/basics/media/preview.png" alt="Preview" width="600">
+  <img src="https://github.com/balmanth/xcheme/raw/master/extensions/basics/media/preview.png" alt="Preview" width="560">
 </p>
 
 ## License
