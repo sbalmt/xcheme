@@ -11,7 +11,7 @@ import * as Analysis from './analysis';
  */
 export class Provider implements VSCode.CompletionItemProvider<VSCode.CompletionItem> {
   /**
-   * Determines whether or not the specified tokens before the given offset compound a valid identity.
+   * Determines whether or not the tokens before the given offset compound a valid identity.
    * @param tokens Input tokens.
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
@@ -21,7 +21,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   }
 
   /**
-   * Determines whether or not the specified tokens before the given offset compound a valid identifier.
+   * Determines whether or not the tokens before the given offset compound a valid identifier.
    * @param tokens Input tokens.
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
@@ -38,7 +38,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   /**
    * Get a completion list for all the symbols in the specified table.
    * @param table Input table.
-   * @param types Symbol type filter.
+   * @param types Symbol types for filtering.
    * @returns Returns the completion list.
    */
   #getSymbolList(table: Core.Table, types: Lang.Parser.Symbols[]): VSCode.CompletionItem[] {
@@ -57,7 +57,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   }
 
   /**
-   * Get the symbol filters according to the node or token behind the given offset.
+   * Get the symbol filters according to the node or token before the given offset.
    * @param tokens Input tokens.
    * @param offset Current offset.
    * @returns Returns the corresponding filters.
@@ -94,7 +94,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @returns Returns the completion items list.
    */
   provideCompletionItems(document: VSCode.TextDocument, position: VSCode.Position): VSCode.ProviderResult<VSCode.CompletionItem[]> {
-    const context = Analysis.consume(document);
+    const context = Analysis.consumeDocument(document);
     const tokens = context.tokens;
     if (tokens.length > 0) {
       const index = this.#getTokenIndex(tokens, document, position);

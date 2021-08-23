@@ -4,8 +4,17 @@ import * as VSCode from 'vscode';
  * Completion item options.
  */
 type ItemOptions = {
+  /**
+   * Item kind.
+   */
   kind: VSCode.CompletionItemKind;
+  /**
+   * Text inserted in the completion.
+   */
   text?: string;
+  /**
+   * Commit characters during the completion.
+   */
   commit?: string[];
 };
 
@@ -26,8 +35,9 @@ const retriggerCommand = {
  */
 export const getItem = (label: string, documentation: string, options: ItemOptions): VSCode.CompletionItem => {
   const text = options?.text ?? label;
+  const raw = options.kind === VSCode.CompletionItemKind.Text;
   const item = new VSCode.CompletionItem(label, options.kind);
-  item.insertText = new VSCode.SnippetString(options.kind === VSCode.CompletionItemKind.Text ? text : `${text} `);
+  item.insertText = new VSCode.SnippetString(raw ? text : `${text} `);
   item.commitCharacters = options?.commit;
   item.documentation = documentation;
   item.command = retriggerCommand;
@@ -90,14 +100,14 @@ export const asItem = getItem('as', 'Set an expression for the current directive
 /**
  * Completion item for a 'THEN' operator.
  */
-export const thenItem = getItem('then', 'Set a condition based on the last consumption state.', {
+export const thenItem = getItem('then', 'Set a partial condition based on the last consumption state.', {
   kind: VSCode.CompletionItemKind.Keyword
 });
 
 /**
  * Completion item for a 'THEN/ELSE' operator.
  */
-export const thenElseItem = getItem('then else', 'Set a condition based on the last consumption state.', {
+export const thenElseItem = getItem('then else', 'Set a full condition based on the last consumption state.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'then ${1} else ${2}',
   commit: [' ', '\n']
@@ -122,28 +132,28 @@ export const andItem = getItem('and', 'Set another expected consumption.', {
 /**
  * Completion item for a 'NOT' operator.
  */
-export const notItem = getItem('not', 'Invert the next consumption result (true to false and vice versa).', {
+export const notItem = getItem('not', 'Invert the next consumption state (true to false and vice versa).', {
   kind: VSCode.CompletionItemKind.Keyword
 });
 
 /**
  * Completion item for an 'OPT' operator.
  */
-export const optItem = getItem('opt', 'Set as optional the next consumption.', {
+export const optItem = getItem('opt', 'Set the next consumption as optional.', {
   kind: VSCode.CompletionItemKind.Keyword
 });
 
 /**
  * Completion item for a 'REPEAT' operator.
  */
-export const repeatItem = getItem('repeat', 'Repeat the next consumption in case of success in the first try.', {
+export const repeatItem = getItem('repeat', 'Repeat the next consumption in case of success after the first try.', {
   kind: VSCode.CompletionItemKind.Keyword
 });
 
 /**
  * Completion item for a 'PLACE' operator.
  */
-export const placeItem = getItem('place', 'Place any resulting node from the next consumption in another direction.', {
+export const placeItem = getItem('place', 'Place the resulting node from the next consumption in another direction.', {
   kind: VSCode.CompletionItemKind.Keyword
 });
 
@@ -215,7 +225,7 @@ export const errorItem = getItem('error', 'Create a new error if the next consum
 /**
  * Completion item for a 'HAS' operator.
  */
-export const hasItem = getItem('has', 'Set a state condition for the next consumption.', {
+export const hasItem = getItem('has', 'Perform the next consumption if the expected state match.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'has <${1}>',
   commit: ['>']
@@ -280,7 +290,7 @@ export const unaryOperatorList = [
 ];
 
 /**
- * Completion list direction modifiers.
+ * Completion list containing all direction modifiers.
  */
 export const directionList = [leftItem, rightItem, nextItem];
 

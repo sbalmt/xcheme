@@ -13,7 +13,7 @@ import * as Errors from './diagnostics/errors';
 export const update = (document: VSCode.TextDocument, collection: VSCode.DiagnosticCollection): void => {
   collection.clear();
   if (document && document.languageId === 'xcheme') {
-    const context = Analysis.consume(document);
+    const context = Analysis.consumeDocument(document);
     if (context.errors.length > 0) {
       const errors = Errors.getDiagnostics(context.errors);
       collection.set(document.uri, errors);

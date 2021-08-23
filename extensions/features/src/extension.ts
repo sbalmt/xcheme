@@ -4,7 +4,7 @@ import * as Diagnostics from './core/diagnostics';
 import * as Completion from './core/completion';
 
 /**
- * Returns a new disposable with an auto completion prover.
+ * Returns a new disposable with an auto completion provider.
  * @returns Returns the disposable.
  */
 const registerAutoCompletion = (): VSCode.Disposable => {
@@ -37,7 +37,7 @@ const detectTextChanges = (collection: VSCode.DiagnosticCollection): VSCode.Disp
 
 /**
  * Called when the extension is activated.
- * @param context VSCode context.
+ * @param context Extension context.
  */
 export function activate(context: VSCode.ExtensionContext) {
   const collection = VSCode.languages.createDiagnosticCollection('xcheme');

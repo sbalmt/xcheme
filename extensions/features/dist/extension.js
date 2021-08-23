@@ -13,160 +13,32 @@ module.exports = require("vscode");
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Provider = void 0;
-const VSCode = __webpack_require__(1);
-const Lang = __webpack_require__(50);
-const Items = __webpack_require__(88);
+exports.update = void 0;
+const Lang = __webpack_require__(3);
 const Analysis = __webpack_require__(86);
+const Errors = __webpack_require__(87);
 /**
- * Completion provider.
+ * Update the specified diagnostics collection based on the given document.
+ * @param document Input document.
+ * @param collection Diagnostics collection.
  */
-class Provider {
-    /**
-     * Determines whether or not the specified tokens before the given offset compound a valid identity.
-     * @param tokens Input tokens.
-     * @param offset Current offset.
-     * @returns Returns true in case of success, false otherwise.
-     */
-    #isIdentity(tokens, offset) {
-        return tokens[offset - 1]?.value === 101 /* Number */ && tokens[offset - 2]?.value === 133 /* OpenChevron */;
-    }
-    /**
-     * Determines whether or not the specified tokens before the given offset compound a valid identifier.
-     * @param tokens Input tokens.
-     * @param offset Current offset.
-     * @returns Returns true in case of success, false otherwise.
-     */
-    #isIdentifier(tokens, offset) {
-        const index = offset - 1;
-        return ((tokens[index]?.value === 134 /* CloseChevron */ && this.#isIdentity(tokens, index)) ||
-            tokens[index]?.value === 126 /* Token */ ||
-            tokens[index]?.value === 127 /* Node */);
-    }
-    /**
-     * Get a completion list for all the symbols in the specified table.
-     * @param table Input table.
-     * @param types Symbol type filter.
-     * @returns Returns the completion list.
-     */
-    #getSymbolList(table, types) {
-        const list = [];
-        for (const name of table.keys) {
-            const record = table.getRecord(name);
-            const label = record.value === 301 /* Node */ ? 'node' : 'token';
-            if (types.includes(record.value)) {
-                const item = Items.getItem(name, `Insert a ${label} reference.`, {
-                    kind: VSCode.CompletionItemKind.Reference
-                });
-                list.push(item);
-            }
+const update = (document, collection) => {
+    collection.clear();
+    if (document && document.languageId === 'xcheme') {
+        const context = Analysis.consumeDocument(document);
+        if (context.errors.length > 0) {
+            const errors = Errors.getDiagnostics(context.errors);
+            collection.set(document.uri, errors);
         }
-        return list;
-    }
-    /**
-     * Get the symbol filters according to the node or token behind the given offset.
-     * @param tokens Input tokens.
-     * @param offset Current offset.
-     * @returns Returns the corresponding filters.
-     */
-    #getSymbolFilters(tokens, offset) {
-        for (let index = offset - 1; index >= 0; --index) {
-            if (tokens[index].value === 126 /* Token */) {
-                return [300 /* Token */];
-            }
-            if (tokens[index].value === 127 /* Node */) {
-                return [300 /* Token */, 301 /* Node */];
-            }
+        else {
+            const project = new Lang.Project(new Lang.TextCoder());
+            Lang.Maker.consumeNodes(context.node, project);
+            const errors = Errors.getDiagnostics(project.errors);
+            collection.set(document.uri, errors);
         }
-        return [];
     }
-    /**
-     * Get the token index that corresponds to the specified position in the given document.
-     * @param tokens Input tokens.
-     * @param document Input document.
-     * @param position Position in the document.
-     * @returns Returns the corresponding token index.
-     */
-    #getTokenIndex(tokens, document, position) {
-        const offset = document.offsetAt(position);
-        const index = tokens.findIndex((token) => token.fragment.end >= offset) - 1;
-        return index < 0 ? tokens.length - 1 : index;
-    }
-    /**
-     * Provide completion items for the given position and document.
-     * @param document Input document.
-     * @param position Position in the document.
-     * @returns Returns the completion items list.
-     */
-    provideCompletionItems(document, position) {
-        const context = Analysis.consume(document);
-        const tokens = context.tokens;
-        if (tokens.length > 0) {
-            const index = this.#getTokenIndex(tokens, document, position);
-            switch (tokens[index].value) {
-                case 125 /* Skip */:
-                    return Items.operandList;
-                case 128 /* Alias */:
-                    return [Items.tokenItem, Items.nodeItem];
-                case 126 /* Token */:
-                case 127 /* Node */:
-                    return [Items.identityItem, Items.identifierItem];
-                case 133 /* OpenChevron */:
-                    return [];
-                case 134 /* CloseChevron */:
-                    return this.#isIdentity(tokens, index) ? [Items.identifierItem] : [];
-                case 100 /* Identifier */:
-                    return this.#isIdentifier(tokens, index) ? [Items.asItem] : Items.binaryOperatorList;
-                case 129 /* As */:
-                case 106 /* Then */:
-                case 107 /* Else */:
-                case 108 /* Or */:
-                case 109 /* And */:
-                    return [
-                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
-                        ...Items.operandList,
-                        ...Items.unaryOperatorList
-                    ];
-                case 110 /* Not */:
-                case 111 /* Opt */:
-                case 112 /* Repeat */:
-                case 118 /* Left */:
-                case 119 /* Right */:
-                case 117 /* Next */:
-                case 116 /* Pivot */:
-                case 120 /* Symbol */:
-                case 121 /* Scope */:
-                case 122 /* Error */:
-                case 123 /* Has */:
-                case 124 /* Set */:
-                case 131 /* OpenParentheses */:
-                    return [
-                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
-                        ...Items.operandList,
-                        ...Items.unaryOperatorList
-                    ];
-                case 113 /* Place */:
-                case 114 /* Append */:
-                case 115 /* Prepend */:
-                    return [
-                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
-                        ...Items.operandList,
-                        ...Items.directionList,
-                        ...Items.unaryOperatorList
-                    ];
-                case 104 /* From */:
-                    return [Items.wordItem];
-                case 105 /* To */:
-                case 102 /* Alphabet */:
-                case 103 /* Any */:
-                case 132 /* CloseParentheses */:
-                    return Items.binaryOperatorList;
-            }
-        }
-        return [Items.skipItem, Items.aliasItem, Items.tokenItem, Items.nodeItem];
-    }
-}
-exports.Provider = Provider;
+};
+exports.update = update;
 
 
 /***/ }),
@@ -175,97 +47,18 @@ exports.Provider = Provider;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.PlaceNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetStatePattern = exports.HasStatePattern = exports.SetStateRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptFlowPattern = exports.NotFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Token = exports.Node = exports.Error = exports.Context = void 0;
-var context_1 = __webpack_require__(4);
-Object.defineProperty(exports, "Context", ({ enumerable: true, get: function () { return context_1.default; } }));
-var error_1 = __webpack_require__(9);
-Object.defineProperty(exports, "Error", ({ enumerable: true, get: function () { return error_1.default; } }));
-var node_1 = __webpack_require__(8);
-Object.defineProperty(exports, "Node", ({ enumerable: true, get: function () { return node_1.default; } }));
-var token_1 = __webpack_require__(10);
-Object.defineProperty(exports, "Token", ({ enumerable: true, get: function () { return token_1.default; } }));
-var table_1 = __webpack_require__(7);
-Object.defineProperty(exports, "Table", ({ enumerable: true, get: function () { return table_1.default; } }));
-var record_1 = __webpack_require__(11);
-Object.defineProperty(exports, "Record", ({ enumerable: true, get: function () { return record_1.default; } }));
-var fragment_1 = __webpack_require__(5);
-Object.defineProperty(exports, "Fragment", ({ enumerable: true, get: function () { return fragment_1.default; } }));
-var location_1 = __webpack_require__(6);
-Object.defineProperty(exports, "Location", ({ enumerable: true, get: function () { return location_1.default; } }));
-var pattern_1 = __webpack_require__(12);
-Object.defineProperty(exports, "Pattern", ({ enumerable: true, get: function () { return pattern_1.default; } }));
-var route_1 = __webpack_require__(13);
-Object.defineProperty(exports, "Route", ({ enumerable: true, get: function () { return route_1.default; } }));
-var base_1 = __webpack_require__(14);
-Object.defineProperty(exports, "BaseSource", ({ enumerable: true, get: function () { return base_1.default; } }));
-var text_1 = __webpack_require__(15);
-Object.defineProperty(exports, "TextSource", ({ enumerable: true, get: function () { return text_1.default; } }));
-var token_2 = __webpack_require__(16);
-Object.defineProperty(exports, "TokenSource", ({ enumerable: true, get: function () { return token_2.default; } }));
-var any_1 = __webpack_require__(17);
-Object.defineProperty(exports, "AnyUnitPattern", ({ enumerable: true, get: function () { return any_1.default; } }));
-var choose_1 = __webpack_require__(18);
-Object.defineProperty(exports, "ChooseUnitPattern", ({ enumerable: true, get: function () { return choose_1.default; } }));
-var expect_1 = __webpack_require__(19);
-Object.defineProperty(exports, "ExpectUnitPattern", ({ enumerable: true, get: function () { return expect_1.default; } }));
-var range_1 = __webpack_require__(20);
-Object.defineProperty(exports, "RangeUnitPattern", ({ enumerable: true, get: function () { return range_1.default; } }));
-var choose_2 = __webpack_require__(21);
-Object.defineProperty(exports, "ChooseFlowPattern", ({ enumerable: true, get: function () { return choose_2.default; } }));
-var condition_1 = __webpack_require__(24);
-Object.defineProperty(exports, "ConditionFlowPattern", ({ enumerable: true, get: function () { return condition_1.default; } }));
-var run_1 = __webpack_require__(25);
-Object.defineProperty(exports, "RunFlowPattern", ({ enumerable: true, get: function () { return run_1.default; } }));
-var expect_2 = __webpack_require__(23);
-Object.defineProperty(exports, "ExpectFlowPattern", ({ enumerable: true, get: function () { return expect_2.default; } }));
-var end_1 = __webpack_require__(26);
-Object.defineProperty(exports, "EndFlowPattern", ({ enumerable: true, get: function () { return end_1.default; } }));
-var not_1 = __webpack_require__(27);
-Object.defineProperty(exports, "NotFlowPattern", ({ enumerable: true, get: function () { return not_1.default; } }));
-var opt_1 = __webpack_require__(28);
-Object.defineProperty(exports, "OptFlowPattern", ({ enumerable: true, get: function () { return opt_1.default; } }));
-var repeat_1 = __webpack_require__(29);
-Object.defineProperty(exports, "RepeatFlowPattern", ({ enumerable: true, get: function () { return repeat_1.default; } }));
-var static_1 = __webpack_require__(30);
-Object.defineProperty(exports, "StaticFlowPattern", ({ enumerable: true, get: function () { return static_1.default; } }));
-var map_1 = __webpack_require__(31);
-Object.defineProperty(exports, "MapFlowPattern", ({ enumerable: true, get: function () { return map_1.default; } }));
-var route_2 = __webpack_require__(32);
-Object.defineProperty(exports, "SetValueRoute", ({ enumerable: true, get: function () { return route_2.default; } }));
-var set_1 = __webpack_require__(33);
-Object.defineProperty(exports, "SetValuePattern", ({ enumerable: true, get: function () { return set_1.default; } }));
-var route_3 = __webpack_require__(34);
-Object.defineProperty(exports, "SetStateRoute", ({ enumerable: true, get: function () { return route_3.default; } }));
-var has_1 = __webpack_require__(36);
-Object.defineProperty(exports, "HasStatePattern", ({ enumerable: true, get: function () { return has_1.default; } }));
-var set_2 = __webpack_require__(35);
-Object.defineProperty(exports, "SetStatePattern", ({ enumerable: true, get: function () { return set_2.default; } }));
-var route_4 = __webpack_require__(37);
-Object.defineProperty(exports, "EmitErrorRoute", ({ enumerable: true, get: function () { return route_4.default; } }));
-var emit_1 = __webpack_require__(38);
-Object.defineProperty(exports, "EmitErrorPattern", ({ enumerable: true, get: function () { return emit_1.default; } }));
-var route_5 = __webpack_require__(39);
-Object.defineProperty(exports, "EmitTokenRoute", ({ enumerable: true, get: function () { return route_5.default; } }));
-var emit_2 = __webpack_require__(40);
-Object.defineProperty(exports, "EmitTokenPattern", ({ enumerable: true, get: function () { return emit_2.default; } }));
-var route_6 = __webpack_require__(41);
-Object.defineProperty(exports, "EmitNodeRoute", ({ enumerable: true, get: function () { return route_6.default; } }));
-var emit_3 = __webpack_require__(42);
-Object.defineProperty(exports, "EmitNodePattern", ({ enumerable: true, get: function () { return emit_3.default; } }));
-var append_1 = __webpack_require__(43);
-Object.defineProperty(exports, "AppendNodePattern", ({ enumerable: true, get: function () { return append_1.default; } }));
-var prepend_1 = __webpack_require__(44);
-Object.defineProperty(exports, "PrependNodePattern", ({ enumerable: true, get: function () { return prepend_1.default; } }));
-var pivot_1 = __webpack_require__(45);
-Object.defineProperty(exports, "PivotNodePattern", ({ enumerable: true, get: function () { return pivot_1.default; } }));
-var place_1 = __webpack_require__(46);
-Object.defineProperty(exports, "PlaceNodePattern", ({ enumerable: true, get: function () { return place_1.default; } }));
-var route_7 = __webpack_require__(47);
-Object.defineProperty(exports, "EmitSymbolRoute", ({ enumerable: true, get: function () { return route_7.default; } }));
-var emit_4 = __webpack_require__(48);
-Object.defineProperty(exports, "EmitSymbolPattern", ({ enumerable: true, get: function () { return emit_4.default; } }));
-var scope_1 = __webpack_require__(49);
-Object.defineProperty(exports, "ScopeSymbolPattern", ({ enumerable: true, get: function () { return scope_1.default; } }));
+exports.Project = exports.TextCoder = exports.LiveCoder = exports.BaseCoder = exports.Maker = exports.Parser = exports.Lexer = void 0;
+exports.Lexer = __webpack_require__(4);
+exports.Parser = __webpack_require__(53);
+exports.Maker = __webpack_require__(57);
+var base_1 = __webpack_require__(81);
+Object.defineProperty(exports, "BaseCoder", ({ enumerable: true, get: function () { return base_1.Base; } }));
+var live_1 = __webpack_require__(82);
+Object.defineProperty(exports, "LiveCoder", ({ enumerable: true, get: function () { return live_1.Live; } }));
+var text_1 = __webpack_require__(83);
+Object.defineProperty(exports, "TextCoder", ({ enumerable: true, get: function () { return text_1.Text; } }));
+var project_1 = __webpack_require__(84);
+Object.defineProperty(exports, "Project", ({ enumerable: true, get: function () { return project_1.Project; } }));
 //# sourceMappingURL=index.js.map
 
 /***/ }),
@@ -274,10 +67,144 @@ Object.defineProperty(exports, "ScopeSymbolPattern", ({ enumerable: true, get: f
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fragment_1 = __webpack_require__(5);
-const location_1 = __webpack_require__(6);
-const table_1 = __webpack_require__(7);
-const node_1 = __webpack_require__(8);
+exports.consume = exports.consumeText = void 0;
+const Core = __webpack_require__(5);
+const program_1 = __webpack_require__(52);
+/**
+ * Consume the specified text and produce a list of tokens for updating the given context.
+ * @param text Input text.
+ * @param context Output context.
+ * @returns Returns true when the consumption was successful, false otherwise.
+ */
+const consumeText = (text, context) => {
+    const source = new Core.TextSource(text, context);
+    if (!program_1.Program.consume(source)) {
+        context.errors.push(new Core.Error(source.fragment, 4097 /* UNEXPECTED_TOKEN */));
+        return false;
+    }
+    return true;
+};
+exports.consumeText = consumeText;
+/**
+ * Consume the given source.
+ * @param source Data source.
+ * @returns Returns true when the source was consumed, otherwise returns false.
+ */
+const consume = (source) => {
+    return program_1.Program.consume(source);
+};
+exports.consume = consume;
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 5 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.PlaceNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetStatePattern = exports.HasStatePattern = exports.SetStateRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptFlowPattern = exports.NotFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Token = exports.Node = exports.Error = exports.Context = void 0;
+var context_1 = __webpack_require__(6);
+Object.defineProperty(exports, "Context", ({ enumerable: true, get: function () { return context_1.default; } }));
+var error_1 = __webpack_require__(11);
+Object.defineProperty(exports, "Error", ({ enumerable: true, get: function () { return error_1.default; } }));
+var node_1 = __webpack_require__(10);
+Object.defineProperty(exports, "Node", ({ enumerable: true, get: function () { return node_1.default; } }));
+var token_1 = __webpack_require__(12);
+Object.defineProperty(exports, "Token", ({ enumerable: true, get: function () { return token_1.default; } }));
+var table_1 = __webpack_require__(9);
+Object.defineProperty(exports, "Table", ({ enumerable: true, get: function () { return table_1.default; } }));
+var record_1 = __webpack_require__(13);
+Object.defineProperty(exports, "Record", ({ enumerable: true, get: function () { return record_1.default; } }));
+var fragment_1 = __webpack_require__(7);
+Object.defineProperty(exports, "Fragment", ({ enumerable: true, get: function () { return fragment_1.default; } }));
+var location_1 = __webpack_require__(8);
+Object.defineProperty(exports, "Location", ({ enumerable: true, get: function () { return location_1.default; } }));
+var pattern_1 = __webpack_require__(14);
+Object.defineProperty(exports, "Pattern", ({ enumerable: true, get: function () { return pattern_1.default; } }));
+var route_1 = __webpack_require__(15);
+Object.defineProperty(exports, "Route", ({ enumerable: true, get: function () { return route_1.default; } }));
+var base_1 = __webpack_require__(16);
+Object.defineProperty(exports, "BaseSource", ({ enumerable: true, get: function () { return base_1.default; } }));
+var text_1 = __webpack_require__(17);
+Object.defineProperty(exports, "TextSource", ({ enumerable: true, get: function () { return text_1.default; } }));
+var token_2 = __webpack_require__(18);
+Object.defineProperty(exports, "TokenSource", ({ enumerable: true, get: function () { return token_2.default; } }));
+var any_1 = __webpack_require__(19);
+Object.defineProperty(exports, "AnyUnitPattern", ({ enumerable: true, get: function () { return any_1.default; } }));
+var choose_1 = __webpack_require__(20);
+Object.defineProperty(exports, "ChooseUnitPattern", ({ enumerable: true, get: function () { return choose_1.default; } }));
+var expect_1 = __webpack_require__(21);
+Object.defineProperty(exports, "ExpectUnitPattern", ({ enumerable: true, get: function () { return expect_1.default; } }));
+var range_1 = __webpack_require__(22);
+Object.defineProperty(exports, "RangeUnitPattern", ({ enumerable: true, get: function () { return range_1.default; } }));
+var choose_2 = __webpack_require__(23);
+Object.defineProperty(exports, "ChooseFlowPattern", ({ enumerable: true, get: function () { return choose_2.default; } }));
+var condition_1 = __webpack_require__(26);
+Object.defineProperty(exports, "ConditionFlowPattern", ({ enumerable: true, get: function () { return condition_1.default; } }));
+var run_1 = __webpack_require__(27);
+Object.defineProperty(exports, "RunFlowPattern", ({ enumerable: true, get: function () { return run_1.default; } }));
+var expect_2 = __webpack_require__(25);
+Object.defineProperty(exports, "ExpectFlowPattern", ({ enumerable: true, get: function () { return expect_2.default; } }));
+var end_1 = __webpack_require__(28);
+Object.defineProperty(exports, "EndFlowPattern", ({ enumerable: true, get: function () { return end_1.default; } }));
+var not_1 = __webpack_require__(29);
+Object.defineProperty(exports, "NotFlowPattern", ({ enumerable: true, get: function () { return not_1.default; } }));
+var opt_1 = __webpack_require__(30);
+Object.defineProperty(exports, "OptFlowPattern", ({ enumerable: true, get: function () { return opt_1.default; } }));
+var repeat_1 = __webpack_require__(31);
+Object.defineProperty(exports, "RepeatFlowPattern", ({ enumerable: true, get: function () { return repeat_1.default; } }));
+var static_1 = __webpack_require__(32);
+Object.defineProperty(exports, "StaticFlowPattern", ({ enumerable: true, get: function () { return static_1.default; } }));
+var map_1 = __webpack_require__(33);
+Object.defineProperty(exports, "MapFlowPattern", ({ enumerable: true, get: function () { return map_1.default; } }));
+var route_2 = __webpack_require__(34);
+Object.defineProperty(exports, "SetValueRoute", ({ enumerable: true, get: function () { return route_2.default; } }));
+var set_1 = __webpack_require__(35);
+Object.defineProperty(exports, "SetValuePattern", ({ enumerable: true, get: function () { return set_1.default; } }));
+var route_3 = __webpack_require__(36);
+Object.defineProperty(exports, "SetStateRoute", ({ enumerable: true, get: function () { return route_3.default; } }));
+var has_1 = __webpack_require__(38);
+Object.defineProperty(exports, "HasStatePattern", ({ enumerable: true, get: function () { return has_1.default; } }));
+var set_2 = __webpack_require__(37);
+Object.defineProperty(exports, "SetStatePattern", ({ enumerable: true, get: function () { return set_2.default; } }));
+var route_4 = __webpack_require__(39);
+Object.defineProperty(exports, "EmitErrorRoute", ({ enumerable: true, get: function () { return route_4.default; } }));
+var emit_1 = __webpack_require__(40);
+Object.defineProperty(exports, "EmitErrorPattern", ({ enumerable: true, get: function () { return emit_1.default; } }));
+var route_5 = __webpack_require__(41);
+Object.defineProperty(exports, "EmitTokenRoute", ({ enumerable: true, get: function () { return route_5.default; } }));
+var emit_2 = __webpack_require__(42);
+Object.defineProperty(exports, "EmitTokenPattern", ({ enumerable: true, get: function () { return emit_2.default; } }));
+var route_6 = __webpack_require__(43);
+Object.defineProperty(exports, "EmitNodeRoute", ({ enumerable: true, get: function () { return route_6.default; } }));
+var emit_3 = __webpack_require__(44);
+Object.defineProperty(exports, "EmitNodePattern", ({ enumerable: true, get: function () { return emit_3.default; } }));
+var append_1 = __webpack_require__(45);
+Object.defineProperty(exports, "AppendNodePattern", ({ enumerable: true, get: function () { return append_1.default; } }));
+var prepend_1 = __webpack_require__(46);
+Object.defineProperty(exports, "PrependNodePattern", ({ enumerable: true, get: function () { return prepend_1.default; } }));
+var pivot_1 = __webpack_require__(47);
+Object.defineProperty(exports, "PivotNodePattern", ({ enumerable: true, get: function () { return pivot_1.default; } }));
+var place_1 = __webpack_require__(48);
+Object.defineProperty(exports, "PlaceNodePattern", ({ enumerable: true, get: function () { return place_1.default; } }));
+var route_7 = __webpack_require__(49);
+Object.defineProperty(exports, "EmitSymbolRoute", ({ enumerable: true, get: function () { return route_7.default; } }));
+var emit_4 = __webpack_require__(50);
+Object.defineProperty(exports, "EmitSymbolPattern", ({ enumerable: true, get: function () { return emit_4.default; } }));
+var scope_1 = __webpack_require__(51);
+Object.defineProperty(exports, "ScopeSymbolPattern", ({ enumerable: true, get: function () { return scope_1.default; } }));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 6 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const fragment_1 = __webpack_require__(7);
+const location_1 = __webpack_require__(8);
+const table_1 = __webpack_require__(9);
+const node_1 = __webpack_require__(10);
 /**
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
  * nodes of the current consumption.
@@ -345,7 +272,7 @@ exports.default = Context;
 //# sourceMappingURL=context.js.map
 
 /***/ }),
-/* 5 */
+/* 7 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -418,7 +345,7 @@ exports.default = Fragment;
 //# sourceMappingURL=fragment.js.map
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -461,12 +388,12 @@ exports.default = Location;
 //# sourceMappingURL=location.js.map
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fragment_1 = __webpack_require__(5);
+const fragment_1 = __webpack_require__(7);
 /**
  * A symbol table for storing symbol records generated during the analysis process.
  */
@@ -542,7 +469,7 @@ exports.default = Table;
 //# sourceMappingURL=table.js.map
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -648,7 +575,7 @@ exports.default = Node;
 //# sourceMappingURL=node.js.map
 
 /***/ }),
-/* 9 */
+/* 11 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -691,7 +618,7 @@ exports.default = Error;
 //# sourceMappingURL=error.js.map
 
 /***/ }),
-/* 10 */
+/* 12 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -734,7 +661,7 @@ exports.default = Token;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 11 */
+/* 13 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -789,7 +716,7 @@ exports.default = Record;
 //# sourceMappingURL=record.js.map
 
 /***/ }),
-/* 12 */
+/* 14 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -811,7 +738,7 @@ exports.default = Pattern;
 //# sourceMappingURL=pattern.js.map
 
 /***/ }),
-/* 13 */
+/* 15 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -854,16 +781,16 @@ exports.default = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 14 */
+/* 16 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const error_1 = __webpack_require__(9);
-const token_1 = __webpack_require__(10);
-const node_1 = __webpack_require__(8);
-const record_1 = __webpack_require__(11);
-const table_1 = __webpack_require__(7);
+const error_1 = __webpack_require__(11);
+const token_1 = __webpack_require__(12);
+const node_1 = __webpack_require__(10);
+const record_1 = __webpack_require__(13);
+const table_1 = __webpack_require__(9);
 /**
  * Base of any data source for the analysis process.
  */
@@ -998,14 +925,14 @@ exports.default = Base;
 //# sourceMappingURL=base.js.map
 
 /***/ }),
-/* 15 */
+/* 17 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fragment_1 = __webpack_require__(5);
-const location_1 = __webpack_require__(6);
-const base_1 = __webpack_require__(14);
+const fragment_1 = __webpack_require__(7);
+const location_1 = __webpack_require__(8);
+const base_1 = __webpack_require__(16);
 /**
  * Data source for processing texts during the analysis process.
  */
@@ -1128,13 +1055,13 @@ exports.default = Text;
 //# sourceMappingURL=text.js.map
 
 /***/ }),
-/* 16 */
+/* 18 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fragment_1 = __webpack_require__(5);
-const base_1 = __webpack_require__(14);
+const fragment_1 = __webpack_require__(7);
+const base_1 = __webpack_require__(16);
 /**
  * Data source for processing tokens during the analysis.
  */
@@ -1249,12 +1176,12 @@ exports.default = TokenSource;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 17 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes one unit.
  */
@@ -1276,12 +1203,12 @@ exports.default = Any;
 //# sourceMappingURL=any.js.map
 
 /***/ }),
-/* 18 */
+/* 20 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes one unit that is between all the acceptable units in the pattern.
  */
@@ -1317,12 +1244,12 @@ exports.default = Choose;
 //# sourceMappingURL=choose.js.map
 
 /***/ }),
-/* 19 */
+/* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the units that are expected by the pattern.
  */
@@ -1358,12 +1285,12 @@ exports.default = Expect;
 //# sourceMappingURL=expect.js.map
 
 /***/ }),
-/* 20 */
+/* 22 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes one unit that is in the range accepted by the pattern.
  */
@@ -1406,13 +1333,13 @@ exports.default = Range;
 //# sourceMappingURL=range.js.map
 
 /***/ }),
-/* 21 */
+/* 23 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const try_1 = __webpack_require__(22);
+const pattern_1 = __webpack_require__(14);
+const try_1 = __webpack_require__(24);
 /**
  * Consumes the first matching pattern in the list of patterns.
  */
@@ -1447,13 +1374,13 @@ exports.default = Choose;
 //# sourceMappingURL=choose.js.map
 
 /***/ }),
-/* 22 */
+/* 24 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const expect_1 = __webpack_require__(23);
+const pattern_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(25);
 /**
  * Consumes all the given patterns and, in case of failure, it preserves the current source state.
  */
@@ -1489,12 +1416,12 @@ exports.default = Try;
 //# sourceMappingURL=try.js.map
 
 /***/ }),
-/* 23 */
+/* 25 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all patterns that are expected by this pattern.
  */
@@ -1529,13 +1456,13 @@ exports.default = Expect;
 //# sourceMappingURL=expect.js.map
 
 /***/ }),
-/* 24 */
+/* 26 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const try_1 = __webpack_require__(22);
+const pattern_1 = __webpack_require__(14);
+const try_1 = __webpack_require__(24);
 /**
  * Consumes the test pattern and, in case of success, it also consumes the success pattern,
  * otherwise, it will consume the failure pattern (when provided).
@@ -1584,12 +1511,12 @@ exports.default = Condition;
 //# sourceMappingURL=condition.js.map
 
 /***/ }),
-/* 25 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes the pattern object returned by the callback given for this pattern.
  */
@@ -1619,12 +1546,12 @@ exports.default = Run;
 //# sourceMappingURL=run.js.map
 
 /***/ }),
-/* 26 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Doesn't consume anything, but it expects the end of the source.
  */
@@ -1642,13 +1569,13 @@ exports.default = End;
 //# sourceMappingURL=end.js.map
 
 /***/ }),
-/* 27 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const try_1 = __webpack_require__(22);
+const pattern_1 = __webpack_require__(14);
+const try_1 = __webpack_require__(24);
 /**
  * Consumes all the given patterns and invert the consumption result.
  */
@@ -1681,13 +1608,13 @@ exports.default = Not;
 //# sourceMappingURL=not.js.map
 
 /***/ }),
-/* 28 */
+/* 30 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const try_1 = __webpack_require__(22);
+const pattern_1 = __webpack_require__(14);
+const try_1 = __webpack_require__(24);
 /**
  * Consumes all the given patterns in this pattern without raising a consumption failure.
  */
@@ -1718,14 +1645,14 @@ exports.default = Option;
 //# sourceMappingURL=opt.js.map
 
 /***/ }),
-/* 29 */
+/* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const expect_1 = __webpack_require__(23);
-const try_1 = __webpack_require__(22);
+const pattern_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(25);
+const try_1 = __webpack_require__(24);
 /**
  * Consumes all the given patterns in this pattern and, in case of success, retry the consumption.
  */
@@ -1765,12 +1692,12 @@ exports.default = Repeat;
 //# sourceMappingURL=repeat.js.map
 
 /***/ }),
-/* 30 */
+/* 32 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Doesn't consume anything and returns the static value given for this pattern.
  */
@@ -1800,12 +1727,12 @@ exports.default = Static;
 //# sourceMappingURL=static.js.map
 
 /***/ }),
-/* 31 */
+/* 33 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes the first route that match in the list of routes given for this pattern.
  */
@@ -1968,14 +1895,14 @@ exports.default = Map;
 //# sourceMappingURL=map.js.map
 
 /***/ }),
-/* 32 */
+/* 34 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(13);
-const pattern_1 = __webpack_require__(12);
-const set_1 = __webpack_require__(33);
+const route_1 = __webpack_require__(15);
+const pattern_1 = __webpack_require__(14);
+const set_1 = __webpack_require__(35);
 /**
  * Produce a route to consume units and in case of success it emits a new token.
  */
@@ -1999,13 +1926,13 @@ exports.default = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 33 */
+/* 35 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns and, in case of success, it will change the current output value.
  */
@@ -2045,14 +1972,14 @@ exports.default = Set;
 //# sourceMappingURL=set.js.map
 
 /***/ }),
-/* 34 */
+/* 36 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(13);
-const pattern_1 = __webpack_require__(12);
-const set_1 = __webpack_require__(35);
+const route_1 = __webpack_require__(15);
+const pattern_1 = __webpack_require__(14);
+const set_1 = __webpack_require__(37);
 /**
  * Produce a route to consume units and in case of success it set a new state value.
  */
@@ -2076,13 +2003,13 @@ exports.default = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 35 */
+/* 37 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns and, in case of success, it will set a new state value.
  */
@@ -2122,13 +2049,13 @@ exports.default = Emit;
 //# sourceMappingURL=set.js.map
 
 /***/ }),
-/* 36 */
+/* 38 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns when the specified state value is defined.
  */
@@ -2167,14 +2094,14 @@ exports.default = Emit;
 //# sourceMappingURL=has.js.map
 
 /***/ }),
-/* 37 */
+/* 39 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(13);
-const pattern_1 = __webpack_require__(12);
-const emit_1 = __webpack_require__(38);
+const route_1 = __webpack_require__(15);
+const pattern_1 = __webpack_require__(14);
+const emit_1 = __webpack_require__(40);
 /**
  * Produce a route to consume units and in case of success it emits a new error.
  */
@@ -2198,15 +2125,15 @@ exports.default = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 38 */
+/* 40 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(14);
-const error_1 = __webpack_require__(9);
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(16);
+const error_1 = __webpack_require__(11);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns and, in case of success, it will emit a new error into the current error list.
  */
@@ -2251,14 +2178,14 @@ exports.default = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 39 */
+/* 41 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(13);
-const pattern_1 = __webpack_require__(12);
-const emit_1 = __webpack_require__(40);
+const route_1 = __webpack_require__(15);
+const pattern_1 = __webpack_require__(14);
+const emit_1 = __webpack_require__(42);
 /**
  * Produce a route to consume units and in case of success it emits a new token.
  */
@@ -2282,15 +2209,15 @@ exports.default = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 40 */
+/* 42 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(14);
-const token_1 = __webpack_require__(10);
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(16);
+const token_1 = __webpack_require__(12);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns and, in case of success, it will emit a new token into the current token list.
  */
@@ -2335,14 +2262,14 @@ exports.default = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(13);
-const pattern_1 = __webpack_require__(12);
-const emit_1 = __webpack_require__(42);
+const route_1 = __webpack_require__(15);
+const pattern_1 = __webpack_require__(14);
+const emit_1 = __webpack_require__(44);
 /**
  * Produce a route to consume units and in case of success it emits a new node.
  */
@@ -2367,15 +2294,15 @@ exports.default = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(14);
-const node_1 = __webpack_require__(8);
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(16);
+const node_1 = __webpack_require__(10);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns and, in case of success, it will emit a new node as the next child of the current node.
  * Any working node in the current source output will be attached as the left child from the new node.
@@ -2430,15 +2357,15 @@ exports.default = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(14);
-const node_1 = __webpack_require__(8);
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(16);
+const node_1 = __webpack_require__(10);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns in this pattern and, in case of success,
  * it appends the resulting node in the current source output node.
@@ -2516,15 +2443,15 @@ exports.default = Append;
 //# sourceMappingURL=append.js.map
 
 /***/ }),
-/* 44 */
+/* 46 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(14);
-const node_1 = __webpack_require__(8);
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(16);
+const node_1 = __webpack_require__(10);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns in this pattern and, in case of success,
  * it prepends the resulting node in the current source output node.
@@ -2600,15 +2527,15 @@ exports.default = Prepend;
 //# sourceMappingURL=prepend.js.map
 
 /***/ }),
-/* 45 */
+/* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(14);
-const node_1 = __webpack_require__(8);
-const expect_1 = __webpack_require__(23);
-const pattern_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(16);
+const node_1 = __webpack_require__(10);
+const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(14);
 /**
  * Consumes all the given patterns in this pattern and, in case of success,
  * it pivots the resulting node by the current source output node.
@@ -2686,13 +2613,13 @@ exports.default = Pivot;
 //# sourceMappingURL=pivot.js.map
 
 /***/ }),
-/* 46 */
+/* 48 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const expect_1 = __webpack_require__(23);
+const pattern_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(25);
 /**
  * Consumes all the given patterns and, in case of success,
  * it places the resulting node into the current source output node.
@@ -2744,14 +2671,14 @@ exports.default = Place;
 //# sourceMappingURL=place.js.map
 
 /***/ }),
-/* 47 */
+/* 49 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(13);
-const pattern_1 = __webpack_require__(12);
-const emit_1 = __webpack_require__(48);
+const route_1 = __webpack_require__(15);
+const pattern_1 = __webpack_require__(14);
+const emit_1 = __webpack_require__(50);
 /**
  * Produce a route to consume units and in case of success it emits a new symbol record.
  */
@@ -2776,16 +2703,16 @@ exports.default = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 48 */
+/* 50 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(14);
-const record_1 = __webpack_require__(11);
-const pattern_1 = __webpack_require__(12);
-const expect_1 = __webpack_require__(23);
-const error_1 = __webpack_require__(9);
+const base_1 = __webpack_require__(16);
+const record_1 = __webpack_require__(13);
+const pattern_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(25);
+const error_1 = __webpack_require__(11);
 /**
  * Consumes all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
  */
@@ -2845,13 +2772,13 @@ exports.default = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 49 */
+/* 51 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(12);
-const expect_1 = __webpack_require__(23);
+const pattern_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(25);
 /**
  * Consumes all the given patterns behind a new symbol table.
  */
@@ -2884,68 +2811,13 @@ exports.default = Scope;
 //# sourceMappingURL=scope.js.map
 
 /***/ }),
-/* 50 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Project = exports.TextCoder = exports.LiveCoder = exports.BaseCoder = exports.Maker = exports.Parser = exports.Lexer = void 0;
-exports.Lexer = __webpack_require__(51);
-exports.Parser = __webpack_require__(53);
-exports.Maker = __webpack_require__(57);
-var base_1 = __webpack_require__(81);
-Object.defineProperty(exports, "BaseCoder", ({ enumerable: true, get: function () { return base_1.Base; } }));
-var live_1 = __webpack_require__(82);
-Object.defineProperty(exports, "LiveCoder", ({ enumerable: true, get: function () { return live_1.Live; } }));
-var text_1 = __webpack_require__(83);
-Object.defineProperty(exports, "TextCoder", ({ enumerable: true, get: function () { return text_1.Text; } }));
-var project_1 = __webpack_require__(84);
-Object.defineProperty(exports, "Project", ({ enumerable: true, get: function () { return project_1.Project; } }));
-//# sourceMappingURL=index.js.map
-
-/***/ }),
-/* 51 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.consume = exports.consumeText = void 0;
-const Core = __webpack_require__(3);
-const program_1 = __webpack_require__(52);
-/**
- * Consume the specified text and produce a list of tokens for updating the given context.
- * @param text Input text.
- * @param context Output context.
- * @returns Returns true when the consumption was successful, false otherwise.
- */
-const consumeText = (text, context) => {
-    const source = new Core.TextSource(text, context);
-    if (!program_1.Program.consume(source)) {
-        context.errors.push(new Core.Error(source.fragment, 4097 /* UNEXPECTED_TOKEN */));
-        return false;
-    }
-    return true;
-};
-exports.consumeText = consumeText;
-/**
- * Consume the given source.
- * @param source Data source.
- * @returns Returns true when the source was consumed, otherwise returns false.
- */
-const consume = (source) => {
-    return program_1.Program.consume(source);
-};
-exports.consume = consume;
-//# sourceMappingURL=index.js.map
-
-/***/ }),
 /* 52 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Program = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 /**
  * Alpha characters.
  */
@@ -2995,7 +2867,7 @@ new Core.SetValuePattern(100 /* Identifier */, new Core.ChooseFlowPattern(alpha,
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.consumeTokens = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 const program_1 = __webpack_require__(54);
 /**
  * Consume the specified tokens and produce an AST for updating the given context.
@@ -3031,8 +2903,8 @@ exports.consume = consume;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Program = void 0;
-const Core = __webpack_require__(3);
-const Lexer = __webpack_require__(51);
+const Core = __webpack_require__(5);
+const Lexer = __webpack_require__(4);
 const binary_1 = __webpack_require__(55);
 const unary_1 = __webpack_require__(56);
 const identity = new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(133 /* OpenChevron */), new Core.AppendNodePattern(202 /* Identity */, 0 /* Left */, 1 /* Right */, new Core.ExpectUnitPattern(101 /* Number */), new Core.ExpectUnitPattern(134 /* CloseChevron */)));
@@ -3065,7 +2937,7 @@ exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.Re
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 /**
  * Binary expression pattern.
  */
@@ -3101,7 +2973,7 @@ exports.default = Binary;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 /**
  * Prefixed unary expression pattern.
  */
@@ -3138,7 +3010,7 @@ exports.default = Unary;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consumeNodes = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 const Parser = __webpack_require__(53);
 const Skip = __webpack_require__(58);
 const Token = __webpack_require__(79);
@@ -3231,7 +3103,7 @@ exports.consume = consume;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 const Parser = __webpack_require__(53);
 const Condition = __webpack_require__(60);
 const Or = __webpack_require__(61);
@@ -4027,7 +3899,7 @@ exports.consume = consume;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 const Parser = __webpack_require__(53);
 /**
  * Resolve the corresponding reference for the specified symbol in a 'TOKEN' pattern context.
@@ -4243,7 +4115,7 @@ exports.consume = consume;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 const Expression = __webpack_require__(59);
 /**
  * Emit a new node entry into the given project.
@@ -4545,7 +4417,7 @@ exports.Base = Base;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Live = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 const base_1 = __webpack_require__(81);
 /**
  * Generate a project output for running in memory.
@@ -4797,7 +4669,7 @@ exports.Live = Live;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Text = void 0;
-const Core = __webpack_require__(3);
+const Core = __webpack_require__(5);
 const String = __webpack_require__(63);
 const base_1 = __webpack_require__(81);
 /**
@@ -5305,16 +5177,16 @@ exports.Aggregator = Aggregator;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.consume = void 0;
+exports.consumeDocument = void 0;
 const VSCode = __webpack_require__(1);
-const Core = __webpack_require__(3);
-const Lang = __webpack_require__(50);
+const Core = __webpack_require__(5);
+const Lang = __webpack_require__(3);
 /**
- * Get all the text from the given document.
+ * Get all the text content from the given document.
  * @param document Input document.
  * @returns Returns the text.
  */
-const getText = (document) => {
+const getTextContent = (document) => {
     const first = document.lineAt(0);
     const last = document.lineAt(document.lineCount - 1);
     return document.getText(new VSCode.Range(first.range.start, last.range.end));
@@ -5324,14 +5196,14 @@ const getText = (document) => {
  * @param document Input document.
  * @returns Returns the consumption context.
  */
-const consume = (document) => {
+const consumeDocument = (document) => {
     const context = new Core.Context(document.uri.path);
-    const text = getText(document);
+    const text = getTextContent(document);
     Lang.Lexer.consumeText(text, context);
     Lang.Parser.consumeTokens(context.tokens, context);
     return context;
 };
-exports.consume = consume;
+exports.consumeDocument = consumeDocument;
 
 
 /***/ }),
@@ -5340,36 +5212,219 @@ exports.consume = consume;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.update = void 0;
-const Lang = __webpack_require__(50);
-const Analysis = __webpack_require__(86);
-const Errors = __webpack_require__(89);
+exports.getDiagnostics = void 0;
+const VSCode = __webpack_require__(1);
+const Lang = __webpack_require__(3);
 /**
- * Update the specified diagnostics collection based on the given document.
- * @param document Input document.
- * @param collection Diagnostics collection.
+ * All error messages.
  */
-const update = (document, collection) => {
-    collection.clear();
-    if (document && document.languageId === 'xcheme') {
-        const context = Analysis.consume(document);
-        if (context.errors.length > 0) {
-            const errors = Errors.getDiagnostics(context.errors);
-            collection.set(document.uri, errors);
-        }
-        else {
-            const project = new Lang.Project(new Lang.TextCoder());
-            Lang.Maker.consumeNodes(context.node, project);
-            const errors = Errors.getDiagnostics(project.errors);
-            collection.set(document.uri, errors);
-        }
-    }
+const errorMessages = {
+    [4096 /* DUPLICATE_IDENTIFIER */]: 'Duplicate identifier.',
+    [4097 /* UNEXPECTED_TOKEN */]: 'Unexpected token.',
+    [4098 /* UNEXPECTED_SYNTAX */]: 'Unexpected syntax.',
+    [4099 /* UNEXPECTED_NODE */]: 'Unexpected node.',
+    [4100 /* INVALID_NODE_REFERENCE */]: 'Node references cannot be in use here.',
+    [4101 /* INVALID_TOKEN_REFERENCE */]: 'Token references cannot be in use here.',
+    [4102 /* INVALID_ALIAS_NODE_REFERENCE */]: 'References for an alias node cannot be in use here.',
+    [4103 /* INVALID_ALIAS_TOKEN_REFERENCE */]: 'References for an alias token cannot be in use here.',
+    [4104 /* UNRESOLVED_TOKEN_REFERENCE */]: 'Token reference is not resolved yet.',
+    [4105 /* UNDEFINED_IDENTIFIER */]: 'Undefined identifiers cannot be referenced.'
 };
-exports.update = update;
+/**
+ * Get the corresponding error message based on the given error object.
+ * @param error Input error.
+ * @returns Returns the corresponding error message.
+ * @throws Throws an exception when the specified error isn't supported.
+ */
+const getMessage = (error) => {
+    const message = errorMessages[error.value];
+    if (!message) {
+        throw new Error(`Error value ${error.value} is not supported.`);
+    }
+    return message;
+};
+/**
+ * Get a new diagnostics list based on the specified errors.
+ * @param error Inputs errors.
+ * @returns Returns the diagnostics list.
+ */
+const getDiagnostics = (errors) => {
+    const list = [];
+    for (const error of errors) {
+        const location = error.fragment.location;
+        const severity = VSCode.DiagnosticSeverity.Error;
+        const range = new VSCode.Range(new VSCode.Position(location.line, location.column), new VSCode.Position(location.line, location.column));
+        list.push(new VSCode.Diagnostic(range, getMessage(error), severity));
+    }
+    return list;
+};
+exports.getDiagnostics = getDiagnostics;
 
 
 /***/ }),
 /* 88 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Provider = void 0;
+const VSCode = __webpack_require__(1);
+const Lang = __webpack_require__(3);
+const Items = __webpack_require__(89);
+const Analysis = __webpack_require__(86);
+/**
+ * Completion provider.
+ */
+class Provider {
+    /**
+     * Determines whether or not the tokens before the given offset compound a valid identity.
+     * @param tokens Input tokens.
+     * @param offset Current offset.
+     * @returns Returns true in case of success, false otherwise.
+     */
+    #isIdentity(tokens, offset) {
+        return tokens[offset - 1]?.value === 101 /* Number */ && tokens[offset - 2]?.value === 133 /* OpenChevron */;
+    }
+    /**
+     * Determines whether or not the tokens before the given offset compound a valid identifier.
+     * @param tokens Input tokens.
+     * @param offset Current offset.
+     * @returns Returns true in case of success, false otherwise.
+     */
+    #isIdentifier(tokens, offset) {
+        const index = offset - 1;
+        return ((tokens[index]?.value === 134 /* CloseChevron */ && this.#isIdentity(tokens, index)) ||
+            tokens[index]?.value === 126 /* Token */ ||
+            tokens[index]?.value === 127 /* Node */);
+    }
+    /**
+     * Get a completion list for all the symbols in the specified table.
+     * @param table Input table.
+     * @param types Symbol types for filtering.
+     * @returns Returns the completion list.
+     */
+    #getSymbolList(table, types) {
+        const list = [];
+        for (const name of table.keys) {
+            const record = table.getRecord(name);
+            const label = record.value === 301 /* Node */ ? 'node' : 'token';
+            if (types.includes(record.value)) {
+                const item = Items.getItem(name, `Insert a ${label} reference.`, {
+                    kind: VSCode.CompletionItemKind.Reference
+                });
+                list.push(item);
+            }
+        }
+        return list;
+    }
+    /**
+     * Get the symbol filters according to the node or token before the given offset.
+     * @param tokens Input tokens.
+     * @param offset Current offset.
+     * @returns Returns the corresponding filters.
+     */
+    #getSymbolFilters(tokens, offset) {
+        for (let index = offset - 1; index >= 0; --index) {
+            if (tokens[index].value === 126 /* Token */) {
+                return [300 /* Token */];
+            }
+            if (tokens[index].value === 127 /* Node */) {
+                return [300 /* Token */, 301 /* Node */];
+            }
+        }
+        return [];
+    }
+    /**
+     * Get the token index that corresponds to the specified position in the given document.
+     * @param tokens Input tokens.
+     * @param document Input document.
+     * @param position Position in the document.
+     * @returns Returns the corresponding token index.
+     */
+    #getTokenIndex(tokens, document, position) {
+        const offset = document.offsetAt(position);
+        const index = tokens.findIndex((token) => token.fragment.end >= offset) - 1;
+        return index < 0 ? tokens.length - 1 : index;
+    }
+    /**
+     * Provide completion items for the given position and document.
+     * @param document Input document.
+     * @param position Position in the document.
+     * @returns Returns the completion items list.
+     */
+    provideCompletionItems(document, position) {
+        const context = Analysis.consumeDocument(document);
+        const tokens = context.tokens;
+        if (tokens.length > 0) {
+            const index = this.#getTokenIndex(tokens, document, position);
+            switch (tokens[index].value) {
+                case 125 /* Skip */:
+                    return Items.operandList;
+                case 128 /* Alias */:
+                    return [Items.tokenItem, Items.nodeItem];
+                case 126 /* Token */:
+                case 127 /* Node */:
+                    return [Items.identityItem, Items.identifierItem];
+                case 133 /* OpenChevron */:
+                    return [];
+                case 134 /* CloseChevron */:
+                    return this.#isIdentity(tokens, index) ? [Items.identifierItem] : [];
+                case 100 /* Identifier */:
+                    return this.#isIdentifier(tokens, index) ? [Items.asItem] : Items.binaryOperatorList;
+                case 129 /* As */:
+                case 106 /* Then */:
+                case 107 /* Else */:
+                case 108 /* Or */:
+                case 109 /* And */:
+                    return [
+                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+                        ...Items.operandList,
+                        ...Items.unaryOperatorList
+                    ];
+                case 110 /* Not */:
+                case 111 /* Opt */:
+                case 112 /* Repeat */:
+                case 118 /* Left */:
+                case 119 /* Right */:
+                case 117 /* Next */:
+                case 116 /* Pivot */:
+                case 120 /* Symbol */:
+                case 121 /* Scope */:
+                case 122 /* Error */:
+                case 123 /* Has */:
+                case 124 /* Set */:
+                case 131 /* OpenParentheses */:
+                    return [
+                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+                        ...Items.operandList,
+                        ...Items.unaryOperatorList
+                    ];
+                case 113 /* Place */:
+                case 114 /* Append */:
+                case 115 /* Prepend */:
+                    return [
+                        ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
+                        ...Items.operandList,
+                        ...Items.directionList,
+                        ...Items.unaryOperatorList
+                    ];
+                case 104 /* From */:
+                    return [Items.wordItem];
+                case 105 /* To */:
+                case 102 /* Alphabet */:
+                case 103 /* Any */:
+                case 132 /* CloseParentheses */:
+                    return Items.binaryOperatorList;
+            }
+        }
+        return [Items.skipItem, Items.aliasItem, Items.tokenItem, Items.nodeItem];
+    }
+}
+exports.Provider = Provider;
+
+
+/***/ }),
+/* 89 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5392,8 +5447,9 @@ const retriggerCommand = {
  */
 const getItem = (label, documentation, options) => {
     const text = options?.text ?? label;
+    const raw = options.kind === VSCode.CompletionItemKind.Text;
     const item = new VSCode.CompletionItem(label, options.kind);
-    item.insertText = new VSCode.SnippetString(options.kind === VSCode.CompletionItemKind.Text ? text : `${text} `);
+    item.insertText = new VSCode.SnippetString(raw ? text : `${text} `);
     item.commitCharacters = options?.commit;
     item.documentation = documentation;
     item.command = retriggerCommand;
@@ -5449,13 +5505,13 @@ exports.asItem = exports.getItem('as', 'Set an expression for the current direct
 /**
  * Completion item for a 'THEN' operator.
  */
-exports.thenItem = exports.getItem('then', 'Set a condition based on the last consumption state.', {
+exports.thenItem = exports.getItem('then', 'Set a partial condition based on the last consumption state.', {
     kind: VSCode.CompletionItemKind.Keyword
 });
 /**
  * Completion item for a 'THEN/ELSE' operator.
  */
-exports.thenElseItem = exports.getItem('then else', 'Set a condition based on the last consumption state.', {
+exports.thenElseItem = exports.getItem('then else', 'Set a full condition based on the last consumption state.', {
     kind: VSCode.CompletionItemKind.Keyword,
     text: 'then ${1} else ${2}',
     commit: [' ', '\n']
@@ -5477,25 +5533,25 @@ exports.andItem = exports.getItem('and', 'Set another expected consumption.', {
 /**
  * Completion item for a 'NOT' operator.
  */
-exports.notItem = exports.getItem('not', 'Invert the next consumption result (true to false and vice versa).', {
+exports.notItem = exports.getItem('not', 'Invert the next consumption state (true to false and vice versa).', {
     kind: VSCode.CompletionItemKind.Keyword
 });
 /**
  * Completion item for an 'OPT' operator.
  */
-exports.optItem = exports.getItem('opt', 'Set as optional the next consumption.', {
+exports.optItem = exports.getItem('opt', 'Set the next consumption as optional.', {
     kind: VSCode.CompletionItemKind.Keyword
 });
 /**
  * Completion item for a 'REPEAT' operator.
  */
-exports.repeatItem = exports.getItem('repeat', 'Repeat the next consumption in case of success in the first try.', {
+exports.repeatItem = exports.getItem('repeat', 'Repeat the next consumption in case of success after the first try.', {
     kind: VSCode.CompletionItemKind.Keyword
 });
 /**
  * Completion item for a 'PLACE' operator.
  */
-exports.placeItem = exports.getItem('place', 'Place any resulting node from the next consumption in another direction.', {
+exports.placeItem = exports.getItem('place', 'Place the resulting node from the next consumption in another direction.', {
     kind: VSCode.CompletionItemKind.Keyword
 });
 /**
@@ -5557,7 +5613,7 @@ exports.errorItem = exports.getItem('error', 'Create a new error if the next con
 /**
  * Completion item for a 'HAS' operator.
  */
-exports.hasItem = exports.getItem('has', 'Set a state condition for the next consumption.', {
+exports.hasItem = exports.getItem('has', 'Perform the next consumption if the expected state match.', {
     kind: VSCode.CompletionItemKind.Keyword,
     text: 'has <${1}>',
     commit: ['>']
@@ -5615,68 +5671,13 @@ exports.unaryOperatorList = [
     exports.setItem
 ];
 /**
- * Completion list direction modifiers.
+ * Completion list containing all direction modifiers.
  */
 exports.directionList = [exports.leftItem, exports.rightItem, exports.nextItem];
 /**
  * Completion list containing all operands.
  */
 exports.operandList = [exports.wordItem, exports.anyItem, exports.rangeItem];
-
-
-/***/ }),
-/* 89 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getDiagnostics = void 0;
-const VSCode = __webpack_require__(1);
-const Lang = __webpack_require__(50);
-/**
- * All error messages.
- */
-const errorMessages = {
-    [4096 /* DUPLICATE_IDENTIFIER */]: 'Duplicate identifier.',
-    [4097 /* UNEXPECTED_TOKEN */]: 'Unexpected token.',
-    [4098 /* UNEXPECTED_SYNTAX */]: 'Unexpected syntax.',
-    [4099 /* UNEXPECTED_NODE */]: 'Unexpected node.',
-    [4100 /* INVALID_NODE_REFERENCE */]: 'Node reference cannot be in use here.',
-    [4101 /* INVALID_TOKEN_REFERENCE */]: 'Token reference cannot be in use here.',
-    [4102 /* INVALID_ALIAS_NODE_REFERENCE */]: 'Alias Node reference cannot be in use here.',
-    [4103 /* INVALID_ALIAS_TOKEN_REFERENCE */]: 'Alias Token reference cannot be in use here.',
-    [4104 /* UNRESOLVED_TOKEN_REFERENCE */]: 'Token reference is not resolved yet.',
-    [4105 /* UNDEFINED_IDENTIFIER */]: 'Undefined identifiers cannot be referenced.'
-};
-/**
- * Get the corresponding error message based on the given error object.
- * @param error Input error.
- * @returns Returns the corresponding error message.
- * @throws Throws an exception when the specified error isn't supported.
- */
-const getMessage = (error) => {
-    const message = errorMessages[error.value];
-    if (!message) {
-        throw new Error(`Error value ${error.value} is not supported.`);
-    }
-    return message;
-};
-/**
- * Get a new diagnostics list based on the specified errors.
- * @param error Inputs errors.
- * @returns Returns the diagnostics list.
- */
-const getDiagnostics = (errors) => {
-    const list = [];
-    for (const error of errors) {
-        const location = error.fragment.location;
-        const severity = VSCode.DiagnosticSeverity.Error;
-        const range = new VSCode.Range(new VSCode.Position(location.line, location.column), new VSCode.Position(location.line, location.column));
-        list.push(new VSCode.Diagnostic(range, getMessage(error), severity));
-    }
-    return list;
-};
-exports.getDiagnostics = getDiagnostics;
 
 
 /***/ })
@@ -5715,10 +5716,10 @@ var exports = __webpack_exports__;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.deactivate = exports.activate = void 0;
 const VSCode = __webpack_require__(1);
-const Diagnostics = __webpack_require__(87);
-const Completion = __webpack_require__(2);
+const Diagnostics = __webpack_require__(2);
+const Completion = __webpack_require__(88);
 /**
- * Returns a new disposable with an auto completion prover.
+ * Returns a new disposable with an auto completion provider.
  * @returns Returns the disposable.
  */
 const registerAutoCompletion = () => {
@@ -5748,7 +5749,7 @@ const detectTextChanges = (collection) => {
 };
 /**
  * Called when the extension is activated.
- * @param context VSCode context.
+ * @param context Extension context.
  */
 function activate(context) {
     const collection = VSCode.languages.createDiagnosticCollection('xcheme');
