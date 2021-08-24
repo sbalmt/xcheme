@@ -13,7 +13,7 @@ const And = require("./and");
 const consume = (project, node, state) => {
     const patterns = And.resolve(project, node.right, state);
     if (patterns) {
-        return project.coder.getNegate(...patterns);
+        return project.coder.emitNotPattern(...patterns);
     }
     return void 0;
 };

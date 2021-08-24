@@ -19,7 +19,7 @@ import * as And from './and';
 export const consume = (project: Project, node: Core.Node, state: State, direction: Core.Nodes): PatternEntry | undefined => {
   const patterns = And.resolve(project, node.right!, state);
   if (patterns) {
-    return project.coder.getPlaceNode(direction, ...patterns);
+    return project.coder.emitPlacePattern(direction, ...patterns);
   }
   return void 0;
 };

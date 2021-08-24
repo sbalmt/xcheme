@@ -20,7 +20,7 @@ const getTokenId = (project: Project, state: State, string: string): string | nu
   const token = project.tokenEntries.get(string);
   if (!token) {
     const identity = state.counter++;
-    const pattern = project.coder.getString([identity]);
+    const pattern = project.coder.emitStringPattern([identity]);
     project.tokenEntries.add(identity, string, pattern, Entries.Types.Loose);
     return identity;
   }
@@ -53,5 +53,5 @@ export const resolve = (project: Project, state: State, value: string): (string 
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry => {
   const name = node.fragment.data;
   const units = resolve(project, state, name);
-  return project.coder.getString(units);
+  return project.coder.emitStringPattern(units);
 };

@@ -129,7 +129,7 @@ class Project {
     get lexer() {
         const routes = this.#getRoutes(this.#tokenEntries.loosePatterns);
         return this.#coder.getEntry('Lexer', this.#getPointers(this.#tokenPointerEntries), ...this.#getPatterns(this.#skipEntries.patterns), ...(routes.length > 0
-            ? [this.#coder.getMap(...routes), ...this.#getPatterns(this.#tokenEntries.patterns)]
+            ? [this.#coder.emitMapPattern(...routes), ...this.#getPatterns(this.#tokenEntries.patterns)]
             : this.#getPatterns(this.#tokenEntries.patterns)));
     }
     /**

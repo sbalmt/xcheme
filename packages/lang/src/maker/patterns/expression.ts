@@ -42,7 +42,7 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
     case Parser.Nodes.String:
       return String.consume(project, node, state);
     case Parser.Nodes.Any:
-      return project.coder.getAny();
+      return project.coder.emitAnyPattern();
     case Parser.Nodes.Range:
       return Range.consume(project, node, state);
     case Parser.Nodes.Then:

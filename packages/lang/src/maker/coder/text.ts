@@ -102,7 +102,7 @@ export class Text extends Base {
    * @param routes Map routes.
    * @returns Returns the pattern.
    */
-  getMap(...routes: string[]): string {
+  emitMapPattern(...routes: string[]): string {
     return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...routes));
   }
 
@@ -112,7 +112,7 @@ export class Text extends Base {
    * @param patterns Token patterns.
    * @returns Returns the pattern.
    */
-  getToken(identity: string | number, ...patterns: string[]): string {
+  emitTokenPattern(identity: string | number, ...patterns: string[]): string {
     return this.#getPattern('EmitTokenPattern', identity, ...patterns);
   }
 
@@ -123,7 +123,7 @@ export class Text extends Base {
    * @param patterns Node patterns.
    * @returns Returns the pattern.
    */
-  getNode(identity: string | number, output: Core.Nodes, ...patterns: string[]): string {
+  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: string[]): string {
     return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
   }
 
@@ -134,7 +134,7 @@ export class Text extends Base {
    * @param failure Failure pattern.
    * @returns Returns the pattern.
    */
-  getCondition(test: string, success: string, failure?: string): string {
+  emitConditionPattern(test: string, success: string, failure?: string): string {
     return this.#getPattern('ConditionFlowPattern', ...(failure ? [test, success, failure] : [test, success]));
   }
 
@@ -143,7 +143,7 @@ export class Text extends Base {
    * @param patterns Possible patterns.
    * @returns Returns the pattern.
    */
-  getChoose(...patterns: string[]): string {
+  emitChoosePattern(...patterns: string[]): string {
     return this.#getPattern('ChooseFlowPattern', ...patterns);
   }
 
@@ -152,7 +152,7 @@ export class Text extends Base {
    * @param units Possible units.
    * @returns Returns the pattern.
    */
-  getChooseUnits(units: (string | number)[]): string {
+  emitChooseUnitsPattern(units: (string | number)[]): string {
     return this.#getPattern('ChooseUnitPattern', ...this.#getUnits(units));
   }
 
@@ -161,7 +161,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getExpect(...patterns: string[]): string {
+  emitExpectPattern(...patterns: string[]): string {
     return this.#getPattern('ExpectFlowPattern', ...patterns);
   }
 
@@ -170,25 +170,25 @@ export class Text extends Base {
    * @param units Expected units.
    * @returns Returns the pattern.
    */
-  getExpectUnits(units: (string | number)[]): string {
+  emitExpectUnitsPattern(units: (string | number)[]): string {
     return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
   }
 
   /**
-   * Get a new negate pattern.
+   * Get a new not pattern.
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getNegate(...patterns: string[]): string {
+  emitNotPattern(...patterns: string[]): string {
     return this.#getPattern('NotFlowPattern', ...patterns);
   }
 
   /**
-   * get a new option pattern.
+   * get a new opt pattern.
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  getOption(...patterns: string[]): string {
+  emitOptPattern(...patterns: string[]): string {
     return this.#getPattern('OptFlowPattern', ...patterns);
   }
 
@@ -197,19 +197,8 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getRepeat(...patterns: string[]): string {
+  emitRepeatPattern(...patterns: string[]): string {
     return this.#getPattern('RepeatFlowPattern', ...patterns);
-  }
-
-  /**
-   * Get a new pivot node pattern.
-   * @param identity Node identity.
-   * @param pivot Pivot pattern.
-   * @param patterns Expected patterns.
-   * @returns Returns the pattern.
-   */
-  getPivotNode(identity: string | number, pivot: string, ...patterns: string[]): string {
-    return this.#getPattern('PivotNodePattern', identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
   }
 
   /**
@@ -218,7 +207,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getPlaceNode(current: Core.Nodes, ...patterns: string[]): string {
+  emitPlacePattern(current: Core.Nodes, ...patterns: string[]): string {
     return this.#getPattern('PlaceNodePattern', current, ...patterns);
   }
 
@@ -230,7 +219,7 @@ export class Text extends Base {
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  getAppendNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
+  emitAppendPattern(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
     return this.#getPattern('AppendNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
@@ -242,8 +231,19 @@ export class Text extends Base {
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  getPrependNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
+  emitPrependPattern(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
     return this.#getPattern('PrependNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
+  }
+
+  /**
+   * Get a new pivot node pattern.
+   * @param identity Node identity.
+   * @param pivot Pivot pattern.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitPivotPattern(identity: string | number, pivot: string, ...patterns: string[]): string {
+    return this.#getPattern('PivotNodePattern', identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
   }
 
   /**
@@ -253,16 +253,16 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getSymbol(identity: string | number, symbol: string, ...patterns: string[]): string {
+  emitSymbolPattern(identity: string | number, symbol: string, ...patterns: string[]): string {
     return this.#getPattern('EmitSymbolPattern', identity, symbol, ...patterns);
   }
 
   /**
-   * Get a new scope symbol pattern.
+   * Get a new symbol scope pattern.
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getScopeSymbol(...patterns: string[]): string {
+  emitScopePattern(...patterns: string[]): string {
     return this.#getPattern('ScopeSymbolPattern', ...patterns);
   }
 
@@ -272,7 +272,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getError(value: number, ...patterns: string[]): string {
+  emitErrorPattern(value: number, ...patterns: string[]): string {
     return this.#getPattern('EmitErrorPattern', value, ...patterns);
   }
 
@@ -282,7 +282,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getHas(state: number, ...patterns: string[]): string {
+  emiHasPattern(state: number, ...patterns: string[]): string {
     return this.#getPattern('HasStatePattern', state, ...patterns);
   }
 
@@ -292,7 +292,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  getSet(state: number, ...patterns: string[]): string {
+  emitSetPattern(state: number, ...patterns: string[]): string {
     return this.#getPattern('SetStatePattern', state, ...patterns);
   }
 
@@ -302,7 +302,7 @@ export class Text extends Base {
    * @param name Reference name.
    * @returns Returns the pattern.
    */
-  getReference(entries: Entries.Aggregator, name: string): string {
+  emitReferencePattern(entries: Entries.Aggregator, name: string): string {
     if (!entries.has(name)) {
       return this.#getPattern('RunFlowPattern', `() => ${name}`);
     }
@@ -313,7 +313,7 @@ export class Text extends Base {
    * Get a new any pattern.
    * @returns Returns the pattern.
    */
-  getAny(): string {
+  emitAnyPattern(): string {
     return this.#getPattern('AnyUnitPattern');
   }
 
@@ -323,7 +323,7 @@ export class Text extends Base {
    * @param to To unit value.
    * @returns Returns the pattern.
    */
-  getRange(from: string | number, to: string | number): string {
+  emitRangePattern(from: string | number, to: string | number): string {
     return this.#getPattern('RangeUnitPattern', ...this.#getUnits([from, to]));
   }
 
@@ -332,7 +332,7 @@ export class Text extends Base {
    * @param units Input units.
    * @returns Returns the string pattern.
    */
-  getString(units: (string | number)[]): string {
+  emitStringPattern(units: (string | number)[]): string {
     return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
   }
 }

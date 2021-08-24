@@ -13,12 +13,12 @@ const String = require("../common/string");
 const consume = (project, node, state) => {
     const from = node.left.fragment.data;
     const to = node.right.fragment.data;
-    const pattern = project.coder.getRange(String.extract(from), String.extract(to));
+    const pattern = project.coder.emitRangePattern(String.extract(from), String.extract(to));
     if (state.type === 2 /* Node */) {
         const identity = state.counter++;
-        const result = project.coder.getToken(identity, pattern);
+        const result = project.coder.emitTokenPattern(identity, pattern);
         project.tokenEntries.add(identity, `${from}-${to}`, result, 0 /* Normal */);
-        return project.coder.getString([identity]);
+        return project.coder.emitStringPattern([identity]);
     }
     return pattern;
 };

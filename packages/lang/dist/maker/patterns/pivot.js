@@ -13,7 +13,7 @@ const And = require("./and");
 const consume = (project, node, state) => {
     const patterns = And.resolve(project, node.right, state);
     if (patterns) {
-        return project.coder.getPivotNode(state.identity, patterns[0], ...patterns.slice(1));
+        return project.coder.emitPivotPattern(state.identity, patterns[0], ...patterns.slice(1));
     }
     return void 0;
 };

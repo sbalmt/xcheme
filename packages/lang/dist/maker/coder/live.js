@@ -31,7 +31,7 @@ class Live extends base_1.Base {
      * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getMap(...routes) {
+    emitMapPattern(...routes) {
         return new Core.EmitTokenPattern(Core.BaseSource.Output, new Core.MapFlowPattern(...routes));
     }
     /**
@@ -40,7 +40,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getToken(identity, ...patterns) {
+    emitTokenPattern(identity, ...patterns) {
         return new Core.EmitTokenPattern(identity, ...patterns);
     }
     /**
@@ -50,7 +50,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getNode(identity, output, ...patterns) {
+    emitNodePattern(identity, output, ...patterns) {
         return new Core.EmitNodePattern(identity, output, ...patterns);
     }
     /**
@@ -60,7 +60,7 @@ class Live extends base_1.Base {
      * @param failure Failure pattern.
      * @returns Returns the pattern.
      */
-    getCondition(test, success, failure) {
+    emitConditionPattern(test, success, failure) {
         return new Core.ConditionFlowPattern(test, success, failure);
     }
     /**
@@ -68,7 +68,7 @@ class Live extends base_1.Base {
      * @param patterns Possible patterns.
      * @returns Returns the pattern.
      */
-    getChoose(...patterns) {
+    emitChoosePattern(...patterns) {
         return new Core.ChooseFlowPattern(...patterns);
     }
     /**
@@ -76,7 +76,7 @@ class Live extends base_1.Base {
      * @param units Possible units.
      * @returns Returns the pattern.
      */
-    getChooseUnits(units) {
+    emitChooseUnitsPattern(units) {
         return new Core.ChooseUnitPattern(...units);
     }
     /**
@@ -84,7 +84,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getExpect(...patterns) {
+    emitExpectPattern(...patterns) {
         return new Core.ExpectFlowPattern(...patterns);
     }
     /**
@@ -92,23 +92,23 @@ class Live extends base_1.Base {
      * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectUnits(units) {
+    emitExpectUnitsPattern(units) {
         return new Core.ExpectUnitPattern(...units);
     }
     /**
-     * Get a new negate pattern.
+     * Get a new not pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getNegate(...patterns) {
+    emitNotPattern(...patterns) {
         return new Core.NotFlowPattern(...patterns);
     }
     /**
-     * get a new option pattern.
+     * get a new opt pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getOption(...patterns) {
+    emitOptPattern(...patterns) {
         return new Core.OptFlowPattern(...patterns);
     }
     /**
@@ -116,7 +116,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getRepeat(...patterns) {
+    emitRepeatPattern(...patterns) {
         return new Core.RepeatFlowPattern(...patterns);
     }
     /**
@@ -125,18 +125,8 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getPlaceNode(current, ...patterns) {
+    emitPlacePattern(current, ...patterns) {
         return new Core.PlaceNodePattern(current, ...patterns);
-    }
-    /**
-     * Get a new pivot node pattern.
-     * @param identity Node identity.
-     * @param pivot Pivot pattern.
-     * @param patterns Expected patterns.
-     * @returns Returns the pattern.
-     */
-    getPivotNode(identity, pivot, ...patterns) {
-        return new Core.PivotNodePattern(identity, 1 /* Right */, 0 /* Left */, pivot, ...patterns);
     }
     /**
      * Get a new append node pattern.
@@ -146,7 +136,7 @@ class Live extends base_1.Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(identity, current, head, ...patterns) {
+    emitAppendPattern(identity, current, head, ...patterns) {
         return new Core.AppendNodePattern(identity, 1 /* Right */, current, head, ...patterns);
     }
     /**
@@ -157,8 +147,18 @@ class Live extends base_1.Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(identity, current, head, ...patterns) {
+    emitPrependPattern(identity, current, head, ...patterns) {
         return new Core.PrependNodePattern(identity, 1 /* Right */, current, head, ...patterns);
+    }
+    /**
+     * Get a new pivot node pattern.
+     * @param identity Node identity.
+     * @param pivot Pivot pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitPivotPattern(identity, pivot, ...patterns) {
+        return new Core.PivotNodePattern(identity, 1 /* Right */, 0 /* Left */, pivot, ...patterns);
     }
     /**
      * Get a new symbol pattern.
@@ -167,15 +167,15 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSymbol(identity, symbol, ...patterns) {
+    emitSymbolPattern(identity, symbol, ...patterns) {
         return new Core.EmitSymbolPattern(identity, symbol, ...patterns);
     }
     /**
-     * Get a new scope symbol pattern.
+     * Get a new symbol scope pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getScopeSymbol(...patterns) {
+    emitScopePattern(...patterns) {
         return new Core.ScopeSymbolPattern(...patterns);
     }
     /**
@@ -184,7 +184,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getError(value, ...patterns) {
+    emitErrorPattern(value, ...patterns) {
         return new Core.EmitErrorPattern(value, ...patterns);
     }
     /**
@@ -193,7 +193,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getHas(state, ...patterns) {
+    emiHasPattern(state, ...patterns) {
         return new Core.HasStatePattern(state, ...patterns);
     }
     /**
@@ -202,7 +202,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSet(state, ...patterns) {
+    emitSetPattern(state, ...patterns) {
         return new Core.SetStatePattern(state, ...patterns);
     }
     /**
@@ -211,7 +211,7 @@ class Live extends base_1.Base {
      * @param name Reference name.
      * @returns Returns the pattern.
      */
-    getReference(entries, name) {
+    emitReferencePattern(entries, name) {
         const pointer = entries.get(name);
         if (!pointer) {
             return new Core.RunFlowPattern(() => entries.get(name).pattern);
@@ -222,7 +222,7 @@ class Live extends base_1.Base {
      * Get a new any pattern.
      * @returns Returns the pattern.
      */
-    getAny() {
+    emitAnyPattern() {
         return new Core.AnyUnitPattern();
     }
     /**
@@ -231,7 +231,7 @@ class Live extends base_1.Base {
      * @param to To unit value.
      * @returns Returns the pattern.
      */
-    getRange(from, to) {
+    emitRangePattern(from, to) {
         return new Core.RangeUnitPattern(from, to);
     }
     /**
@@ -239,7 +239,7 @@ class Live extends base_1.Base {
      * @param units Input units.
      * @returns Returns the string pattern.
      */
-    getString(units) {
+    emitStringPattern(units) {
         return new Core.ExpectUnitPattern(...units);
     }
 }

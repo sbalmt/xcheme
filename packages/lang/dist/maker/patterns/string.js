@@ -14,7 +14,7 @@ const getTokenId = (project, state, string) => {
     const token = project.tokenEntries.get(string);
     if (!token) {
         const identity = state.counter++;
-        const pattern = project.coder.getString([identity]);
+        const pattern = project.coder.emitStringPattern([identity]);
         project.tokenEntries.add(identity, string, pattern, 2 /* Loose */);
         return identity;
     }
@@ -46,7 +46,7 @@ exports.resolve = resolve;
 const consume = (project, node, state) => {
     const name = node.fragment.data;
     const units = exports.resolve(project, state, name);
-    return project.coder.getString(units);
+    return project.coder.emitStringPattern(units);
 };
 exports.consume = consume;
 //# sourceMappingURL=string.js.map

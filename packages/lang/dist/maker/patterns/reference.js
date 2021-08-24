@@ -19,14 +19,14 @@ const resolveToken = (project, node, state, symbol) => {
         return void 0;
     }
     if (state.pointers.has(name)) {
-        return project.coder.getReference(project.tokenPointerEntries, name);
+        return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
     }
     const token = project.tokenEntries.get(name);
     if (token) {
         project.tokenPointerEntries.add(token.identity, name, token.pattern, 0 /* Normal */);
     }
     state.pointers.add(name);
-    return project.coder.getReference(project.tokenPointerEntries, name);
+    return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
 };
 /**
  * Resolve the corresponding reference for the specified symbol in a 'NODE' pattern context.
@@ -41,14 +41,14 @@ const resolveNode = (project, node, state, symbol) => {
     const name = node.fragment.data;
     if (symbol.value === 301 /* Node */) {
         if (state.pointers.has(name)) {
-            return project.coder.getReference(project.nodePointerEntries, name);
+            return project.coder.emitReferencePattern(project.nodePointerEntries, name);
         }
         const node = project.nodeEntries.get(name);
         if (node) {
             project.nodePointerEntries.add(node.identity, name, node.pattern, 0 /* Normal */);
         }
         state.pointers.add(name);
-        return project.coder.getReference(project.nodePointerEntries, name);
+        return project.coder.emitReferencePattern(project.nodePointerEntries, name);
     }
     const token = project.tokenEntries.get(name);
     if (!token) {
@@ -56,7 +56,7 @@ const resolveNode = (project, node, state, symbol) => {
     }
     else {
         if (token.type !== 1 /* Alias */) {
-            return project.coder.getString([token.identity]);
+            return project.coder.emitStringPattern([token.identity]);
         }
         project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_ALIAS_TOKEN_REFERENCE */));
     }
@@ -84,11 +84,11 @@ const resolveSkip = (project, node, state, symbol) => {
         else {
             if (token.type === 1 /* Alias */) {
                 if (state.pointers.has(name)) {
-                    return project.coder.getReference(project.tokenPointerEntries, name);
+                    return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
                 }
                 state.pointers.add(name);
                 project.tokenPointerEntries.add(token.identity, name, token.pattern, 0 /* Normal */);
-                return project.coder.getReference(project.tokenPointerEntries, name);
+                return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
             }
             project.errors.push(new Core.Error(node.fragment, 4101 /* INVALID_TOKEN_REFERENCE */));
         }

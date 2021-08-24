@@ -25,14 +25,14 @@ const resolveToken = (project: Project, node: Core.Node, state: State, symbol: C
     return void 0;
   }
   if (state.pointers.has(name)) {
-    return project.coder.getReference(project.tokenPointerEntries, name);
+    return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
   }
   const token = project.tokenEntries.get(name);
   if (token) {
     project.tokenPointerEntries.add(token.identity, name, token.pattern, Entries.Types.Normal);
   }
   state.pointers.add(name);
-  return project.coder.getReference(project.tokenPointerEntries, name);
+  return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
 };
 
 /**
@@ -48,21 +48,21 @@ const resolveNode = (project: Project, node: Core.Node, state: State, symbol: Co
   const name = node.fragment.data;
   if (symbol.value === Parser.Symbols.Node) {
     if (state.pointers.has(name)) {
-      return project.coder.getReference(project.nodePointerEntries, name);
+      return project.coder.emitReferencePattern(project.nodePointerEntries, name);
     }
     const node = project.nodeEntries.get(name);
     if (node) {
       project.nodePointerEntries.add(node.identity, name, node.pattern, Entries.Types.Normal);
     }
     state.pointers.add(name);
-    return project.coder.getReference(project.nodePointerEntries, name);
+    return project.coder.emitReferencePattern(project.nodePointerEntries, name);
   }
   const token = project.tokenEntries.get(name);
   if (!token) {
     project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
   } else {
     if (token.type !== Entries.Types.Alias) {
-      return project.coder.getString([token.identity]);
+      return project.coder.emitStringPattern([token.identity]);
     }
     project.errors.push(new Core.Error(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE));
   }
@@ -89,11 +89,11 @@ const resolveSkip = (project: Project, node: Core.Node, state: State, symbol: Co
     } else {
       if (token.type === Entries.Types.Alias) {
         if (state.pointers.has(name)) {
-          return project.coder.getReference(project.tokenPointerEntries, name);
+          return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
         }
         state.pointers.add(name);
         project.tokenPointerEntries.add(token.identity, name, token.pattern, Entries.Types.Normal);
-        return project.coder.getReference(project.tokenPointerEntries, name);
+        return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
       }
       project.errors.push(new Core.Error(node.fragment, Errors.INVALID_TOKEN_REFERENCE));
     }

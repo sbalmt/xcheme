@@ -19,12 +19,12 @@ import type { PatternEntry } from '../coder/base';
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   const from = node.left!.fragment.data;
   const to = node.right!.fragment.data;
-  const pattern = project.coder.getRange(String.extract(from), String.extract(to));
+  const pattern = project.coder.emitRangePattern(String.extract(from), String.extract(to));
   if (state.type === Types.Node) {
     const identity = state.counter++;
-    const result = project.coder.getToken(identity, pattern);
+    const result = project.coder.emitTokenPattern(identity, pattern);
     project.tokenEntries.add(identity, `${from}-${to}`, result, Entries.Types.Normal);
-    return project.coder.getString([identity]);
+    return project.coder.emitStringPattern([identity]);
   }
   return pattern;
 };

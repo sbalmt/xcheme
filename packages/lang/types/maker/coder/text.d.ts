@@ -39,14 +39,14 @@ export declare class Text extends Base {
      * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getMap(...routes: string[]): string;
+    emitMapPattern(...routes: string[]): string;
     /**
      * Get a new token pattern.
      * @param identity Token identity.
      * @param patterns Token patterns.
      * @returns Returns the pattern.
      */
-    getToken(identity: string | number, ...patterns: string[]): string;
+    emitTokenPattern(identity: string | number, ...patterns: string[]): string;
     /**
      * Get a new node pattern.
      * @param identity Node identity.
@@ -54,7 +54,7 @@ export declare class Text extends Base {
      * @param patterns Node patterns.
      * @returns Returns the pattern.
      */
-    getNode(identity: string | number, output: Core.Nodes, ...patterns: string[]): string;
+    emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: string[]): string;
     /**
      * Get a new condition pattern.
      * @param test Test pattern.
@@ -62,64 +62,56 @@ export declare class Text extends Base {
      * @param failure Failure pattern.
      * @returns Returns the pattern.
      */
-    getCondition(test: string, success: string, failure?: string): string;
+    emitConditionPattern(test: string, success: string, failure?: string): string;
     /**
      * Get a new choose pattern.
      * @param patterns Possible patterns.
      * @returns Returns the pattern.
      */
-    getChoose(...patterns: string[]): string;
+    emitChoosePattern(...patterns: string[]): string;
     /**
      * Get a new choose units pattern.
      * @param units Possible units.
      * @returns Returns the pattern.
      */
-    getChooseUnits(units: (string | number)[]): string;
+    emitChooseUnitsPattern(units: (string | number)[]): string;
     /**
      * Get a new expect pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getExpect(...patterns: string[]): string;
+    emitExpectPattern(...patterns: string[]): string;
     /**
      * Get a new expect units pattern.
      * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectUnits(units: (string | number)[]): string;
+    emitExpectUnitsPattern(units: (string | number)[]): string;
     /**
-     * Get a new negate pattern.
+     * Get a new not pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getNegate(...patterns: string[]): string;
+    emitNotPattern(...patterns: string[]): string;
     /**
-     * get a new option pattern.
+     * get a new opt pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getOption(...patterns: string[]): string;
+    emitOptPattern(...patterns: string[]): string;
     /**
      * Get a new repeat pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getRepeat(...patterns: string[]): string;
-    /**
-     * Get a new pivot node pattern.
-     * @param identity Node identity.
-     * @param pivot Pivot pattern.
-     * @param patterns Expected patterns.
-     * @returns Returns the pattern.
-     */
-    getPivotNode(identity: string | number, pivot: string, ...patterns: string[]): string;
+    emitRepeatPattern(...patterns: string[]): string;
     /**
      * Get a new place node pattern.
      * @param current Current node destination.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getPlaceNode(current: Core.Nodes, ...patterns: string[]): string;
+    emitPlacePattern(current: Core.Nodes, ...patterns: string[]): string;
     /**
      * Get a new append node pattern.
      * @param identity Node identity.
@@ -128,7 +120,7 @@ export declare class Text extends Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
+    emitAppendPattern(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
     /**
      * Get a new prepend node pattern.
      * @param identity Node identity.
@@ -137,7 +129,15 @@ export declare class Text extends Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
+    emitPrependPattern(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string;
+    /**
+     * Get a new pivot node pattern.
+     * @param identity Node identity.
+     * @param pivot Pivot pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitPivotPattern(identity: string | number, pivot: string, ...patterns: string[]): string;
     /**
      * Get a new symbol pattern.
      * @param identity Symbol identity.
@@ -145,58 +145,58 @@ export declare class Text extends Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSymbol(identity: string | number, symbol: string, ...patterns: string[]): string;
+    emitSymbolPattern(identity: string | number, symbol: string, ...patterns: string[]): string;
     /**
-     * Get a new scope symbol pattern.
+     * Get a new symbol scope pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getScopeSymbol(...patterns: string[]): string;
+    emitScopePattern(...patterns: string[]): string;
     /**
      * Get a new error pattern.
      * @param value Error value.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getError(value: number, ...patterns: string[]): string;
+    emitErrorPattern(value: number, ...patterns: string[]): string;
     /**
      * Get a new has pattern.
      * @param state Expected state value.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getHas(state: number, ...patterns: string[]): string;
+    emiHasPattern(state: number, ...patterns: string[]): string;
     /**
      * Get a new set pattern.
      * @param state New state value.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSet(state: number, ...patterns: string[]): string;
+    emitSetPattern(state: number, ...patterns: string[]): string;
     /**
      * Get a new reference pattern.
      * @param entries Pointer entries.
      * @param name Reference name.
      * @returns Returns the pattern.
      */
-    getReference(entries: Entries.Aggregator, name: string): string;
+    emitReferencePattern(entries: Entries.Aggregator, name: string): string;
     /**
      * Get a new any pattern.
      * @returns Returns the pattern.
      */
-    getAny(): string;
+    emitAnyPattern(): string;
     /**
      * Get a new range pattern.
      * @param from From unit value.
      * @param to To unit value.
      * @returns Returns the pattern.
      */
-    getRange(from: string | number, to: string | number): string;
+    emitRangePattern(from: string | number, to: string | number): string;
     /**
      * Get a new string pattern.
      * @param units Input units.
      * @returns Returns the string pattern.
      */
-    getString(units: (string | number)[]): string;
+    emitStringPattern(units: (string | number)[]): string;
 }
 export {};

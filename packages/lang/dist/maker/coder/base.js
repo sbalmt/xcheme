@@ -29,7 +29,7 @@ class Base {
      * @param routes Map routes.
      * @returns Should return the pattern.
      */
-    getMap(...routes) {
+    emitMapPattern(...routes) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -38,7 +38,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getToken(identity, ...patterns) {
+    emitTokenPattern(identity, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -48,7 +48,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getNode(identity, output, ...patterns) {
+    emitNodePattern(identity, output, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -58,7 +58,7 @@ class Base {
      * @param failure Failure pattern.
      * @returns Should return the pattern.
      */
-    getCondition(test, success, failure) {
+    emitConditionPattern(test, success, failure) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -66,7 +66,7 @@ class Base {
      * @param patterns Possible patterns.
      * @returns Should return the pattern.
      */
-    getChoose(...patterns) {
+    emitChoosePattern(...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -74,7 +74,7 @@ class Base {
      * @param units Possible units.
      * @returns Should return the pattern.
      */
-    getChooseUnits(units) {
+    emitChooseUnitsPattern(units) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -82,7 +82,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getExpect(...patterns) {
+    emitExpectPattern(...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -90,23 +90,23 @@ class Base {
      * @param units Expected units.
      * @returns Should return the pattern.
      */
-    getExpectUnits(units) {
+    emitExpectUnitsPattern(units) {
         throw "Method doesn't implemented.";
     }
     /**
-     * Should be implemented to return a negate pattern.
+     * Should be implemented to return a not pattern.
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getNegate(...patterns) {
+    emitNotPattern(...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
-     * Should be implemented to return an option pattern.
+     * Should be implemented to return an opt pattern.
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getOption(...patterns) {
+    emitOptPattern(...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -114,7 +114,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getRepeat(...patterns) {
+    emitRepeatPattern(...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -123,17 +123,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getPlaceNode(current, ...patterns) {
-        throw "Method doesn't implemented.";
-    }
-    /**
-     * Should be implemented to return a pivot node pattern.
-     * @param identity Node identity.
-     * @param head Head pattern.
-     * @param patterns Optional patterns.
-     * @returns Should return the pattern.
-     */
-    getPivotNode(identity, pivot, ...patterns) {
+    emitPlacePattern(current, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -144,7 +134,7 @@ class Base {
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getAppendNode(identity, current, head, ...patterns) {
+    emitAppendPattern(identity, current, head, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -155,7 +145,17 @@ class Base {
      * @param patterns Optional patterns.
      * @returns Should return the pattern.
      */
-    getPrependNode(identity, current, head, ...patterns) {
+    emitPrependPattern(identity, current, head, ...patterns) {
+        throw "Method doesn't implemented.";
+    }
+    /**
+     * Should be implemented to return a pivot node pattern.
+     * @param identity Node identity.
+     * @param head Head pattern.
+     * @param patterns Optional patterns.
+     * @returns Should return the pattern.
+     */
+    emitPivotPattern(identity, pivot, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -164,15 +164,15 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getSymbol(value, symbol, ...patterns) {
+    emitSymbolPattern(value, symbol, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
-     * Should be implemented to return a scope symbol pattern.
+     * Should be implemented to return a symbol scope pattern.
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getScopeSymbol(...patterns) {
+    emitScopePattern(...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -181,7 +181,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getError(value, ...patterns) {
+    emitErrorPattern(value, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -190,7 +190,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getHas(state, ...patterns) {
+    emiHasPattern(state, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -199,7 +199,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    getSet(state, ...patterns) {
+    emitSetPattern(state, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -208,14 +208,14 @@ class Base {
      * @param name Reference name.
      * @returns Should return the pattern.
      */
-    getReference(entries, name) {
+    emitReferencePattern(entries, name) {
         throw "Method doesn't implemented.";
     }
     /**
      * Should be implemented to return an any pattern.
      * @returns Should return the pattern.
      */
-    getAny() {
+    emitAnyPattern() {
         throw "Method doesn't implemented.";
     }
     /**
@@ -224,7 +224,7 @@ class Base {
      * @param to To unit value.
      * @returns Should return the pattern.
      */
-    getRange(from, to) {
+    emitRangePattern(from, to) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -232,7 +232,7 @@ class Base {
      * @param units Input units.
      * @returns Should return the pattern.
      */
-    getString(units) {
+    emitStringPattern(units) {
         throw "Method doesn't implemented.";
     }
 }

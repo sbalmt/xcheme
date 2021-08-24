@@ -38,14 +38,14 @@ export declare class Live extends Base {
      * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getMap(...routes: Core.Route[]): Core.Pattern;
+    emitMapPattern(...routes: Core.Route[]): Core.Pattern;
     /**
      * Get a new token pattern.
      * @param identity Token identity.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getToken(identity: string | number, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitTokenPattern(identity: string | number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new node pattern.
      * @param identity Node identity.
@@ -53,7 +53,7 @@ export declare class Live extends Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getNode(identity: string | number, output: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new condition pattern.
      * @param test Test pattern.
@@ -61,64 +61,56 @@ export declare class Live extends Base {
      * @param failure Failure pattern.
      * @returns Returns the pattern.
      */
-    getCondition(test: Core.Pattern, success: Core.Pattern, failure?: Core.Pattern): Core.Pattern;
+    emitConditionPattern(test: Core.Pattern, success: Core.Pattern, failure?: Core.Pattern): Core.Pattern;
     /**
      * Get a new choose pattern.
      * @param patterns Possible patterns.
      * @returns Returns the pattern.
      */
-    getChoose(...patterns: Core.Pattern[]): Core.Pattern;
+    emitChoosePattern(...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new choose units pattern.
      * @param units Possible units.
      * @returns Returns the pattern.
      */
-    getChooseUnits(units: (string | number)[]): Core.Pattern;
+    emitChooseUnitsPattern(units: (string | number)[]): Core.Pattern;
     /**
      * Get a new expect pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getExpect(...patterns: Core.Pattern[]): Core.Pattern;
+    emitExpectPattern(...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new expect units pattern.
      * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectUnits(units: (string | number)[]): Core.Pattern;
+    emitExpectUnitsPattern(units: (string | number)[]): Core.Pattern;
     /**
-     * Get a new negate pattern.
+     * Get a new not pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getNegate(...patterns: Core.Pattern[]): Core.Pattern;
+    emitNotPattern(...patterns: Core.Pattern[]): Core.Pattern;
     /**
-     * get a new option pattern.
+     * get a new opt pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getOption(...patterns: Core.Pattern[]): Core.Pattern;
+    emitOptPattern(...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new repeat pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getRepeat(...patterns: Core.Pattern[]): Core.Pattern;
+    emitRepeatPattern(...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new place node pattern.
      * @param current Current node destination.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getPlaceNode(current: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern;
-    /**
-     * Get a new pivot node pattern.
-     * @param identity Node identity.
-     * @param pivot Pivot pattern.
-     * @param patterns Expected patterns.
-     * @returns Returns the pattern.
-     */
-    getPivotNode(identity: string | number, pivot: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitPlacePattern(current: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new append node pattern.
      * @param identity Node identity.
@@ -127,7 +119,7 @@ export declare class Live extends Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(identity: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitAppendPattern(identity: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new prepend node pattern.
      * @param identity Node identity.
@@ -136,7 +128,15 @@ export declare class Live extends Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(identity: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitPrependPattern(identity: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
+    /**
+     * Get a new pivot node pattern.
+     * @param identity Node identity.
+     * @param pivot Pivot pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitPivotPattern(identity: string | number, pivot: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new symbol pattern.
      * @param identity Symbol identity.
@@ -144,58 +144,58 @@ export declare class Live extends Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSymbol(identity: string | number, symbol: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitSymbolPattern(identity: string | number, symbol: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
-     * Get a new scope symbol pattern.
+     * Get a new symbol scope pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getScopeSymbol(...patterns: Core.Pattern[]): Core.Pattern;
+    emitScopePattern(...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new error pattern.
      * @param value Error value.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getError(value: number, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitErrorPattern(value: number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new has pattern.
      * @param state Expected state value.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getHas(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
+    emiHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new set pattern.
      * @param state New state value.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSet(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitSetPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new reference pattern.
      * @param entries Pointer entries.
      * @param name Reference name.
      * @returns Returns the pattern.
      */
-    getReference(entries: Entries.Aggregator, name: string): Core.Pattern;
+    emitReferencePattern(entries: Entries.Aggregator, name: string): Core.Pattern;
     /**
      * Get a new any pattern.
      * @returns Returns the pattern.
      */
-    getAny(): Core.Pattern;
+    emitAnyPattern(): Core.Pattern;
     /**
      * Get a new range pattern.
      * @param from From unit value.
      * @param to To unit value.
      * @returns Returns the pattern.
      */
-    getRange(from: string | number, to: string | number): Core.Pattern;
+    emitRangePattern(from: string | number, to: string | number): Core.Pattern;
     /**
      * Get a new string pattern.
      * @param units Input units.
      * @returns Returns the string pattern.
      */
-    getString(units: (string | number)[]): Core.Pattern;
+    emitStringPattern(units: (string | number)[]): Core.Pattern;
 }
 export {};

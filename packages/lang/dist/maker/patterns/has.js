@@ -15,7 +15,7 @@ const consume = (project, node, state) => {
     const patterns = And.resolve(project, param.right, state);
     if (patterns) {
         const value = parseInt(param.fragment.data);
-        return project.coder.getHas(value, ...patterns);
+        return project.coder.emiHasPattern(value, ...patterns);
     }
     return void 0;
 };

@@ -20,7 +20,7 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
   const patterns = And.resolve(project, param.right!, state);
   if (patterns) {
     const value = parseInt(param.fragment.data);
-    return project.coder.getError(value, ...patterns);
+    return project.coder.emitErrorPattern(value, ...patterns);
   }
   return void 0;
 };

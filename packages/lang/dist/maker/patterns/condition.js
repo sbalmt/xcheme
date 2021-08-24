@@ -24,7 +24,7 @@ const consume = (project, node, state) => {
             success = Expression.consume(project, content, state);
         }
         if (success) {
-            return project.coder.getCondition(test, success, failure);
+            return project.coder.emitConditionPattern(test, success, failure);
         }
     }
     return void 0;

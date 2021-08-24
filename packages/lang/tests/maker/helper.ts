@@ -103,7 +103,7 @@ export const testLexer = (project: Project, context: Core.Context, text: string)
 };
 
 /**
- * Test the parser frm the given project using the input tokens and context.
+ * Test the parser from the given project using the input tokens and context.
  * @param project Parser project.
  * @param context Parser context.
  * @param tokens Input tokens.

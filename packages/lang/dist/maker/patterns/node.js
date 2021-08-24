@@ -14,7 +14,7 @@ const Expression = require("./expression");
  */
 const emit = (project, identity, name, pattern, type, ref) => {
     if (ref) {
-        const reference = project.coder.getReference(project.nodePointerEntries, name);
+        const reference = project.coder.emitReferencePattern(project.nodePointerEntries, name);
         project.nodePointerEntries.add(identity, name, pattern, 0 /* Normal */);
         project.nodeEntries.add(identity, name, reference, type);
     }
@@ -42,7 +42,7 @@ const consume = (project, node, identity, pointers, counter, alias) => {
             emit(project, identity, name, entry, 1 /* Alias */, referenced);
         }
         else {
-            const pattern = project.coder.getNode(identity, 1 /* Right */, entry);
+            const pattern = project.coder.emitNodePattern(identity, 1 /* Right */, entry);
             emit(project, identity, name, pattern, 0 /* Normal */, referenced);
         }
     }

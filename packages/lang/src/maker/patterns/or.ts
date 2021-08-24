@@ -51,7 +51,7 @@ const merge = (project: Project, node: Core.Node, state: State, units: (string |
     patterns.push(result);
   }
   if (units.length > 0) {
-    patterns.push(project.coder.getChooseUnits(units.reverse().flat()));
+    patterns.push(project.coder.emitChooseUnitsPattern(units.reverse().flat()));
   }
   return true;
 };
@@ -72,7 +72,7 @@ export const resolve = (project: Project, node: Core.Node, state: State): Patter
       return patterns;
     }
     if (units.length > 0) {
-      return [project.coder.getChooseUnits(units.reverse().flat())];
+      return [project.coder.emitChooseUnitsPattern(units.reverse().flat())];
     }
   }
   return void 0;
@@ -90,7 +90,7 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
   const patterns = resolve(project, node, state);
   if (patterns) {
     if (patterns.length > 1) {
-      return project.coder.getChoose(...patterns);
+      return project.coder.emitChoosePattern(...patterns);
     }
     return patterns[0];
   }

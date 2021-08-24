@@ -18,7 +18,7 @@ import * as And from './and';
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   const patterns = And.resolve(project, node.right!, state);
   if (patterns) {
-    return project.coder.getRepeat(...patterns);
+    return project.coder.emitRepeatPattern(...patterns);
   }
   return void 0;
 };

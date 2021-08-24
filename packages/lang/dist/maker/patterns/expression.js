@@ -36,7 +36,7 @@ const consume = (project, node, state) => {
         case 203 /* String */:
             return String.consume(project, node, state);
         case 204 /* Any */:
-            return project.coder.getAny();
+            return project.coder.emitAnyPattern();
         case 205 /* Range */:
             return Range.consume(project, node, state);
         case 206 /* Then */:

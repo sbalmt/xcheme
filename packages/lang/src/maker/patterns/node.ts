@@ -19,7 +19,7 @@ import * as Expression from './expression';
  */
 const emit = (project: Project, identity: number, name: string, pattern: PatternEntry, type: Entries.Types, ref: boolean): void => {
   if (ref) {
-    const reference = project.coder.getReference(project.nodePointerEntries, name);
+    const reference = project.coder.emitReferencePattern(project.nodePointerEntries, name);
     project.nodePointerEntries.add(identity, name, pattern, Entries.Types.Normal);
     project.nodeEntries.add(identity, name, reference, type);
   } else {
@@ -53,7 +53,7 @@ export const consume = (
     if (alias) {
       emit(project, identity, name, entry, Entries.Types.Alias, referenced);
     } else {
-      const pattern = project.coder.getNode(identity, Core.Nodes.Right, entry);
+      const pattern = project.coder.emitNodePattern(identity, Core.Nodes.Right, entry);
       emit(project, identity, name, pattern, Entries.Types.Normal, referenced);
     }
   }

@@ -39,7 +39,7 @@ const merge = (project, node, state, units, patterns) => {
         patterns.push(result);
     }
     if (units.length > 0) {
-        patterns.push(project.coder.getExpectUnits(units.reverse().flat()));
+        patterns.push(project.coder.emitExpectUnitsPattern(units.reverse().flat()));
     }
     return true;
 };
@@ -59,7 +59,7 @@ const resolve = (project, node, state) => {
             return patterns;
         }
         if (units.length > 0) {
-            return [project.coder.getExpectUnits(units.reverse().flat())];
+            return [project.coder.emitExpectUnitsPattern(units.reverse().flat())];
         }
     }
     return void 0;
@@ -77,7 +77,7 @@ const consume = (project, node, state) => {
     const patterns = exports.resolve(project, node, state);
     if (patterns) {
         if (patterns.length > 1) {
-            return project.coder.getExpect(...patterns);
+            return project.coder.emitExpectPattern(...patterns);
         }
         return patterns[0];
     }

@@ -69,7 +69,7 @@ class Text extends base_1.Base {
      * @param routes Map routes.
      * @returns Returns the pattern.
      */
-    getMap(...routes) {
+    emitMapPattern(...routes) {
         return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...routes));
     }
     /**
@@ -78,7 +78,7 @@ class Text extends base_1.Base {
      * @param patterns Token patterns.
      * @returns Returns the pattern.
      */
-    getToken(identity, ...patterns) {
+    emitTokenPattern(identity, ...patterns) {
         return this.#getPattern('EmitTokenPattern', identity, ...patterns);
     }
     /**
@@ -88,7 +88,7 @@ class Text extends base_1.Base {
      * @param patterns Node patterns.
      * @returns Returns the pattern.
      */
-    getNode(identity, output, ...patterns) {
+    emitNodePattern(identity, output, ...patterns) {
         return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
     }
     /**
@@ -98,7 +98,7 @@ class Text extends base_1.Base {
      * @param failure Failure pattern.
      * @returns Returns the pattern.
      */
-    getCondition(test, success, failure) {
+    emitConditionPattern(test, success, failure) {
         return this.#getPattern('ConditionFlowPattern', ...(failure ? [test, success, failure] : [test, success]));
     }
     /**
@@ -106,7 +106,7 @@ class Text extends base_1.Base {
      * @param patterns Possible patterns.
      * @returns Returns the pattern.
      */
-    getChoose(...patterns) {
+    emitChoosePattern(...patterns) {
         return this.#getPattern('ChooseFlowPattern', ...patterns);
     }
     /**
@@ -114,7 +114,7 @@ class Text extends base_1.Base {
      * @param units Possible units.
      * @returns Returns the pattern.
      */
-    getChooseUnits(units) {
+    emitChooseUnitsPattern(units) {
         return this.#getPattern('ChooseUnitPattern', ...this.#getUnits(units));
     }
     /**
@@ -122,7 +122,7 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getExpect(...patterns) {
+    emitExpectPattern(...patterns) {
         return this.#getPattern('ExpectFlowPattern', ...patterns);
     }
     /**
@@ -130,23 +130,23 @@ class Text extends base_1.Base {
      * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectUnits(units) {
+    emitExpectUnitsPattern(units) {
         return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
     }
     /**
-     * Get a new negate pattern.
+     * Get a new not pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getNegate(...patterns) {
+    emitNotPattern(...patterns) {
         return this.#getPattern('NotFlowPattern', ...patterns);
     }
     /**
-     * get a new option pattern.
+     * get a new opt pattern.
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getOption(...patterns) {
+    emitOptPattern(...patterns) {
         return this.#getPattern('OptFlowPattern', ...patterns);
     }
     /**
@@ -154,18 +154,8 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getRepeat(...patterns) {
+    emitRepeatPattern(...patterns) {
         return this.#getPattern('RepeatFlowPattern', ...patterns);
-    }
-    /**
-     * Get a new pivot node pattern.
-     * @param identity Node identity.
-     * @param pivot Pivot pattern.
-     * @param patterns Expected patterns.
-     * @returns Returns the pattern.
-     */
-    getPivotNode(identity, pivot, ...patterns) {
-        return this.#getPattern('PivotNodePattern', identity, 1 /* Right */, 0 /* Left */, pivot, ...patterns);
     }
     /**
      * Get a new place node pattern.
@@ -173,7 +163,7 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getPlaceNode(current, ...patterns) {
+    emitPlacePattern(current, ...patterns) {
         return this.#getPattern('PlaceNodePattern', current, ...patterns);
     }
     /**
@@ -184,7 +174,7 @@ class Text extends base_1.Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getAppendNode(identity, current, head, ...patterns) {
+    emitAppendPattern(identity, current, head, ...patterns) {
         return this.#getPattern('AppendNodePattern', identity, 1 /* Right */, current, head, ...patterns);
     }
     /**
@@ -195,8 +185,18 @@ class Text extends base_1.Base {
      * @param patterns Optional patterns.
      * @returns Returns the pattern.
      */
-    getPrependNode(identity, current, head, ...patterns) {
+    emitPrependPattern(identity, current, head, ...patterns) {
         return this.#getPattern('PrependNodePattern', identity, 1 /* Right */, current, head, ...patterns);
+    }
+    /**
+     * Get a new pivot node pattern.
+     * @param identity Node identity.
+     * @param pivot Pivot pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitPivotPattern(identity, pivot, ...patterns) {
+        return this.#getPattern('PivotNodePattern', identity, 1 /* Right */, 0 /* Left */, pivot, ...patterns);
     }
     /**
      * Get a new symbol pattern.
@@ -205,15 +205,15 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSymbol(identity, symbol, ...patterns) {
+    emitSymbolPattern(identity, symbol, ...patterns) {
         return this.#getPattern('EmitSymbolPattern', identity, symbol, ...patterns);
     }
     /**
-     * Get a new scope symbol pattern.
+     * Get a new symbol scope pattern.
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getScopeSymbol(...patterns) {
+    emitScopePattern(...patterns) {
         return this.#getPattern('ScopeSymbolPattern', ...patterns);
     }
     /**
@@ -222,7 +222,7 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getError(value, ...patterns) {
+    emitErrorPattern(value, ...patterns) {
         return this.#getPattern('EmitErrorPattern', value, ...patterns);
     }
     /**
@@ -231,7 +231,7 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getHas(state, ...patterns) {
+    emiHasPattern(state, ...patterns) {
         return this.#getPattern('HasStatePattern', state, ...patterns);
     }
     /**
@@ -240,7 +240,7 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    getSet(state, ...patterns) {
+    emitSetPattern(state, ...patterns) {
         return this.#getPattern('SetStatePattern', state, ...patterns);
     }
     /**
@@ -249,7 +249,7 @@ class Text extends base_1.Base {
      * @param name Reference name.
      * @returns Returns the pattern.
      */
-    getReference(entries, name) {
+    emitReferencePattern(entries, name) {
         if (!entries.has(name)) {
             return this.#getPattern('RunFlowPattern', `() => ${name}`);
         }
@@ -259,7 +259,7 @@ class Text extends base_1.Base {
      * Get a new any pattern.
      * @returns Returns the pattern.
      */
-    getAny() {
+    emitAnyPattern() {
         return this.#getPattern('AnyUnitPattern');
     }
     /**
@@ -268,7 +268,7 @@ class Text extends base_1.Base {
      * @param to To unit value.
      * @returns Returns the pattern.
      */
-    getRange(from, to) {
+    emitRangePattern(from, to) {
         return this.#getPattern('RangeUnitPattern', ...this.#getUnits([from, to]));
     }
     /**
@@ -276,7 +276,7 @@ class Text extends base_1.Base {
      * @param units Input units.
      * @returns Returns the string pattern.
      */
-    getString(units) {
+    emitStringPattern(units) {
         return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
     }
 }
