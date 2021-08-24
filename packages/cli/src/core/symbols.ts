@@ -46,10 +46,10 @@ const printTable = (node: Core.Node, cache: Set<Core.Table>): void => {
       cache.add(node.table);
       const scope = getScope(node.table);
       const level = getLevel(node.table);
-      for (const key of node.table.keys) {
-        const record = node.table.getRecord(key)!;
+      for (const name of node.table.names) {
+        const record = node.table.get(name)!;
         const location = Fragment.getLocation(record.fragment);
-        Console.printLine(` ${location} ${scope} ${level} ${getCode(record)} ${key}`);
+        Console.printLine(` ${location} ${scope} ${level} ${getCode(record)} ${name}`);
       }
     }
     if (node.left) {
