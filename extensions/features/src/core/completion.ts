@@ -43,8 +43,8 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    */
   #getSymbolList(table: Core.Table, types: Lang.Parser.Symbols[]): VSCode.CompletionItem[] {
     const list = [];
-    for (const name of table.keys) {
-      const record = table.getRecord(name)!;
+    for (const name of table.names) {
+      const record = table.get(name)!;
       const label = record.value === Lang.Parser.Symbols.Node ? 'node' : 'token';
       if (types.includes(record.value as Lang.Parser.Symbols)) {
         const item = Items.getItem(name, `Insert a ${label} reference.`, {
@@ -152,7 +152,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lang.Lexer.Tokens.From:
           return [Items.wordItem];
         case Lang.Lexer.Tokens.To:
-        case Lang.Lexer.Tokens.Alphabet:
+        case Lang.Lexer.Tokens.String:
         case Lang.Lexer.Tokens.Any:
         case Lang.Lexer.Tokens.CloseParentheses:
           return Items.binaryOperatorList;
