@@ -107,7 +107,7 @@ class Text extends base_1.default {
     /**
      * Move to the next source state.
      */
-    move() {
+    nextState() {
         if (this.value !== '\n') {
             this.#current.column++;
         }

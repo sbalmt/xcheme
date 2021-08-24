@@ -90,7 +90,7 @@ class Base {
     /**
      * Should be implemented to move to the next source state.
      */
-    move() {
+    nextState() {
         throw "Move method doesn't implemented.";
     }
     /**

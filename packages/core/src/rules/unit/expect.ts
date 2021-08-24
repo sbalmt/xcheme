@@ -30,7 +30,7 @@ export default class Expect extends Pattern {
       if (source.length === 0 || source.value !== unit) {
         return false;
       }
-      source.move();
+      source.nextState();
     }
     return true;
   }

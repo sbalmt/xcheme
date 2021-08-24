@@ -131,7 +131,7 @@ export default class TokenSource extends Base {
   /**
    * Move to the next source state.
    */
-  move(): void {
+  nextState(): void {
     this.#current.offset++;
     if (this.#current.offset > this.#longest.offset) {
       this.#longest = { ...this.#current };

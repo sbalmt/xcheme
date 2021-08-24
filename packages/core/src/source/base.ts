@@ -130,7 +130,7 @@ export default class Base {
   /**
    * Should be implemented to move to the next source state.
    */
-  public move(): void {
+  public nextState(): void {
     throw "Move method doesn't implemented.";
   }
 

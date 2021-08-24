@@ -63,6 +63,6 @@ export default class TokenSource extends Base {
     /**
      * Move to the next source state.
      */
-    move(): void;
+    nextState(): void;
 }
 export {};

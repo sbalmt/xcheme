@@ -32,7 +32,7 @@ class Range extends pattern_1.default {
         if (source.length > 0) {
             const value = source.value;
             if (value >= this.#begin && value <= this.#end) {
-                source.move();
+                source.nextState();
                 return true;
             }
         }

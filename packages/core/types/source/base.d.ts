@@ -75,7 +75,7 @@ export default class Base {
     /**
      * Should be implemented to move to the next source state.
      */
-    move(): void;
+    nextState(): void;
     /**
      * Emit the given product in the current source context.
      * @param product Input product.

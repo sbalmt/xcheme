@@ -44,7 +44,7 @@ test('Next source state', () => {
   expect(fragment.location.line).toBe(0);
 
   // Test the next state.
-  source.move();
+  source.nextState();
 
   expect(source.offset).toBe(1);
   expect(source.length).toBe(2);
@@ -58,7 +58,7 @@ test('Next source state', () => {
   expect(fragment.location.line).toBe(0);
 
   // Test the next state.
-  source.move();
+  source.nextState();
 
   expect(source.offset).toBe(2);
   expect(source.length).toBe(1);
@@ -72,7 +72,7 @@ test('Next source state', () => {
   expect(fragment.location.line).toBe(1);
 
   // Test the last state.
-  source.move();
+  source.nextState();
 
   expect(source.offset).toBe(3);
   expect(source.length).toBe(0);
@@ -103,9 +103,9 @@ test('Save/Discard source state', () => {
   source.saveState();
 
   // Move to the last state.
-  source.move();
-  source.move();
-  source.move();
+  source.nextState();
+  source.nextState();
+  source.nextState();
 
   fragment = source.fragment;
   expect(fragment.data).toBe('a\nb');
@@ -135,7 +135,7 @@ test('Save/Restore/Discard source state', () => {
   source.saveState();
 
   // Move to the next state.
-  source.move();
+  source.nextState();
 
   // Restore state.
   source.restoreState();

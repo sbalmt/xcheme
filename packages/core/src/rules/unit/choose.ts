@@ -28,7 +28,7 @@ export default class Choose extends Pattern {
   consume(source: Base): boolean {
     if (source.length > 0) {
       if (this.#units.has(source.value)) {
-        source.move();
+        source.nextState();
         return true;
       }
     }

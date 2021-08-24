@@ -142,7 +142,7 @@ export default class Map extends Pattern {
           source.discardState();
           return current;
         }
-        source.move();
+        source.nextState();
         current = current.next;
       }
     }
@@ -176,7 +176,7 @@ export default class Map extends Pattern {
     while ((current = this.#findNode(source, current)) !== void 0) {
       longest = current;
       current = current.next;
-      source.move();
+      source.nextState();
     }
     if (longest !== void 0) {
       return longest.pattern!.consume(source);

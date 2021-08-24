@@ -36,7 +36,7 @@ export default class Range extends Pattern {
     if (source.length > 0) {
       const value = source.value;
       if (value >= this.#begin && value <= this.#end) {
-        source.move();
+        source.nextState();
         return true;
       }
     }

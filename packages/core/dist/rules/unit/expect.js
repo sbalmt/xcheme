@@ -27,7 +27,7 @@ class Expect extends pattern_1.default {
             if (source.length === 0 || source.value !== unit) {
                 return false;
             }
-            source.move();
+            source.nextState();
         }
         return true;
     }

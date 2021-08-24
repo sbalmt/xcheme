@@ -142,7 +142,7 @@ export default class Text extends Base {
   /**
    * Move to the next source state.
    */
-  move(): void {
+  nextState(): void {
     if (this.value !== '\n') {
       this.#current.column++;
     } else {
