@@ -25,7 +25,7 @@ import * as Has from './has';
 import * as Set from './set';
 import * as Reference from './reference';
 import * as Range from './range';
-import * as Alphabet from './alphabet';
+import * as String from './string';
 
 /**
  * Consume the specified input node resolving its expression patterns.
@@ -39,8 +39,8 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
   switch (node.value) {
     case Parser.Nodes.Reference:
       return Reference.consume(project, node, state);
-    case Parser.Nodes.Alphabet:
-      return Alphabet.consume(project, node, state);
+    case Parser.Nodes.String:
+      return String.consume(project, node, state);
     case Parser.Nodes.Any:
       return project.coder.getAny();
     case Parser.Nodes.Range:

@@ -11,7 +11,7 @@ export declare const enum Types {
     Node = 2
 }
 /**
- * Store the consumption context state.
+ * Store the consumption state for the context.
  */
 export declare type State = {
     /**

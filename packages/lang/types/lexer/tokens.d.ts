@@ -1,10 +1,10 @@
 /**
- * All lexer tokens.
+ * All tokens for the lexer.
  */
 export declare const enum Tokens {
     Identifier = 100,
     Number = 101,
-    Alphabet = 102,
+    String = 102,
     Any = 103,
     From = 104,
     To = 105,

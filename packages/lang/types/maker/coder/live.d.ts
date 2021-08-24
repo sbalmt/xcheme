@@ -69,11 +69,11 @@ export declare class Live extends Base {
      */
     getChoose(...patterns: Core.Pattern[]): Core.Pattern;
     /**
-     * Get a new choose alphabet pattern.
-     * @param alphabet Possible alphabet.
+     * Get a new choose units pattern.
+     * @param units Possible units.
      * @returns Returns the pattern.
      */
-    getChooseAlphabet(alphabet: (string | number)[]): Core.Pattern;
+    getChooseUnits(units: (string | number)[]): Core.Pattern;
     /**
      * Get a new expect pattern.
      * @param patterns Expected patterns.
@@ -81,11 +81,11 @@ export declare class Live extends Base {
      */
     getExpect(...patterns: Core.Pattern[]): Core.Pattern;
     /**
-     * Get a new expect alphabet pattern.
-     * @param alphabet Expected alphabet.
+     * Get a new expect units pattern.
+     * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectAlphabet(alphabet: (string | number)[]): Core.Pattern;
+    getExpectUnits(units: (string | number)[]): Core.Pattern;
     /**
      * Get a new negate pattern.
      * @param patterns Expected patterns.
@@ -186,16 +186,16 @@ export declare class Live extends Base {
     getAny(): Core.Pattern;
     /**
      * Get a new range pattern.
-     * @param from From alphabet value.
-     * @param to To alphabet value.
+     * @param from From unit value.
+     * @param to To unit value.
      * @returns Returns the pattern.
      */
     getRange(from: string | number, to: string | number): Core.Pattern;
     /**
-     * Get a new alphabet pattern.
-     * @param alphabet Input alphabet.
-     * @returns Returns the alphabet pattern.
+     * Get a new string pattern.
+     * @param units Input units.
+     * @returns Returns the string pattern.
      */
-    getAlphabet(alphabet: (string | number)[]): Core.Pattern;
+    getString(units: (string | number)[]): Core.Pattern;
 }
 export {};

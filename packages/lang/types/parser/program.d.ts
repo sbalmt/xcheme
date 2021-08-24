@@ -1,5 +1,5 @@
 import * as Core from '@xcheme/core';
 /**
- * Main parser program.
+ * Main parser pattern.
  */
 export declare const Program: Core.ExpectFlowPattern;

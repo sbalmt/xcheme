@@ -7,6 +7,9 @@ import UnaryExpression from './patterns/unary';
 import { Symbols } from './symbols';
 import { Nodes } from './nodes';
 
+/**
+ * Identity pattern.
+ */
 const identity = new Core.ExpectFlowPattern(
   new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
   new Core.AppendNodePattern(
@@ -18,6 +21,9 @@ const identity = new Core.ExpectFlowPattern(
   )
 );
 
+/**
+ * Expression pattern.
+ */
 const expression: Core.Pattern = new Core.ExpectFlowPattern(
   // Or expressions
   new BinaryExpression(
@@ -56,10 +62,10 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
             Core.Nodes.Right,
             new Core.ExpectUnitPattern(Lexer.Tokens.From),
             new Core.AppendNodePattern(
-              Nodes.Alphabet,
+              Nodes.String,
               Core.Nodes.Right,
               Core.Nodes.Right,
-              new Core.ExpectUnitPattern(Lexer.Tokens.Alphabet)
+              new Core.ExpectUnitPattern(Lexer.Tokens.String)
             ),
             new Core.PivotNodePattern(
               Nodes.Range,
@@ -67,21 +73,21 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
               Core.Nodes.Left,
               new Core.ExpectUnitPattern(Lexer.Tokens.To),
               new Core.AppendNodePattern(
-                Nodes.Alphabet,
+                Nodes.String,
                 Core.Nodes.Right,
                 Core.Nodes.Right,
-                new Core.ExpectUnitPattern(Lexer.Tokens.Alphabet)
+                new Core.ExpectUnitPattern(Lexer.Tokens.String)
               )
             )
           ),
-          // Any, Alphabet & Reference
+          // Any, String & Reference
           new Core.AppendNodePattern(
             Core.BaseSource.Output,
             Core.Nodes.Right,
             Core.Nodes.Right,
             new Core.MapFlowPattern(
               new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Any),
-              new Core.SetValueRoute(Nodes.Alphabet, Lexer.Tokens.Alphabet),
+              new Core.SetValueRoute(Nodes.String, Lexer.Tokens.String),
               new Core.SetValueRoute(Nodes.Reference, Lexer.Tokens.Identifier)
             )
           ),
@@ -119,6 +125,9 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
   )
 );
 
+/**
+ * Token directive pattern.
+ */
 const token = new Core.ExpectFlowPattern(
   new Core.OptFlowPattern(identity),
   new Core.EmitSymbolPattern(
@@ -134,6 +143,9 @@ const token = new Core.ExpectFlowPattern(
   )
 );
 
+/**
+ * Node directive pattern.
+ */
 const node = new Core.ExpectFlowPattern(
   new Core.OptFlowPattern(identity),
   new Core.EmitSymbolPattern(
@@ -150,7 +162,7 @@ const node = new Core.ExpectFlowPattern(
 );
 
 /**
- * Main parser program.
+ * Main parser pattern.
  */
 export const Program = new Core.ExpectFlowPattern(
   new Core.OptFlowPattern(

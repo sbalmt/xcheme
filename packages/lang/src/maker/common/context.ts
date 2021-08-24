@@ -13,7 +13,7 @@ export const enum Types {
 }
 
 /**
- * Store the consumption context state.
+ * Store the consumption state for the context.
  */
 export type State = {
   /**

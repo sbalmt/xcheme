@@ -14,7 +14,7 @@ const addRegex = new RegExp(`(?:${charList.join('|')})`, 'g');
  */
 const stripRegex = new RegExp(`(?:${charList.join('|').replaceAll('\\', '\\\\')})`, 'g');
 /**
- * Strip slashes in the given input text.
+ * Strip slashes in the specified text.
  * @param text Input text.
  * @returns Returns the stripped text.
  */
@@ -40,7 +40,7 @@ const stripSlashes = (text) => {
     });
 };
 /**
- * Add slashes in the given input text.
+ * Add slashes in the specified text.
  * @param text Input text.
  * @returns Returns the slashed text.
  */
@@ -75,7 +75,7 @@ const extract = (text) => {
 };
 exports.extract = extract;
 /**
- * Compose a string with the given text adding all necessary slashes.
+ * Compose a string with the given text adding all the necessary slashes.
  * @param text Input text.
  * @returns Returns the composed string.
  */

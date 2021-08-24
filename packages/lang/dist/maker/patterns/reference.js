@@ -56,7 +56,7 @@ const resolveNode = (project, node, state, symbol) => {
     }
     else {
         if (token.type !== 1 /* Alias */) {
-            return project.coder.getAlphabet([token.identity]);
+            return project.coder.getString([token.identity]);
         }
         project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_ALIAS_TOKEN_REFERENCE */));
     }
@@ -105,7 +105,7 @@ const resolveSkip = (project, node, state, symbol) => {
  */
 const consume = (project, node, state) => {
     const name = node.fragment.data;
-    const symbol = node.table?.getRecord(name);
+    const symbol = node.table?.get(name);
     if (symbol) {
         if (state.type === 1 /* Token */) {
             return resolveToken(project, node, state, symbol);

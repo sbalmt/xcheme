@@ -102,11 +102,11 @@ export class Base {
   }
 
   /**
-   * Should be implemented to return a choose alphabet pattern.
-   * @param alphabet Possible alphabet.
+   * Should be implemented to return a choose units pattern.
+   * @param units Possible units.
    * @returns Should return the pattern.
    */
-  getChooseAlphabet(alphabet: (string | number)[]): PatternEntry {
+  getChooseUnits(units: (string | number)[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 
@@ -120,11 +120,11 @@ export class Base {
   }
 
   /**
-   * Should be implemented to return an expect unit pattern.
-   * @param alphabet Expected alphabet.
+   * Should be implemented to return an expect units pattern.
+   * @param units Expected units.
    * @returns Should return the pattern.
    */
-  getExpectAlphabet(alphabet: (string | number)[]): PatternEntry {
+  getExpectUnits(units: (string | number)[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 
@@ -269,8 +269,8 @@ export class Base {
 
   /**
    * Should be implemented to return a range pattern.
-   * @param from From the alphabet value.
-   * @param to To alphabet value.
+   * @param from From unit value.
+   * @param to To unit value.
    * @returns Should return the pattern.
    */
   getRange(from: string | number, to: string | number): PatternEntry {
@@ -278,11 +278,11 @@ export class Base {
   }
 
   /**
-   * Should be implemented to return an alphabet pattern.
-   * @param alphabet Input alphabet.
+   * Should be implemented to return a string pattern.
+   * @param units Input units.
    * @returns Should return the pattern.
    */
-  getAlphabet(alphabet: (string | number)[]): PatternEntry {
+  getString(units: (string | number)[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 }

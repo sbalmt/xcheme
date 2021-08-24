@@ -28,7 +28,7 @@ test("Consume expected 'FROM'...'TO' rule", () => {
 
   const from = expr.left!;
   expect(from).toBeDefined();
-  expect(from.value).toBe(Parser.Nodes.Alphabet);
+  expect(from.value).toBe(Parser.Nodes.String);
   expect(from.fragment.data).toBe("'0'");
   expect(from.left).toBeUndefined();
   expect(from.right).toBeUndefined();
@@ -36,7 +36,7 @@ test("Consume expected 'FROM'...'TO' rule", () => {
 
   const to = expr.right!;
   expect(to).toBeDefined();
-  expect(to.value).toBe(Parser.Nodes.Alphabet);
+  expect(to.value).toBe(Parser.Nodes.String);
   expect(to.fragment.data).toBe("'9'");
   expect(to.left).toBeUndefined();
   expect(to.right).toBeUndefined();

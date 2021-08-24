@@ -9,8 +9,8 @@ const tokens = [
     { name: 'NAME', value: Lexer.Tokens.Identifier },
     // Number
     { name: '1234567890', value: Lexer.Tokens.Number },
-    // Alphabet
-    { name: "'text'", value: Lexer.Tokens.Alphabet },
+    // String
+    { name: "'text'", value: Lexer.Tokens.String },
     // Any unit
     { name: 'any', value: Lexer.Tokens.Any },
     { name: '*', value: Lexer.Tokens.Any },

@@ -11,7 +11,7 @@ class Binary extends Core.Pattern {
     #pattern;
     /**
      * Default constructor.
-     * @param operator Binary operator.
+     * @param operator Binary operator pattern.
      * @param expression Expression pattern.
      */
     constructor(operator, expression) {

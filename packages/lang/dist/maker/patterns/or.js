@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = exports.resolve = void 0;
 const Parser = require("../../parser");
-const Alphabet = require("./alphabet");
+const String = require("./string");
 const Expression = require("./expression");
 /**
  * Merge all subsequent occurrences of the 'OR' pattern starting with the given input node.
@@ -10,18 +10,18 @@ const Expression = require("./expression");
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
- * @param alphabet Output alphabet.
+ * @param units Output units.
  * @param patterns Output patterns.
  * @returns Returns true when the merge consumption was successful, false otherwise.
  */
-const merge = (project, node, state, alphabet, patterns) => {
+const merge = (project, node, state, units, patterns) => {
     let result;
     if (node.value === 208 /* Or */) {
-        if (node.right.value === 203 /* Alphabet */) {
-            const result = Alphabet.resolve(project, state, node.right.fragment.data);
+        if (node.right.value === 203 /* String */) {
+            const result = String.resolve(project, state, node.right.fragment.data);
             if (result.length === 1) {
-                alphabet.push(result);
-                return merge(project, node.left, state, alphabet, patterns);
+                units.push(result);
+                return merge(project, node.left, state, units, patterns);
             }
         }
         const lhs = exports.resolve(project, node.left, state);
@@ -32,10 +32,10 @@ const merge = (project, node, state, alphabet, patterns) => {
         patterns.push(...lhs, ...rhs);
     }
     else {
-        if (node.value === 203 /* Alphabet */) {
-            const result = Alphabet.resolve(project, state, node.fragment.data);
+        if (node.value === 203 /* String */) {
+            const result = String.resolve(project, state, node.fragment.data);
             if (result.length === 1) {
-                alphabet.push(result);
+                units.push(result);
                 return true;
             }
         }
@@ -45,8 +45,8 @@ const merge = (project, node, state, alphabet, patterns) => {
         }
         patterns.push(result);
     }
-    if (alphabet.length > 0) {
-        patterns.push(project.coder.getChooseAlphabet(alphabet.reverse().flat()));
+    if (units.length > 0) {
+        patterns.push(project.coder.getChooseUnits(units.reverse().flat()));
     }
     return true;
 };
@@ -59,14 +59,14 @@ const merge = (project, node, state, alphabet, patterns) => {
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 const resolve = (project, node, state) => {
-    const alphabet = [];
+    const units = [];
     const patterns = [];
-    if (merge(project, node, state, alphabet, patterns)) {
+    if (merge(project, node, state, units, patterns)) {
         if (patterns.length > 0) {
             return patterns;
         }
-        if (alphabet.length > 0) {
-            return [project.coder.getChooseAlphabet(alphabet.reverse().flat())];
+        if (units.length > 0) {
+            return [project.coder.getChooseUnits(units.reverse().flat())];
         }
     }
     return void 0;

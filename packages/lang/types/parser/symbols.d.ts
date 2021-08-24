@@ -1,5 +1,5 @@
 /**
- * All parser symbols.
+ * All symbols for the parser.
  */
 export declare const enum Symbols {
     Token = 300,

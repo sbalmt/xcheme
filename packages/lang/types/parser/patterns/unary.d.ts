@@ -6,7 +6,7 @@ export default class Unary extends Core.Pattern {
     #private;
     /**
      * Default constructor.
-     * @param operator Unary operator.
+     * @param operator Unary operator pattern.
      * @param expression Expression pattern.
      */
     constructor(operator: Core.Pattern, expression: Core.Pattern);

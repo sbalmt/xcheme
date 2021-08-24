@@ -5,7 +5,7 @@
  */
 export declare const extract: (text: string) => string;
 /**
- * Compose a string with the given text adding all necessary slashes.
+ * Compose a string with the given text adding all the necessary slashes.
  * @param text Input text.
  * @returns Returns the composed string.
  */

@@ -7,13 +7,8 @@ import { State } from '../common/context';
 
 import type { PatternEntry } from '../coder/base';
 
-import * as Alphabet from './alphabet';
+import * as String from './string';
 import * as Expression from './expression';
-
-/**
- * Alphabet type.
- */
-type Alphabet = (string | number)[];
 
 /**
  * Merge all subsequent occurrences of the 'AND' pattern starting with the given input node.
@@ -21,15 +16,15 @@ type Alphabet = (string | number)[];
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
- * @param alphabet Output alphabet.
+ * @param units Output units.
  * @param patterns Output patterns.
  * @returns Returns true when the merge consumption was successful, false otherwise.
  */
-const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphabet[], patterns: PatternEntry[]): boolean => {
+const merge = (project: Project, node: Core.Node, state: State, units: (string | number)[][], patterns: PatternEntry[]): boolean => {
   if (node.value === Parser.Nodes.And) {
-    if (node.right!.value === Parser.Nodes.Alphabet) {
-      alphabet.push(Alphabet.resolve(project, state, node.right!.fragment.data));
-      return merge(project, node.left!, state, alphabet, patterns);
+    if (node.right!.value === Parser.Nodes.String) {
+      units.push(String.resolve(project, state, node.right!.fragment.data));
+      return merge(project, node.left!, state, units, patterns);
     }
     const lhs = resolve(project, node.left!, state);
     const rhs = resolve(project, node.right!, state);
@@ -38,8 +33,8 @@ const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphab
     }
     patterns.push(...lhs, ...rhs);
   } else {
-    if (node.value === Parser.Nodes.Alphabet) {
-      alphabet.push(Alphabet.resolve(project, state, node.fragment.data));
+    if (node.value === Parser.Nodes.String) {
+      units.push(String.resolve(project, state, node.fragment.data));
       return true;
     }
     const result = Expression.consume(project, node, state);
@@ -48,8 +43,8 @@ const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphab
     }
     patterns.push(result);
   }
-  if (alphabet.length > 0) {
-    patterns.push(project.coder.getExpectAlphabet(alphabet.reverse().flat()));
+  if (units.length > 0) {
+    patterns.push(project.coder.getExpectUnits(units.reverse().flat()));
   }
   return true;
 };
@@ -63,14 +58,14 @@ const merge = (project: Project, node: Core.Node, state: State, alphabet: Alphab
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 export const resolve = (project: Project, node: Core.Node, state: State): PatternEntry[] | undefined => {
-  const alphabet: Alphabet[] = [];
+  const units: (string | number)[][] = [];
   const patterns: PatternEntry[] = [];
-  if (merge(project, node, state, alphabet, patterns)) {
+  if (merge(project, node, state, units, patterns)) {
     if (patterns.length > 0) {
       return patterns;
     }
-    if (alphabet.length > 0) {
-      return [project.coder.getExpectAlphabet(alphabet.reverse().flat())];
+    if (units.length > 0) {
+      return [project.coder.getExpectUnits(units.reverse().flat())];
     }
   }
   return void 0;

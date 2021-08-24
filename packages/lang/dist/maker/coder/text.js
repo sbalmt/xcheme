@@ -9,12 +9,12 @@ const base_1 = require("./base");
  */
 class Text extends base_1.Base {
     /**
-     * Get alphabet units.
-     * @param alphabet Input alphabet.
-     * @returns Returns the alphabet units.
+     * Get string units.
+     * @param string Input string.
+     * @returns Returns the string units.
      */
-    #getUnits(alphabet) {
-        return alphabet.map((unit) => (typeof unit !== 'number' ? String.compose(unit) : unit));
+    #getUnits(string) {
+        return string.map((unit) => (typeof unit !== 'number' ? String.compose(unit) : unit));
     }
     /**
      * Get a new pattern.
@@ -110,12 +110,12 @@ class Text extends base_1.Base {
         return this.#getPattern('ChooseFlowPattern', ...patterns);
     }
     /**
-     * Should be implemented to return a choose alphabet pattern.
-     * @param alphabet Possible alphabet.
-     * @returns Should return the pattern.
+     * Get a new choose units pattern.
+     * @param units Possible units.
+     * @returns Returns the pattern.
      */
-    getChooseAlphabet(alphabet) {
-        return this.#getPattern('ChooseUnitPattern', ...this.#getUnits(alphabet));
+    getChooseUnits(units) {
+        return this.#getPattern('ChooseUnitPattern', ...this.#getUnits(units));
     }
     /**
      * Get a new expect pattern.
@@ -126,12 +126,12 @@ class Text extends base_1.Base {
         return this.#getPattern('ExpectFlowPattern', ...patterns);
     }
     /**
-     * Get a new expect alphabet pattern.
-     * @param alphabet Expected alphabet.
+     * Get a new expect units pattern.
+     * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectAlphabet(alphabet) {
-        return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(alphabet));
+    getExpectUnits(units) {
+        return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
     }
     /**
      * Get a new negate pattern.
@@ -264,20 +264,20 @@ class Text extends base_1.Base {
     }
     /**
      * Get a new range pattern.
-     * @param from From alphabet value.
-     * @param to To alphabet value.
+     * @param from From unit value.
+     * @param to To unit value.
      * @returns Returns the pattern.
      */
     getRange(from, to) {
         return this.#getPattern('RangeUnitPattern', ...this.#getUnits([from, to]));
     }
     /**
-     * Get a new alphabet pattern.
-     * @param alphabet Input alphabet.
-     * @returns Returns the alphabet pattern.
+     * Get a new string pattern.
+     * @param units Input units.
+     * @returns Returns the string pattern.
      */
-    getAlphabet(alphabet) {
-        return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(alphabet));
+    getString(units) {
+        return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
     }
 }
 exports.Text = Text;

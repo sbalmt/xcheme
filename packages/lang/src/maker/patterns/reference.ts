@@ -62,7 +62,7 @@ const resolveNode = (project: Project, node: Core.Node, state: State, symbol: Co
     project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
   } else {
     if (token.type !== Entries.Types.Alias) {
-      return project.coder.getAlphabet([token.identity]);
+      return project.coder.getString([token.identity]);
     }
     project.errors.push(new Core.Error(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE));
   }
@@ -111,7 +111,7 @@ const resolveSkip = (project: Project, node: Core.Node, state: State, symbol: Co
  */
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   const name = node.fragment.data;
-  const symbol = node.table?.getRecord(name);
+  const symbol = node.table?.get(name);
   if (symbol) {
     if (state.type === Types.Token) {
       return resolveToken(project, node, state, symbol);

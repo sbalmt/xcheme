@@ -8,7 +8,7 @@ export { Tokens } from './tokens';
 /**
  * Consume the specified text and produce a list of tokens for updating the given context.
  * @param text Input text.
- * @param context Output context.
+ * @param context Input context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
 export const consumeText = (text: string, context: Core.Context): boolean => {

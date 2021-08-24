@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected alphabet", () => {
+test('Consume expected string', () => {
   const context = new Core.Context('test');
   const text = "skip 'test';";
 
@@ -20,7 +20,7 @@ test("Consume expected alphabet", () => {
 
   const expr = stmt.right!;
   expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.Alphabet);
+  expect(expr.value).toBe(Parser.Nodes.String);
   expect(expr.fragment.data).toBe("'test'");
   expect(expr.left).toBeUndefined();
   expect(expr.right).toBeUndefined();

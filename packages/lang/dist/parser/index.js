@@ -6,7 +6,7 @@ const program_1 = require("./program");
 /**
  * Consume the specified tokens and produce an AST for updating the given context.
  * @param tokens Input tokens.
- * @param context Output context.
+ * @param context Input context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
 const consumeTokens = (tokens, context) => {

@@ -4,7 +4,7 @@ export { Nodes } from './nodes';
 /**
  * Consume the specified tokens and produce an AST for updating the given context.
  * @param tokens Input tokens.
- * @param context Output context.
+ * @param context Input context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
 export declare const consumeTokens: (tokens: Core.Token[], context: Core.Context) => boolean;

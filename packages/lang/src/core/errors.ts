@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 /**
- * Language errors.
+ * All errors in the language.
  */
 export const enum Errors {
   DUPLICATE_IDENTIFIER = Core.Errors.DUPLICATE_IDENTIFIER,

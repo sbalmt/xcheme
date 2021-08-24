@@ -70,11 +70,11 @@ export declare class Text extends Base {
      */
     getChoose(...patterns: string[]): string;
     /**
-     * Should be implemented to return a choose alphabet pattern.
-     * @param alphabet Possible alphabet.
-     * @returns Should return the pattern.
+     * Get a new choose units pattern.
+     * @param units Possible units.
+     * @returns Returns the pattern.
      */
-    getChooseAlphabet(alphabet: (string | number)[]): string;
+    getChooseUnits(units: (string | number)[]): string;
     /**
      * Get a new expect pattern.
      * @param patterns Expected patterns.
@@ -82,11 +82,11 @@ export declare class Text extends Base {
      */
     getExpect(...patterns: string[]): string;
     /**
-     * Get a new expect alphabet pattern.
-     * @param alphabet Expected alphabet.
+     * Get a new expect units pattern.
+     * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectAlphabet(alphabet: (string | number)[]): string;
+    getExpectUnits(units: (string | number)[]): string;
     /**
      * Get a new negate pattern.
      * @param patterns Expected patterns.
@@ -187,16 +187,16 @@ export declare class Text extends Base {
     getAny(): string;
     /**
      * Get a new range pattern.
-     * @param from From alphabet value.
-     * @param to To alphabet value.
+     * @param from From unit value.
+     * @param to To unit value.
      * @returns Returns the pattern.
      */
     getRange(from: string | number, to: string | number): string;
     /**
-     * Get a new alphabet pattern.
-     * @param alphabet Input alphabet.
-     * @returns Returns the alphabet pattern.
+     * Get a new string pattern.
+     * @param units Input units.
+     * @returns Returns the string pattern.
      */
-    getAlphabet(alphabet: (string | number)[]): string;
+    getString(units: (string | number)[]): string;
 }
 export {};

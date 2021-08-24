@@ -11,7 +11,7 @@ class Unary extends Core.Pattern {
     #pattern;
     /**
      * Default constructor.
-     * @param operator Unary operator.
+     * @param operator Unary operator pattern.
      * @param expression Expression pattern.
      */
     constructor(operator, expression) {

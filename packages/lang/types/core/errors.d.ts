@@ -1,5 +1,5 @@
 /**
- * Language errors.
+ * All errors in the language.
  */
 export declare const enum Errors {
     DUPLICATE_IDENTIFIER = 4096,

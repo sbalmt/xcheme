@@ -4,7 +4,7 @@ exports.Project = void 0;
 const String = require("./string");
 const Entries = require("./entries");
 /**
- * Store the project entries, errors and options during the making process.
+ * Store all the project entries, errors and options during the making process.
  */
 class Project {
     /**
@@ -40,7 +40,7 @@ class Project {
      */
     #nodePointerEntries = new Entries.Aggregator();
     /**
-     * Get an array of patterns from the the specified patterns entry aggregator.
+     * Get an array of patterns from the the specified aggregator.
      * @param entries Patterns entry aggregator.
      * @returns Returns the array of patterns.
      */
@@ -48,7 +48,7 @@ class Project {
         return entries.map((entry) => entry.pattern);
     }
     /**
-     * Get an array of routes from the specified patterns entry aggregator.
+     * Get an array of routes from the specified aggregator.
      * @param entries Patterns entry aggregator.
      * @returns Returns the array of routes.
      */
@@ -56,9 +56,9 @@ class Project {
         return entries.map((entry) => this.#coder.getRoute(entry.identity, String.extract(entry.name).split('')));
     }
     /**
-     * Get an array of pointers entry from the patterns of the specified pointers entry aggregator.
-     * @param entries Pointers entries aggregator.
-     * @returns Returns the array of pointers entry.
+     * Get an array of pointers from the specified aggregator.
+     * @param entries Pointers entry aggregator.
+     * @returns Returns the array of pointers.
      */
     #getPointers(entries) {
         return entries.patterns.map((entry) => ({
@@ -94,31 +94,31 @@ class Project {
         return this.#errors;
     }
     /**
-     * Get the skip entries.
+     * Get the skip entries aggregator.
      */
     get skipEntries() {
         return this.#skipEntries;
     }
     /**
-     * Get the token entries.
+     * Get the token entries aggregator.
      */
     get tokenEntries() {
         return this.#tokenEntries;
     }
     /**
-     * Get the token pointer entries.
+     * Get the token pointer entries aggregator.
      */
     get tokenPointerEntries() {
         return this.#tokenPointerEntries;
     }
     /**
-     * Get the node entries.
+     * Get the node entries aggregator.
      */
     get nodeEntries() {
         return this.#nodeEntries;
     }
     /**
-     * Get the node pointer entries.
+     * Get the node pointer entries aggregator.
      */
     get nodePointerEntries() {
         return this.#nodePointerEntries;

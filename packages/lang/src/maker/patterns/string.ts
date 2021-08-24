@@ -9,31 +9,31 @@ import { State, Types } from '../common/context';
 import type { PatternEntry } from '../coder/base';
 
 /**
- * Get the identity of the token that corresponds to the specified alphabet.
- * When there's no token matching the given alphabet, a new one will be created.
+ * Get the identity of the token that corresponds to the specified string.
+ * When there's no token matching the given string, a new one will be created.
  * @param project Input project.
  * @param state Context state.
- * @param alphabet Alphabet value.
+ * @param string Alphabet value.
  * @returns Returns the corresponding token identity.
  */
-const getTokenId = (project: Project, state: State, alphabet: string): string | number => {
-  const token = project.tokenEntries.get(alphabet);
+const getTokenId = (project: Project, state: State, string: string): string | number => {
+  const token = project.tokenEntries.get(string);
   if (!token) {
     const identity = state.counter++;
-    const pattern = project.coder.getAlphabet([identity]);
-    project.tokenEntries.add(identity, alphabet, pattern, Entries.Types.Loose);
+    const pattern = project.coder.getString([identity]);
+    project.tokenEntries.add(identity, string, pattern, Entries.Types.Loose);
     return identity;
   }
   return token.identity;
 };
 
 /**
- * Resolve the specified input node as an alphabet pattern.
- * It can also update the given project and context state when a new token is created.
+ * Resolve the specified input node as a string pattern.
+ * It can also update the given project and context state when a new token needs to be created.
  * @param project Input project.
  * @param state Context state.
- * @param value Alphabet value.
- * @returns Returns the alphabet resolution which is a token identity or an escaped string.
+ * @param value String value.
+ * @returns Returns the string resolution which is a token identity or an escaped string units.
  */
 export const resolve = (project: Project, state: State, value: string): (string | number)[] => {
   if (state.type === Types.Node) {
@@ -43,8 +43,8 @@ export const resolve = (project: Project, state: State, value: string): (string 
 };
 
 /**
- * Consume the specified input node resolving its alphabet patterns.
- * It can also update the given project and context state when a new token is created.
+ * Consume the specified input node resolving its string patterns.
+ * It can also update the given project and context state when a new token needs to be created.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -52,6 +52,6 @@ export const resolve = (project: Project, state: State, value: string): (string 
  */
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry => {
   const name = node.fragment.data;
-  const alphabet = resolve(project, state, name);
-  return project.coder.getAlphabet(alphabet);
+  const units = resolve(project, state, name);
+  return project.coder.getString(units);
 };

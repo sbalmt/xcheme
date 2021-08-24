@@ -72,12 +72,12 @@ class Live extends base_1.Base {
         return new Core.ChooseFlowPattern(...patterns);
     }
     /**
-     * Get a new choose alphabet pattern.
-     * @param alphabet Possible alphabet.
+     * Get a new choose units pattern.
+     * @param units Possible units.
      * @returns Returns the pattern.
      */
-    getChooseAlphabet(alphabet) {
-        return new Core.ChooseUnitPattern(...alphabet);
+    getChooseUnits(units) {
+        return new Core.ChooseUnitPattern(...units);
     }
     /**
      * Get a new expect pattern.
@@ -88,12 +88,12 @@ class Live extends base_1.Base {
         return new Core.ExpectFlowPattern(...patterns);
     }
     /**
-     * Get a new expect alphabet pattern.
-     * @param alphabet Expected alphabet.
+     * Get a new expect units pattern.
+     * @param units Expected units.
      * @returns Returns the pattern.
      */
-    getExpectAlphabet(alphabet) {
-        return new Core.ExpectUnitPattern(...alphabet);
+    getExpectUnits(units) {
+        return new Core.ExpectUnitPattern(...units);
     }
     /**
      * Get a new negate pattern.
@@ -227,20 +227,20 @@ class Live extends base_1.Base {
     }
     /**
      * Get a new range pattern.
-     * @param from From alphabet value.
-     * @param to To alphabet value.
+     * @param from From unit value.
+     * @param to To unit value.
      * @returns Returns the pattern.
      */
     getRange(from, to) {
         return new Core.RangeUnitPattern(from, to);
     }
     /**
-     * Get a new alphabet pattern.
-     * @param alphabet Input alphabet.
-     * @returns Returns the alphabet pattern.
+     * Get a new string pattern.
+     * @param units Input units.
+     * @returns Returns the string pattern.
      */
-    getAlphabet(alphabet) {
-        return new Core.ExpectUnitPattern(...alphabet);
+    getString(units) {
+        return new Core.ExpectUnitPattern(...units);
     }
 }
 exports.Live = Live;

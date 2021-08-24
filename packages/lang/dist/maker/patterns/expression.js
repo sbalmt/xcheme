@@ -20,7 +20,7 @@ const Has = require("./has");
 const Set = require("./set");
 const Reference = require("./reference");
 const Range = require("./range");
-const Alphabet = require("./alphabet");
+const String = require("./string");
 /**
  * Consume the specified input node resolving its expression patterns.
  * It can also update the given project and context state during the consumption.
@@ -33,8 +33,8 @@ const consume = (project, node, state) => {
     switch (node.value) {
         case 201 /* Reference */:
             return Reference.consume(project, node, state);
-        case 203 /* Alphabet */:
-            return Alphabet.consume(project, node, state);
+        case 203 /* String */:
+            return String.consume(project, node, state);
         case 204 /* Any */:
             return project.coder.getAny();
         case 205 /* Range */:

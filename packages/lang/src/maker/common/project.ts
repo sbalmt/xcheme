@@ -10,13 +10,13 @@ import { Base, PointerEntry, PatternEntry, RouteEntry } from '../coder/base';
  */
 export type Options = {
   /**
-   * Initial identity number for tokens, nodes and symbols.
+   * Initial identity for tokens, nodes and symbols.
    */
   initialIdentity?: number;
 };
 
 /**
- * Store the project entries, errors and options during the making process.
+ * Store all the project entries, errors and options during the making process.
  */
 export class Project {
   /**
@@ -60,7 +60,7 @@ export class Project {
   #nodePointerEntries = new Entries.Aggregator();
 
   /**
-   * Get an array of patterns from the the specified patterns entry aggregator.
+   * Get an array of patterns from the the specified aggregator.
    * @param entries Patterns entry aggregator.
    * @returns Returns the array of patterns.
    */
@@ -69,7 +69,7 @@ export class Project {
   }
 
   /**
-   * Get an array of routes from the specified patterns entry aggregator.
+   * Get an array of routes from the specified aggregator.
    * @param entries Patterns entry aggregator.
    * @returns Returns the array of routes.
    */
@@ -78,9 +78,9 @@ export class Project {
   }
 
   /**
-   * Get an array of pointers entry from the patterns of the specified pointers entry aggregator.
-   * @param entries Pointers entries aggregator.
-   * @returns Returns the array of pointers entry.
+   * Get an array of pointers from the specified aggregator.
+   * @param entries Pointers entry aggregator.
+   * @returns Returns the array of pointers.
    */
   #getPointers(entries: Entries.Aggregator): PointerEntry[] {
     return entries.patterns.map((entry) => ({
@@ -121,35 +121,35 @@ export class Project {
   }
 
   /**
-   * Get the skip entries.
+   * Get the skip entries aggregator.
    */
   get skipEntries(): Entries.Aggregator {
     return this.#skipEntries;
   }
 
   /**
-   * Get the token entries.
+   * Get the token entries aggregator.
    */
   get tokenEntries(): Entries.Aggregator {
     return this.#tokenEntries;
   }
 
   /**
-   * Get the token pointer entries.
+   * Get the token pointer entries aggregator.
    */
   get tokenPointerEntries(): Entries.Aggregator {
     return this.#tokenPointerEntries;
   }
 
   /**
-   * Get the node entries.
+   * Get the node entries aggregator.
    */
   get nodeEntries(): Entries.Aggregator {
     return this.#nodeEntries;
   }
 
   /**
-   * Get the node pointer entries.
+   * Get the node pointer entries aggregator.
    */
   get nodePointerEntries(): Entries.Aggregator {
     return this.#nodePointerEntries;

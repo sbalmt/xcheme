@@ -6,12 +6,12 @@ import { Base } from '../coder/base';
  */
 export declare type Options = {
     /**
-     * Initial identity number for tokens, nodes and symbols.
+     * Initial identity for tokens, nodes and symbols.
      */
     initialIdentity?: number;
 };
 /**
- * Store the project entries, errors and options during the making process.
+ * Store all the project entries, errors and options during the making process.
  */
 export declare class Project {
     #private;
@@ -34,23 +34,23 @@ export declare class Project {
      */
     get errors(): Core.Error[];
     /**
-     * Get the skip entries.
+     * Get the skip entries aggregator.
      */
     get skipEntries(): Entries.Aggregator;
     /**
-     * Get the token entries.
+     * Get the token entries aggregator.
      */
     get tokenEntries(): Entries.Aggregator;
     /**
-     * Get the token pointer entries.
+     * Get the token pointer entries aggregator.
      */
     get tokenPointerEntries(): Entries.Aggregator;
     /**
-     * Get the node entries.
+     * Get the node entries aggregator.
      */
     get nodeEntries(): Entries.Aggregator;
     /**
-     * Get the node pointer entries.
+     * Get the node pointer entries aggregator.
      */
     get nodePointerEntries(): Entries.Aggregator;
     /**

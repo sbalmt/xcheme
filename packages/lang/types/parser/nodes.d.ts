@@ -1,11 +1,11 @@
 /**
- * All parser nodes.
+ * All nodes for the parser.
  */
 export declare const enum Nodes {
     Identifier = 200,
     Reference = 201,
     Identity = 202,
-    Alphabet = 203,
+    String = 203,
     Any = 204,
     Range = 205,
     Then = 206,
