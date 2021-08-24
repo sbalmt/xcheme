@@ -10,7 +10,7 @@ test('Token referring a node (reference error)', () => {
 });
 
 test('Token referring an alias node (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_NODE_REFERENCE]);
+  Helper.makeError(new Lang.LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]);
 });
 
 test('Token with an identity', () => {

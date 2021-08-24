@@ -3,5 +3,7 @@
  */
 export declare const enum Symbols {
     Token = 300,
-    Node = 301
+    AliasToken = 301,
+    Node = 302,
+    AliasNode = 303
 }

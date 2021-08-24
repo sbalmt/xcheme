@@ -19,20 +19,27 @@ import type { PatternEntry } from '../coder/base';
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveToken = (project: Project, node: Core.Node, state: State, symbol: Core.Record): PatternEntry | undefined => {
-  const name = node.fragment.data;
-  if (symbol.value !== Parser.Symbols.Token) {
+  let pattern;
+  if (symbol.value === Parser.Symbols.Token || symbol.value === Parser.Symbols.AliasToken) {
+    const name = node.fragment.data;
+    if (state.pointers.has(name)) {
+      pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
+    } else {
+      const token = project.tokenEntries.get(name);
+      if (token) {
+        project.tokenPointerEntries.add(token.identity, name, token.pattern, Entries.Types.Normal);
+      }
+      pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
+      state.pointers.add(name);
+    }
+  } else if (symbol.value === Parser.Symbols.Node) {
     project.errors.push(new Core.Error(node.fragment, Errors.INVALID_NODE_REFERENCE));
-    return void 0;
+  } else if (symbol.value === Parser.Symbols.AliasNode) {
+    project.errors.push(new Core.Error(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE));
+  } else {
+    project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_IDENTIFIER));
   }
-  if (state.pointers.has(name)) {
-    return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
-  }
-  const token = project.tokenEntries.get(name);
-  if (token) {
-    project.tokenPointerEntries.add(token.identity, name, token.pattern, Entries.Types.Normal);
-  }
-  state.pointers.add(name);
-  return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
+  return pattern;
 };
 
 /**
@@ -45,28 +52,33 @@ const resolveToken = (project: Project, node: Core.Node, state: State, symbol: C
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveNode = (project: Project, node: Core.Node, state: State, symbol: Core.Record): PatternEntry | undefined => {
-  const name = node.fragment.data;
-  if (symbol.value === Parser.Symbols.Node) {
+  let pattern;
+  if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
+    const name = node.fragment.data;
     if (state.pointers.has(name)) {
-      return project.coder.emitReferencePattern(project.nodePointerEntries, name);
+      pattern = project.coder.emitReferencePattern(project.nodePointerEntries, name);
+    } else {
+      const entry = project.nodeEntries.get(name);
+      if (entry) {
+        project.nodePointerEntries.add(entry.identity, name, entry.pattern, Entries.Types.Normal);
+      }
+      pattern = project.coder.emitReferencePattern(project.nodePointerEntries, name);
+      state.pointers.add(name);
     }
-    const node = project.nodeEntries.get(name);
-    if (node) {
-      project.nodePointerEntries.add(node.identity, name, node.pattern, Entries.Types.Normal);
+  } else if (symbol.value === Parser.Symbols.Token) {
+    const name = node.fragment.data;
+    const token = project.tokenEntries.get(name);
+    if (!token) {
+      project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
+    } else {
+      pattern = project.coder.emitStringPattern([token.identity]);
     }
-    state.pointers.add(name);
-    return project.coder.emitReferencePattern(project.nodePointerEntries, name);
-  }
-  const token = project.tokenEntries.get(name);
-  if (!token) {
-    project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
-  } else {
-    if (token.type !== Entries.Types.Alias) {
-      return project.coder.emitStringPattern([token.identity]);
-    }
+  } else if (symbol.value === Parser.Symbols.AliasToken) {
     project.errors.push(new Core.Error(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE));
+  } else {
+    project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_IDENTIFIER));
   }
-  return void 0;
+  return pattern;
 };
 
 /**
@@ -79,26 +91,31 @@ const resolveNode = (project: Project, node: Core.Node, state: State, symbol: Co
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveSkip = (project: Project, node: Core.Node, state: State, symbol: Core.Record): PatternEntry | undefined => {
-  const name = node.fragment.data;
-  if (symbol.value === Parser.Symbols.Node) {
-    project.errors.push(new Core.Error(node.fragment, Errors.INVALID_NODE_REFERENCE));
-  } else {
-    const token = project.tokenEntries.get(name);
-    if (!token) {
-      project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
+  let pattern;
+  if (symbol.value === Parser.Symbols.AliasToken) {
+    const name = node.fragment.data;
+    if (state.pointers.has(name)) {
+      pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
     } else {
-      if (token.type === Entries.Types.Alias) {
-        if (state.pointers.has(name)) {
-          return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
-        }
-        state.pointers.add(name);
+      const token = project.tokenEntries.get(name);
+      if (!token) {
+        project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
+      } else {
         project.tokenPointerEntries.add(token.identity, name, token.pattern, Entries.Types.Normal);
-        return project.coder.emitReferencePattern(project.tokenPointerEntries, name);
+        pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
+        state.pointers.add(name);
       }
-      project.errors.push(new Core.Error(node.fragment, Errors.INVALID_TOKEN_REFERENCE));
     }
+  } else if (symbol.value === Parser.Symbols.Token) {
+    project.errors.push(new Core.Error(node.fragment, Errors.INVALID_TOKEN_REFERENCE));
+  } else if (symbol.value === Parser.Symbols.Node) {
+    project.errors.push(new Core.Error(node.fragment, Errors.INVALID_NODE_REFERENCE));
+  } else if (symbol.value === Parser.Symbols.AliasNode) {
+    project.errors.push(new Core.Error(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE));
+  } else {
+    project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_IDENTIFIER));
   }
-  return void 0;
+  return pattern;
 };
 
 /**
@@ -113,12 +130,13 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
   const name = node.fragment.data;
   const symbol = node.table?.get(name);
   if (symbol) {
-    if (state.type === Types.Token) {
-      return resolveToken(project, node, state, symbol);
-    } else if (state.type === Types.Node) {
-      return resolveNode(project, node, state, symbol);
-    } else {
-      return resolveSkip(project, node, state, symbol);
+    switch (state.type) {
+      case Types.Token:
+        return resolveToken(project, node, state, symbol);
+      case Types.Node:
+        return resolveNode(project, node, state, symbol);
+      case Types.Skip:
+        return resolveSkip(project, node, state, symbol);
     }
   }
   project.errors.push(new Core.Error(node.fragment, Errors.UNDEFINED_IDENTIFIER));
