@@ -1,0 +1,40 @@
+/**
+ * A basic JSON parser.
+ */
+skip ' ' | '\t' | '\r' | '\n';
+
+// Lexer
+alias token T_DIGIT     as from '0' to '9';
+alias token T_INTEGER   as '0' | opt '-' & from '1' to '9' & opt repeat T_DIGIT;
+alias token T_FRACTION  as '.' & repeat T_DIGIT;
+alias token T_EXPOENT   as ('E' | 'e') & ('+' | '-') & T_DIGIT;
+alias token T_END       as not (from 'A' to 'Z' | from 'a' to 'z' | '_' | T_DIGIT);
+
+token T_STRING          as '"' & repeat ('\\' then * else not '"' then *) & '"';
+token T_NUMBER          as T_INTEGER & opt T_FRACTION & opt T_EXPOENT;
+token T_OBJECT_OPEN     as '{';
+token T_OBJECT_CLOSE    as '}';
+token T_ARRAY_OPEN      as '[';
+token T_ARRAY_CLOSE     as ']';
+token T_TRUE            as 'true' & T_END;
+token T_FALSE           as 'false' & T_END;
+token T_NULL            as 'null' & T_END;
+token T_COLON           as ':';
+token T_COMMA           as ',';
+
+// Parser
+alias node OBJECT_ELEMENTS  as append (PROPERTY & VALUE & opt (T_COMMA & place next OBJECT_ELEMENTS));
+alias node ARRAY_ELEMENTS   as VALUE & opt (T_COMMA & place next ARRAY_ELEMENTS);
+
+alias node<201> STRING      as append T_STRING;
+alias node<202> NUMBER      as append T_NUMBER;
+alias node<203> OBJECT      as T_OBJECT_OPEN & opt append OBJECT_ELEMENTS & T_OBJECT_CLOSE;
+alias node<204> ARRAY       as T_ARRAY_OPEN & opt append ARRAY_ELEMENTS & T_ARRAY_CLOSE;
+alias node<205> TRUE        as append T_TRUE;
+alias node<206> FALSE       as append T_FALSE;
+alias node<207> NULL        as append T_NULL;
+
+alias node<208> PROPERTY    as T_STRING & T_COLON;
+alias node<209> VALUE       as STRING | NUMBER | OBJECT | ARRAY | TRUE | FALSE | NULL;
+
+node<200> DOCUMENT  as OBJECT;

@@ -1,0 +1,34 @@
+{
+  "field1": "value",
+  "field2": false,
+  "field3": 0,
+  "field4": {
+    "subfield1": "sub value",
+    "subfield2": true,
+    "subfield3": 1,
+    "subfield4": {},
+    "subfield5": []
+  },
+  "field5": [
+    {
+      "subfield1": "sub value 1",
+      "subfield2": null,
+      "subfield3": 2,
+      "subfield4": {},
+      "subfield5": []
+    },
+    {
+      "subfield1": "sub value 2",
+      "subfield2": null,
+      "subfield3": 3,
+      "subfield4": {},
+      "subfield5": []
+    },
+    123456789,
+    0.0123456789,
+    0E+1,
+    1E-2,
+    2e+1,
+    3e-2
+  ]
+}
