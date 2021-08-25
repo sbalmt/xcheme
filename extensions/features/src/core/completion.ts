@@ -45,9 +45,8 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
     const list = [];
     for (const name of table.names) {
       const record = table.get(name)!;
-      const label = record.value === Lang.Parser.Symbols.Node ? 'node' : 'token';
       if (types.includes(record.value as Lang.Parser.Symbols)) {
-        const item = Items.getItem(name, `Insert a ${label} reference.`, {
+        const item = Items.getItem(name, `Insert a the reference.`, {
           kind: VSCode.CompletionItemKind.Reference
         });
         list.push(item);
@@ -64,11 +63,13 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    */
   #getSymbolFilters(tokens: Core.Token[], offset: number): Lang.Parser.Symbols[] {
     for (let index = offset - 1; index >= 0; --index) {
-      if (tokens[index].value === Lang.Lexer.Tokens.Token) {
-        return [Lang.Parser.Symbols.Token];
-      }
-      if (tokens[index].value === Lang.Lexer.Tokens.Node) {
-        return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.Node];
+      switch (tokens[index].value) {
+        case Lang.Lexer.Tokens.Skip:
+          return [Lang.Parser.Symbols.AliasToken];
+        case Lang.Lexer.Tokens.Token:
+          return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.AliasToken];
+        case Lang.Lexer.Tokens.Node:
+          return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.Node, Lang.Parser.Symbols.AliasNode];
       }
     }
     return [];

@@ -11,12 +11,13 @@ const errorMessages = {
   [Lang.Errors.UNEXPECTED_TOKEN]: 'Unexpected token.',
   [Lang.Errors.UNEXPECTED_SYNTAX]: 'Unexpected syntax.',
   [Lang.Errors.UNEXPECTED_NODE]: 'Unexpected node.',
+  [Lang.Errors.UNDEFINED_IDENTIFIER]: 'Undefined identifiers cannot be referenced.',
+  [Lang.Errors.UNRESOLVED_IDENTIFIER]: 'Unresolved identifiers cannot be referenced.',
   [Lang.Errors.INVALID_NODE_REFERENCE]: 'Node references cannot be in use here.',
   [Lang.Errors.INVALID_TOKEN_REFERENCE]: 'Token references cannot be in use here.',
   [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: 'References for an alias node cannot be in use here.',
   [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]: 'References for an alias token cannot be in use here.',
-  [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]: 'Token reference is not resolved yet.',
-  [Lang.Errors.UNDEFINED_IDENTIFIER]: 'Undefined identifiers cannot be referenced.'
+  [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]: 'Token reference is not resolved yet.'
 };
 
 /**
