@@ -41,11 +41,11 @@ export const consumeNodes = (node: Core.Node, project: Project): boolean => {
         case Parser.Nodes.Token:
           state = Token.consume(project, current, identity, pointer, counter, false);
           break;
-        case Parser.Nodes.AliasToken:
-          state = Token.consume(project, current, identity, pointer, counter, true);
-          break;
         case Parser.Nodes.Node:
           state = Node.consume(project, current, identity, pointer, counter, false);
+          break;
+        case Parser.Nodes.AliasToken:
+          state = Token.consume(project, current, identity, pointer, counter, true);
           break;
         case Parser.Nodes.AliasNode:
           state = Node.consume(project, current, identity, pointer, counter, true);

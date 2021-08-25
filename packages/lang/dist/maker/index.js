@@ -35,16 +35,16 @@ const consumeNodes = (node, project) => {
         else {
             const identity = getIdentity(current, counter);
             switch (node.value) {
-                case 233 /* Token */:
+                case 232 /* Token */:
                     state = Token.consume(project, current, identity, pointer, counter, false);
                     break;
-                case 235 /* AliasToken */:
-                    state = Token.consume(project, current, identity, pointer, counter, true);
-                    break;
-                case 232 /* Node */:
+                case 233 /* Node */:
                     state = Node.consume(project, current, identity, pointer, counter, false);
                     break;
-                case 234 /* AliasNode */:
+                case 234 /* AliasToken */:
+                    state = Token.consume(project, current, identity, pointer, counter, true);
+                    break;
+                case 235 /* AliasNode */:
                     state = Node.consume(project, current, identity, pointer, counter, true);
                     break;
                 default:

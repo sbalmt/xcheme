@@ -14,7 +14,7 @@ const Parser = require("../../parser");
  */
 const resolveToken = (project, node, state, symbol) => {
     let pattern;
-    if (symbol.value === 300 /* Token */ || symbol.value === 301 /* AliasToken */) {
+    if (symbol.value === 300 /* Token */ || symbol.value === 303 /* AliasToken */) {
         const name = node.fragment.data;
         if (state.pointers.has(name)) {
             pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
@@ -28,10 +28,10 @@ const resolveToken = (project, node, state, symbol) => {
             state.pointers.add(name);
         }
     }
-    else if (symbol.value === 302 /* Node */) {
+    else if (symbol.value === 301 /* Node */) {
         project.errors.push(new Core.Error(node.fragment, 4102 /* INVALID_NODE_REFERENCE */));
     }
-    else if (symbol.value === 303 /* AliasNode */) {
+    else if (symbol.value === 302 /* AliasNode */) {
         project.errors.push(new Core.Error(node.fragment, 4104 /* INVALID_ALIAS_NODE_REFERENCE */));
     }
     else {
@@ -50,7 +50,7 @@ const resolveToken = (project, node, state, symbol) => {
  */
 const resolveNode = (project, node, state, symbol) => {
     let pattern;
-    if (symbol.value === 302 /* Node */ || symbol.value === 303 /* AliasNode */) {
+    if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
         const name = node.fragment.data;
         if (state.pointers.has(name)) {
             pattern = project.coder.emitReferencePattern(project.nodePointerEntries, name);
@@ -74,7 +74,7 @@ const resolveNode = (project, node, state, symbol) => {
             pattern = project.coder.emitStringPattern([token.identity]);
         }
     }
-    else if (symbol.value === 301 /* AliasToken */) {
+    else if (symbol.value === 303 /* AliasToken */) {
         project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_ALIAS_TOKEN_REFERENCE */));
     }
     else {
@@ -93,7 +93,7 @@ const resolveNode = (project, node, state, symbol) => {
  */
 const resolveSkip = (project, node, state, symbol) => {
     let pattern;
-    if (symbol.value === 301 /* AliasToken */) {
+    if (symbol.value === 303 /* AliasToken */) {
         const name = node.fragment.data;
         if (state.pointers.has(name)) {
             pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
@@ -113,10 +113,10 @@ const resolveSkip = (project, node, state, symbol) => {
     else if (symbol.value === 300 /* Token */) {
         project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_TOKEN_REFERENCE */));
     }
-    else if (symbol.value === 302 /* Node */) {
+    else if (symbol.value === 301 /* Node */) {
         project.errors.push(new Core.Error(node.fragment, 4102 /* INVALID_NODE_REFERENCE */));
     }
-    else if (symbol.value === 303 /* AliasNode */) {
+    else if (symbol.value === 302 /* AliasNode */) {
         project.errors.push(new Core.Error(node.fragment, 4104 /* INVALID_ALIAS_NODE_REFERENCE */));
     }
     else {

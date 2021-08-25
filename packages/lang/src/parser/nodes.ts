@@ -34,8 +34,8 @@ export const enum Nodes {
   Has,
   Set,
   Skip,
-  Node,
   Token,
-  AliasNode,
-  AliasToken
+  Node,
+  AliasToken,
+  AliasNode
 }

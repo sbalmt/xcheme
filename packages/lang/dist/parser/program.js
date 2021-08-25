@@ -41,19 +41,19 @@ const skip = new Core.SetValueRoute(231 /* Skip */, expression, 125 /* Skip */);
 /**
  * Token directive route.
  */
-const token = new Core.SetValueRoute(233 /* Token */, new directive_1.default(300 /* Token */, identity, expression), 126 /* Token */);
+const token = new Core.SetValueRoute(232 /* Token */, new directive_1.default(300 /* Token */, identity, expression), 126 /* Token */);
 /**
  * Node directive route.
  */
-const node = new Core.SetValueRoute(232 /* Node */, new directive_1.default(302 /* Node */, identity, expression), 127 /* Node */);
+const node = new Core.SetValueRoute(233 /* Node */, new directive_1.default(301 /* Node */, identity, expression), 127 /* Node */);
 /**
  * Alias token directive route.
  */
-const aliasToken = new Core.SetValueRoute(235 /* AliasToken */, new directive_1.default(301 /* AliasToken */, identity, expression), 128 /* Alias */, 126 /* Token */);
+const aliasToken = new Core.SetValueRoute(234 /* AliasToken */, new directive_1.default(303 /* AliasToken */, identity, expression), 128 /* Alias */, 126 /* Token */);
 /**
  * Alias node directive route.
  */
-const aliasNode = new Core.SetValueRoute(234 /* AliasNode */, new directive_1.default(303 /* AliasNode */, identity, expression), 128 /* Alias */, 127 /* Node */);
+const aliasNode = new Core.SetValueRoute(235 /* AliasNode */, new directive_1.default(302 /* AliasNode */, identity, expression), 128 /* Alias */, 127 /* Node */);
 /**
  * Main parser pattern.
  */
