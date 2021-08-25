@@ -76,19 +76,6 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   }
 
   /**
-   * Get the token index that corresponds to the specified position in the given document.
-   * @param tokens Input tokens.
-   * @param document Input document.
-   * @param position Position in the document.
-   * @returns Returns the corresponding token index.
-   */
-  #getTokenIndex(tokens: Core.Token[], document: VSCode.TextDocument, position: VSCode.Position): number {
-    const offset = document.offsetAt(position);
-    const index = tokens.findIndex((token) => token.fragment.end >= offset) - 1;
-    return index < 0 ? tokens.length - 1 : index;
-  }
-
-  /**
    * Provide completion items for the given position and document.
    * @param document Input document.
    * @param position Position in the document.
@@ -98,7 +85,8 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
     const context = Analysis.consumeDocument(document);
     const tokens = context.tokens;
     if (tokens.length > 0) {
-      const index = this.#getTokenIndex(tokens, document, position);
+      const range = Analysis.tokenizeDocumentRange(document, document.lineAt(0).range.start, position);
+      const index = range.tokens.length - 1;
       switch (tokens[index].value) {
         case Lang.Lexer.Tokens.Skip:
           return Items.operandList;
