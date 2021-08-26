@@ -63,8 +63,8 @@ const tokens = [
   // Syntax symbols
   ...[
     { name: ';', value: Lexer.Tokens.Semicolon },
-    { name: '(', value: Lexer.Tokens.OpenParentheses },
-    { name: ')', value: Lexer.Tokens.CloseParentheses },
+    { name: '(', value: Lexer.Tokens.OpenParenthesis },
+    { name: ')', value: Lexer.Tokens.CloseParenthesis },
     { name: '<', value: Lexer.Tokens.OpenChevron },
     { name: '>', value: Lexer.Tokens.CloseChevron }
   ]

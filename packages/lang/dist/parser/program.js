@@ -25,7 +25,7 @@ const generalOperands = new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* 
 /**
  * Group expression pattern.
  */
-const groupExpression = new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(131 /* OpenParentheses */), new Core.RunFlowPattern(() => expression), new Core.ExpectUnitPattern(132 /* CloseParentheses */)));
+const groupExpression = new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(131 /* OpenParenthesis */), new Core.RunFlowPattern(() => expression), new Core.ExpectUnitPattern(132 /* CloseParenthesis */)));
 /**
  * Condition expression pattern.
  */

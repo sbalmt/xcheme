@@ -123,7 +123,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lang.Lexer.Tokens.Error:
         case Lang.Lexer.Tokens.Has:
         case Lang.Lexer.Tokens.Set:
-        case Lang.Lexer.Tokens.OpenParentheses:
+        case Lang.Lexer.Tokens.OpenParenthesis:
           return [
             ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, index)),
             ...Items.operandList,
@@ -143,7 +143,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lang.Lexer.Tokens.To:
         case Lang.Lexer.Tokens.String:
         case Lang.Lexer.Tokens.Any:
-        case Lang.Lexer.Tokens.CloseParentheses:
+        case Lang.Lexer.Tokens.CloseParenthesis:
           return Items.binaryOperatorList;
       }
     }

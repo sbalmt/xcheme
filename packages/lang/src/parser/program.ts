@@ -85,9 +85,9 @@ const generalOperands = new Core.AppendNodePattern(
 const groupExpression = new Core.PlaceNodePattern(
   Core.Nodes.Right,
   new Core.ExpectFlowPattern(
-    new Core.ExpectUnitPattern(Lexer.Tokens.OpenParentheses),
+    new Core.ExpectUnitPattern(Lexer.Tokens.OpenParenthesis),
     new Core.RunFlowPattern(() => expression),
-    new Core.ExpectUnitPattern(Lexer.Tokens.CloseParentheses)
+    new Core.ExpectUnitPattern(Lexer.Tokens.CloseParenthesis)
   )
 );
 

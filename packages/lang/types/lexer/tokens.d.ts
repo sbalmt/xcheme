@@ -33,8 +33,8 @@ export declare const enum Tokens {
     Alias = 128,
     As = 129,
     Semicolon = 130,
-    OpenParentheses = 131,
-    CloseParentheses = 132,
+    OpenParenthesis = 131,
+    CloseParenthesis = 132,
     OpenChevron = 133,
     CloseChevron = 134
 }

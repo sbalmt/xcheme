@@ -92,8 +92,8 @@ const keywordsAndSymbols = new Core.MapFlowPattern(
   new Core.SetValueRoute(Tokens.Or, '|'),
   new Core.SetValueRoute(Tokens.And, '&'),
   new Core.SetValueRoute(Tokens.Semicolon, ';'),
-  new Core.SetValueRoute(Tokens.OpenParentheses, '('),
-  new Core.SetValueRoute(Tokens.CloseParentheses, ')'),
+  new Core.SetValueRoute(Tokens.OpenParenthesis, '('),
+  new Core.SetValueRoute(Tokens.CloseParenthesis, ')'),
   new Core.SetValueRoute(Tokens.OpenChevron, '<'),
   new Core.SetValueRoute(Tokens.CloseChevron, '>')
 );
