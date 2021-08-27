@@ -11,48 +11,48 @@ test("Consume expected 'OR' rule", () => {
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
+  const directive = context.node.next!;
+  expect(directive).toBeDefined();
+  expect(directive.value).toBe(Parser.Nodes.Skip);
+  expect(directive.left).toBeUndefined();
+  expect(directive.right).toBeDefined();
+  expect(directive.next).toBeUndefined();
 
-  const expr2 = stmt.right!;
-  expect(expr2).toBeDefined();
-  expect(expr2.value).toBe(Parser.Nodes.Or);
-  expect(expr2.left).toBeDefined();
-  expect(expr2.right).toBeDefined();
-  expect(expr2.next).toBeUndefined();
+  const expression2 = directive.right!;
+  expect(expression2).toBeDefined();
+  expect(expression2.value).toBe(Parser.Nodes.Or);
+  expect(expression2.left).toBeDefined();
+  expect(expression2.right).toBeDefined();
+  expect(expression2.next).toBeUndefined();
 
-  const expr1 = expr2.left!;
-  expect(expr1).toBeDefined();
-  expect(expr1.value).toBe(Parser.Nodes.Or);
-  expect(expr1.left).toBeDefined();
-  expect(expr1.right).toBeDefined();
-  expect(expr1.next).toBeUndefined();
+  const expression1 = expression2.left!;
+  expect(expression1).toBeDefined();
+  expect(expression1.value).toBe(Parser.Nodes.Or);
+  expect(expression1.left).toBeDefined();
+  expect(expression1.right).toBeDefined();
+  expect(expression1.next).toBeUndefined();
 
-  const ref1 = expr1.left!;
-  expect(ref1).toBeDefined();
-  expect(ref1.value).toBe(Parser.Nodes.Reference);
-  expect(ref1.fragment.data).toBe('REF1');
-  expect(ref1.left).toBeUndefined();
-  expect(ref1.right).toBeUndefined();
-  expect(ref1.next).toBeUndefined();
+  const reference1 = expression1.left!;
+  expect(reference1).toBeDefined();
+  expect(reference1.value).toBe(Parser.Nodes.Reference);
+  expect(reference1.fragment.data).toBe('REF1');
+  expect(reference1.left).toBeUndefined();
+  expect(reference1.right).toBeUndefined();
+  expect(reference1.next).toBeUndefined();
 
-  const ref2 = expr1.right!;
-  expect(ref2).toBeDefined();
-  expect(ref2.value).toBe(Parser.Nodes.Reference);
-  expect(ref2.fragment.data).toBe('REF2');
-  expect(ref2.left).toBeUndefined();
-  expect(ref2.right).toBeUndefined();
-  expect(ref2.next).toBeUndefined();
+  const reference2 = expression1.right!;
+  expect(reference2).toBeDefined();
+  expect(reference2.value).toBe(Parser.Nodes.Reference);
+  expect(reference2.fragment.data).toBe('REF2');
+  expect(reference2.left).toBeUndefined();
+  expect(reference2.right).toBeUndefined();
+  expect(reference2.next).toBeUndefined();
 
-  const ref3 = expr2.right!;
-  expect(ref3).toBeDefined();
-  expect(ref3.value).toBe(Parser.Nodes.Reference);
-  expect(ref3.fragment.data).toBe('REF3');
-  expect(ref3.left).toBeUndefined();
-  expect(ref3.right).toBeUndefined();
-  expect(ref3.next).toBeUndefined();
+  const reference3 = expression2.right!;
+  expect(reference3).toBeDefined();
+  expect(reference3.value).toBe(Parser.Nodes.Reference);
+  expect(reference3.fragment.data).toBe('REF3');
+  expect(reference3.left).toBeUndefined();
+  expect(reference3.right).toBeUndefined();
+  expect(reference3.next).toBeUndefined();
 });

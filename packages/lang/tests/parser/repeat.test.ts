@@ -11,25 +11,25 @@ test("Consume expected 'REPEAT' rule", () => {
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
+  const directive = context.node.next!;
+  expect(directive).toBeDefined();
+  expect(directive.value).toBe(Parser.Nodes.Skip);
+  expect(directive.left).toBeUndefined();
+  expect(directive.right).toBeDefined();
+  expect(directive.next).toBeUndefined();
 
-  const expr = stmt.right!;
-  expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.Repeat);
-  expect(expr.left).toBeUndefined();
-  expect(expr.right).toBeDefined();
-  expect(expr.next).toBeUndefined();
+  const expression = directive.right!;
+  expect(expression).toBeDefined();
+  expect(expression.value).toBe(Parser.Nodes.Repeat);
+  expect(expression.left).toBeUndefined();
+  expect(expression.right).toBeDefined();
+  expect(expression.next).toBeUndefined();
 
-  const ref = expr.right!;
-  expect(ref).toBeDefined();
-  expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('REF');
-  expect(ref.left).toBeUndefined();
-  expect(ref.right).toBeUndefined();
-  expect(ref.next).toBeUndefined();
+  const reference = expression.right!;
+  expect(reference).toBeDefined();
+  expect(reference.value).toBe(Parser.Nodes.Reference);
+  expect(reference.fragment.data).toBe('REF');
+  expect(reference.left).toBeUndefined();
+  expect(reference.right).toBeUndefined();
+  expect(reference.next).toBeUndefined();
 });

@@ -11,35 +11,35 @@ test("Consume expected 'THEN' rule (half condition)", () => {
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
+  const directive = context.node.next!;
+  expect(directive).toBeDefined();
+  expect(directive.value).toBe(Parser.Nodes.Skip);
+  expect(directive.left).toBeUndefined();
+  expect(directive.right).toBeDefined();
+  expect(directive.next).toBeUndefined();
 
-  const expr = stmt.right!;
-  expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.Then);
-  expect(expr.left).toBeDefined();
-  expect(expr.right).toBeDefined();
-  expect(expr.next).toBeUndefined();
+  const expression = directive.right!;
+  expect(expression).toBeDefined();
+  expect(expression.value).toBe(Parser.Nodes.Then);
+  expect(expression.left).toBeDefined();
+  expect(expression.right).toBeDefined();
+  expect(expression.next).toBeUndefined();
 
-  const cond = expr.left!;
-  expect(cond).toBeDefined();
-  expect(cond.value).toBe(Parser.Nodes.Reference);
-  expect(cond.fragment.data).toBe('REF');
-  expect(cond.left).toBeUndefined();
-  expect(cond.right).toBeUndefined();
-  expect(cond.next).toBeUndefined();
+  const condition = expression.left!;
+  expect(condition).toBeDefined();
+  expect(condition.value).toBe(Parser.Nodes.Reference);
+  expect(condition.fragment.data).toBe('REF');
+  expect(condition.left).toBeUndefined();
+  expect(condition.right).toBeUndefined();
+  expect(condition.next).toBeUndefined();
 
-  const ref = expr.right!;
-  expect(ref).toBeDefined();
-  expect(ref.value).toBe(Parser.Nodes.Reference);
-  expect(ref.fragment.data).toBe('TRUE');
-  expect(ref.left).toBeUndefined();
-  expect(ref.right).toBeUndefined();
-  expect(ref.next).toBeUndefined();
+  const reference = expression.right!;
+  expect(reference).toBeDefined();
+  expect(reference.value).toBe(Parser.Nodes.Reference);
+  expect(reference.fragment.data).toBe('TRUE');
+  expect(reference.left).toBeUndefined();
+  expect(reference.right).toBeUndefined();
+  expect(reference.next).toBeUndefined();
 });
 
 test("Consume expected 'THEN' rule with 'ELSE' rule (full condition)", () => {
@@ -51,48 +51,48 @@ test("Consume expected 'THEN' rule with 'ELSE' rule (full condition)", () => {
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
+  const directive = context.node.next!;
+  expect(directive).toBeDefined();
+  expect(directive.value).toBe(Parser.Nodes.Skip);
+  expect(directive.left).toBeUndefined();
+  expect(directive.right).toBeDefined();
+  expect(directive.next).toBeUndefined();
 
-  const expr = stmt.right!;
-  expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.Then);
-  expect(expr.left).toBeDefined();
-  expect(expr.right).toBeDefined();
-  expect(expr.next).toBeUndefined();
+  const expression = directive.right!;
+  expect(expression).toBeDefined();
+  expect(expression.value).toBe(Parser.Nodes.Then);
+  expect(expression.left).toBeDefined();
+  expect(expression.right).toBeDefined();
+  expect(expression.next).toBeUndefined();
 
-  const cond = expr.left!;
-  expect(cond).toBeDefined();
-  expect(cond.value).toBe(Parser.Nodes.Reference);
-  expect(cond.fragment.data).toBe('REF');
-  expect(cond.left).toBeUndefined();
-  expect(cond.right).toBeUndefined();
-  expect(cond.next).toBeUndefined();
+  const condition = expression.left!;
+  expect(condition).toBeDefined();
+  expect(condition.value).toBe(Parser.Nodes.Reference);
+  expect(condition.fragment.data).toBe('REF');
+  expect(condition.left).toBeUndefined();
+  expect(condition.right).toBeUndefined();
+  expect(condition.next).toBeUndefined();
 
-  const options = expr.right!;
+  const options = expression.right!;
   expect(options).toBeDefined();
   expect(options.value).toBe(Parser.Nodes.Else);
   expect(options.left).toBeDefined();
   expect(options.right).toBeDefined();
   expect(options.next).toBeUndefined();
 
-  const ref1 = options.left!;
-  expect(ref1).toBeDefined();
-  expect(ref1.value).toBe(Parser.Nodes.Reference);
-  expect(ref1.fragment.data).toBe('TRUE');
-  expect(ref1.left).toBeUndefined();
-  expect(ref1.right).toBeUndefined();
-  expect(ref1.next).toBeUndefined();
+  const reference1 = options.left!;
+  expect(reference1).toBeDefined();
+  expect(reference1.value).toBe(Parser.Nodes.Reference);
+  expect(reference1.fragment.data).toBe('TRUE');
+  expect(reference1.left).toBeUndefined();
+  expect(reference1.right).toBeUndefined();
+  expect(reference1.next).toBeUndefined();
 
-  const ref2 = options.right!;
-  expect(ref2).toBeDefined();
-  expect(ref2.value).toBe(Parser.Nodes.Reference);
-  expect(ref2.fragment.data).toBe('FALSE');
-  expect(ref2.left).toBeUndefined();
-  expect(ref2.right).toBeUndefined();
-  expect(ref2.next).toBeUndefined();
+  const reference2 = options.right!;
+  expect(reference2).toBeDefined();
+  expect(reference2.value).toBe(Parser.Nodes.Reference);
+  expect(reference2.fragment.data).toBe('FALSE');
+  expect(reference2.left).toBeUndefined();
+  expect(reference2.right).toBeUndefined();
+  expect(reference2.next).toBeUndefined();
 });

@@ -11,22 +11,22 @@ test("Consume expected 'FROM'...'TO' rule", () => {
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
+  const directive = context.node.next!;
+  expect(directive).toBeDefined();
+  expect(directive.value).toBe(Parser.Nodes.Skip);
+  expect(directive.left).toBeUndefined();
+  expect(directive.right).toBeDefined();
+  expect(directive.next).toBeUndefined();
 
-  const expr = stmt.right!;
-  expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.Range);
+  const expression = directive.right!;
+  expect(expression).toBeDefined();
+  expect(expression.value).toBe(Parser.Nodes.Range);
 
-  expect(expr.left).toBeDefined();
-  expect(expr.right).toBeDefined();
-  expect(expr.next).toBeUndefined();
+  expect(expression.left).toBeDefined();
+  expect(expression.right).toBeDefined();
+  expect(expression.next).toBeUndefined();
 
-  const from = expr.left!;
+  const from = expression.left!;
   expect(from).toBeDefined();
   expect(from.value).toBe(Parser.Nodes.String);
   expect(from.fragment.data).toBe("'0'");
@@ -34,7 +34,7 @@ test("Consume expected 'FROM'...'TO' rule", () => {
   expect(from.right).toBeUndefined();
   expect(from.next).toBeUndefined();
 
-  const to = expr.right!;
+  const to = expression.right!;
   expect(to).toBeDefined();
   expect(to.value).toBe(Parser.Nodes.String);
   expect(to.fragment.data).toBe("'9'");

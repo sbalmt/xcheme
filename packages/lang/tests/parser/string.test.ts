@@ -11,18 +11,18 @@ test('Consume expected string', () => {
   expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
 
   // Check the resulting nodes.
-  const stmt = context.node.next!;
-  expect(stmt).toBeDefined();
-  expect(stmt.value).toBe(Parser.Nodes.Skip);
-  expect(stmt.left).toBeUndefined();
-  expect(stmt.right).toBeDefined();
-  expect(stmt.next).toBeUndefined();
+  const directive = context.node.next!;
+  expect(directive).toBeDefined();
+  expect(directive.value).toBe(Parser.Nodes.Skip);
+  expect(directive.left).toBeUndefined();
+  expect(directive.right).toBeDefined();
+  expect(directive.next).toBeUndefined();
 
-  const expr = stmt.right!;
-  expect(expr).toBeDefined();
-  expect(expr.value).toBe(Parser.Nodes.String);
-  expect(expr.fragment.data).toBe("'test'");
-  expect(expr.left).toBeUndefined();
-  expect(expr.right).toBeUndefined();
-  expect(expr.next).toBeUndefined();
+  const expression = directive.right!;
+  expect(expression).toBeDefined();
+  expect(expression.value).toBe(Parser.Nodes.String);
+  expect(expression.fragment.data).toBe("'test'");
+  expect(expression.left).toBeUndefined();
+  expect(expression.right).toBeUndefined();
+  expect(expression.next).toBeUndefined();
 });
