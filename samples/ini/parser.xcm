@@ -1,0 +1,26 @@
+/**
+ * A basic INI parser.
+ */
+skip ' ' | '\t' | '\r' | '\n';
+skip ';' & opt repeat (not '\n' then *);
+
+// Lexer
+alias token T_ALPHA     as from 'A' to 'Z' | from 'a' to 'z';
+alias token T_DIGIT     as from '0' to '9';
+alias token T_EXTRA     as '_';
+
+token T_DQ_STRING       as '"' & repeat ('\\' then * else not '"' then *) & '"';
+token T_SQ_STRING       as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
+token T_IDENTIFIER      as repeat (T_ALPHA | T_DIGIT | T_EXTRA);
+token T_SECTION_OPEN    as '[';
+token T_SECTION_CLOSE   as ']';
+token T_ASSIGNMENT      as '=';
+
+// Parser
+alias node LITERAL  as append T_IDENTIFIER;
+alias node STRING   as append (T_DQ_STRING | T_SQ_STRING);
+alias node ENTRY    as append (T_IDENTIFIER & T_ASSIGNMENT & (LITERAL | STRING));
+alias node ENTRIES  as ENTRY & opt place next ENTRIES;
+
+node<200> SECTION   as T_SECTION_OPEN & append (T_IDENTIFIER & T_SECTION_CLOSE & opt ENTRIES);
+node<201> GLOBAL    as ENTRY;
