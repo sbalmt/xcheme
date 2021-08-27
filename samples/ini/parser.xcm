@@ -5,13 +5,9 @@ skip ' ' | '\t' | '\r' | '\n';
 skip ';' & opt repeat (not '\n' then *);
 
 // Lexer
-alias token T_ALPHA     as from 'A' to 'Z' | from 'a' to 'z';
-alias token T_DIGIT     as from '0' to '9';
-alias token T_EXTRA     as '_';
-
 token T_DQ_STRING       as '"' & repeat ('\\' then * else not '"' then *) & '"';
 token T_SQ_STRING       as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
-token T_IDENTIFIER      as repeat (T_ALPHA | T_DIGIT | T_EXTRA);
+token T_IDENTIFIER      as repeat (not (' ' | '\t' | '\r' | '\n' | '=' | '[' | ']') then *);
 token T_SECTION_OPEN    as '[';
 token T_SECTION_CLOSE   as ']';
 token T_ASSIGNMENT      as '=';
