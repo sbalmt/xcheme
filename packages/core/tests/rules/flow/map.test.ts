@@ -1,12 +1,12 @@
-import { Context, TextSource, MapFlowPattern, ChooseFlowPattern, RangeUnitPattern, Route } from '../../../src/index';
+import { Context, TextSource, MapFlowPattern, ChooseFlowPattern, RangeUnitPattern, FlowRoute } from '../../../src/index';
 
 /**
  * It can consume routes that contain patterns and prefixes indicating which flow should be triggered.
  */
 const pattern = new MapFlowPattern(
-  new Route(new RangeUnitPattern('0', '7'), '0'),
-  new Route(new RangeUnitPattern('0', '1'), '0', 'b'),
-  new Route(new ChooseFlowPattern(new RangeUnitPattern('0', '9'), new RangeUnitPattern('a', 'f')), '0', 'x')
+  new FlowRoute(new RangeUnitPattern('0', '7'), '0'),
+  new FlowRoute(new RangeUnitPattern('0', '1'), '0', 'b'),
+  new FlowRoute(new ChooseFlowPattern(new RangeUnitPattern('0', '9'), new RangeUnitPattern('a', 'f')), '0', 'x')
 );
 
 test('Consume success', () => {

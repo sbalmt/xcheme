@@ -10,7 +10,7 @@ export default class Route extends Base {
      * Default constructor.
      * @param value Node value.
      * @param output Output node destination.
-     * @param first Route pattern or the first unit.
+     * @param first Route pattern or first route unit.
      * @param units Route units.
      */
     constructor(value: string | number, output: Nodes, first: Pattern | string | number, ...units: (string | number)[]);

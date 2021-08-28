@@ -115,7 +115,7 @@ class Map extends pattern_1.default {
                 current = current.right;
             }
             else {
-                if (current.pattern) {
+                if (current.pattern !== void 0) {
                     source.discardState();
                     return current;
                 }
@@ -126,6 +126,21 @@ class Map extends pattern_1.default {
         source.restoreState();
         source.discardState();
         return void 0;
+    }
+    /**
+     * Consume the given source and get the longest consumption node.
+     * @param source Data source.
+     * @returns Returns the consumption node or undefined when the given source doesn't match any route.
+     */
+    #getLongestConsumptionNode(source) {
+        let current = this.#root;
+        let longest;
+        while ((current = this.#findNode(source, current)) !== void 0) {
+            longest = current;
+            current = current.next;
+            source.nextState();
+        }
+        return longest;
     }
     /**
      * Default constructor.
@@ -146,15 +161,12 @@ class Map extends pattern_1.default {
      * @returns Returns true when the source was consumed, otherwise returns false.
      */
     consume(source) {
-        let current = this.#root;
-        let longest;
-        while ((current = this.#findNode(source, current)) !== void 0) {
-            longest = current;
-            current = current.next;
-            source.nextState();
-        }
-        if (longest !== void 0) {
-            return longest.pattern.consume(source);
+        const node = this.#getLongestConsumptionNode(source);
+        if (node !== void 0) {
+            if (node.pattern) {
+                return node.pattern.consume(source);
+            }
+            return true;
         }
         return false;
     }

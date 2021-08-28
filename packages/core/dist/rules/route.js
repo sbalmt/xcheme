@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * Base of any route used together with routing patterns.
+ * Base of any route for using together with map patterns.
  */
 class Route {
     /**
@@ -15,11 +15,12 @@ class Route {
     /**
      * Default constructor.
      * @param pattern Route pattern.
-     * @param units Route units.
+     * @param first First route unit.
+     * @param units Remaining route units.
      */
-    constructor(pattern, ...units) {
+    constructor(pattern, first, ...units) {
         this.#pattern = pattern;
-        this.#units = units;
+        this.#units = [first, ...units];
     }
     /**
      * Get the route pattern.

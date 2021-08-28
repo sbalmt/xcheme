@@ -12,12 +12,12 @@ export default class Route extends Base {
    * Default constructor.
    * @param value Node value.
    * @param output Output node destination.
-   * @param first Route pattern or the first unit.
+   * @param first Route pattern or first route unit.
    * @param units Route units.
    */
   constructor(value: string | number, output: Nodes, first: Pattern | string | number, ...units: (string | number)[]) {
     if (first instanceof Pattern) {
-      super(new Emit(value, output, first), ...units);
+      super(new Emit(value, output, first), units[0], ...units.splice(1));
     } else {
       super(new Emit(value, output), first, ...units);
     }

@@ -1,9 +1,9 @@
-import { Context, TextSource, MapFlowPattern, EmitErrorRoute, ExpectUnitPattern } from '../../../src/index';
+import { Context, TextSource, MapFlowPattern, UnitRoute } from '../../../src/index';
 
 /**
  * Routes map.
  */
-const pattern = new MapFlowPattern(new EmitErrorRoute(0x1aa, 'a'), new EmitErrorRoute(0x2bb, new ExpectUnitPattern('c'), 'b'));
+const pattern = new MapFlowPattern(new UnitRoute('a'), new UnitRoute('b', 'c'));
 
 test('Consume success', () => {
   const context = new Context('test');
@@ -28,6 +28,9 @@ test('Consume failure', () => {
   expect(pattern.consume(source)).toBeFalsy();
   expect(source.offset).toBe(0);
   expect(source.length).toBe(2);
+
+  // Check the output state.
+  expect(source.output.state).toBe(0);
 });
 
 test('Consume eof', () => {
@@ -38,4 +41,7 @@ test('Consume eof', () => {
   expect(pattern.consume(source)).toBeFalsy();
   expect(source.offset).toBe(0);
   expect(source.length).toBe(0);
+
+  // Check the output state.
+  expect(source.output.state).toBe(0);
 });

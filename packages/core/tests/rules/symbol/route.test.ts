@@ -1,7 +1,7 @@
 import { Context, TextSource, MapFlowPattern, EmitSymbolRoute, ExpectUnitPattern } from '../../../src/index';
 
 /**
- * It can consume routes that contain patterns and prefixes indicating which flow should be triggered.
+ * Routes map.
  */
 const pattern = new MapFlowPattern(
   new EmitSymbolRoute(0x1aa, new ExpectUnitPattern('a'), new ExpectUnitPattern('b'), '1'),

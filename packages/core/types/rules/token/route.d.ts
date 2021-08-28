@@ -7,7 +7,7 @@ export default class Route extends Base {
     /**
      * Default constructor.
      * @param value Token value.
-     * @param first Route pattern or the first unit.
+     * @param first Route pattern or first route unit.
      * @param units Route units.
      */
     constructor(value: string | number, first: Pattern | string | number, ...units: (string | number)[]);

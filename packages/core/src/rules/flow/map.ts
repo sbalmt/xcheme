@@ -14,7 +14,7 @@ type Node = {
   /**
    * Node pattern.
    */
-  pattern?: Pattern;
+  pattern?: Pattern | null;
   /**
    * Left child node.
    */
@@ -138,7 +138,7 @@ export default class Map extends Pattern {
       } else if (diff > 0) {
         current = current.right;
       } else {
-        if (current.pattern) {
+        if (current.pattern !== void 0) {
           source.discardState();
           return current;
         }
@@ -149,6 +149,22 @@ export default class Map extends Pattern {
     source.restoreState();
     source.discardState();
     return void 0;
+  }
+
+  /**
+   * Consume the given source and get the longest consumption node.
+   * @param source Data source.
+   * @returns Returns the consumption node or undefined when the given source doesn't match any route.
+   */
+  #getLongestConsumptionNode(source: Base): Node | undefined {
+    let current = this.#root;
+    let longest;
+    while ((current = this.#findNode(source, current)) !== void 0) {
+      longest = current;
+      current = current.next;
+      source.nextState();
+    }
+    return longest;
   }
 
   /**
@@ -171,15 +187,12 @@ export default class Map extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    let current = this.#root;
-    let longest: Node | undefined;
-    while ((current = this.#findNode(source, current)) !== void 0) {
-      longest = current;
-      current = current.next;
-      source.nextState();
-    }
-    if (longest !== void 0) {
-      return longest.pattern!.consume(source);
+    const node = this.#getLongestConsumptionNode(source);
+    if (node !== void 0) {
+      if (node.pattern) {
+        return node.pattern.consume(source);
+      }
+      return true;
     }
     return false;
   }

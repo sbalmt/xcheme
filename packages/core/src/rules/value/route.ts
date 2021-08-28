@@ -9,12 +9,12 @@ export default class Route extends Base {
   /**
    * Default constructor.
    * @param value New value.
-   * @param first Route pattern or the first unit.
+   * @param first Route pattern or first route unit.
    * @param units Route units.
    */
   constructor(value: string | number, first: Pattern | string | number, ...units: (string | number)[]) {
     if (first instanceof Pattern) {
-      super(new Set(value, first), ...units);
+      super(new Set(value, first), units[0], ...units.slice(1));
     } else {
       super(new Set(value), first, ...units);
     }

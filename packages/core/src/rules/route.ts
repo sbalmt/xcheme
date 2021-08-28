@@ -1,13 +1,13 @@
 import type Pattern from './pattern';
 
 /**
- * Base of any route used together with routing patterns.
+ * Base of any route for using together with map patterns.
  */
 export default class Route {
   /**
    * Route pattern.
    */
-  #pattern: Pattern;
+  #pattern: Pattern | null;
 
   /**
    * Route units.
@@ -17,17 +17,18 @@ export default class Route {
   /**
    * Default constructor.
    * @param pattern Route pattern.
-   * @param units Route units.
+   * @param first First route unit.
+   * @param units Remaining route units.
    */
-  constructor(pattern: Pattern, ...units: (string | number)[]) {
+  constructor(pattern: Pattern | null, first: string | number, ...units: (string | number)[]) {
     this.#pattern = pattern;
-    this.#units = units;
+    this.#units = [first, ...units];
   }
 
   /**
    * Get the route pattern.
    */
-  get pattern(): Pattern {
+  get pattern(): Pattern | null {
     return this.#pattern;
   }
 

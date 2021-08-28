@@ -1,7 +1,7 @@
 import { Context, Nodes, TextSource, MapFlowPattern, EmitNodeRoute, ExpectUnitPattern } from '../../../src/index';
 
 /**
- * It can consume routes that contain patterns and prefixes indicating which flow should be triggered.
+ * Routes map.
  */
 const pattern = new MapFlowPattern(
   new EmitNodeRoute(0x1aa, Nodes.Right, 'a'),

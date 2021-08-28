@@ -11,12 +11,12 @@ class Route extends route_1.default {
      * Default constructor.
      * @param value Symbol value.
      * @param test Symbol pattern.
-     * @param first Route pattern or the first unit.
+     * @param first Route pattern or first route unit.
      * @param units Route units.
      */
     constructor(value, test, first, ...units) {
         if (first instanceof pattern_1.default) {
-            super(new emit_1.default(value, test, first), ...units);
+            super(new emit_1.default(value, test, first), units[0], ...units.splice(1));
         }
         else {
             super(new emit_1.default(value, test), first, ...units);
