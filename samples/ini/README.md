@@ -15,7 +15,7 @@ xcm -s ./samples/ini/parser.xcm -t ./parser.js
 For running the parser instantly:
 
 ```sh
-xcm -s ./samples/ini/parser.xcm -t ./sampes/ini/input.ini --run
+xcm -s ./samples/ini/parser.xcm -t ./samples/ini/input.ini --run
 ```
 
 > Change the option `-t` with another location for parsing another JSON source.
