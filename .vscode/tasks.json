@@ -6,6 +6,7 @@
     {
       "type": "npm",
       "script": "watch",
+      "path": "extensions/features/",
       "problemMatcher": ["$ts-webpack-watch"],
       "isBackground": true,
       "presentation": {

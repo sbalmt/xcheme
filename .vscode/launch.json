@@ -1,0 +1,56 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Run Basics (Extension)",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/basics", "${workspaceFolder}/samples"]
+    },
+    {
+      "type": "extensionHost",
+      "request": "launch",
+      "name": "Run Features (Extension)",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "preLaunchTask": "${defaultBuildTask}",
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/features", "${workspaceFolder}/samples"],
+      "outFiles": ["${workspaceFolder}/extensions/features/dist/**/*.js"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Run CLI",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeArgs": ["--inspect-brk", "bin/xcm.js", "-s", "../../samples/hello/parser.xcm"],
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/packages/cli"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Test Core",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeArgs": ["--inspect-brk", "node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/packages/core"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Test Lang",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeArgs": ["--inspect-brk", "node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/packages/lang"
+    }
+  ]
+}
