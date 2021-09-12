@@ -15,7 +15,7 @@ xcm -s ./samples/hello/parser.xcm -t ./parser.js
 For running the parser instantly:
 
 ```sh
-xcm -s ./samples/hello/parser.xcm -t ./sampes/html/input.txt --run
+xcm -s ./samples/hello/parser.xcm -t ./samples/html/input.txt --run
 ```
 
 > Change the option `-t` with another location for parsing another HTML source.

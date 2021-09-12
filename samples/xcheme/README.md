@@ -15,7 +15,7 @@ xcm -s ./samples/xcheme/parser.xcm -t ./parser.js
 For running the parser instantly:
 
 ```sh
-xcm -s ./samples/xcheme/parser.xcm -t ./sampes/xcheme/parser.xcm --run
+xcm -s ./samples/xcheme/parser.xcm -t ./samples/xcheme/parser.xcm --run
 ```
 
 > Change the option `-t` with another location for parsing another XCHEME source.
