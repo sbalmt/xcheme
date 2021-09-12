@@ -23,7 +23,6 @@ const Range = require("./range");
 const String = require("./string");
 /**
  * Consume the specified input node resolving its expression patterns.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.

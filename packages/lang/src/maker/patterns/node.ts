@@ -1,9 +1,10 @@
 import * as Core from '@xcheme/core';
 
-import * as Entries from '../common/entries';
+import * as Entries from '../../core/entries';
+import * as Directive from '../../optimizer/nodes/directive';
 
-import { Project } from '../common/project';
-import { Pointers, State, Types } from '../common/context';
+import { Project } from '../../core/project';
+import { Pointers, Types } from '../context';
 import { PatternEntry } from '../coder/base';
 
 import * as Expression from './expression';
@@ -11,51 +12,41 @@ import * as Expression from './expression';
 /**
  * Emit a new node entry into the given project.
  * @param project Input project.
- * @param identity Node identity.
- * @param name Node name.
- * @param pattern Node pattern.
  * @param type Node type.
+ * @param name Node name.
+ * @param identity Node identity.
+ * @param pattern Node pattern.
  * @param ref Determines whether or not the node is referenced by another one.
  */
-const emit = (project: Project, identity: number, name: string, pattern: PatternEntry, type: Entries.Types, ref: boolean): void => {
+const emit = (project: Project, type: Entries.Types, name: string, identity: number, pattern: PatternEntry, ref: boolean): void => {
   if (ref) {
     const reference = project.coder.emitReferencePattern(project.nodePointerEntries, name);
-    project.nodePointerEntries.add(identity, name, pattern, Entries.Types.Normal);
-    project.nodeEntries.add(identity, name, reference, type);
+    project.nodePointerEntries.add(Entries.Types.Normal, name, identity, pattern);
+    project.nodeEntries.add(type, name, identity, reference);
   } else {
-    project.nodeEntries.add(identity, name, pattern, type);
+    project.nodeEntries.add(type, name, identity, pattern);
   }
 };
 
 /**
  * Consume the specified input node resolving its 'NODE' pattern.
  * @param project Input project.
- * @param node Input node.
- * @param identity Pattern identity.
+ * @param directive Directive node.
  * @param pointers Initial context pointers.
- * @param counter Initial context counter.
  * @param alias Determines whether or not the node is an alias.
- * @returns Returns the consumption state.
  */
-export const consume = (
-  project: Project,
-  node: Core.Node,
-  identity: number,
-  pointers: Pointers,
-  counter: number,
-  alias: boolean
-): State => {
-  const state = { identity, pointers, counter, type: Types.Node };
-  const entry = Expression.consume(project, node.right!, state);
-  if (entry) {
-    const name = node.fragment.data;
-    const referenced = pointers.has(name);
+export const consume = (project: Project, directive: Directive.Node, pointers: Pointers, alias: boolean): void => {
+  const identity = directive.identity;
+  const state = { type: Types.Node, identity, pointers };
+  const expression = Expression.consume(project, directive.right!, state);
+  if (expression !== void 0) {
+    const identifier = directive.fragment.data;
+    const referenced = pointers.has(identifier);
     if (alias) {
-      emit(project, identity, name, entry, Entries.Types.Alias, referenced);
+      emit(project, Entries.Types.Alias, identifier, identity, expression, referenced);
     } else {
-      const pattern = project.coder.emitNodePattern(identity, Core.Nodes.Right, entry);
-      emit(project, identity, name, pattern, Entries.Types.Normal, referenced);
+      const pattern = project.coder.emitNodePattern(identity, Core.Nodes.Right, expression);
+      emit(project, Entries.Types.Normal, identifier, identity, pattern, referenced);
     }
   }
-  return state;
 };

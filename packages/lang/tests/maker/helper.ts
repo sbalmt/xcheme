@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import { Lexer, Parser, Maker, Errors, Project, BaseCoder } from '../../src/index';
+import { Lexer, Parser, Optimizer, Maker, Errors, Project, BaseCoder } from '../../src/index';
 
 /**
  * Print all errors in the given list.
@@ -37,7 +37,13 @@ export const makeParser = (coder: BaseCoder, text: string): Project => {
   }
   expect(status).toBeTruthy();
 
-  // Consume input nodes.
+  // Consume input nodes and optimize its tree.
+  if (!(status = Optimizer.consumeNodes(context.node, project))) {
+    printErrors(project.errors);
+  }
+  expect(status).toBeTruthy();
+
+  // Consume input nodes and make the output.
   if (!(status = Maker.consumeNodes(context.node, project))) {
     printErrors(project.errors);
   }
@@ -70,8 +76,12 @@ export const makeError = (coder: BaseCoder, text: string, errors: Errors[]): Pro
   }
   expect(status).toBeTruthy();
 
-  // Consume input nodes and check the expected errors.
-  expect(Maker.consumeNodes(context.node, project)).toBeFalsy();
+  // Consume input nodes and optimize its tree.
+  if ((status = Optimizer.consumeNodes(context.node, project))) {
+    status = Maker.consumeNodes(context.node, project);
+  }
+
+  expect(status).toBeFalsy();
   expect(project.errors).toHaveLength(errors.length);
 
   for (const error of project.errors) {

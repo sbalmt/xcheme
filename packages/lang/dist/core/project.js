@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Project = void 0;
-const String = require("./string");
 const Entries = require("./entries");
 /**
  * Store all the project entries, errors and options during the making process.
@@ -46,14 +45,6 @@ class Project {
      */
     #getPatterns(entries) {
         return entries.map((entry) => entry.pattern);
-    }
-    /**
-     * Get an array of routes from the specified aggregator.
-     * @param entries Patterns entry aggregator.
-     * @returns Returns the array of routes.
-     */
-    #getRoutes(entries) {
-        return entries.map((entry) => this.#coder.getRoute(entry.identity, String.extract(entry.name).split('')));
     }
     /**
      * Get an array of pointers from the specified aggregator.
@@ -127,10 +118,7 @@ class Project {
      * Get the resulting lexer.
      */
     get lexer() {
-        const routes = this.#getRoutes(this.#tokenEntries.loosePatterns);
-        return this.#coder.getEntry('Lexer', this.#getPointers(this.#tokenPointerEntries), ...this.#getPatterns(this.#skipEntries.patterns), ...(routes.length > 0
-            ? [this.#coder.emitMapPattern(...routes), ...this.#getPatterns(this.#tokenEntries.patterns)]
-            : this.#getPatterns(this.#tokenEntries.patterns)));
+        return this.#coder.getEntry('Lexer', this.#getPointers(this.#tokenPointerEntries), ...this.#getPatterns(this.#skipEntries.patterns), ...this.#getPatterns(this.#tokenEntries.patterns));
     }
     /**
      * Get the resulting parser.

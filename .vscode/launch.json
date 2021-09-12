@@ -28,9 +28,9 @@
       "name": "Run CLI",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "runtimeArgs": ["--inspect-brk", "bin/xcm.js", "-s", "../../samples/hello/parser.xcm"],
+      "runtimeArgs": ["--inspect-brk", "cli/bin/xcm.js", "-s", "cli/sample.xcm"],
       "skipFiles": ["<node_internals>/**"],
-      "cwd": "${workspaceFolder}/packages/cli"
+      "cwd": "${workspaceFolder}/packages"
     },
     {
       "type": "node",

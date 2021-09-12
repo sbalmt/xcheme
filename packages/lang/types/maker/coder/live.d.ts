@@ -1,5 +1,5 @@
 import * as Core from '@xcheme/core';
-import * as Entries from '../common/entries';
+import * as Entries from '../../core/entries';
 import { Base } from './base';
 /**
  * Pointer entry type.
@@ -28,11 +28,11 @@ export declare class Live extends Base {
     getEntry(name: string, pointers: PointerEntry[], ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new route.
-     * @param value Route value.
      * @param path Route path.
+     * @param value Optional route value.
      * @returns Returns the route.
      */
-    getRoute(value: number, path: (string | number)[]): Core.Route;
+    getRoute(path: (string | number)[], value?: number): Core.Route;
     /**
      * Get a new map pattern.
      * @param routes Map routes.
@@ -191,11 +191,5 @@ export declare class Live extends Base {
      * @returns Returns the pattern.
      */
     emitRangePattern(from: string | number, to: string | number): Core.Pattern;
-    /**
-     * Get a new string pattern.
-     * @param units Input units.
-     * @returns Returns the string pattern.
-     */
-    emitStringPattern(units: (string | number)[]): Core.Pattern;
 }
 export {};

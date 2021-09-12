@@ -17,6 +17,10 @@ export const enum Types {
  */
 export type State = {
   /**
+   * Context type.
+   */
+  type: Types;
+  /**
    * Current identity.
    */
   identity: number;
@@ -24,12 +28,4 @@ export type State = {
    * Context pointers.
    */
   pointers: Pointers;
-  /**
-   * Current counter.
-   */
-  counter: number;
-  /**
-   * Context type.
-   */
-  type: Types;
 };

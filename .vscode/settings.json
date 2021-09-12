@@ -8,5 +8,9 @@
     "out": true,
     "dist": true
   },
-  "typescript.tsc.autoDetect": "off"
+  "typescript.tsc.autoDetect": "off",
+  "cSpell.words": [
+    "mergeable",
+    "Mergeable"
+  ]
 }

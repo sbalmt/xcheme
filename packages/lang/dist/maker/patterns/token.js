@@ -5,47 +5,44 @@ const Expression = require("./expression");
 /**
  * Emit a new token entry into the given project.
  * @param project Input project.
- * @param identity Token identity.
- * @param name Token name.
- * @param pattern Token pattern.
  * @param type Token type.
+ * @param name Token name.
+ * @param identity Token identity.
+ * @param pattern Token pattern.
  * @param ref Determines whether or not the node is referenced by another one.
  */
-const emit = (project, identity, name, pattern, type, ref) => {
+const emit = (project, type, name, identity, pattern, ref) => {
     if (ref) {
         const reference = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
-        project.tokenPointerEntries.add(identity, name, pattern, 0 /* Normal */);
-        project.tokenEntries.add(identity, name, reference, type);
+        project.tokenPointerEntries.add(0 /* Normal */, name, identity, pattern);
+        project.tokenEntries.add(type, name, identity, reference);
     }
     else {
-        project.tokenEntries.add(identity, name, pattern, type);
+        project.tokenEntries.add(type, name, identity, pattern);
     }
 };
 /**
  * Consume the specified input node resolving its 'TOKEN' pattern.
  * @param project Input project.
- * @param node Input node.
- * @param identity Pattern identity.
+ * @param directive Directive node.
  * @param pointer Initial context pointers.
- * @param counter Initial context counter.
  * @param alias Determines whether or not the token is an alias.
- * @returns Returns the consumption state.
  */
-const consume = (project, node, identity, pointers, counter, alias) => {
-    const state = { identity, pointers, counter, type: 1 /* Token */ };
-    const entry = Expression.consume(project, node.right, state);
-    if (entry) {
-        const name = node.fragment.data;
-        const referenced = pointers.has(name);
+const consume = (project, directive, pointers, alias) => {
+    const identity = directive.identity;
+    const state = { type: 1 /* Token */, identity, pointers };
+    const expression = Expression.consume(project, directive.right, state);
+    if (expression !== void 0) {
+        const identifier = directive.fragment.data;
+        const referenced = pointers.has(identifier);
         if (alias) {
-            emit(project, identity, name, entry, 1 /* Alias */, referenced);
+            emit(project, 1 /* Alias */, identifier, identity, expression, referenced);
         }
         else {
-            const pattern = project.coder.emitTokenPattern(identity, entry);
-            emit(project, identity, name, pattern, 0 /* Normal */, referenced);
+            const pattern = project.coder.emitTokenPattern(identity, expression);
+            emit(project, 0 /* Normal */, identifier, identity, pattern, referenced);
         }
     }
-    return state;
 };
 exports.consume = consume;
 //# sourceMappingURL=token.js.map

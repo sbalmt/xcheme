@@ -3,9 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Parser = require("../../parser");
+const Identity = require("../../optimizer/nodes/identity");
 /**
  * Resolve the corresponding reference for the specified symbol in a 'TOKEN' pattern context.
- * It can also update the given project and context state when a new pointer is created.
+ * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -13,35 +14,23 @@ const Parser = require("../../parser");
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveToken = (project, node, state, symbol) => {
-    let pattern;
     if (symbol.value === 300 /* Token */ || symbol.value === 303 /* AliasToken */) {
-        const name = node.fragment.data;
-        if (state.pointers.has(name)) {
-            pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
+        const identifier = node.fragment.data;
+        if (state.pointers.has(identifier)) {
+            return project.coder.emitReferencePattern(project.tokenPointerEntries, identifier);
         }
-        else {
-            const token = project.tokenEntries.get(name);
-            if (token) {
-                project.tokenPointerEntries.add(token.identity, name, token.pattern, 0 /* Normal */);
-            }
-            pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
-            state.pointers.add(name);
+        const token = project.tokenEntries.get(identifier);
+        if (token !== void 0) {
+            project.tokenPointerEntries.add(0 /* Normal */, identifier, token.identity, token.pattern);
         }
+        state.pointers.add(identifier);
+        return project.coder.emitReferencePattern(project.tokenPointerEntries, identifier);
     }
-    else if (symbol.value === 301 /* Node */) {
-        project.errors.push(new Core.Error(node.fragment, 4102 /* INVALID_NODE_REFERENCE */));
-    }
-    else if (symbol.value === 302 /* AliasNode */) {
-        project.errors.push(new Core.Error(node.fragment, 4104 /* INVALID_ALIAS_NODE_REFERENCE */));
-    }
-    else {
-        project.errors.push(new Core.Error(node.fragment, 4101 /* UNRESOLVED_IDENTIFIER */));
-    }
-    return pattern;
+    return void 0;
 };
 /**
  * Resolve the corresponding reference for the specified symbol in a 'NODE' pattern context.
- * It can also update the given project and context state when a new pointer is created.
+ * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -49,42 +38,26 @@ const resolveToken = (project, node, state, symbol) => {
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveNode = (project, node, state, symbol) => {
-    let pattern;
-    if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
-        const name = node.fragment.data;
-        if (state.pointers.has(name)) {
-            pattern = project.coder.emitReferencePattern(project.nodePointerEntries, name);
-        }
-        else {
-            const entry = project.nodeEntries.get(name);
-            if (entry) {
-                project.nodePointerEntries.add(entry.identity, name, entry.pattern, 0 /* Normal */);
-            }
-            pattern = project.coder.emitReferencePattern(project.nodePointerEntries, name);
-            state.pointers.add(name);
-        }
+    if (node instanceof Identity.Node) {
+        return project.coder.emitExpectUnitsPattern([node.identity]);
     }
-    else if (symbol.value === 300 /* Token */) {
-        const name = node.fragment.data;
-        const token = project.tokenEntries.get(name);
-        if (!token) {
-            project.errors.push(new Core.Error(node.fragment, 4106 /* UNRESOLVED_TOKEN_REFERENCE */));
+    else if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
+        const identifier = node.fragment.data;
+        if (state.pointers.has(identifier)) {
+            return project.coder.emitReferencePattern(project.nodePointerEntries, identifier);
         }
-        else {
-            pattern = project.coder.emitStringPattern([token.identity]);
+        const entry = project.nodeEntries.get(identifier);
+        if (entry !== void 0) {
+            project.nodePointerEntries.add(0 /* Normal */, identifier, entry.identity, entry.pattern);
         }
+        state.pointers.add(identifier);
+        return project.coder.emitReferencePattern(project.nodePointerEntries, identifier);
     }
-    else if (symbol.value === 303 /* AliasToken */) {
-        project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_ALIAS_TOKEN_REFERENCE */));
-    }
-    else {
-        project.errors.push(new Core.Error(node.fragment, 4101 /* UNRESOLVED_IDENTIFIER */));
-    }
-    return pattern;
+    return void 0;
 };
 /**
  * Resolve the corresponding reference for the specified symbol in a 'SKIP' pattern context.
- * It can also update the given project and context state when a new pointer is created.
+ * REMARKS: Skips can only accept alias tokens references.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -92,41 +65,22 @@ const resolveNode = (project, node, state, symbol) => {
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveSkip = (project, node, state, symbol) => {
-    let pattern;
     if (symbol.value === 303 /* AliasToken */) {
-        const name = node.fragment.data;
-        if (state.pointers.has(name)) {
-            pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
+        const identifier = node.fragment.data;
+        if (state.pointers.has(identifier)) {
+            return project.coder.emitReferencePattern(project.tokenPointerEntries, identifier);
         }
-        else {
-            const token = project.tokenEntries.get(name);
-            if (!token) {
-                project.errors.push(new Core.Error(node.fragment, 4106 /* UNRESOLVED_TOKEN_REFERENCE */));
-            }
-            else {
-                project.tokenPointerEntries.add(token.identity, name, token.pattern, 0 /* Normal */);
-                pattern = project.coder.emitReferencePattern(project.tokenPointerEntries, name);
-                state.pointers.add(name);
-            }
+        const entry = project.tokenEntries.get(identifier);
+        if (entry !== void 0) {
+            project.tokenPointerEntries.add(0 /* Normal */, identifier, entry.identity, entry.pattern);
         }
+        state.pointers.add(identifier);
+        return project.coder.emitReferencePattern(project.tokenPointerEntries, identifier);
     }
-    else if (symbol.value === 300 /* Token */) {
-        project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_TOKEN_REFERENCE */));
-    }
-    else if (symbol.value === 301 /* Node */) {
-        project.errors.push(new Core.Error(node.fragment, 4102 /* INVALID_NODE_REFERENCE */));
-    }
-    else if (symbol.value === 302 /* AliasNode */) {
-        project.errors.push(new Core.Error(node.fragment, 4104 /* INVALID_ALIAS_NODE_REFERENCE */));
-    }
-    else {
-        project.errors.push(new Core.Error(node.fragment, 4101 /* UNRESOLVED_IDENTIFIER */));
-    }
-    return pattern;
+    return void 0;
 };
 /**
  * Consume the specified input node resolving its reference pattern.
- * It can also update the given project and context state when a new pointer is created.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -135,7 +89,7 @@ const resolveSkip = (project, node, state, symbol) => {
 const consume = (project, node, state) => {
     const name = node.fragment.data;
     const symbol = node.table?.get(name);
-    if (symbol) {
+    if (symbol !== void 0) {
         switch (state.type) {
             case 1 /* Token */:
                 return resolveToken(project, node, state, symbol);
@@ -145,7 +99,7 @@ const consume = (project, node, state) => {
                 return resolveSkip(project, node, state, symbol);
         }
     }
-    project.errors.push(new Core.Error(node.fragment, 4100 /* UNDEFINED_IDENTIFIER */));
+    project.errors.push(new Core.Error(node.fragment, 4101 /* UNDEFINED_IDENTIFIER */));
     return void 0;
 };
 exports.consume = consume;

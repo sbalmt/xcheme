@@ -2,8 +2,8 @@ import * as Core from '@xcheme/core';
 
 import * as Parser from '../../parser';
 
-import { Project } from '../common/project';
-import { State } from '../common/context';
+import { Project } from '../../core/project';
+import { State } from '../context';
 
 import type { PatternEntry } from '../coder/base';
 
@@ -11,7 +11,6 @@ import * as Expression from './expression';
 
 /**
  * Consume the specified input node resolving its condition pattern.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -19,17 +18,21 @@ import * as Expression from './expression';
  */
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   const test = Expression.consume(project, node.left!, state);
-  if (test) {
+  if (test !== void 0) {
     const content = node.right!;
-    let success, failure;
     if (content.value === Parser.Nodes.Else) {
-      success = Expression.consume(project, content.left!, state);
-      failure = Expression.consume(project, content.right!, state);
+      const success = Expression.consume(project, content.left!, state);
+      if (success !== void 0) {
+        const failure = Expression.consume(project, content.right!, state);
+        if (failure !== void 0) {
+          return project.coder.emitConditionPattern(test, success, failure);
+        }
+      }
     } else {
-      success = Expression.consume(project, content, state);
-    }
-    if (success) {
-      return project.coder.emitConditionPattern(test, success, failure);
+      const success = Expression.consume(project, content, state);
+      if (success !== void 0) {
+        return project.coder.emitConditionPattern(test, success);
+      }
     }
   }
   return void 0;

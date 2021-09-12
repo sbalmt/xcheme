@@ -1,26 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const String = require("../common/string");
+const Core = require("@xcheme/core");
+const String = require("../../core/string");
 /**
  * Consume the specified input node resolving its range pattern.
- * It can also update the given project and context state when new tokens are created.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
  * @returns Returns the consumption result or undefined when the pattern is invalid.
  */
 const consume = (project, node, state) => {
-    const from = node.left.fragment.data;
-    const to = node.right.fragment.data;
-    const pattern = project.coder.emitRangePattern(String.extract(from), String.extract(to));
     if (state.type === 2 /* Node */) {
-        const identity = state.counter++;
-        const result = project.coder.emitTokenPattern(identity, pattern);
-        project.tokenEntries.add(identity, `${from}-${to}`, result, 0 /* Normal */);
-        return project.coder.emitStringPattern([identity]);
+        project.errors.push(new Core.Error(node.fragment, 4100 /* UNOPTIMIZED_NODE */));
+        return void 0;
     }
-    return pattern;
+    const from = String.extract(node.left.fragment.data);
+    const to = String.extract(node.right.fragment.data);
+    return project.coder.emitRangePattern(from, to);
 };
 exports.consume = consume;
 //# sourceMappingURL=range.js.map

@@ -22,12 +22,6 @@ class Aggregator {
         return Object.values(this.#map).filter((entry) => entry.type === 1 /* Alias */);
     }
     /**
-     * Get all loose patterns.
-     */
-    get loosePatterns() {
-        return Object.values(this.#map).filter((entry) => entry.type === 2 /* Loose */);
-    }
-    /**
      * Determines whether or not the aggregator contains an entry with the given name.
      * @param name Pattern entry name.
      * @returns Returns true when the specified entry exists, false otherwise.
@@ -45,21 +39,21 @@ class Aggregator {
     }
     /**
      * Add a new pattern entry.
-     * @param identity Entry identity.
-     * @param name Entry name.
-     * @param pattern Entry patterns.
      * @param type Entry type.
+     * @param name Entry name.
+     * @param identity Entry identity.
+     * @param pattern Entry patterns.
      * @throws Throws an error when the specified entry already exists.
      */
-    add(identity, name, pattern, type) {
+    add(type, name, identity, pattern) {
         if (this.#map[name]) {
             throw `Pattern entry '${name}' already exists.`;
         }
         this.#map[name] = {
-            identity,
+            type,
             name,
-            pattern,
-            type
+            identity,
+            pattern
         };
     }
 }

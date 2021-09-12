@@ -3,21 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consumeNodes = void 0;
 const Core = require("@xcheme/core");
 const Parser = require("../parser");
+const Directive = require("../optimizer/nodes/directive");
 const Skip = require("./patterns/skip");
 const Token = require("./patterns/token");
 const Node = require("./patterns/node");
-/**
- * Get the identity from the specified node.
- * @param node Identifiable node.
- * @param identity Default identity.
- * @returns Returns the node identity.
- */
-const getIdentity = (node, identity) => {
-    if (node.left) {
-        return parseInt(node.left.fragment.data);
-    }
-    return identity;
-};
 /**
  * Consume the specified node (organized as an AST) and produce output entries for updating the given project.
  * @param node Input node.
@@ -26,33 +15,38 @@ const getIdentity = (node, identity) => {
  */
 const consumeNodes = (node, project) => {
     const pointer = new Set();
-    for (let counter = project.options.initialIdentity ?? 0; (node = node.next); counter++) {
-        const current = node.right;
-        let state;
+    while ((node = node.next) !== void 0) {
         if (node.value === 231 /* Skip */) {
-            state = Skip.consume(project, current, pointer, counter);
-        }
-        else {
-            const identity = getIdentity(current, counter);
-            switch (node.value) {
-                case 232 /* Token */:
-                    state = Token.consume(project, current, identity, pointer, counter, false);
-                    break;
-                case 233 /* Node */:
-                    state = Node.consume(project, current, identity, pointer, counter, false);
-                    break;
-                case 234 /* AliasToken */:
-                    state = Token.consume(project, current, identity, pointer, counter, true);
-                    break;
-                case 235 /* AliasNode */:
-                    state = Node.consume(project, current, identity, pointer, counter, true);
-                    break;
-                default:
-                    project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));
+            if (!(node instanceof Directive.Node)) {
+                project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));
+            }
+            else {
+                Skip.consume(project, node, pointer);
             }
         }
-        if (state) {
-            counter = state.counter;
+        else {
+            const directive = node.right;
+            if (!(directive instanceof Directive.Node)) {
+                project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));
+            }
+            else {
+                switch (node.value) {
+                    case 232 /* Token */:
+                        Token.consume(project, directive, pointer, false);
+                        break;
+                    case 233 /* Node */:
+                        Node.consume(project, directive, pointer, false);
+                        break;
+                    case 234 /* AliasToken */:
+                        Token.consume(project, directive, pointer, true);
+                        break;
+                    case 235 /* AliasNode */:
+                        Node.consume(project, directive, pointer, true);
+                        break;
+                    default:
+                        project.errors.push(new Core.Error(directive.fragment, 4099 /* UNEXPECTED_NODE */));
+                }
+            }
         }
     }
     return project.errors.length === 0;

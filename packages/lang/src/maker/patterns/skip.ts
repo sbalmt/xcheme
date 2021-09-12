@@ -1,25 +1,23 @@
-import * as Core from '@xcheme/core';
+import * as Entries from '../../core/entries';
+import * as Directive from '../../optimizer/nodes/directive';
 
-import * as Entries from '../common/entries';
-
-import { Project } from '../common/project';
-import { Pointers, State, Types } from '../common/context';
+import { Project } from '../../core/project';
+import { Pointers, Types } from '../context';
 
 import * as Expression from './expression';
 
 /**
  * Consume the specified input node resolving its 'SKIP' pattern.
  * @param project Input project.
- * @param node Input node.
- * @param pointers Initial context pointers.
- * @param counter Initial context counter.
- * @returns Returns the consumption state.
+ * @param directive Directive node.
+ * @param identity Pattern identity.
+ * @param pointer Initial context pointers.
  */
-export const consume = (project: Project, node: Core.Node, pointers: Pointers, counter: number): State => {
-  const state = { identity: counter, pointers, counter, type: Types.Skip };
-  const entry = Expression.consume(project, node, state);
-  if (entry) {
-    project.skipEntries.add(counter, `SKIP${counter}`, entry, Entries.Types.Normal);
+export const consume = (project: Project, directive: Directive.Node, pointers: Pointers): void => {
+  const identity = directive.identity;
+  const state = { type: Types.Skip, identity, pointers };
+  const expression = Expression.consume(project, directive.right!, state);
+  if (expression !== void 0) {
+    project.skipEntries.add(Entries.Types.Normal, `@SKIP${identity}`, identity, expression);
   }
-  return state;
 };

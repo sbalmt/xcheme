@@ -1,9 +1,8 @@
 import * as Core from '@xcheme/core';
 
-import * as String from './string';
 import * as Entries from './entries';
 
-import { Base, PointerEntry, PatternEntry, RouteEntry } from '../coder/base';
+import { Base, PointerEntry, PatternEntry } from '../maker/coder/base';
 
 /**
  * Project options.
@@ -66,15 +65,6 @@ export class Project {
    */
   #getPatterns(entries: Entries.Entry[]): PatternEntry[] {
     return entries.map((entry) => entry.pattern);
-  }
-
-  /**
-   * Get an array of routes from the specified aggregator.
-   * @param entries Patterns entry aggregator.
-   * @returns Returns the array of routes.
-   */
-  #getRoutes(entries: Entries.Entry[]): RouteEntry[] {
-    return entries.map((entry) => this.#coder.getRoute(entry.identity, String.extract(entry.name).split('')));
   }
 
   /**
@@ -159,14 +149,11 @@ export class Project {
    * Get the resulting lexer.
    */
   get lexer(): string | Core.Pattern {
-    const routes = this.#getRoutes(this.#tokenEntries.loosePatterns);
     return this.#coder.getEntry(
       'Lexer',
       this.#getPointers(this.#tokenPointerEntries),
       ...this.#getPatterns(this.#skipEntries.patterns),
-      ...(routes.length > 0
-        ? [this.#coder.emitMapPattern(...routes), ...this.#getPatterns(this.#tokenEntries.patterns)]
-        : this.#getPatterns(this.#tokenEntries.patterns))
+      ...this.#getPatterns(this.#tokenEntries.patterns)
     );
   }
 

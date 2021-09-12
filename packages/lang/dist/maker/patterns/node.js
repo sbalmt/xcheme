@@ -6,47 +6,44 @@ const Expression = require("./expression");
 /**
  * Emit a new node entry into the given project.
  * @param project Input project.
- * @param identity Node identity.
- * @param name Node name.
- * @param pattern Node pattern.
  * @param type Node type.
+ * @param name Node name.
+ * @param identity Node identity.
+ * @param pattern Node pattern.
  * @param ref Determines whether or not the node is referenced by another one.
  */
-const emit = (project, identity, name, pattern, type, ref) => {
+const emit = (project, type, name, identity, pattern, ref) => {
     if (ref) {
         const reference = project.coder.emitReferencePattern(project.nodePointerEntries, name);
-        project.nodePointerEntries.add(identity, name, pattern, 0 /* Normal */);
-        project.nodeEntries.add(identity, name, reference, type);
+        project.nodePointerEntries.add(0 /* Normal */, name, identity, pattern);
+        project.nodeEntries.add(type, name, identity, reference);
     }
     else {
-        project.nodeEntries.add(identity, name, pattern, type);
+        project.nodeEntries.add(type, name, identity, pattern);
     }
 };
 /**
  * Consume the specified input node resolving its 'NODE' pattern.
  * @param project Input project.
- * @param node Input node.
- * @param identity Pattern identity.
+ * @param directive Directive node.
  * @param pointers Initial context pointers.
- * @param counter Initial context counter.
  * @param alias Determines whether or not the node is an alias.
- * @returns Returns the consumption state.
  */
-const consume = (project, node, identity, pointers, counter, alias) => {
-    const state = { identity, pointers, counter, type: 2 /* Node */ };
-    const entry = Expression.consume(project, node.right, state);
-    if (entry) {
-        const name = node.fragment.data;
-        const referenced = pointers.has(name);
+const consume = (project, directive, pointers, alias) => {
+    const identity = directive.identity;
+    const state = { type: 2 /* Node */, identity, pointers };
+    const expression = Expression.consume(project, directive.right, state);
+    if (expression !== void 0) {
+        const identifier = directive.fragment.data;
+        const referenced = pointers.has(identifier);
         if (alias) {
-            emit(project, identity, name, entry, 1 /* Alias */, referenced);
+            emit(project, 1 /* Alias */, identifier, identity, expression, referenced);
         }
         else {
-            const pattern = project.coder.emitNodePattern(identity, 1 /* Right */, entry);
-            emit(project, identity, name, pattern, 0 /* Normal */, referenced);
+            const pattern = project.coder.emitNodePattern(identity, 1 /* Right */, expression);
+            emit(project, 0 /* Normal */, identifier, identity, pattern, referenced);
         }
     }
-    return state;
 };
 exports.consume = consume;
 //# sourceMappingURL=node.js.map

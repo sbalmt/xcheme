@@ -18,6 +18,22 @@ const globalOptions: Lang.Options = {
 };
 
 /**
+ * Generate a new optimized project based on the specified input nodes.
+ * @param project Input project.
+ * @param node Input node.
+ * @returns Returns true in case of success, false otherwise.
+ */
+const optimize = (project: Lang.Project, node: Core.Node): boolean => {
+  Console.printLine('Optimizing...');
+  if (Lang.Optimizer.consumeNodes(node, project)) {
+    Console.clearLine();
+    return true;
+  }
+  Errors.print(project.errors);
+  return false;
+};
+
+/**
  * Make a new project based on the specified input nodes.
  * @param project Input project.
  * @param node Input node.
@@ -80,16 +96,17 @@ export const perform = (source: string | number, target: string | number, run: b
     if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
       if (run) {
         const project = new Lang.Project(new Lang.LiveCoder(), globalOptions);
-        if (make(project, context.node)) {
+        if (optimize(project, context.node) && make(project, context.node)) {
           const content = FS.readFileSync(target).toString();
           test(project, content, state);
           return true;
         }
-      }
-      const project = new Lang.Project(new Lang.TextCoder(), globalOptions);
-      if (make(project, context.node)) {
-        save(project, target);
-        return true;
+      } else {
+        const project = new Lang.Project(new Lang.TextCoder(), globalOptions);
+        if (optimize(project, context.node) && make(project, context.node)) {
+          save(project, target);
+          return true;
+        }
       }
     }
   }

@@ -5,7 +5,6 @@ const Parser = require("../../parser");
 const Expression = require("./expression");
 /**
  * Consume the specified input node resolving its condition pattern.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -13,18 +12,22 @@ const Expression = require("./expression");
  */
 const consume = (project, node, state) => {
     const test = Expression.consume(project, node.left, state);
-    if (test) {
+    if (test !== void 0) {
         const content = node.right;
-        let success, failure;
         if (content.value === 207 /* Else */) {
-            success = Expression.consume(project, content.left, state);
-            failure = Expression.consume(project, content.right, state);
+            const success = Expression.consume(project, content.left, state);
+            if (success !== void 0) {
+                const failure = Expression.consume(project, content.right, state);
+                if (failure !== void 0) {
+                    return project.coder.emitConditionPattern(test, success, failure);
+                }
+            }
         }
         else {
-            success = Expression.consume(project, content, state);
-        }
-        if (success) {
-            return project.coder.emitConditionPattern(test, success, failure);
+            const success = Expression.consume(project, content, state);
+            if (success !== void 0) {
+                return project.coder.emitConditionPattern(test, success);
+            }
         }
     }
     return void 0;

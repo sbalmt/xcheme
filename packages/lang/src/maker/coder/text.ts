@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import * as Entries from '../common/entries';
-import * as String from '../common/string';
+import * as Entries from '../../core/entries';
+import * as String from '../../core/string';
 
 import { Base } from './base';
 
@@ -89,12 +89,15 @@ export class Text extends Base {
 
   /**
    * Get a new route.
-   * @param value Route value.
    * @param path Route path.
+   * @param value Optional route value.
    * @returns Returns the route.
    */
-  getRoute(value: number, path: (string | number)[]): string {
-    return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
+  getRoute(path: (string | number)[], value?: number): string {
+    if (value) {
+      return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
+    }
+    return this.#getPattern('UnitRoute', ...this.#getUnits(path));
   }
 
   /**
@@ -103,7 +106,7 @@ export class Text extends Base {
    * @returns Returns the pattern.
    */
   emitMapPattern(...routes: string[]): string {
-    return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...routes));
+    return this.#getPattern('MapFlowPattern', ...routes);
   }
 
   /**
@@ -325,14 +328,5 @@ export class Text extends Base {
    */
   emitRangePattern(from: string | number, to: string | number): string {
     return this.#getPattern('RangeUnitPattern', ...this.#getUnits([from, to]));
-  }
-
-  /**
-   * Get a new string pattern.
-   * @param units Input units.
-   * @returns Returns the string pattern.
-   */
-  emitStringPattern(units: (string | number)[]): string {
-    return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
   }
 }

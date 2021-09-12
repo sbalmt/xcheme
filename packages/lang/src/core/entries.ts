@@ -17,18 +17,13 @@ type Map = {
  */
 export const enum Types {
   Normal,
-  Alias,
-  Loose
+  Alias
 }
 
 /**
  * Map entry.
  */
 export type Entry = {
-  /**
-   * Entry identity.
-   */
-  identity: number;
   /**
    * Entry type.
    */
@@ -37,6 +32,10 @@ export type Entry = {
    * Entry name.
    */
   name: string;
+  /**
+   * Entry identity.
+   */
+  identity: number;
   /**
    * Entry pattern.
    */
@@ -67,13 +66,6 @@ export class Aggregator {
   }
 
   /**
-   * Get all loose patterns.
-   */
-  get loosePatterns(): Entry[] {
-    return Object.values(this.#map).filter((entry) => entry.type === Types.Loose);
-  }
-
-  /**
    * Determines whether or not the aggregator contains an entry with the given name.
    * @param name Pattern entry name.
    * @returns Returns true when the specified entry exists, false otherwise.
@@ -93,21 +85,21 @@ export class Aggregator {
 
   /**
    * Add a new pattern entry.
-   * @param identity Entry identity.
-   * @param name Entry name.
-   * @param pattern Entry patterns.
    * @param type Entry type.
+   * @param name Entry name.
+   * @param identity Entry identity.
+   * @param pattern Entry patterns.
    * @throws Throws an error when the specified entry already exists.
    */
-  add(identity: number, name: string, pattern: Pattern, type: Types): void {
+  add(type: Types, name: string, identity: number, pattern: Pattern): void {
     if (this.#map[name]) {
       throw `Pattern entry '${name}' already exists.`;
     }
     this.#map[name] = {
-      identity,
+      type,
       name,
-      pattern,
-      type
+      identity,
+      pattern
     };
   }
 }

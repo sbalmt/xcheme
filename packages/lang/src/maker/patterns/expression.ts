@@ -3,8 +3,8 @@ import * as Core from '@xcheme/core';
 import * as Parser from '../../parser';
 
 import { Errors } from '../../core/errors';
-import { Project } from '../common/project';
-import { State } from '../common/context';
+import { Project } from '../../core/project';
+import { State } from '../context';
 
 import type { PatternEntry } from '../coder/base';
 
@@ -29,7 +29,6 @@ import * as String from './string';
 
 /**
  * Consume the specified input node resolving its expression patterns.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.

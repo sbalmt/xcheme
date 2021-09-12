@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Text = void 0;
 const Core = require("@xcheme/core");
-const String = require("../common/string");
+const String = require("../../core/string");
 const base_1 = require("./base");
 /**
  * Can generate a project output to be saved as a JavaScript source.
@@ -57,12 +57,15 @@ class Text extends base_1.Base {
     }
     /**
      * Get a new route.
-     * @param value Route value.
      * @param path Route path.
+     * @param value Optional route value.
      * @returns Returns the route.
      */
-    getRoute(value, path) {
-        return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
+    getRoute(path, value) {
+        if (value) {
+            return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
+        }
+        return this.#getPattern('UnitRoute', ...this.#getUnits(path));
     }
     /**
      * Get a new map pattern.
@@ -70,7 +73,7 @@ class Text extends base_1.Base {
      * @returns Returns the pattern.
      */
     emitMapPattern(...routes) {
-        return this.#getPattern('EmitTokenPattern', Core.BaseSource.Output, this.#getPattern('MapFlowPattern', ...routes));
+        return this.#getPattern('MapFlowPattern', ...routes);
     }
     /**
      * Get a new token pattern.
@@ -270,14 +273,6 @@ class Text extends base_1.Base {
      */
     emitRangePattern(from, to) {
         return this.#getPattern('RangeUnitPattern', ...this.#getUnits([from, to]));
-    }
-    /**
-     * Get a new string pattern.
-     * @param units Input units.
-     * @returns Returns the string pattern.
-     */
-    emitStringPattern(units) {
-        return this.#getPattern('ExpectUnitPattern', ...this.#getUnits(units));
     }
 }
 exports.Text = Text;

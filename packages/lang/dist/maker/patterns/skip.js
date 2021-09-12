@@ -5,18 +5,17 @@ const Expression = require("./expression");
 /**
  * Consume the specified input node resolving its 'SKIP' pattern.
  * @param project Input project.
- * @param node Input node.
- * @param pointers Initial context pointers.
- * @param counter Initial context counter.
- * @returns Returns the consumption state.
+ * @param directive Directive node.
+ * @param identity Pattern identity.
+ * @param pointer Initial context pointers.
  */
-const consume = (project, node, pointers, counter) => {
-    const state = { identity: counter, pointers, counter, type: 0 /* Skip */ };
-    const entry = Expression.consume(project, node, state);
-    if (entry) {
-        project.skipEntries.add(counter, `SKIP${counter}`, entry, 0 /* Normal */);
+const consume = (project, directive, pointers) => {
+    const identity = directive.identity;
+    const state = { type: 0 /* Skip */, identity, pointers };
+    const expression = Expression.consume(project, directive.right, state);
+    if (expression !== void 0) {
+        project.skipEntries.add(0 /* Normal */, `@SKIP${identity}`, identity, expression);
     }
-    return state;
 };
 exports.consume = consume;
 //# sourceMappingURL=skip.js.map

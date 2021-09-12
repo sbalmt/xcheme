@@ -1,5 +1,5 @@
 import * as Core from '@xcheme/core';
-import * as Entries from '../common/entries';
+import * as Entries from '../../core/entries';
 /**
  * Pattern entry.
  */
@@ -35,11 +35,11 @@ export declare class Base {
     getEntry(name: string, pointers: PointerEntry[], ...patterns: PatternEntry[]): PatternEntry;
     /**
      * Should be implemented to return a route.
-     * @param value Route value.
      * @param path Route path.
+     * @param value Optional route value.
      * @returns Should return the route.
      */
-    getRoute(value: number, path: (string | number)[]): RouteEntry;
+    getRoute(path: (string | number)[], value?: number): RouteEntry;
     /**
      * Should be implemented to return a map pattern.
      * @param routes Map routes.
@@ -197,10 +197,4 @@ export declare class Base {
      * @returns Should return the pattern.
      */
     emitRangePattern(from: string | number, to: string | number): PatternEntry;
-    /**
-     * Should be implemented to return a string pattern.
-     * @param units Input units.
-     * @returns Should return the pattern.
-     */
-    emitStringPattern(units: (string | number)[]): PatternEntry;
 }

@@ -17,11 +17,11 @@ class Base {
     }
     /**
      * Should be implemented to return a route.
-     * @param value Route value.
      * @param path Route path.
+     * @param value Optional route value.
      * @returns Should return the route.
      */
-    getRoute(value, path) {
+    getRoute(path, value) {
         throw "Method doesn't implemented.";
     }
     /**
@@ -225,14 +225,6 @@ class Base {
      * @returns Should return the pattern.
      */
     emitRangePattern(from, to) {
-        throw "Method doesn't implemented.";
-    }
-    /**
-     * Should be implemented to return a string pattern.
-     * @param units Input units.
-     * @returns Should return the pattern.
-     */
-    emitStringPattern(units) {
         throw "Method doesn't implemented.";
     }
 }

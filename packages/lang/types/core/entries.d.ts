@@ -8,17 +8,12 @@ declare type Pattern = string | Core.Pattern;
  */
 export declare const enum Types {
     Normal = 0,
-    Alias = 1,
-    Loose = 2
+    Alias = 1
 }
 /**
  * Map entry.
  */
 export declare type Entry = {
-    /**
-     * Entry identity.
-     */
-    identity: number;
     /**
      * Entry type.
      */
@@ -27,6 +22,10 @@ export declare type Entry = {
      * Entry name.
      */
     name: string;
+    /**
+     * Entry identity.
+     */
+    identity: number;
     /**
      * Entry pattern.
      */
@@ -46,10 +45,6 @@ export declare class Aggregator {
      */
     get aliasPatterns(): Entry[];
     /**
-     * Get all loose patterns.
-     */
-    get loosePatterns(): Entry[];
-    /**
      * Determines whether or not the aggregator contains an entry with the given name.
      * @param name Pattern entry name.
      * @returns Returns true when the specified entry exists, false otherwise.
@@ -63,12 +58,12 @@ export declare class Aggregator {
     get(name: string): Entry | undefined;
     /**
      * Add a new pattern entry.
-     * @param identity Entry identity.
-     * @param name Entry name.
-     * @param pattern Entry patterns.
      * @param type Entry type.
+     * @param name Entry name.
+     * @param identity Entry identity.
+     * @param pattern Entry patterns.
      * @throws Throws an error when the specified entry already exists.
      */
-    add(identity: number, name: string, pattern: Pattern, type: Types): void;
+    add(type: Types, name: string, identity: number, pattern: Pattern): void;
 }
 export {};

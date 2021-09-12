@@ -28,7 +28,7 @@ test("Parse a 'NODE' rule with a loose token reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get("'@'")!;
+  const token = project.tokenEntries.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, token.identity)).toBe(3);
 
@@ -47,7 +47,7 @@ test("Parse a 'NODE' rule with a loose range rule", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '0123456789');
 
-  const token = project.tokenEntries.get("'0'-'9'")!;
+  const token = project.tokenEntries.get("@REF1")!;
   expect(token).toBeDefined();
   expect(checkTokens(context, token.identity)).toBe(10);
 
@@ -85,7 +85,7 @@ test("Parse a 'NODE' rule with an alias node reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get("'@'")!;
+  const token = project.tokenEntries.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, token.identity)).toBe(3);
 
@@ -104,7 +104,7 @@ test("Parse a 'NODE' rule with a reference to itself", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get("'@'")!;
+  const token = project.tokenEntries.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, token.identity)).toBe(3);
 
@@ -123,7 +123,7 @@ test("Parse a 'NODE' rule with an alias node that has a reference to itself", ()
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get("'@'")!;
+  const token = project.tokenEntries.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, token.identity)).toBe(3);
 

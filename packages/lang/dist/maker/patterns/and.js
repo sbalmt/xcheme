@@ -1,65 +1,42 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = exports.resolve = void 0;
+const String = require("../../core/string");
+const Mergeable = require("../../optimizer/nodes/mergeable");
 const Parser = require("../../parser");
-const String = require("./string");
 const Expression = require("./expression");
 /**
- * Merge all subsequent occurrences of the 'AND' pattern starting with the given input node.
- * It can also update the given project and context state during the consumption.
- * @param project Input project.
- * @param node Input node.
- * @param state Context state.
- * @param units Output units.
- * @param patterns Output patterns.
- * @returns Returns true when the merge consumption was successful, false otherwise.
- */
-const merge = (project, node, state, units, patterns) => {
-    if (node.value === 209 /* And */) {
-        if (node.right.value === 203 /* String */) {
-            units.push(String.resolve(project, state, node.right.fragment.data));
-            return merge(project, node.left, state, units, patterns);
-        }
-        const lhs = exports.resolve(project, node.left, state);
-        const rhs = exports.resolve(project, node.right, state);
-        if (!lhs || !rhs) {
-            return false;
-        }
-        patterns.push(...lhs, ...rhs);
-    }
-    else {
-        if (node.value === 203 /* String */) {
-            units.push(String.resolve(project, state, node.fragment.data));
-            return true;
-        }
-        const result = Expression.consume(project, node, state);
-        if (!result) {
-            return false;
-        }
-        patterns.push(result);
-    }
-    if (units.length > 0) {
-        patterns.push(project.coder.emitExpectUnitsPattern(units.reverse().flat()));
-    }
-    return true;
-};
-/**
  * Resolve the specified input node as an 'AND' pattern.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 const resolve = (project, node, state) => {
-    const units = [];
-    const patterns = [];
-    if (merge(project, node, state, units, patterns)) {
-        if (patterns.length > 0) {
-            return patterns;
+    if (node.value !== 209 /* And */) {
+        const pattern = Expression.consume(project, node, state);
+        if (pattern !== void 0) {
+            return [pattern];
         }
-        if (units.length > 0) {
-            return [project.coder.emitExpectUnitsPattern(units.reverse().flat())];
+    }
+    else if (node instanceof Mergeable.Node) {
+        let units;
+        if (node.type === 203 /* String */) {
+            const words = node.sequence.map((node) => String.extract(node.fragment.data));
+            units = words.join('').split('');
+        }
+        else {
+            units = node.sequence.map((node) => node.identity);
+        }
+        return [project.coder.emitExpectUnitsPattern(units)];
+    }
+    else {
+        const left = exports.resolve(project, node.left, state);
+        if (left !== void 0) {
+            const right = exports.resolve(project, node.right, state);
+            if (right !== void 0) {
+                return [...left, ...right];
+            }
         }
     }
     return void 0;
@@ -67,7 +44,6 @@ const resolve = (project, node, state) => {
 exports.resolve = resolve;
 /**
  * Consume the specified input node resolving its 'AND' pattern.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -75,7 +51,7 @@ exports.resolve = resolve;
  */
 const consume = (project, node, state) => {
     const patterns = exports.resolve(project, node, state);
-    if (patterns) {
+    if (patterns !== void 0) {
         if (patterns.length > 1) {
             return project.coder.emitExpectPattern(...patterns);
         }

@@ -5,7 +5,7 @@ test("Output an 'ANY' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), 'skip *;');
 
   // Check the output code.
-  const rule = project.skipEntries.get('SKIP0')!;
+  const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
   expect(rule.pattern).toBe(`new Core.AnyUnitPattern()`);
 });

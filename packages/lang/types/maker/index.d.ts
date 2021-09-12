@@ -1,5 +1,5 @@
 import * as Core from '@xcheme/core';
-import { Project } from './common/project';
+import { Project } from '../core/project';
 import * as Node from './patterns/node';
 /**
  * Consume the specified node (organized as an AST) and produce output entries for updating the given project.

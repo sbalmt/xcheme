@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 import * as Entries from './entries';
-import { Base } from '../coder/base';
+import { Base } from '../maker/coder/base';
 /**
  * Project options.
  */

@@ -19,12 +19,15 @@ class Live extends base_1.Base {
     }
     /**
      * Get a new route.
-     * @param value Route value.
      * @param path Route path.
+     * @param value Optional route value.
      * @returns Returns the route.
      */
-    getRoute(value, path) {
-        return new Core.Route(new Core.SetValuePattern(value), ...path);
+    getRoute(path, value) {
+        if (value) {
+            return new Core.SetValueRoute(value, path[0], ...path.slice(1));
+        }
+        return new Core.UnitRoute(path[0], ...path.slice(1));
     }
     /**
      * Get a new map pattern.
@@ -32,7 +35,7 @@ class Live extends base_1.Base {
      * @returns Returns the pattern.
      */
     emitMapPattern(...routes) {
-        return new Core.EmitTokenPattern(Core.BaseSource.Output, new Core.MapFlowPattern(...routes));
+        return new Core.MapFlowPattern(...routes);
     }
     /**
      * Get a new token pattern.
@@ -233,14 +236,6 @@ class Live extends base_1.Base {
      */
     emitRangePattern(from, to) {
         return new Core.RangeUnitPattern(from, to);
-    }
-    /**
-     * Get a new string pattern.
-     * @param units Input units.
-     * @returns Returns the string pattern.
-     */
-    emitStringPattern(units) {
-        return new Core.ExpectUnitPattern(...units);
     }
 }
 exports.Live = Live;

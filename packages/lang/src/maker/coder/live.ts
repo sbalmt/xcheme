@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Entries from '../common/entries';
+import * as Entries from '../../core/entries';
 
 import { Base } from './base';
 
@@ -38,12 +38,15 @@ export class Live extends Base {
 
   /**
    * Get a new route.
-   * @param value Route value.
    * @param path Route path.
+   * @param value Optional route value.
    * @returns Returns the route.
    */
-  getRoute(value: number, path: (string | number)[]): Core.Route {
-    return new Core.Route(new Core.SetValuePattern(value), ...path);
+  getRoute(path: (string | number)[], value?: number): Core.Route {
+    if (value) {
+      return new Core.SetValueRoute(value, path[0], ...path.slice(1));
+    }
+    return new Core.UnitRoute(path[0], ...path.slice(1));
   }
 
   /**
@@ -52,7 +55,7 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   emitMapPattern(...routes: Core.Route[]): Core.Pattern {
-    return new Core.EmitTokenPattern(Core.BaseSource.Output, new Core.MapFlowPattern(...routes));
+    return new Core.MapFlowPattern(...routes);
   }
 
   /**
@@ -275,14 +278,5 @@ export class Live extends Base {
    */
   emitRangePattern(from: string | number, to: string | number): Core.Pattern {
     return new Core.RangeUnitPattern(from, to);
-  }
-
-  /**
-   * Get a new string pattern.
-   * @param units Input units.
-   * @returns Returns the string pattern.
-   */
-  emitStringPattern(units: (string | number)[]): Core.Pattern {
-    return new Core.ExpectUnitPattern(...units);
   }
 }

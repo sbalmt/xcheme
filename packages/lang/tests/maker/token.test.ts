@@ -13,6 +13,10 @@ test('Token referring an alias node (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]);
 });
 
+test('Token already defined (token collision)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as '@'; token TOKEN2 as '@';", [Lang.Errors.TOKEN_COLLISION]);
+});
+
 test('Token with an identity', () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token<1010> TOKEN as '@';");
 

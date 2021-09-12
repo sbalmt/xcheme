@@ -4,7 +4,6 @@ exports.consume = void 0;
 const And = require("./and");
 /**
  * Consume the specified input node resolving its 'HAS' pattern.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -13,7 +12,7 @@ const And = require("./and");
 const consume = (project, node, state) => {
     const param = node.right;
     const patterns = And.resolve(project, param.right, state);
-    if (patterns) {
+    if (patterns !== void 0) {
         const value = parseInt(param.fragment.data);
         return project.coder.emiHasPattern(value, ...patterns);
     }

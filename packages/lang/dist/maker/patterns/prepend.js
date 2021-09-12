@@ -4,7 +4,6 @@ exports.consume = void 0;
 const And = require("./and");
 /**
  * Consume the specified input node resolving its 'PREPEND' pattern.
- * It can also update the given project and context state during the consumption.
  * @param project Input project.
  * @param node Input node.
  * @param state Context state.
@@ -13,7 +12,7 @@ const And = require("./and");
  */
 const consume = (project, node, state, direction) => {
     const patterns = And.resolve(project, node.right, state);
-    if (patterns) {
+    if (patterns !== void 0) {
         return project.coder.emitPrependPattern(state.identity, direction, patterns[0], ...patterns.slice(1));
     }
     return void 0;
