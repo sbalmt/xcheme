@@ -10,14 +10,7 @@
 		}
 	],
 	"repository": {
-		"named-directives": {
-			"begin": "\\b(token|node)\\b",
-			"end": "(?=\\;)",
-			"beginCaptures": {
-				"1": {
-					"name": "storage.type.xcheme"
-				}
-			},
+		"directive-expression": {
 			"patterns": [
 				{
 					"include": "#comments"
@@ -31,6 +24,20 @@
 				},
 				{
 					"include": "#expression"
+				}
+			]
+		},
+		"named-directives": {
+			"begin": "\\b(token|node)\\b",
+			"end": "(?=\\;)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.type.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#directive-expression"
 				}
 			]
 		},
@@ -85,7 +92,7 @@
 		},
 		"operator-expression": {
 			"name": "keyword.operator.xcheme",
-			"match": "(\\||\\&|\\*)"
+			"match": "\\||\\&|\\*|\\."
 		},
 		"control-expression": {
 			"name": "keyword.control.xcheme",
@@ -109,6 +116,38 @@
 		"constant-expression": {
 			"name": "constant.language.xcheme",
 			"match": "\\b(any)\\b"
+		},
+		"map-block-expression": {
+			"begin": "\\{",
+			"end": "\\}",
+			"beginCaptures": {
+				"0": {
+					"name": "meta.brace.curly.xcheme"
+				}
+			},
+			"endCaptures": {
+				"0": {
+					"name": "meta.brace.curly.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#directive-expression"
+				},
+				{
+					"name": "meta.comma.xcheme",
+					"match": "\\,"
+				}
+			]
+		},
+		"map-expression": {
+			"name": "keyword.control.xcheme",
+			"match": "\\b(map)\\b",
+			"patterns": [
+				{
+					"include": "#map-block-expression"
+				}
+			]
 		},
 		"range-expression": {
 			"begin": "\\b(from)\\b",
@@ -211,6 +250,9 @@
 				},
 				{
 					"include": "#control-expression"
+				},
+				{
+					"include": "#map-expression"
 				},
 				{
 					"include": "#new-node-expression"
