@@ -32,6 +32,7 @@ const tokens = [
     { name: 'not', value: Lexer.Tokens.Not },
     { name: 'opt', value: Lexer.Tokens.Opt },
     { name: 'repeat', value: Lexer.Tokens.Repeat },
+    { name: 'map', value: Lexer.Tokens.Map },
     // Node
     { name: 'place', value: Lexer.Tokens.Place },
     { name: 'pivot', value: Lexer.Tokens.Pivot },
@@ -62,7 +63,11 @@ const tokens = [
   ],
   // Syntax symbols
   ...[
+    { name: '.', value: Lexer.Tokens.Period },
+    { name: ',', value: Lexer.Tokens.Comma },
     { name: ';', value: Lexer.Tokens.Semicolon },
+    { name: '{', value: Lexer.Tokens.OpenBraces },
+    { name: '}', value: Lexer.Tokens.CloseBraces },
     { name: '(', value: Lexer.Tokens.OpenParenthesis },
     { name: ')', value: Lexer.Tokens.CloseParenthesis },
     { name: '<', value: Lexer.Tokens.OpenChevron },
