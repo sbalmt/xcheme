@@ -5,5 +5,6 @@ export const enum Symbols {
   Token = 300,
   Node,
   AliasNode,
-  AliasToken
+  AliasToken,
+  Member
 }

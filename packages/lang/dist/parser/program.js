@@ -9,11 +9,19 @@ const unary_1 = require("./patterns/unary");
 /**
  * Identity pattern.
  */
-const identity = new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(133 /* OpenChevron */), new Core.AppendNodePattern(202 /* Identity */, 0 /* Left */, 1 /* Right */, new Core.ExpectUnitPattern(101 /* Number */), new Core.ExpectUnitPattern(134 /* CloseChevron */)));
+const identity = new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(138 /* OpenChevron */), new Core.AppendNodePattern(202 /* Identity */, 0 /* Left */, 1 /* Right */, new Core.ExpectUnitPattern(101 /* Number */), new Core.ExpectUnitPattern(139 /* CloseChevron */)));
 /**
  * Unary operators pattern.
  */
-const unaryOperators = new Core.MapFlowPattern(new Core.SetValueRoute(210 /* Not */, 110 /* Not */), new Core.SetValueRoute(211 /* Opt */, 111 /* Opt */), new Core.SetValueRoute(212 /* Repeat */, 112 /* Repeat */), new Core.SetValueRoute(216 /* Place */, 113 /* Place */), new Core.SetValueRoute(225 /* Pivot */, 116 /* Pivot */), new Core.SetValueRoute(220 /* Append */, 114 /* Append */), new Core.SetValueRoute(224 /* Prepend */, 115 /* Prepend */), new Core.SetValueRoute(213 /* PlaceNext */, 113 /* Place */, 117 /* Next */), new Core.SetValueRoute(217 /* AppendNext */, 114 /* Append */, 117 /* Next */), new Core.SetValueRoute(221 /* PrependNext */, 115 /* Prepend */, 117 /* Next */), new Core.SetValueRoute(214 /* PlaceLeft */, 113 /* Place */, 118 /* Left */), new Core.SetValueRoute(218 /* AppendLeft */, 114 /* Append */, 118 /* Left */), new Core.SetValueRoute(222 /* PrependLeft */, 115 /* Prepend */, 118 /* Left */), new Core.SetValueRoute(215 /* PlaceRight */, 113 /* Place */, 119 /* Right */), new Core.SetValueRoute(219 /* AppendRight */, 114 /* Append */, 119 /* Right */), new Core.SetValueRoute(223 /* PrependRight */, 115 /* Prepend */, 119 /* Right */), new Core.SetValueRoute(226 /* Symbol */, 120 /* Symbol */), new Core.SetValueRoute(227 /* Scope */, 121 /* Scope */), new Core.SetValueRoute(228 /* Error */, identity, 122 /* Error */), new Core.SetValueRoute(229 /* Has */, identity, 123 /* Has */), new Core.SetValueRoute(230 /* Set */, identity, 124 /* Set */));
+const unaryOperators = new Core.MapFlowPattern(new Core.SetValueRoute(213 /* Not */, 111 /* Not */), new Core.SetValueRoute(214 /* Opt */, 112 /* Opt */), new Core.SetValueRoute(215 /* Repeat */, 113 /* Repeat */), new Core.SetValueRoute(219 /* Place */, 114 /* Place */), new Core.SetValueRoute(228 /* Pivot */, 117 /* Pivot */), new Core.SetValueRoute(223 /* Append */, 115 /* Append */), new Core.SetValueRoute(227 /* Prepend */, 116 /* Prepend */), new Core.SetValueRoute(216 /* PlaceNext */, 114 /* Place */, 118 /* Next */), new Core.SetValueRoute(220 /* AppendNext */, 115 /* Append */, 118 /* Next */), new Core.SetValueRoute(224 /* PrependNext */, 116 /* Prepend */, 118 /* Next */), new Core.SetValueRoute(217 /* PlaceLeft */, 114 /* Place */, 119 /* Left */), new Core.SetValueRoute(221 /* AppendLeft */, 115 /* Append */, 119 /* Left */), new Core.SetValueRoute(225 /* PrependLeft */, 116 /* Prepend */, 119 /* Left */), new Core.SetValueRoute(218 /* PlaceRight */, 114 /* Place */, 120 /* Right */), new Core.SetValueRoute(222 /* AppendRight */, 115 /* Append */, 120 /* Right */), new Core.SetValueRoute(226 /* PrependRight */, 116 /* Prepend */, 120 /* Right */), new Core.SetValueRoute(229 /* Symbol */, 121 /* Symbol */), new Core.SetValueRoute(230 /* Scope */, 122 /* Scope */), new Core.SetValueRoute(231 /* Error */, identity, 123 /* Error */), new Core.SetValueRoute(232 /* Has */, identity, 124 /* Has */), new Core.SetValueRoute(233 /* Set */, identity, 125 /* Set */));
+/**
+ * Map members pattern.
+ */
+const mapMembers = new Core.ExpectFlowPattern(new Core.AppendNodePattern(208 /* Member */, 1 /* Right */, 2 /* Next */, new Core.ChooseFlowPattern(new directive_1.default(304 /* Member */, identity, new Core.RunFlowPattern(() => expression)), new Core.RunFlowPattern(() => expression))), new Core.OptFlowPattern(new Core.ExpectUnitPattern(132 /* Comma */), new Core.RunFlowPattern(() => mapMembers)));
+/**
+ * Map operand pattern.
+ */
+const mapOperand = new Core.ScopeSymbolPattern(new Core.ExpectUnitPattern(106 /* Map */), new Core.AppendNodePattern(207 /* Map */, 1 /* Right */, 1 /* Right */, new Core.ExpectUnitPattern(134 /* OpenBraces */), new Core.OptFlowPattern(mapMembers), new Core.ExpectUnitPattern(135 /* CloseBraces */)));
 /**
  * Range operand pattern.
  */
@@ -25,37 +33,37 @@ const generalOperands = new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* 
 /**
  * Group expression pattern.
  */
-const groupExpression = new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(131 /* OpenParenthesis */), new Core.RunFlowPattern(() => expression), new Core.ExpectUnitPattern(132 /* CloseParenthesis */)));
+const groupExpression = new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(136 /* OpenParenthesis */), new Core.RunFlowPattern(() => expression), new Core.ExpectUnitPattern(137 /* CloseParenthesis */)));
 /**
  * Condition expression pattern.
  */
-const conditionExpression = new Core.OptFlowPattern(new Core.PivotNodePattern(206 /* Then */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(106 /* Then */), new Core.RunFlowPattern(() => expression), new Core.OptFlowPattern(new Core.PivotNodePattern(207 /* Else */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(107 /* Else */), new Core.RunFlowPattern(() => expression)))));
+const conditionExpression = new Core.OptFlowPattern(new Core.PivotNodePattern(209 /* Then */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(107 /* Then */), new Core.RunFlowPattern(() => expression), new Core.OptFlowPattern(new Core.PivotNodePattern(210 /* Else */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(108 /* Else */), new Core.RunFlowPattern(() => expression)))));
 /**
  * Expression pattern.
  */
-const expression = new Core.ExpectFlowPattern(new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(208 /* Or */, 108 /* Or */)), new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(209 /* And */, 109 /* And */)), new unary_1.default(unaryOperators, new Core.ChooseFlowPattern(rangeOperand, generalOperands, groupExpression)))), conditionExpression);
+const expression = new Core.ExpectFlowPattern(new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(211 /* Or */, 109 /* Or */)), new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(212 /* And */, 110 /* And */)), new unary_1.default(unaryOperators, new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(206 /* Access */, 131 /* Period */)), new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression))))), conditionExpression);
 /**
  * Skip directive route.
  */
-const skip = new Core.SetValueRoute(231 /* Skip */, expression, 125 /* Skip */);
+const skip = new Core.SetValueRoute(234 /* Skip */, expression, 126 /* Skip */);
 /**
  * Token directive route.
  */
-const token = new Core.SetValueRoute(232 /* Token */, new directive_1.default(300 /* Token */, identity, expression), 126 /* Token */);
+const token = new Core.SetValueRoute(235 /* Token */, new directive_1.default(300 /* Token */, identity, expression), 127 /* Token */);
 /**
  * Node directive route.
  */
-const node = new Core.SetValueRoute(233 /* Node */, new directive_1.default(301 /* Node */, identity, expression), 127 /* Node */);
+const node = new Core.SetValueRoute(236 /* Node */, new directive_1.default(301 /* Node */, identity, expression), 128 /* Node */);
 /**
  * Alias token directive route.
  */
-const aliasToken = new Core.SetValueRoute(234 /* AliasToken */, new directive_1.default(303 /* AliasToken */, identity, expression), 128 /* Alias */, 126 /* Token */);
+const aliasToken = new Core.SetValueRoute(237 /* AliasToken */, new directive_1.default(303 /* AliasToken */, identity, expression), 129 /* Alias */, 127 /* Token */);
 /**
  * Alias node directive route.
  */
-const aliasNode = new Core.SetValueRoute(235 /* AliasNode */, new directive_1.default(302 /* AliasNode */, identity, expression), 128 /* Alias */, 127 /* Node */);
+const aliasNode = new Core.SetValueRoute(238 /* AliasNode */, new directive_1.default(302 /* AliasNode */, identity, expression), 129 /* Alias */, 128 /* Node */);
 /**
  * Main parser pattern.
  */
-exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(skip, token, node, aliasToken, aliasNode), new Core.ExpectUnitPattern(130 /* Semicolon */))))), new Core.EndFlowPattern());
+exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(skip, token, node, aliasToken, aliasNode), new Core.ExpectUnitPattern(133 /* Semicolon */))))), new Core.EndFlowPattern());
 //# sourceMappingURL=program.js.map

@@ -50,6 +50,37 @@ const unaryOperators = new Core.MapFlowPattern(
 );
 
 /**
+ * Map members pattern.
+ */
+const mapMembers: Core.Pattern = new Core.ExpectFlowPattern(
+  new Core.AppendNodePattern(
+    Nodes.Member,
+    Core.Nodes.Right,
+    Core.Nodes.Next,
+    new Core.ChooseFlowPattern(
+      new DirectiveExpression(Symbols.Member, identity, new Core.RunFlowPattern(() => expression)),
+      new Core.RunFlowPattern(() => expression)
+    )
+  ),
+  new Core.OptFlowPattern(new Core.ExpectUnitPattern(Lexer.Tokens.Comma), new Core.RunFlowPattern(() => mapMembers))
+);
+
+/**
+ * Map operand pattern.
+ */
+const mapOperand = new Core.ScopeSymbolPattern(
+  new Core.ExpectUnitPattern(Lexer.Tokens.Map),
+  new Core.AppendNodePattern(
+    Nodes.Map,
+    Core.Nodes.Right,
+    Core.Nodes.Right,
+    new Core.ExpectUnitPattern(Lexer.Tokens.OpenBraces),
+    new Core.OptFlowPattern(mapMembers),
+    new Core.ExpectUnitPattern(Lexer.Tokens.CloseBraces)
+  )
+);
+
+/**
  * Range operand pattern.
  */
 const rangeOperand = new Core.PlaceNodePattern(
@@ -121,7 +152,13 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
     new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.Or, Lexer.Tokens.Or)),
     new BinaryExpression(
       new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.And, Lexer.Tokens.And)),
-      new UnaryExpression(unaryOperators, new Core.ChooseFlowPattern(rangeOperand, generalOperands, groupExpression))
+      new UnaryExpression(
+        unaryOperators,
+        new BinaryExpression(
+          new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.Access, Lexer.Tokens.Period)),
+          new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)
+        )
+      )
     )
   ),
   conditionExpression
