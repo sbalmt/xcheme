@@ -98,6 +98,17 @@ export default class Node {
   }
 
   /**
+   * Swap all the currently node properties by all properties from the given one.
+   * @param node Input node.
+   */
+  swap(node: Node): void {
+    [this.#children, node.#children] = [node.#children, this.#children];
+    [this.#fragment, node.#fragment] = [node.#fragment, this.#fragment];
+    [this.#table, node.#table] = [node.#table, this.#table];
+    [this.#value, node.#value] = [node.#value, this.#value];
+  }
+
+  /**
    * Get a child node in the specified direction.
    * @param child Child node direction.
    * @returns Return the corresponding child node.

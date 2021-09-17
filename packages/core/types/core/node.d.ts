@@ -45,6 +45,11 @@ export default class Node {
      */
     get next(): Node | undefined;
     /**
+     * Swap all the currently node properties by all properties from the given one.
+     * @param node Input node.
+     */
+    swap(node: Node): void;
+    /**
      * Get a child node in the specified direction.
      * @param child Child node direction.
      * @returns Return the corresponding child node.
