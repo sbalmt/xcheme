@@ -19,7 +19,7 @@ const assign = (project, node, state, name, entry) => {
     const current = state.references[name];
     if (current !== void 0) {
         if (current.type !== 1 /* Loose */) {
-            project.errors.push(new Core.Error(node.fragment, 4108 /* TOKEN_COLLISION */));
+            project.errors.push(new Core.Error(node.fragment, 4109 /* TOKEN_COLLISION */));
         }
     }
     else {

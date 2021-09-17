@@ -17,7 +17,7 @@ import type { PatternEntry } from '../coder/base';
  */
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   if (state.type === Types.Node) {
-    project.errors.push(new Core.Error(node.fragment, Errors.UNOPTIMIZED_NODE));
+    project.errors.push(new Core.Error(node.fragment, Errors.UNSUPPORTED_NODE));
     return void 0;
   }
   const from = String.extract(node.left!.fragment.data);

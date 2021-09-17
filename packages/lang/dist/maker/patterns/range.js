@@ -12,7 +12,7 @@ const String = require("../../core/string");
  */
 const consume = (project, node, state) => {
     if (state.type === 2 /* Node */) {
-        project.errors.push(new Core.Error(node.fragment, 4100 /* UNOPTIMIZED_NODE */));
+        project.errors.push(new Core.Error(node.fragment, 4100 /* UNSUPPORTED_NODE */));
         return void 0;
     }
     const from = String.extract(node.left.fragment.data);

@@ -11,14 +11,15 @@ const errorMessages = {
   [Lang.Errors.UNEXPECTED_TOKEN]: "Unexpected token '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNEXPECTED_SYNTAX]: "Unexpected syntax '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNEXPECTED_NODE]: "Unexpected node '{0}' at line {1}, column {2}.",
-  [Lang.Errors.UNOPTIMIZED_NODE]: "Unoptimized node '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNSUPPORTED_NODE]: "Unoptimized node '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNDEFINED_IDENTIFIER]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNRESOLVED_IDENTIFIER]: "Unresolved identifiers cannot be referenced, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_NODE_REFERENCE]: "Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_TOKEN_REFERENCE]: "Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: "Alias Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]: "Alias Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]: "Token reference is not resolved yet, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_TOKEN_REFERENCE]: "Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_NODE_REFERENCE]: "Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]: "Alias Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: "Alias Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with a string '{0}' at line {1}, column {2}.",
   [Lang.Errors.TOKEN_COLLISION]: "Multiple tokens with the same expression, '{0}' at line {1}, column {2}."
 };
 

@@ -19,7 +19,7 @@ const consume = (project, direction, parent, state) => {
         let entry = state.references[word];
         if (entry !== void 0) {
             if (entry.type === 0 /* User */) {
-                project.errors.push(new Core.Error(node.fragment, 4108 /* TOKEN_COLLISION */));
+                project.errors.push(new Core.Error(node.fragment, 4109 /* TOKEN_COLLISION */));
             }
         }
         else {

@@ -14,10 +14,10 @@ const Identity = require("../nodes/identity");
 const resolveToken = (project, node, symbol) => {
     if (symbol.value !== 300 /* Token */ && symbol.value !== 303 /* AliasToken */) {
         if (symbol.value === 301 /* Node */) {
-            project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_NODE_REFERENCE */));
         }
         else if (symbol.value === 302 /* AliasNode */) {
-            project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_ALIAS_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4107 /* INVALID_ALIAS_NODE_REFERENCE */));
         }
         else {
             project.errors.push(new Core.Error(node.fragment, 4102 /* UNRESOLVED_IDENTIFIER */));
@@ -42,7 +42,7 @@ const resolveNode = (project, direction, parent, state, symbol) => {
                 parent.setChild(direction, new Identity.Node(node, entry.identity));
             }
             else {
-                project.errors.push(new Core.Error(node.fragment, 4107 /* UNRESOLVED_TOKEN_REFERENCE */));
+                project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_TOKEN_REFERENCE */));
             }
         }
         else if (symbol.value === 303 /* AliasToken */) {
@@ -67,10 +67,10 @@ const resolveSkip = (project, node, state, symbol) => {
             project.errors.push(new Core.Error(node.fragment, 4104 /* INVALID_TOKEN_REFERENCE */));
         }
         else if (symbol.value === 301 /* Node */) {
-            project.errors.push(new Core.Error(node.fragment, 4103 /* INVALID_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_NODE_REFERENCE */));
         }
         else if (symbol.value === 302 /* AliasNode */) {
-            project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_ALIAS_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4107 /* INVALID_ALIAS_NODE_REFERENCE */));
         }
         else {
             project.errors.push(new Core.Error(node.fragment, 4102 /* UNRESOLVED_IDENTIFIER */));
