@@ -16,11 +16,11 @@ export const tokenize = (program: Core.Pattern, text: string, context: Core.Cont
   Console.printLine('Tokenizing...');
   if (!program.consume(source)) {
     context.errors.push(new Core.Error(source.fragment, Lang.Errors.UNEXPECTED_TOKEN));
-    return false;
+  } else {
+    Console.clearLine();
+    if (tokens) {
+      Tokens.print(context.tokens);
+    }
   }
-  Console.clearLine();
-  if (tokens) {
-    Tokens.print(context.tokens);
-  }
-  return true;
+  return context.errors.length === 0;
 };

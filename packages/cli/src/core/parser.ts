@@ -25,14 +25,14 @@ export const parse = (
   if (!program.consume(source)) {
     const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
     context.errors.push(new Core.Error(fragment, Lang.Errors.UNEXPECTED_SYNTAX));
-    return false;
+  } else {
+    Console.clearLine();
+    if (symbols) {
+      Symbols.print(context.node);
+    }
+    if (nodes) {
+      Nodes.print(context.node);
+    }
   }
-  Console.clearLine();
-  if (symbols) {
-    Symbols.print(context.node);
-  }
-  if (nodes) {
-    Nodes.print(context.node);
-  }
-  return true;
+  return context.errors.length === 0;
 };
