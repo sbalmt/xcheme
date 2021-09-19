@@ -11,15 +11,21 @@ const errorMessages = {
   [Lang.Errors.UNEXPECTED_TOKEN]: 'Unexpected token.',
   [Lang.Errors.UNEXPECTED_SYNTAX]: 'Unexpected syntax.',
   [Lang.Errors.UNEXPECTED_NODE]: 'Unexpected node.',
-  [Lang.Errors.UNSUPPORTED_NODE]: 'Unoptimized node.',
+  [Lang.Errors.UNSUPPORTED_NODE]: 'Unsupported node.',
+  [Lang.Errors.UNSUPPORTED_IDENTITY]: 'Unsupported identity.',
   [Lang.Errors.UNDEFINED_IDENTIFIER]: 'Undefined identifiers cannot be referenced.',
   [Lang.Errors.UNRESOLVED_IDENTIFIER]: 'Unresolved identifiers cannot be referenced.',
   [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]: 'Token reference is not resolved yet.',
+  [Lang.Errors.UNRESOLVED_NODE_REFERENCE]: 'Node reference is not resolved yet.',
+  [Lang.Errors.UNRESOLVED_ALIAS_TOKEN_REFERENCE]: 'Alias Token reference is not resolved yet.',
+  [Lang.Errors.UNRESOLVED_ALIAS_NODE_REFERENCE]: 'Alias Node reference is not resolved yet.',
   [Lang.Errors.INVALID_TOKEN_REFERENCE]: 'Token references cannot be in use here.',
   [Lang.Errors.INVALID_NODE_REFERENCE]: 'Node references cannot be in use here.',
   [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]: 'References for an alias token cannot be in use here.',
   [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: 'References for an alias node cannot be in use here.',
-  [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with a string.",
+  [Lang.Errors.INVALID_MAP_REFERENCE]: 'Map cannot be referenced here.',
+  [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: 'Map entries cannot be referenced here.',
+  [Lang.Errors.INVALID_MAP_ENTRY]: 'Map entries must start with a string.',
   [Lang.Errors.TOKEN_COLLISION]: 'Multiple tokens with the same expression.'
 };
 
