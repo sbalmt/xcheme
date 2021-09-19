@@ -40,4 +40,10 @@ export default class Table {
      * @throw Throws an error when a symbol record with the same fragment data already exists.
      */
     add(record: Record): void;
+    /**
+     * Find in all tables the symbol record that corresponds to the specified name.
+     * @param name Symbol record name.
+     * @returns Returns the corresponding record or undefined when the record wasn't found.
+     */
+    find(name: Fragment | string): Record | undefined;
 }

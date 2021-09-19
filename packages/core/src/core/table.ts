@@ -87,4 +87,17 @@ export default class Table {
     this.#records[name] = record;
     this.#length++;
   }
+
+  /**
+   * Find in all tables the symbol record that corresponds to the specified name.
+   * @param name Symbol record name.
+   * @returns Returns the corresponding record or undefined when the record wasn't found.
+   */
+  find(name: Fragment | string): Record | undefined {
+    const record = this.get(name);
+    if (record === void 0 && this.#parent !== void 0) {
+      return this.#parent.find(name);
+    }
+    return record;
+  }
 }
