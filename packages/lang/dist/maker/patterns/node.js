@@ -30,7 +30,7 @@ const emit = (project, type, name, identity, pattern, ref) => {
  * @param alias Determines whether or not the node is an alias.
  */
 const consume = (project, directive, pointers, alias) => {
-    const identity = directive.identity;
+    const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
     const state = { type: 2 /* Node */, identity, pointers };
     const expression = Expression.consume(project, directive.right, state);
     if (expression !== void 0) {

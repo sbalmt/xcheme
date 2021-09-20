@@ -3,10 +3,15 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Parser = require("../../parser");
-const Condition = require("./condition");
+const Reference = require("./reference");
+const String = require("./string");
+const Range = require("./range");
+const Map = require("./map");
+const Access = require("./access");
 const Or = require("./or");
 const And = require("./and");
-const Negate = require("./not");
+const Condition = require("./condition");
+const Not = require("./not");
 const Option = require("./option");
 const Repeat = require("./repeat");
 const Place = require("./place");
@@ -18,9 +23,6 @@ const Scope = require("./scope");
 const Error = require("./error");
 const Has = require("./has");
 const Set = require("./set");
-const Reference = require("./reference");
-const Range = require("./range");
-const String = require("./string");
 /**
  * Consume the specified input node resolving its expression patterns.
  * @param project Input project.
@@ -38,50 +40,54 @@ const consume = (project, node, state) => {
             return project.coder.emitAnyPattern();
         case 205 /* Range */:
             return Range.consume(project, node, state);
-        case 206 /* Then */:
+        case 207 /* Map */:
+            return Map.consume(project, node, state);
+        case 206 /* Access */:
+            return Access.consume(project, node, state);
+        case 209 /* Then */:
             return Condition.consume(project, node, state);
-        case 208 /* Or */:
+        case 211 /* Or */:
             return Or.consume(project, node, state);
-        case 209 /* And */:
+        case 212 /* And */:
             return And.consume(project, node, state);
-        case 210 /* Not */:
-            return Negate.consume(project, node, state);
-        case 211 /* Opt */:
+        case 213 /* Not */:
+            return Not.consume(project, node, state);
+        case 214 /* Opt */:
             return Option.consume(project, node, state);
-        case 212 /* Repeat */:
+        case 215 /* Repeat */:
             return Repeat.consume(project, node, state);
-        case 216 /* Place */:
-        case 215 /* PlaceRight */:
+        case 219 /* Place */:
+        case 218 /* PlaceRight */:
             return Place.consume(project, node, state, 1 /* Right */);
-        case 213 /* PlaceNext */:
+        case 216 /* PlaceNext */:
             return Place.consume(project, node, state, 2 /* Next */);
-        case 214 /* PlaceLeft */:
+        case 217 /* PlaceLeft */:
             return Place.consume(project, node, state, 0 /* Left */);
-        case 220 /* Append */:
-        case 219 /* AppendRight */:
+        case 223 /* Append */:
+        case 222 /* AppendRight */:
             return Append.consume(project, node, state, 1 /* Right */);
-        case 217 /* AppendNext */:
+        case 220 /* AppendNext */:
             return Append.consume(project, node, state, 2 /* Next */);
-        case 218 /* AppendLeft */:
+        case 221 /* AppendLeft */:
             return Append.consume(project, node, state, 0 /* Left */);
-        case 224 /* Prepend */:
-        case 223 /* PrependRight */:
+        case 227 /* Prepend */:
+        case 226 /* PrependRight */:
             return Prepend.consume(project, node, state, 1 /* Right */);
-        case 221 /* PrependNext */:
+        case 224 /* PrependNext */:
             return Prepend.consume(project, node, state, 2 /* Next */);
-        case 222 /* PrependLeft */:
+        case 225 /* PrependLeft */:
             return Prepend.consume(project, node, state, 0 /* Left */);
-        case 225 /* Pivot */:
+        case 228 /* Pivot */:
             return Pivot.consume(project, node, state);
-        case 226 /* Symbol */:
+        case 229 /* Symbol */:
             return Symbol.consume(project, node, state);
-        case 227 /* Scope */:
+        case 230 /* Scope */:
             return Scope.consume(project, node, state);
-        case 228 /* Error */:
+        case 231 /* Error */:
             return Error.consume(project, node, state);
-        case 229 /* Has */:
+        case 232 /* Has */:
             return Has.consume(project, node, state);
-        case 230 /* Set */:
+        case 233 /* Set */:
             return Set.consume(project, node, state);
         default:
             project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));

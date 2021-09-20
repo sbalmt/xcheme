@@ -10,16 +10,17 @@ const Expression = require("./expression");
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
- * @param alias Determines whether or not the node is an alias.
  */
-const consume = (project, direction, parent, state, alias) => {
+const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const entry = { type: 0 /* User */, identity: state.identity, identifier: node.fragment.data };
+    const entry = state.entry;
     const type = state.type;
     state.type = 3 /* Node */;
+    entry.type = 1 /* User */;
+    entry.identifier = node.fragment.data;
     Expression.consume(project, 1 /* Right */, node, state);
-    parent.setChild(direction, new Directive.Node(node, entry.identity, alias));
-    state.references[entry.identifier] = entry;
+    parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, state.alias));
+    state.references[entry.identifier] = state.entry;
     state.type = type;
 };
 exports.consume = consume;

@@ -8,10 +8,15 @@ import { State } from '../context';
 
 import type { PatternEntry } from '../coder/base';
 
-import * as Condition from './condition';
+import * as Reference from './reference';
+import * as String from './string';
+import * as Range from './range';
+import * as Map from './map';
+import * as Access from './access';
 import * as Or from './or';
 import * as And from './and';
-import * as Negate from './not';
+import * as Condition from './condition';
+import * as Not from './not';
 import * as Option from './option';
 import * as Repeat from './repeat';
 import * as Place from './place';
@@ -23,9 +28,6 @@ import * as Scope from './scope';
 import * as Error from './error';
 import * as Has from './has';
 import * as Set from './set';
-import * as Reference from './reference';
-import * as Range from './range';
-import * as String from './string';
 
 /**
  * Consume the specified input node resolving its expression patterns.
@@ -44,6 +46,10 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
       return project.coder.emitAnyPattern();
     case Parser.Nodes.Range:
       return Range.consume(project, node, state);
+    case Parser.Nodes.Map:
+      return Map.consume(project, node, state);
+    case Parser.Nodes.Access:
+      return Access.consume(project, node, state);
     case Parser.Nodes.Then:
       return Condition.consume(project, node, state);
     case Parser.Nodes.Or:
@@ -51,7 +57,7 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
     case Parser.Nodes.And:
       return And.consume(project, node, state);
     case Parser.Nodes.Not:
-      return Negate.consume(project, node, state);
+      return Not.consume(project, node, state);
     case Parser.Nodes.Opt:
       return Option.consume(project, node, state);
     case Parser.Nodes.Repeat:

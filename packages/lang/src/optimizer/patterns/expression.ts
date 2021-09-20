@@ -7,6 +7,8 @@ import * as Reference from './reference';
 import * as Mergeable from './mergeable';
 import * as String from './string';
 import * as Range from './range';
+import * as Map from './map';
+import * as Access from './access';
 
 import { Project } from '../../core/project';
 
@@ -29,6 +31,12 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
       break;
     case Parser.Nodes.String:
       String.consume(project, direction, parent, state);
+      break;
+    case Parser.Nodes.Map:
+      Map.consume(project, direction, parent, state);
+      break;
+    case Parser.Nodes.Access:
+      Access.consume(project, direction, parent, state);
       break;
     case Parser.Nodes.Or:
       Mergeable.consume(project, direction, parent, Parser.Nodes.Or, state);

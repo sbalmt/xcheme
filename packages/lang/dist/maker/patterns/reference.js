@@ -88,7 +88,7 @@ const resolveSkip = (project, node, state, symbol) => {
  */
 const consume = (project, node, state) => {
     const name = node.fragment.data;
-    const symbol = node.table?.get(name);
+    const symbol = node.table.find(name);
     if (symbol !== void 0) {
         switch (state.type) {
             case 1 /* Token */:
@@ -99,7 +99,7 @@ const consume = (project, node, state) => {
                 return resolveSkip(project, node, state, symbol);
         }
     }
-    project.errors.push(new Core.Error(node.fragment, 4101 /* UNDEFINED_IDENTIFIER */));
+    project.errors.push(new Core.Error(node.fragment, 4102 /* UNDEFINED_IDENTIFIER */));
     return void 0;
 };
 exports.consume = consume;

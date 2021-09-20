@@ -1,5 +1,5 @@
-import type * as Reference from './reference';
 import * as Core from '@xcheme/core';
+import * as Reference from './reference';
 /**
  * Context types.
  */
@@ -18,15 +18,31 @@ export declare type State = {
      */
     type: Types;
     /**
-     * Previous entry node.
+     * Anchor node.
      */
-    entry: Core.Node;
+    anchor: Core.Node;
     /**
-     * Current identity.
+     * Determines whether or not the context is an alias.
      */
-    identity: number;
+    alias: boolean;
+    /**
+     * Reference entry.
+     */
+    entry: Reference.Entry;
     /**
      * All references.
      */
     references: Reference.Map;
+    /**
+     * Identity counter.
+     */
+    counter: number;
 };
+/**
+ * Get a new state based on the given parameters.
+ * @param anchor Anchor node.
+ * @param references References map.
+ * @param counter Auto identity counter.
+ * @returns Returns the new state.
+ */
+export declare const getNewState: (anchor: Core.Node, references: Reference.Map, counter: number) => State;

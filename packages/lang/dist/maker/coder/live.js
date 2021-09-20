@@ -21,11 +21,18 @@ class Live extends base_1.Base {
      * Get a new route.
      * @param path Route path.
      * @param value Optional route value.
+     * @param pattern Optional route pattern.
      * @returns Returns the route.
      */
-    getRoute(path, value) {
-        if (value) {
+    getRoute(path, value, pattern) {
+        if (value !== void 0) {
+            if (pattern !== void 0) {
+                return new Core.SetValueRoute(value, pattern, ...path);
+            }
             return new Core.SetValueRoute(value, path[0], ...path.slice(1));
+        }
+        if (pattern !== void 0) {
+            return new Core.FlowRoute(pattern, path[0], ...path.slice(1));
         }
         return new Core.UnitRoute(path[0], ...path.slice(1));
     }

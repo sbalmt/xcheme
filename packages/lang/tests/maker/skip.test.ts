@@ -16,3 +16,7 @@ test('Skip referring a node (reference error)', () => {
 test('Skip referring an alias node (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "alias node NODE as '@'; skip NODE;", [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]);
 });
+
+test('Skip with an identified map', () => {
+  Helper.makeError(new Lang.LiveCoder(), "skip map { <100> A as 'a' };", [Lang.Errors.UNSUPPORTED_IDENTITY]);
+});

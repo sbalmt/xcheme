@@ -37,9 +37,10 @@ export declare class Base {
      * Should be implemented to return a route.
      * @param path Route path.
      * @param value Optional route value.
+     * @param pattern Optional route pattern.
      * @returns Should return the route.
      */
-    getRoute(path: (string | number)[], value?: number): RouteEntry;
+    getRoute(path: (string | number)[], value?: number, pattern?: PatternEntry): RouteEntry;
     /**
      * Should be implemented to return a map pattern.
      * @param routes Map routes.

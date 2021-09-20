@@ -12,9 +12,10 @@ import { Project } from '../../core/project';
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Input project.
  * @param node Input node.
+ * @param state Context state.
  * @param symbol Input symbol.
  */
-const resolveToken = (project: Project, node: Core.Node, symbol: Core.Record): void => {
+const resolveToken = (project: Project, node: Core.Node, state: Context.State, symbol: Core.Record): void => {
   if (symbol.value !== Parser.Symbols.Token && symbol.value !== Parser.Symbols.AliasToken) {
     if (symbol.value === Parser.Symbols.Node) {
       project.errors.push(new Core.Error(node.fragment, Errors.INVALID_NODE_REFERENCE));
@@ -22,6 +23,12 @@ const resolveToken = (project: Project, node: Core.Node, symbol: Core.Record): v
       project.errors.push(new Core.Error(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE));
     } else {
       project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_IDENTIFIER));
+    }
+  } else {
+    const identifier = node.fragment.data;
+    const entry = state.references[identifier];
+    if (entry !== void 0 && entry.dynamic) {
+      state.entry.dynamic = true;
     }
   }
 };
@@ -35,13 +42,17 @@ const resolveToken = (project: Project, node: Core.Node, symbol: Core.Record): v
  * @param symbol Input symbol.
  */
 const resolveNode = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State, symbol: Core.Record): void => {
+  const node = parent.getChild(direction)!;
+  const identifier = node.fragment.data;
+  const entry = state.references[identifier];
   if (symbol.value !== Parser.Symbols.Node && symbol.value !== Parser.Symbols.AliasNode) {
-    const node = parent.getChild(direction)!;
     if (symbol.value === Parser.Symbols.Token) {
-      const identifier = node.fragment.data;
-      const entry = state.references[identifier];
       if (entry !== void 0) {
-        parent.setChild(direction, new Identity.Node(node, entry.identity));
+        if (entry.dynamic) {
+          project.errors.push(new Core.Error(node.fragment, Errors.INVALID_MAP_REFERENCE));
+        } else {
+          parent.setChild(direction, new Identity.Node(node, entry.identity, entry.dynamic));
+        }
       } else {
         project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_TOKEN_REFERENCE));
       }
@@ -50,6 +61,8 @@ const resolveNode = (project: Project, direction: Core.Nodes, parent: Core.Node,
     } else {
       project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_IDENTIFIER));
     }
+  } else if (entry !== void 0 && entry.dynamic) {
+    state.entry.dynamic = true;
   }
 };
 
@@ -84,13 +97,13 @@ const resolveSkip = (project: Project, node: Core.Node, state: Context.State, sy
  */
 export const consume = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.getChild(direction)!;
-  const symbol = node.table?.get(node.fragment.data);
-  if (!symbol) {
+  const symbol = node.table.find(node.fragment.data);
+  if (symbol === void 0) {
     project.errors.push(new Core.Error(node.fragment, Errors.UNDEFINED_IDENTIFIER));
   } else {
     switch (state.type) {
       case Context.Types.Token:
-        resolveToken(project, node, symbol);
+        resolveToken(project, node, state, symbol);
         break;
       case Context.Types.Node:
         resolveNode(project, direction, parent, state, symbol);

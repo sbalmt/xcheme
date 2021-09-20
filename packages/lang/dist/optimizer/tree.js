@@ -43,7 +43,7 @@ exports.getIdentifier = getIdentifier;
  */
 const getToken = (identifier, table, location, expression) => {
     const fragment = new Core.Fragment('token', 0, 5, location);
-    const token = new Core.Node(fragment, table, 232 /* Token */);
+    const token = new Core.Node(fragment, table, 235 /* Token */);
     const ident = exports.getIdentifier(identifier, table, location);
     ident.setChild(1 /* Right */, expression);
     token.setChild(1 /* Right */, ident);

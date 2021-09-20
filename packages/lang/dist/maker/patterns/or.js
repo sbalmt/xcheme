@@ -13,7 +13,7 @@ const Expression = require("./expression");
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 const resolve = (project, node, state) => {
-    if (node.value !== 208 /* Or */) {
+    if (node.value !== 211 /* Or */) {
         const pattern = Expression.consume(project, node, state);
         if (pattern !== void 0) {
             return [pattern];

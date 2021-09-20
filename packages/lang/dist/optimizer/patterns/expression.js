@@ -7,6 +7,8 @@ const Reference = require("./reference");
 const Mergeable = require("./mergeable");
 const String = require("./string");
 const Range = require("./range");
+const Map = require("./map");
+const Access = require("./access");
 /**
  * Consume the specified input node optimizing its expression pattern.
  * @param project Input project.
@@ -27,11 +29,17 @@ const consume = (project, direction, parent, state) => {
         case 203 /* String */:
             String.consume(project, direction, parent, state);
             break;
-        case 208 /* Or */:
-            Mergeable.consume(project, direction, parent, 208 /* Or */, state);
+        case 207 /* Map */:
+            Map.consume(project, direction, parent, state);
             break;
-        case 209 /* And */:
-            Mergeable.consume(project, direction, parent, 209 /* And */, state);
+        case 206 /* Access */:
+            Access.consume(project, direction, parent, state);
+            break;
+        case 211 /* Or */:
+            Mergeable.consume(project, direction, parent, 211 /* Or */, state);
+            break;
+        case 212 /* And */:
+            Mergeable.consume(project, direction, parent, 212 /* And */, state);
             break;
         default:
             exports.consume(project, 1 /* Right */, node, state);

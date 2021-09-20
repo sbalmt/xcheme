@@ -13,19 +13,18 @@ const String = require("./string");
  * @param node Input node.
  * @param state Consumption state.
  * @param name Entry name.
- * @param entry Reference entry.
  */
-const assign = (project, node, state, name, entry) => {
+const assign = (project, node, state, name) => {
     const current = state.references[name];
     if (current !== void 0) {
-        if (current.type !== 1 /* Loose */) {
-            project.errors.push(new Core.Error(node.fragment, 4109 /* TOKEN_COLLISION */));
+        if (current.type !== 2 /* Loose */) {
+            project.errors.push(new Core.Error(node.fragment, 4115 /* TOKEN_COLLISION */));
         }
     }
     else {
         const identifier = node.fragment.data;
-        state.references[identifier] = entry;
-        state.references[name] = entry;
+        state.references[identifier] = state.entry;
+        state.references[name] = state.entry;
     }
 };
 /**
@@ -34,35 +33,34 @@ const assign = (project, node, state, name, entry) => {
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
- * @param alias Determines whether or not the token is an alias.
  */
-const consume = (project, direction, parent, state, alias) => {
+const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     const expression = node.right;
+    const entry = state.entry;
     const type = state.type;
-    const entry = {
-        type: type === 3 /* Node */ ? 1 /* Loose */ : 0 /* User */,
-        identity: state.identity,
-        identifier: node.fragment.data
-    };
     state.type = 2 /* Token */;
+    entry.identifier = node.fragment.data;
+    if (entry.type === 0 /* Undefined */) {
+        entry.type = 1 /* User */;
+    }
     if (expression.value === 203 /* String */) {
         String.consume(project, 1 /* Right */, node, state);
         const word = node.right.fragment.data;
-        assign(project, node, state, word, entry);
+        assign(project, node, state, word);
     }
     else if (expression.value === 205 /* Range */) {
         Range.consume(project, 1 /* Right */, node, state);
         const from = expression.left.fragment.data;
         const to = expression.right.fragment.data;
         const range = `${from}-${to}`;
-        assign(project, node, state, range, entry);
+        assign(project, node, state, range);
     }
     else {
         Expression.consume(project, 1 /* Right */, node, state);
         state.references[entry.identifier] = entry;
     }
-    parent.setChild(direction, new Directive.Node(node, entry.identity, alias));
+    parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, state.alias));
     state.type = type;
 };
 exports.consume = consume;

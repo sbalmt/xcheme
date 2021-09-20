@@ -16,10 +16,10 @@ import * as Expression from './expression';
  */
 export const consume = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.getChild(direction)!;
-  const identity = state.identity;
+  const entry = state.entry;
   const type = state.type;
   state.type = Context.Types.Skip;
   Expression.consume(project, Core.Nodes.Right, node, state);
-  parent.setChild(direction, new Directive.Node(node, identity, false));
+  parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, false));
   state.type = type;
 };

@@ -21,7 +21,7 @@ const mapMembers = new Core.ExpectFlowPattern(new Core.AppendNodePattern(208 /* 
 /**
  * Map operand pattern.
  */
-const mapOperand = new Core.ScopeSymbolPattern(new Core.ExpectUnitPattern(106 /* Map */), new Core.AppendNodePattern(207 /* Map */, 1 /* Right */, 1 /* Right */, new Core.ExpectUnitPattern(134 /* OpenBraces */), new Core.OptFlowPattern(mapMembers), new Core.ExpectUnitPattern(135 /* CloseBraces */)));
+const mapOperand = new Core.ScopeSymbolPattern(new Core.ExpectUnitPattern(106 /* Map */), new Core.AppendNodePattern(207 /* Map */, 1 /* Right */, 1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(134 /* OpenBraces */), new Core.OptFlowPattern(mapMembers), new Core.ExpectUnitPattern(135 /* CloseBraces */))));
 /**
  * Range operand pattern.
  */
@@ -41,7 +41,7 @@ const conditionExpression = new Core.OptFlowPattern(new Core.PivotNodePattern(20
 /**
  * Expression pattern.
  */
-const expression = new Core.ExpectFlowPattern(new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(211 /* Or */, 109 /* Or */)), new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(212 /* And */, 110 /* And */)), new unary_1.default(unaryOperators, new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(206 /* Access */, 131 /* Period */)), new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression))))), conditionExpression);
+const expression = new Core.ExpectFlowPattern(new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(211 /* Or */, 109 /* Or */)), new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(212 /* And */, 110 /* And */)), new unary_1.default(unaryOperators, new Core.PlaceNodePattern(1 /* Right */, new binary_1.default(new Core.MapFlowPattern(new Core.SetValueRoute(206 /* Access */, 131 /* Period */)), new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)))))), conditionExpression);
 /**
  * Skip directive route.
  */

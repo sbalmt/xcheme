@@ -1,3 +1,5 @@
+import * as Core from '@xcheme/core';
+
 import * as Entries from '../../core/entries';
 import * as Directive from '../../optimizer/nodes/directive';
 
@@ -34,7 +36,7 @@ const emit = (project: Project, type: Entries.Types, name: string, identity: num
  * @param alias Determines whether or not the token is an alias.
  */
 export const consume = (project: Project, directive: Directive.Node, pointers: Pointers, alias: boolean): void => {
-  const identity = directive.identity;
+  const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
   const state = { type: Types.Token, identity, pointers };
   const expression = Expression.consume(project, directive.right!, state);
   if (expression !== void 0) {

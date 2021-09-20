@@ -31,9 +31,10 @@ export declare class Text extends Base {
      * Get a new route.
      * @param path Route path.
      * @param value Optional route value.
+     * @param pattern Optional route pattern.
      * @returns Returns the route.
      */
-    getRoute(path: (string | number)[], value?: number): string;
+    getRoute(path: (string | number)[], value?: number, pattern?: string): string;
     /**
      * Get a new map pattern.
      * @param routes Map routes.

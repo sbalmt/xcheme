@@ -30,9 +30,10 @@ export declare class Live extends Base {
      * Get a new route.
      * @param path Route path.
      * @param value Optional route value.
+     * @param pattern Optional route pattern.
      * @returns Returns the route.
      */
-    getRoute(path: (string | number)[], value?: number): Core.Route;
+    getRoute(path: (string | number)[], value?: number, pattern?: Core.Pattern): Core.Route;
     /**
      * Get a new map pattern.
      * @param routes Map routes.

@@ -13,6 +13,24 @@ test('Token referring an alias node (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]);
 });
 
+test('Token referring a token map entry (reference error)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as map { <100> A as 'a' }; token TOKEN2 as TOKEN1.A;", [
+    Lang.Errors.INVALID_MAP_ENTRY_REFERENCE
+  ]);
+});
+
+test('Token referring an alias token map entry (reference error)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "alias token TOKEN1 as map { <100> A as 'a' }; token TOKEN2 as TOKEN1.A;", [
+    Lang.Errors.INVALID_MAP_ENTRY_REFERENCE
+  ]);
+});
+
+test('Token referring a node map entry (reference error)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "node NODE as map { <100> A as 'a' }; token TOKEN as NODE.A;", [
+    Lang.Errors.INVALID_MAP_ENTRY_REFERENCE
+  ]);
+});
+
 test('Token already defined (token collision)', () => {
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as '@'; token TOKEN2 as '@';", [Lang.Errors.TOKEN_COLLISION]);
 });

@@ -16,31 +16,47 @@ const consumeNodes = (node, project) => {
     let counter = project.options.initialIdentity ?? 0;
     const references = {};
     while (node.next !== void 0) {
+        const state = {
+            type: 0 /* Undefined */,
+            alias: false,
+            anchor: node,
+            entry: {
+                type: 0 /* Undefined */,
+                identity: counter,
+                identifier: '?',
+                dynamic: false
+            },
+            references,
+            counter
+        };
         const entry = node.next;
-        const state = { type: 0 /* Undefined */, entry: node, references, identity: counter };
-        if (entry.value === 231 /* Skip */) {
+        if (entry.value === 234 /* Skip */) {
             Skip.consume(project, 2 /* Next */, node, state);
         }
         else {
             const directive = entry.right;
-            state.identity = (directive.left ? parseInt(directive.left?.fragment.data) : NaN) || counter;
+            if (directive.left !== void 0) {
+                state.entry.identity = parseInt(directive.left.fragment.data) || counter;
+            }
             switch (entry.value) {
-                case 232 /* Token */:
-                    Token.consume(project, 1 /* Right */, entry, state, false);
+                case 235 /* Token */:
+                    Token.consume(project, 1 /* Right */, entry, state);
                     break;
-                case 233 /* Node */:
-                    Node.consume(project, 1 /* Right */, entry, state, false);
+                case 236 /* Node */:
+                    Node.consume(project, 1 /* Right */, entry, state);
                     break;
-                case 234 /* AliasToken */:
-                    Token.consume(project, 1 /* Right */, entry, state, true);
+                case 237 /* AliasToken */:
+                    state.alias = true;
+                    Token.consume(project, 1 /* Right */, entry, state);
                     break;
-                case 235 /* AliasNode */:
-                    Node.consume(project, 1 /* Right */, entry, state, true);
+                case 238 /* AliasNode */:
+                    state.alias = true;
+                    Node.consume(project, 1 /* Right */, entry, state);
                     break;
             }
         }
-        counter = state.identity + 1;
-        node = node.next;
+        counter = state.counter + 1;
+        node = entry;
     }
     return project.errors.length === 0;
 };

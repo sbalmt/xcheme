@@ -13,11 +13,11 @@ const Expression = require("./expression");
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const identity = state.identity;
+    const entry = state.entry;
     const type = state.type;
     state.type = 1 /* Skip */;
     Expression.consume(project, 1 /* Right */, node, state);
-    parent.setChild(direction, new Directive.Node(node, identity, false));
+    parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, false));
     state.type = type;
 };
 exports.consume = consume;

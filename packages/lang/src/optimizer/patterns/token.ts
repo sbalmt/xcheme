@@ -18,9 +18,8 @@ import * as String from './string';
  * @param node Input node.
  * @param state Consumption state.
  * @param name Entry name.
- * @param entry Reference entry.
  */
-const assign = (project: Project, node: Core.Node, state: Context.State, name: string, entry: Reference.Entry): void => {
+const assign = (project: Project, node: Core.Node, state: Context.State, name: string): void => {
   const current = state.references[name];
   if (current !== void 0) {
     if (current.type !== Reference.Types.Loose) {
@@ -28,8 +27,8 @@ const assign = (project: Project, node: Core.Node, state: Context.State, name: s
     }
   } else {
     const identifier = node.fragment.data;
-    state.references[identifier] = entry;
-    state.references[name] = entry;
+    state.references[identifier] = state.entry;
+    state.references[name] = state.entry;
   }
 };
 
@@ -39,32 +38,31 @@ const assign = (project: Project, node: Core.Node, state: Context.State, name: s
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
- * @param alias Determines whether or not the token is an alias.
  */
-export const consume = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State, alias: boolean): void => {
+export const consume = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.getChild(direction)!;
   const expression = node.right!;
+  const entry = state.entry;
   const type = state.type;
-  const entry = {
-    type: type === Context.Types.Node ? Reference.Types.Loose : Reference.Types.User,
-    identity: state.identity,
-    identifier: node.fragment.data
-  };
   state.type = Context.Types.Token;
+  entry.identifier = node.fragment.data;
+  if (entry.type === Reference.Types.Undefined) {
+    entry.type = Reference.Types.User;
+  }
   if (expression.value === Parser.Nodes.String) {
     String.consume(project, Core.Nodes.Right, node, state);
     const word = node.right!.fragment.data;
-    assign(project, node, state, word, entry);
+    assign(project, node, state, word);
   } else if (expression.value === Parser.Nodes.Range) {
     Range.consume(project, Core.Nodes.Right, node, state);
     const from = expression.left!.fragment.data;
     const to = expression.right!.fragment.data;
     const range = `${from}-${to}`;
-    assign(project, node, state, range, entry);
+    assign(project, node, state, range);
   } else {
     Expression.consume(project, Core.Nodes.Right, node, state);
     state.references[entry.identifier] = entry;
   }
-  parent.setChild(direction, new Directive.Node(node, entry.identity, alias));
+  parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, state.alias));
   state.type = type;
 };

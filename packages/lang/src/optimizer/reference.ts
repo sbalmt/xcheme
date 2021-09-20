@@ -2,6 +2,7 @@
  * Reference types.
  */
 export const enum Types {
+  Undefined,
   User,
   Loose
 }
@@ -22,6 +23,10 @@ export type Entry = {
    * Reference identity.
    */
   identity: number;
+  /**
+   * Determines whether or not the entry can have a dynamic identity.
+   */
+  dynamic: boolean;
 };
 
 /**
@@ -29,4 +34,18 @@ export type Entry = {
  */
 export type Map = {
   [key: string]: Entry;
+};
+
+/**
+ * Get a new entry with the given identity.
+ * @param identity Entry identity.
+ * @returns Returns the new entry.
+ */
+export const getNewEntry = (identity: number): Entry => {
+  return {
+    type: Types.Undefined,
+    identifier: '?',
+    identity: identity,
+    dynamic: false
+  };
 };

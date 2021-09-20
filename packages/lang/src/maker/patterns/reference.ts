@@ -96,7 +96,7 @@ const resolveSkip = (project: Project, node: Core.Node, state: State, symbol: Co
  */
 export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
   const name = node.fragment.data;
-  const symbol = node.table?.get(name);
+  const symbol = node.table.find(name);
   if (symbol !== void 0) {
     switch (state.type) {
       case Types.Token:

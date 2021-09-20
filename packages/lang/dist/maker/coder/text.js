@@ -59,11 +59,18 @@ class Text extends base_1.Base {
      * Get a new route.
      * @param path Route path.
      * @param value Optional route value.
+     * @param pattern Optional route pattern.
      * @returns Returns the route.
      */
-    getRoute(path, value) {
-        if (value) {
+    getRoute(path, value, pattern) {
+        if (value !== void 0) {
+            if (pattern !== void 0) {
+                return this.#getPattern('SetValueRoute', value, pattern, ...this.#getUnits(path));
+            }
             return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
+        }
+        if (pattern !== void 0) {
+            return this.#getPattern('FlowRoute', pattern, ...this.#getUnits(path));
         }
         return this.#getPattern('UnitRoute', ...this.#getUnits(path));
     }

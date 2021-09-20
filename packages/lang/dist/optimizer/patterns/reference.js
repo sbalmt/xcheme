@@ -9,18 +9,26 @@ const Identity = require("../nodes/identity");
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Input project.
  * @param node Input node.
+ * @param state Context state.
  * @param symbol Input symbol.
  */
-const resolveToken = (project, node, symbol) => {
+const resolveToken = (project, node, state, symbol) => {
     if (symbol.value !== 300 /* Token */ && symbol.value !== 303 /* AliasToken */) {
         if (symbol.value === 301 /* Node */) {
-            project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4109 /* INVALID_NODE_REFERENCE */));
         }
         else if (symbol.value === 302 /* AliasNode */) {
-            project.errors.push(new Core.Error(node.fragment, 4107 /* INVALID_ALIAS_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4111 /* INVALID_ALIAS_NODE_REFERENCE */));
         }
         else {
-            project.errors.push(new Core.Error(node.fragment, 4102 /* UNRESOLVED_IDENTIFIER */));
+            project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_IDENTIFIER */));
+        }
+    }
+    else {
+        const identifier = node.fragment.data;
+        const entry = state.references[identifier];
+        if (entry !== void 0 && entry.dynamic) {
+            state.entry.dynamic = true;
         }
     }
 };
@@ -33,24 +41,32 @@ const resolveToken = (project, node, symbol) => {
  * @param symbol Input symbol.
  */
 const resolveNode = (project, direction, parent, state, symbol) => {
+    const node = parent.getChild(direction);
+    const identifier = node.fragment.data;
+    const entry = state.references[identifier];
     if (symbol.value !== 301 /* Node */ && symbol.value !== 302 /* AliasNode */) {
-        const node = parent.getChild(direction);
         if (symbol.value === 300 /* Token */) {
-            const identifier = node.fragment.data;
-            const entry = state.references[identifier];
             if (entry !== void 0) {
-                parent.setChild(direction, new Identity.Node(node, entry.identity));
+                if (entry.dynamic) {
+                    project.errors.push(new Core.Error(node.fragment, 4112 /* INVALID_MAP_REFERENCE */));
+                }
+                else {
+                    parent.setChild(direction, new Identity.Node(node, entry.identity, entry.dynamic));
+                }
             }
             else {
-                project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_TOKEN_REFERENCE */));
+                project.errors.push(new Core.Error(node.fragment, 4104 /* UNRESOLVED_TOKEN_REFERENCE */));
             }
         }
         else if (symbol.value === 303 /* AliasToken */) {
-            project.errors.push(new Core.Error(node.fragment, 4106 /* INVALID_ALIAS_TOKEN_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4110 /* INVALID_ALIAS_TOKEN_REFERENCE */));
         }
         else {
-            project.errors.push(new Core.Error(node.fragment, 4102 /* UNRESOLVED_IDENTIFIER */));
+            project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_IDENTIFIER */));
         }
+    }
+    else if (entry !== void 0 && entry.dynamic) {
+        state.entry.dynamic = true;
     }
 };
 /**
@@ -64,16 +80,16 @@ const resolveNode = (project, direction, parent, state, symbol) => {
 const resolveSkip = (project, node, state, symbol) => {
     if (symbol.value !== 303 /* AliasToken */) {
         if (symbol.value === 300 /* Token */) {
-            project.errors.push(new Core.Error(node.fragment, 4104 /* INVALID_TOKEN_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4108 /* INVALID_TOKEN_REFERENCE */));
         }
         else if (symbol.value === 301 /* Node */) {
-            project.errors.push(new Core.Error(node.fragment, 4105 /* INVALID_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4109 /* INVALID_NODE_REFERENCE */));
         }
         else if (symbol.value === 302 /* AliasNode */) {
-            project.errors.push(new Core.Error(node.fragment, 4107 /* INVALID_ALIAS_NODE_REFERENCE */));
+            project.errors.push(new Core.Error(node.fragment, 4111 /* INVALID_ALIAS_NODE_REFERENCE */));
         }
         else {
-            project.errors.push(new Core.Error(node.fragment, 4102 /* UNRESOLVED_IDENTIFIER */));
+            project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_IDENTIFIER */));
         }
     }
 };
@@ -86,14 +102,14 @@ const resolveSkip = (project, node, state, symbol) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const symbol = node.table?.get(node.fragment.data);
-    if (!symbol) {
-        project.errors.push(new Core.Error(node.fragment, 4101 /* UNDEFINED_IDENTIFIER */));
+    const symbol = node.table.find(node.fragment.data);
+    if (symbol === void 0) {
+        project.errors.push(new Core.Error(node.fragment, 4102 /* UNDEFINED_IDENTIFIER */));
     }
     else {
         switch (state.type) {
             case 2 /* Token */:
-                resolveToken(project, node, symbol);
+                resolveToken(project, node, state, symbol);
                 break;
             case 3 /* Node */:
                 resolveNode(project, direction, parent, state, symbol);

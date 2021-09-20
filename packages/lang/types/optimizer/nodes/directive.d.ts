@@ -9,15 +9,16 @@ export declare class Node extends Identity.Node {
      * Default constructor.
      * @param node Original node.
      * @param identity Node identity.
+     * @param dynamic Determines whether or not the directive can have a dynamic identity.
      * @param alias Determines whether or not the directive is an alias.
      */
-    constructor(node: Core.Node, identity: number, alias: boolean);
+    constructor(node: Core.Node, identity: number, dynamic: boolean, alias: boolean);
     /**
-     * Get whether or not the node is an alias.
+     * Get whether or not the directive is an alias.
      */
     get alias(): boolean;
     /**
-     * Get the node name.
+     * Get the directive name.
      */
     get name(): string;
 }

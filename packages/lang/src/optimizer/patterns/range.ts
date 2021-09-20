@@ -29,11 +29,14 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
         project.errors.push(new Core.Error(node.fragment, Errors.TOKEN_COLLISION));
       }
     } else {
-      const token = Tree.getToken(`@REF${++state.identity}`, node.table, node.fragment.location, node);
-      Token.consume(project, Core.Nodes.Right, token, state, false);
-      token.setChild(Core.Nodes.Next, state.entry.next);
-      state.entry.setChild(Core.Nodes.Next, token);
-      state.entry = token;
+      const token = Tree.getToken(`@REF${++state.counter}`, node.table, node.fragment.location, node);
+      const temp = Context.getNewState(state.anchor, state.references, state.counter);
+      temp.entry.type = Reference.Types.Loose;
+      Token.consume(project, Core.Nodes.Right, token, temp);
+      token.setChild(Core.Nodes.Next, state.anchor.next);
+      state.counter = temp.counter;
+      state.anchor.setChild(Core.Nodes.Next, token);
+      state.anchor = token;
       entry = state.references[range];
     }
     const reference = Tree.getReference(entry.identifier, node.table, node.fragment.location);

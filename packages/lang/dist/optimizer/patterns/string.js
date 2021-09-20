@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
+const Context = require("../context");
 const Tree = require("../tree");
 const Expression = require("./expression");
 const Token = require("./token");
@@ -18,16 +19,19 @@ const consume = (project, direction, parent, state) => {
         const word = node.fragment.data;
         let entry = state.references[word];
         if (entry !== void 0) {
-            if (entry.type === 0 /* User */) {
-                project.errors.push(new Core.Error(node.fragment, 4109 /* TOKEN_COLLISION */));
+            if (entry.type === 1 /* User */) {
+                project.errors.push(new Core.Error(node.fragment, 4115 /* TOKEN_COLLISION */));
             }
         }
         else {
-            const token = Tree.getToken(`@REF${++state.identity}`, node.table, node.fragment.location, node);
-            Token.consume(project, 1 /* Right */, token, state, false);
-            token.setChild(2 /* Next */, state.entry.next);
-            state.entry.setChild(2 /* Next */, token);
-            state.entry = token;
+            const token = Tree.getToken(`@REF${++state.counter}`, node.table, node.fragment.location, node);
+            const temp = Context.getNewState(state.anchor, state.references, state.counter);
+            temp.entry.type = 2 /* Loose */;
+            Token.consume(project, 1 /* Right */, token, temp);
+            token.setChild(2 /* Next */, state.anchor.next);
+            state.counter = temp.counter;
+            state.anchor.setChild(2 /* Next */, token);
+            state.anchor = token;
             entry = state.references[word];
         }
         const reference = Tree.getReference(entry.identifier, node.table, node.fragment.location);

@@ -2,10 +2,10 @@ import * as Core from '@xcheme/core';
 import * as Helper from '../helper';
 import * as Lang from '../../../src/index';
 
-const checkTokens = (context: Core.Context, identity: number): number => {
+const checkTokens = (context: Core.Context, identities: number[]): number => {
   let total = 0;
   for (const current of context.tokens) {
-    expect(current.value).toBe(identity);
+    expect(identities).toContain(current.value);
     total++;
   }
   return total;
@@ -20,7 +20,7 @@ test("Parse a 'TOKEN' rule", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(3);
+  expect(checkTokens(context, [token.identity])).toBe(3);
 });
 
 test("Parse a 'TOKEN' rule with an alias token reference", () => {
@@ -32,7 +32,7 @@ test("Parse a 'TOKEN' rule with an alias token reference", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(3);
+  expect(checkTokens(context, [token.identity])).toBe(3);
 });
 
 test("Parse a 'TOKEN' rule with a reference to itself", () => {
@@ -44,7 +44,7 @@ test("Parse a 'TOKEN' rule with a reference to itself", () => {
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(3);
+  expect(checkTokens(context, [token.identity])).toBe(3);
 });
 
 test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", () => {
@@ -56,5 +56,18 @@ test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", 
 
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(checkTokens(context, token.identity)).toBe(1);
+  expect(checkTokens(context, [token.identity])).toBe(1);
+});
+
+test("Parse a 'NODE' rule with a whole token map reference", () => {
+  const project = Helper.makeParser(
+    new Lang.LiveCoder(),
+    "alias token TOKEN1 as map { <100> A as 'a', <101> B as 'b' }; token TOKEN2 as TOKEN1 & '!';"
+  );
+  const context = new Core.Context('test');
+
+  // Check the resulting tokens.
+  Helper.testLexer(project, context, 'a!b!');
+
+  expect(checkTokens(context, [100, 101])).toBe(2);
 });

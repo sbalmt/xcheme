@@ -74,9 +74,11 @@ const mapOperand = new Core.ScopeSymbolPattern(
     Nodes.Map,
     Core.Nodes.Right,
     Core.Nodes.Right,
-    new Core.ExpectUnitPattern(Lexer.Tokens.OpenBraces),
-    new Core.OptFlowPattern(mapMembers),
-    new Core.ExpectUnitPattern(Lexer.Tokens.CloseBraces)
+    new Core.ExpectFlowPattern(
+      new Core.ExpectUnitPattern(Lexer.Tokens.OpenBraces),
+      new Core.OptFlowPattern(mapMembers),
+      new Core.ExpectUnitPattern(Lexer.Tokens.CloseBraces)
+    )
   )
 );
 
@@ -154,9 +156,12 @@ const expression: Core.Pattern = new Core.ExpectFlowPattern(
       new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.And, Lexer.Tokens.And)),
       new UnaryExpression(
         unaryOperators,
-        new BinaryExpression(
-          new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.Access, Lexer.Tokens.Period)),
-          new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)
+        new Core.PlaceNodePattern(
+          Core.Nodes.Right,
+          new BinaryExpression(
+            new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.Access, Lexer.Tokens.Period)),
+            new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)
+          )
         )
       )
     )

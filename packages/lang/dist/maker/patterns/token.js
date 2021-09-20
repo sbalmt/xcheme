@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
+const Core = require("@xcheme/core");
 const Expression = require("./expression");
 /**
  * Emit a new token entry into the given project.
@@ -29,7 +30,7 @@ const emit = (project, type, name, identity, pattern, ref) => {
  * @param alias Determines whether or not the token is an alias.
  */
 const consume = (project, directive, pointers, alias) => {
-    const identity = directive.identity;
+    const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
     const state = { type: 1 /* Token */, identity, pointers };
     const expression = Expression.consume(project, directive.right, state);
     if (expression !== void 0) {
