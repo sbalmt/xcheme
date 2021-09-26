@@ -50,21 +50,29 @@ const consume = (project, direction, parent, state) => {
             }
             const entry = state.entry;
             state.entry = {
-                type: 1 /* User */,
+                type: 1 /* Normal */,
+                origin: 1 /* User */,
                 identity: expression.left !== void 0 ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
                 identifier: `${state.entry.identifier}@${expression.fragment.data}`,
-                dynamic: false
+                dynamic: false,
+                references: 0,
+                pattern: void 0
             };
-            Expression.consume(project, 1 /* Right */, member.right, state);
-            const candidate = getCandidate(member.right.right);
+            Expression.consume(project, 1 /* Right */, expression, state);
+            const candidate = getCandidate(expression.right);
             if (candidate !== void 0) {
-                const replacement = new Member.Node(member.right.right, state.entry.identity, state.entry.dynamic, candidate);
+                const replacement = new Member.Node(expression.right, state.entry.identity, state.entry.dynamic, candidate);
                 member.setChild(1 /* Right */, replacement);
             }
             else {
                 project.errors.push(new Core.Error(member.fragment, 4114 /* INVALID_MAP_ENTRY */));
             }
-            state.references[state.entry.identifier] = state.entry;
+            if (state.type === 2 /* Token */) {
+                project.tokenEntries.add(state.entry.type, state.entry.origin, state.entry.identifier, state.entry.identity, state.entry.dynamic);
+            }
+            else {
+                project.nodeEntries.add(state.entry.type, state.entry.origin, state.entry.identifier, state.entry.identity, state.entry.dynamic);
+            }
             state.entry = entry;
         }
         else {

@@ -17,13 +17,12 @@ import * as Node from './patterns/node';
  * @returns Returns true when the consumption was successful, false otherwise.
  */
 export const consumeNodes = (node: Core.Node, project: Project): boolean => {
-  const pointer = new Set<string>();
   while ((node = node.next!) !== void 0) {
     if (node.value === Parser.Nodes.Skip) {
       if (!(node instanceof Directive.Node)) {
         project.errors.push(new Core.Error(node.fragment, Errors.UNEXPECTED_NODE));
       } else {
-        Skip.consume(project, node, pointer);
+        Skip.consume(project, node);
       }
     } else {
       const directive = node.right!;
@@ -32,16 +31,16 @@ export const consumeNodes = (node: Core.Node, project: Project): boolean => {
       } else {
         switch (node.value) {
           case Parser.Nodes.Token:
-            Token.consume(project, directive, pointer, false);
+            Token.consume(project, directive);
             break;
           case Parser.Nodes.Node:
-            Node.consume(project, directive, pointer, false);
+            Node.consume(project, directive);
             break;
           case Parser.Nodes.AliasToken:
-            Token.consume(project, directive, pointer, true);
+            Token.consume(project, directive);
             break;
           case Parser.Nodes.AliasNode:
-            Node.consume(project, directive, pointer, true);
+            Node.consume(project, directive);
             break;
           default:
             project.errors.push(new Core.Error(directive.fragment, Errors.UNEXPECTED_NODE));

@@ -2,38 +2,38 @@ import * as Core from '@xcheme/core';
 
 import * as Identity from './identity';
 
+import * as Entries from '../../core/entries';
+
 /**
  * Directive node.
  */
 export class Node extends Identity.Node {
   /**
-   * Determines whether or not the directive is an alias.
+   * Node entry.
    */
-  #alias: boolean;
+  #entry: Entries.Entry;
 
   /**
    * Default constructor.
    * @param node Original node.
-   * @param identity Node identity.
-   * @param dynamic Determines whether or not the directive can have a dynamic identity.
-   * @param alias Determines whether or not the directive is an alias.
+   * @param entry Node entry.
    */
-  constructor(node: Core.Node, identity: number, dynamic: boolean, alias: boolean) {
-    super(node, identity, dynamic);
-    this.#alias = alias;
+  constructor(node: Core.Node, entry: Entries.Entry) {
+    super(node, entry.identity, entry.dynamic);
+    this.#entry = entry;
   }
 
   /**
    * Get whether or not the directive is an alias.
    */
   get alias(): boolean {
-    return this.#alias;
+    return this.#entry.type === Entries.Types.Alias;
   }
 
   /**
-   * Get the directive name.
+   * Get the directive identifier.
    */
-  get name(): string {
-    return this.fragment.data;
+  get identifier(): string {
+    return this.#entry.identifier;
   }
 }

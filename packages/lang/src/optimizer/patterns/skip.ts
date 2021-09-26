@@ -5,6 +5,8 @@ import * as Context from '../context';
 
 import { Project } from '../../core/project';
 
+import * as Entries from '../../core/entries';
+
 import * as Expression from './expression';
 
 /**
@@ -19,7 +21,10 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
   const entry = state.entry;
   const type = state.type;
   state.type = Context.Types.Skip;
+  entry.origin = Entries.Origins.User;
+  entry.identifier = `@SKIP${entry.identity}`;
   Expression.consume(project, Core.Nodes.Right, node, state);
-  parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, false));
+  project.skipEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
+  parent.setChild(direction, new Directive.Node(node, entry));
   state.type = type;
 };

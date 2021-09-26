@@ -14,14 +14,13 @@ const Node = require("./patterns/node");
  * @returns Returns true when the consumption was successful, false otherwise.
  */
 const consumeNodes = (node, project) => {
-    const pointer = new Set();
     while ((node = node.next) !== void 0) {
         if (node.value === 234 /* Skip */) {
             if (!(node instanceof Directive.Node)) {
                 project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));
             }
             else {
-                Skip.consume(project, node, pointer);
+                Skip.consume(project, node);
             }
         }
         else {
@@ -32,16 +31,16 @@ const consumeNodes = (node, project) => {
             else {
                 switch (node.value) {
                     case 235 /* Token */:
-                        Token.consume(project, directive, pointer, false);
+                        Token.consume(project, directive);
                         break;
                     case 236 /* Node */:
-                        Node.consume(project, directive, pointer, false);
+                        Node.consume(project, directive);
                         break;
                     case 237 /* AliasToken */:
-                        Token.consume(project, directive, pointer, true);
+                        Token.consume(project, directive);
                         break;
                     case 238 /* AliasNode */:
-                        Node.consume(project, directive, pointer, true);
+                        Node.consume(project, directive);
                         break;
                     default:
                         project.errors.push(new Core.Error(directive.fragment, 4099 /* UNEXPECTED_NODE */));

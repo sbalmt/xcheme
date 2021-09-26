@@ -4,11 +4,12 @@ import * as Parser from '../../parser';
 import * as Member from '../nodes/member';
 import * as Mergeable from '../nodes/mergeable';
 import * as Identity from '../nodes/identity';
-import * as Reference from '../reference';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
 import { Project } from '../../core/project';
+
+import * as Entries from '../../core/entries';
 
 import * as Expression from './expression';
 
@@ -56,10 +57,13 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
       }
       const entry = state.entry;
       state.entry = {
-        type: Reference.Types.User,
+        type: Entries.Types.Normal,
+        origin: Entries.Origins.User,
         identity: expression.left !== void 0 ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
         identifier: `${state.entry.identifier}@${expression.fragment.data}`,
-        dynamic: false
+        dynamic: false,
+        references: 0,
+        pattern: void 0
       };
       Expression.consume(project, Core.Nodes.Right, expression, state);
       const candidate = getCandidate(expression.right!);
@@ -69,7 +73,23 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
       } else {
         project.errors.push(new Core.Error(member.fragment, Errors.INVALID_MAP_ENTRY));
       }
-      state.references[state.entry.identifier] = state.entry;
+      if (state.type === Context.Types.Token) {
+        project.tokenEntries.add(
+          state.entry.type,
+          state.entry.origin,
+          state.entry.identifier,
+          state.entry.identity,
+          state.entry.dynamic
+        );
+      } else {
+        project.nodeEntries.add(
+          state.entry.type,
+          state.entry.origin,
+          state.entry.identifier,
+          state.entry.identity,
+          state.entry.dynamic
+        );
+      }
       state.entry = entry;
     } else {
       Expression.consume(project, Core.Nodes.Right, member, state);

@@ -16,11 +16,11 @@ const consume = (project, direction, parent, state) => {
     const entry = state.entry;
     const type = state.type;
     state.type = 3 /* Node */;
-    entry.type = 1 /* User */;
+    entry.origin = 1 /* User */;
     entry.identifier = node.fragment.data;
     Expression.consume(project, 1 /* Right */, node, state);
-    parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, state.alias));
-    state.references[entry.identifier] = state.entry;
+    parent.setChild(direction, new Directive.Node(node, entry));
+    project.nodeEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
     state.type = type;
 };
 exports.consume = consume;

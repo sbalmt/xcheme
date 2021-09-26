@@ -16,8 +16,11 @@ const consume = (project, direction, parent, state) => {
     const entry = state.entry;
     const type = state.type;
     state.type = 1 /* Skip */;
+    entry.origin = 1 /* User */;
+    entry.identifier = `@SKIP${entry.identity}`;
     Expression.consume(project, 1 /* Right */, node, state);
-    parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, false));
+    project.skipEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
+    parent.setChild(direction, new Directive.Node(node, entry));
     state.type = type;
 };
 exports.consume = consume;

@@ -2,11 +2,12 @@ import * as Core from '@xcheme/core';
 
 import * as Parser from '../../parser';
 import * as Directive from '../nodes/directive';
-import * as Reference from '../reference';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
 import { Project } from '../../core/project';
+
+import * as Entries from '../../core/entries';
 
 import * as Expression from './expression';
 import * as Range from './range';
@@ -17,18 +18,18 @@ import * as String from './string';
  * @param project Input project.
  * @param node Input node.
  * @param state Consumption state.
- * @param name Entry name.
+ * @param link Entry link name.
  */
-const assign = (project: Project, node: Core.Node, state: Context.State, name: string): void => {
-  const current = state.references[name];
+const assign = (project: Project, node: Core.Node, state: Context.State, link: string): void => {
+  const current = project.tokenEntries.get(link);
   if (current !== void 0) {
-    if (current.type !== Reference.Types.Loose) {
+    if (current.origin !== Entries.Origins.Loose) {
       project.errors.push(new Core.Error(node.fragment, Errors.TOKEN_COLLISION));
     }
   } else {
-    const identifier = node.fragment.data;
-    state.references[identifier] = state.entry;
-    state.references[name] = state.entry;
+    const entry = state.entry;
+    project.tokenEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
+    project.tokenEntries.link(link, entry.identifier);
   }
 };
 
@@ -46,8 +47,8 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
   const type = state.type;
   state.type = Context.Types.Token;
   entry.identifier = node.fragment.data;
-  if (entry.type === Reference.Types.Undefined) {
-    entry.type = Reference.Types.User;
+  if (entry.origin === Entries.Origins.Undefined) {
+    entry.origin = Entries.Origins.User;
   }
   if (expression.value === Parser.Nodes.String) {
     String.consume(project, Core.Nodes.Right, node, state);
@@ -55,14 +56,12 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
     assign(project, node, state, word);
   } else if (expression.value === Parser.Nodes.Range) {
     Range.consume(project, Core.Nodes.Right, node, state);
-    const from = expression.left!.fragment.data;
-    const to = expression.right!.fragment.data;
-    const range = `${from}-${to}`;
+    const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
     assign(project, node, state, range);
   } else {
     Expression.consume(project, Core.Nodes.Right, node, state);
-    state.references[entry.identifier] = entry;
+    project.tokenEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
   }
-  parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, state.alias));
+  parent.setChild(direction, new Directive.Node(node, entry));
   state.type = type;
 };

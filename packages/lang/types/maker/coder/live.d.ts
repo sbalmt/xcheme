@@ -2,15 +2,15 @@ import * as Core from '@xcheme/core';
 import * as Entries from '../../core/entries';
 import { Base } from './base';
 /**
- * Pointer entry type.
+ * Reference entry type.
  */
-declare type PointerEntry = {
+declare type ReferenceEntry = {
     /**
-     * Pointer entry name.
+     * Reference name.
      */
     name: string;
     /**
-     * Pointer entry pattern.
+     * Reference pattern.
      */
     pattern: Core.Pattern;
 };
@@ -21,11 +21,11 @@ export declare class Live extends Base {
     /**
      * Get a new entry pattern.
      * @param name Entry name.
-     * @param pointers Entry pointers.
+     * @param references Entry references.
      * @param patterns Entry patterns.
      * @returns Returns the pattern.
      */
-    getEntry(name: string, pointers: PointerEntry[], ...patterns: Core.Pattern[]): Core.Pattern;
+    getEntry(name: string, references: ReferenceEntry[], patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new route.
      * @param path Route path.
@@ -55,6 +55,13 @@ export declare class Live extends Base {
      * @returns Returns the pattern.
      */
     emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern;
+    /**
+     * Get a new identity pattern for dynamic directives.
+     * @param identity New identity.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitIdentityPattern(identity: string | number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new condition pattern.
      * @param test Test pattern.
@@ -176,10 +183,10 @@ export declare class Live extends Base {
     /**
      * Get a new reference pattern.
      * @param entries Pointer entries.
-     * @param name Reference name.
+     * @param identifier Reference identifier.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entries: Entries.Aggregator, name: string): Core.Pattern;
+    emitReferencePattern(entries: Entries.Aggregator, identifier: string): Core.Pattern;
     /**
      * Get a new any pattern.
      * @returns Returns the pattern.

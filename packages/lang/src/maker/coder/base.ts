@@ -13,15 +13,15 @@ export type PatternEntry = string | Core.Pattern;
 export type RouteEntry = string | Core.Route;
 
 /**
- * Pointer entry.
+ * Reference entry type.
  */
-export type PointerEntry = {
+export type ReferenceEntry = {
   /**
-   * Entry name.
+   * Reference name.
    */
   name: string;
   /**
-   * Entry pattern.
+   * Reference pattern.
    */
   pattern: PatternEntry;
 };
@@ -33,11 +33,11 @@ export class Base {
   /**
    * Should be implemented to return an entry pattern.
    * @param name Entry name.
-   * @param pointers Entry pointers.
+   * @param references Entry references.
    * @param patterns Entry patterns.
    * @returns Should return the pattern.
    */
-  getEntry(name: string, pointers: PointerEntry[], ...patterns: PatternEntry[]): PatternEntry {
+  getEntry(name: string, references: ReferenceEntry[], patterns: PatternEntry[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 
@@ -79,6 +79,16 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry {
+    throw "Method doesn't implemented.";
+  }
+
+  /**
+   * Get a new identity pattern for dynamic directives.
+   * @param identity New identity.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitIdentityPattern(identity: string | number, ...patterns: PatternEntry[]): PatternEntry {
     throw "Method doesn't implemented.";
   }
 
@@ -253,10 +263,10 @@ export class Base {
   /**
    * Should be implemented to return a reference pattern.
    * @param entries Pointer entries.
-   * @param name Reference name.
+   * @param identifier Reference identifier.
    * @returns Should return the pattern.
    */
-  emitReferencePattern(entries: Entries.Aggregator, name: string): PatternEntry {
+  emitReferencePattern(entries: Entries.Aggregator, identifier: string): PatternEntry {
     throw "Method doesn't implemented.";
   }
 

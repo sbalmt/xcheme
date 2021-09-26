@@ -26,7 +26,7 @@ const resolveToken = (project: Project, node: Core.Node, state: Context.State, s
     }
   } else {
     const identifier = node.fragment.data;
-    const entry = state.references[identifier];
+    const entry = project.tokenEntries.get(identifier);
     if (entry !== void 0 && entry.dynamic) {
       state.entry.dynamic = true;
     }
@@ -44,8 +44,13 @@ const resolveToken = (project: Project, node: Core.Node, state: Context.State, s
 const resolveNode = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State, symbol: Core.Record): void => {
   const node = parent.getChild(direction)!;
   const identifier = node.fragment.data;
-  const entry = state.references[identifier];
-  if (symbol.value !== Parser.Symbols.Node && symbol.value !== Parser.Symbols.AliasNode) {
+  if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
+    const entry = project.nodeEntries.get(identifier);
+    if (entry !== void 0 && entry.dynamic) {
+      state.entry.dynamic = true;
+    }
+  } else {
+    const entry = project.tokenEntries.get(identifier);
     if (symbol.value === Parser.Symbols.Token) {
       if (entry !== void 0) {
         if (entry.dynamic) {
@@ -61,8 +66,6 @@ const resolveNode = (project: Project, direction: Core.Nodes, parent: Core.Node,
     } else {
       project.errors.push(new Core.Error(node.fragment, Errors.UNRESOLVED_IDENTIFIER));
     }
-  } else if (entry !== void 0 && entry.dynamic) {
-    state.entry.dynamic = true;
   }
 };
 
@@ -71,10 +74,9 @@ const resolveNode = (project: Project, direction: Core.Nodes, parent: Core.Node,
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Input project.
  * @param node Input node.
- * @param state Context state.
  * @param symbol Input symbol.
  */
-const resolveSkip = (project: Project, node: Core.Node, state: Context.State, symbol: Core.Record): void => {
+const resolveSkip = (project: Project, node: Core.Node, symbol: Core.Record): void => {
   if (symbol.value !== Parser.Symbols.AliasToken) {
     if (symbol.value === Parser.Symbols.Token) {
       project.errors.push(new Core.Error(node.fragment, Errors.INVALID_TOKEN_REFERENCE));
@@ -97,19 +99,21 @@ const resolveSkip = (project: Project, node: Core.Node, state: Context.State, sy
  */
 export const consume = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.getChild(direction)!;
-  const symbol = node.table.find(node.fragment.data);
+  const identifier = node.fragment.data;
+  const symbol = node.table.find(identifier);
   if (symbol === void 0) {
     project.errors.push(new Core.Error(node.fragment, Errors.UNDEFINED_IDENTIFIER));
   } else {
     switch (state.type) {
+      case Context.Types.Skip:
+        resolveSkip(project, node, symbol);
+        break;
       case Context.Types.Token:
         resolveToken(project, node, state, symbol);
         break;
       case Context.Types.Node:
         resolveNode(project, direction, parent, state, symbol);
         break;
-      case Context.Types.Skip:
-        resolveSkip(project, node, state, symbol);
     }
   }
 };

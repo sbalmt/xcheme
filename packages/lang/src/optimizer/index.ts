@@ -1,7 +1,6 @@
 import * as Core from '@xcheme/core';
 
 import * as Parser from '../parser';
-import * as Reference from './reference';
 import * as Context from './context';
 
 import * as Skip from './patterns/skip';
@@ -9,6 +8,8 @@ import * as Token from './patterns/token';
 import * as Node from './patterns/node';
 
 import { Project } from '../core/project';
+
+import * as Entries from '../core/entries';
 
 /**
  * Consume the specified node (organized as an AST) and generate an optimized AST for the maker.
@@ -18,23 +19,11 @@ import { Project } from '../core/project';
  */
 export const consumeNodes = (node: Core.Node, project: Project): boolean => {
   let counter = project.options.initialIdentity ?? 0;
-  const references = {};
   while (node.next !== void 0) {
-    const state = {
-      type: Context.Types.Undefined,
-      alias: false,
-      anchor: node,
-      entry: {
-        type: Reference.Types.Undefined,
-        identity: counter,
-        identifier: '?',
-        dynamic: false
-      },
-      references,
-      counter
-    };
+    const state = Context.getNewState(node, counter);
     const entry = node.next;
     if (entry.value === Parser.Nodes.Skip) {
+      state.entry.type = Entries.Types.Normal;
       Skip.consume(project, Core.Nodes.Next, node, state);
     } else {
       const directive = entry.right!;
@@ -43,17 +32,19 @@ export const consumeNodes = (node: Core.Node, project: Project): boolean => {
       }
       switch (entry.value) {
         case Parser.Nodes.Token:
+          state.entry.type = Entries.Types.Normal;
           Token.consume(project, Core.Nodes.Right, entry, state);
           break;
         case Parser.Nodes.Node:
+          state.entry.type = Entries.Types.Normal;
           Node.consume(project, Core.Nodes.Right, entry, state);
           break;
         case Parser.Nodes.AliasToken:
-          state.alias = true;
+          state.entry.type = Entries.Types.Alias;
           Token.consume(project, Core.Nodes.Right, entry, state);
           break;
         case Parser.Nodes.AliasNode:
-          state.alias = true;
+          state.entry.type = Entries.Types.Alias;
           Node.consume(project, Core.Nodes.Right, entry, state);
           break;
       }

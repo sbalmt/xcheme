@@ -10,11 +10,11 @@ class Live extends base_1.Base {
     /**
      * Get a new entry pattern.
      * @param name Entry name.
-     * @param pointers Entry pointers.
+     * @param references Entry references.
      * @param patterns Entry patterns.
      * @returns Returns the pattern.
      */
-    getEntry(name, pointers, ...patterns) {
+    getEntry(name, references, patterns) {
         return new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))), new Core.EndFlowPattern());
     }
     /**
@@ -62,6 +62,15 @@ class Live extends base_1.Base {
      */
     emitNodePattern(identity, output, ...patterns) {
         return new Core.EmitNodePattern(identity, output, ...patterns);
+    }
+    /**
+     * Get a new identity pattern for dynamic directives.
+     * @param identity New identity.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitIdentityPattern(identity, ...patterns) {
+        return new Core.SetValuePattern(identity, ...patterns);
     }
     /**
      * Get a new condition pattern.
@@ -218,15 +227,15 @@ class Live extends base_1.Base {
     /**
      * Get a new reference pattern.
      * @param entries Pointer entries.
-     * @param name Reference name.
+     * @param identifier Reference identifier.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entries, name) {
-        const pointer = entries.get(name);
-        if (!pointer) {
-            return new Core.RunFlowPattern(() => entries.get(name).pattern);
+    emitReferencePattern(entries, identifier) {
+        const entry = entries.get(identifier);
+        if (!entry.pattern) {
+            return new Core.RunFlowPattern(() => entries.get(identifier).pattern);
         }
-        return pointer.pattern;
+        return entry.pattern;
     }
     /**
      * Get a new any pattern.

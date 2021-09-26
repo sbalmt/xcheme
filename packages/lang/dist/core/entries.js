@@ -6,55 +6,86 @@ exports.Aggregator = void 0;
  */
 class Aggregator {
     /**
-     * Entries map.
+     * Entry map.
      */
-    #map = {};
+    #entries = {};
+    /**
+     * Link map.
+     */
+    #links = {};
     /**
      * Get all patterns.
      */
     get patterns() {
-        return Object.values(this.#map).filter((entry) => entry.type === 0 /* Normal */);
+        return Object.values(this.#entries).filter((entry) => entry.references === 0 && entry.type === 1 /* Normal */);
     }
     /**
      * Get all alias patterns.
      */
     get aliasPatterns() {
-        return Object.values(this.#map).filter((entry) => entry.type === 1 /* Alias */);
+        return Object.values(this.#entries).filter((entry) => entry.references === 0 && entry.type === 2 /* Alias */);
+    }
+    /**
+     * Get all reference patterns.
+     */
+    get referencePatterns() {
+        return Object.values(this.#entries).filter((entry) => entry.references > 0);
     }
     /**
      * Determines whether or not the aggregator contains an entry with the given name.
-     * @param name Pattern entry name.
+     * @param name Entry name.
      * @returns Returns true when the specified entry exists, false otherwise.
      */
     has(name) {
-        return this.#map[name] !== void 0;
+        return this.#entries[name] !== void 0 || this.#links[name] !== void 0;
     }
     /**
      * Get the entry that correspond to the given name.
-     * @param name Pattern entry name.
+     * @param name Entry name.
      * @returns Returns the corresponding entry or undefined when it doesn't exists.
      */
     get(name) {
-        return this.#map[name];
+        return this.#entries[name] ?? this.#links[name];
     }
     /**
      * Add a new pattern entry.
      * @param type Entry type.
-     * @param name Entry name.
+     * @param origin Entry origin.
+     * @param identifier Entry identifier.
      * @param identity Entry identity.
-     * @param pattern Entry patterns.
+     * @param dynamic Determines whether or not the entry can have dynamic identity.
      * @throws Throws an error when the specified entry already exists.
+     * @returns Returns the new entry.
      */
-    add(type, name, identity, pattern) {
-        if (this.#map[name]) {
-            throw `Pattern entry '${name}' already exists.`;
+    add(type, origin, identifier, identity, dynamic) {
+        if (this.has(identifier)) {
+            throw `An entry named '${name}' already exists.`;
         }
-        this.#map[name] = {
+        return (this.#entries[identifier] = {
             type,
-            name,
+            origin,
+            identifier,
             identity,
-            pattern
-        };
+            dynamic,
+            references: 0,
+            pattern: undefined
+        });
+    }
+    /**
+     * Link an existing entry to another name.
+     * @param name Link name.
+     * @param identifier Pattern identifier.
+     * @throws Throws an error when the specified name already exists or the given identifier doesn't exists.
+     * @returns Returns the linked entry.
+     */
+    link(name, identifier) {
+        if (this.has(name)) {
+            throw `An entry named '${name}' already exists.`;
+        }
+        else if (!this.has(identifier)) {
+            throw `An entry named '${identifier}' doesn't exists.`;
+        }
+        return (this.#links[name] = this.get(identifier));
     }
 }
 exports.Aggregator = Aggregator;

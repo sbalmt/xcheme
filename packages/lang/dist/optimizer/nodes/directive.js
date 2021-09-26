@@ -7,31 +7,29 @@ const Identity = require("./identity");
  */
 class Node extends Identity.Node {
     /**
-     * Determines whether or not the directive is an alias.
+     * Node entry.
      */
-    #alias;
+    #entry;
     /**
      * Default constructor.
      * @param node Original node.
-     * @param identity Node identity.
-     * @param dynamic Determines whether or not the directive can have a dynamic identity.
-     * @param alias Determines whether or not the directive is an alias.
+     * @param entry Node entry.
      */
-    constructor(node, identity, dynamic, alias) {
-        super(node, identity, dynamic);
-        this.#alias = alias;
+    constructor(node, entry) {
+        super(node, entry.identity, entry.dynamic);
+        this.#entry = entry;
     }
     /**
      * Get whether or not the directive is an alias.
      */
     get alias() {
-        return this.#alias;
+        return this.#entry.type === 2 /* Alias */;
     }
     /**
-     * Get the directive name.
+     * Get the directive identifier.
      */
-    get name() {
-        return this.fragment.data;
+    get identifier() {
+        return this.#entry.identifier;
     }
 }
 exports.Node = Node;

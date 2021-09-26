@@ -6,15 +6,15 @@ import * as String from '../../core/string';
 import { Base } from './base';
 
 /**
- * Pointer entry type.
+ * Reference entry type.
  */
-type PointerEntry = {
+type ReferenceEntry = {
   /**
-   * Pointer entry name.
+   * Reference name.
    */
   name: string;
   /**
-   * Pointer entry pattern.
+   * Reference pattern.
    */
   pattern: string;
 };
@@ -43,13 +43,12 @@ export class Text extends Base {
   }
 
   /**
-   * Get a new pointer entry.
-   * @param name Pointer entry name.
-   * @param pattern Pointer entry pattern.
-   * @returns Returns the pointer entry.
+   * Get a new reference.
+   * @param reference Reference entry.
+   * @returns Returns the reference.
    */
-  #getPointerEntry(name: string, pattern: string): string {
-    return `const ${name} = ${pattern};`;
+  #getReference(reference: ReferenceEntry): string {
+    return `const ${reference.name} = ${reference.pattern};`;
   }
 
   /**
@@ -65,12 +64,12 @@ export class Text extends Base {
   /**
    * Get a new entry pattern.
    * @param name Entry name.
-   * @param pointers Entry pointers.
+   * @param references Entry references.
    * @param patterns Entry patterns.
    * @returns Returns the pattern.
    */
-  getEntry(name: string, pointers: PointerEntry[], ...patterns: string[]): string {
-    const deps = pointers.map((entry) => this.#getPointerEntry(entry.name, entry.pattern)).join('');
+  getEntry(name: string, references: ReferenceEntry[], patterns: string[]): string {
+    const deps = references.map((entry) => this.#getReference(entry));
     return (
       deps +
       this.#getExportEntry(
@@ -135,6 +134,16 @@ export class Text extends Base {
    */
   emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: string[]): string {
     return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
+  }
+
+  /**
+   * Get a new identity pattern for dynamic directives.
+   * @param identity New identity.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitIdentityPattern(identity: string | number, ...patterns: string[]): string {
+    return this.#getPattern('SetValuePattern', identity, ...patterns);
   }
 
   /**
@@ -309,14 +318,15 @@ export class Text extends Base {
   /**
    * Get a new reference pattern.
    * @param entries Pointer entries.
-   * @param name Reference name.
+   * @param identifier Reference identifier.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(entries: Entries.Aggregator, name: string): string {
-    if (!entries.has(name)) {
-      return this.#getPattern('RunFlowPattern', `() => ${name}`);
+  emitReferencePattern(entries: Entries.Aggregator, identifier: string): string {
+    const entry = entries.get(identifier)!;
+    if (!entry.pattern) {
+      return this.#getPattern('RunFlowPattern', `() => ${identifier}`);
     }
-    return name;
+    return identifier;
   }
 
   /**

@@ -23,7 +23,7 @@ export declare type State = {
      */
     identity: number;
     /**
-     * Context pointers.
+     * Determines whether or not the state has a dynamic identity.
      */
-    pointers: Pointers;
+    dynamic: boolean;
 };

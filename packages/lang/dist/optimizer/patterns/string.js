@@ -17,22 +17,24 @@ const consume = (project, direction, parent, state) => {
     if (state.type === 3 /* Node */) {
         const node = parent.getChild(direction);
         const word = node.fragment.data;
-        let entry = state.references[word];
+        let entry = project.tokenEntries.get(word);
         if (entry !== void 0) {
-            if (entry.type === 1 /* User */) {
+            if (entry.origin === 1 /* User */) {
                 project.errors.push(new Core.Error(node.fragment, 4115 /* TOKEN_COLLISION */));
             }
         }
         else {
-            const token = Tree.getToken(`@REF${++state.counter}`, node.table, node.fragment.location, node);
-            const temp = Context.getNewState(state.anchor, state.references, state.counter);
-            temp.entry.type = 2 /* Loose */;
+            const identifier = `@REF${++state.counter}`;
+            const token = Tree.getToken(identifier, node.table, node.fragment.location, node);
+            const temp = Context.getNewState(state.anchor, state.counter);
+            temp.entry.type = 1 /* Normal */;
+            temp.entry.origin = 2 /* Loose */;
             Token.consume(project, 1 /* Right */, token, temp);
             token.setChild(2 /* Next */, state.anchor.next);
             state.counter = temp.counter;
             state.anchor.setChild(2 /* Next */, token);
             state.anchor = token;
-            entry = state.references[word];
+            entry = project.tokenEntries.get(word);
         }
         const reference = Tree.getReference(entry.identifier, node.table, node.fragment.location);
         parent.setChild(direction, reference);

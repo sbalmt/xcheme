@@ -26,13 +26,12 @@ class Text extends base_1.Base {
         return `new Core.${name}(${params.join(', ')})`;
     }
     /**
-     * Get a new pointer entry.
-     * @param name Pointer entry name.
-     * @param pattern Pointer entry pattern.
-     * @returns Returns the pointer entry.
+     * Get a new reference.
+     * @param reference Reference entry.
+     * @returns Returns the reference.
      */
-    #getPointerEntry(name, pattern) {
-        return `const ${name} = ${pattern};`;
+    #getReference(reference) {
+        return `const ${reference.name} = ${reference.pattern};`;
     }
     /**
      * Get a new export entry.
@@ -46,12 +45,12 @@ class Text extends base_1.Base {
     /**
      * Get a new entry pattern.
      * @param name Entry name.
-     * @param pointers Entry pointers.
+     * @param references Entry references.
      * @param patterns Entry patterns.
      * @returns Returns the pattern.
      */
-    getEntry(name, pointers, ...patterns) {
-        const deps = pointers.map((entry) => this.#getPointerEntry(entry.name, entry.pattern)).join('');
+    getEntry(name, references, patterns) {
+        const deps = references.map((entry) => this.#getReference(entry));
         return (deps +
             this.#getExportEntry(name, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
     }
@@ -100,6 +99,15 @@ class Text extends base_1.Base {
      */
     emitNodePattern(identity, output, ...patterns) {
         return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
+    }
+    /**
+     * Get a new identity pattern for dynamic directives.
+     * @param identity New identity.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitIdentityPattern(identity, ...patterns) {
+        return this.#getPattern('SetValuePattern', identity, ...patterns);
     }
     /**
      * Get a new condition pattern.
@@ -256,14 +264,15 @@ class Text extends base_1.Base {
     /**
      * Get a new reference pattern.
      * @param entries Pointer entries.
-     * @param name Reference name.
+     * @param identifier Reference identifier.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entries, name) {
-        if (!entries.has(name)) {
-            return this.#getPattern('RunFlowPattern', `() => ${name}`);
+    emitReferencePattern(entries, identifier) {
+        const entry = entries.get(identifier);
+        if (!entry.pattern) {
+            return this.#getPattern('RunFlowPattern', `() => ${identifier}`);
         }
-        return name;
+        return identifier;
     }
     /**
      * Get a new any pattern.

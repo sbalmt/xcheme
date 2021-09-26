@@ -26,7 +26,7 @@ const resolveToken = (project, node, state, symbol) => {
     }
     else {
         const identifier = node.fragment.data;
-        const entry = state.references[identifier];
+        const entry = project.tokenEntries.get(identifier);
         if (entry !== void 0 && entry.dynamic) {
             state.entry.dynamic = true;
         }
@@ -43,8 +43,14 @@ const resolveToken = (project, node, state, symbol) => {
 const resolveNode = (project, direction, parent, state, symbol) => {
     const node = parent.getChild(direction);
     const identifier = node.fragment.data;
-    const entry = state.references[identifier];
-    if (symbol.value !== 301 /* Node */ && symbol.value !== 302 /* AliasNode */) {
+    if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
+        const entry = project.nodeEntries.get(identifier);
+        if (entry !== void 0 && entry.dynamic) {
+            state.entry.dynamic = true;
+        }
+    }
+    else {
+        const entry = project.tokenEntries.get(identifier);
         if (symbol.value === 300 /* Token */) {
             if (entry !== void 0) {
                 if (entry.dynamic) {
@@ -65,19 +71,15 @@ const resolveNode = (project, direction, parent, state, symbol) => {
             project.errors.push(new Core.Error(node.fragment, 4103 /* UNRESOLVED_IDENTIFIER */));
         }
     }
-    else if (entry !== void 0 && entry.dynamic) {
-        state.entry.dynamic = true;
-    }
 };
 /**
  * Validate the corresponding reference for the specified symbol in a 'SKIP' pattern context.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Input project.
  * @param node Input node.
- * @param state Context state.
  * @param symbol Input symbol.
  */
-const resolveSkip = (project, node, state, symbol) => {
+const resolveSkip = (project, node, symbol) => {
     if (symbol.value !== 303 /* AliasToken */) {
         if (symbol.value === 300 /* Token */) {
             project.errors.push(new Core.Error(node.fragment, 4108 /* INVALID_TOKEN_REFERENCE */));
@@ -102,20 +104,22 @@ const resolveSkip = (project, node, state, symbol) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const symbol = node.table.find(node.fragment.data);
+    const identifier = node.fragment.data;
+    const symbol = node.table.find(identifier);
     if (symbol === void 0) {
         project.errors.push(new Core.Error(node.fragment, 4102 /* UNDEFINED_IDENTIFIER */));
     }
     else {
         switch (state.type) {
+            case 1 /* Skip */:
+                resolveSkip(project, node, symbol);
+                break;
             case 2 /* Token */:
                 resolveToken(project, node, state, symbol);
                 break;
             case 3 /* Node */:
                 resolveNode(project, direction, parent, state, symbol);
                 break;
-            case 1 /* Skip */:
-                resolveSkip(project, node, state, symbol);
         }
     }
 };

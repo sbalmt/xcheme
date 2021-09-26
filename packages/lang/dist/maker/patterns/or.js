@@ -6,6 +6,22 @@ const Mergeable = require("../../optimizer/nodes/mergeable");
 const Parser = require("../../parser");
 const Expression = require("./expression");
 /**
+ * Determines whether or not the given node contains a map pattern.
+ * @param project Input project.
+ * @param node Input node.
+ * @returns Returns true when the map pattern was found, false otherwise.
+ */
+const hasMapPattern = (project, node) => {
+    if (node.value === 201 /* Reference */) {
+        const identifier = node.fragment.data;
+        const entry = project.tokenEntries.get(identifier) ?? project.nodeEntries.get(identifier);
+        return entry?.dynamic ?? false;
+    }
+    return (node.value === 207 /* Map */ ||
+        (node.left !== void 0 && hasMapPattern(project, node.left)) ||
+        (node.right !== void 0 && hasMapPattern(project, node.right)));
+};
+/**
  * Resolve the specified input node as an 'OR' pattern.
  * @param project Input project.
  * @param node Input node.
@@ -38,10 +54,16 @@ const resolve = (project, node, state) => {
         }
     }
     else {
-        const left = exports.resolve(project, node.left, state);
+        let left = exports.resolve(project, node.left, state);
         if (left !== void 0) {
-            const right = exports.resolve(project, node.right, state);
+            if (state.dynamic && !hasMapPattern(project, node.left)) {
+                left = [project.coder.emitIdentityPattern(state.identity, ...left)];
+            }
+            let right = exports.resolve(project, node.right, state);
             if (right !== void 0) {
+                if (state.dynamic && !hasMapPattern(project, node.right)) {
+                    right = [project.coder.emitIdentityPattern(state.identity, ...right)];
+                }
                 return [...left, ...right];
             }
         }

@@ -42,17 +42,9 @@ export declare class Project {
      */
     get tokenEntries(): Entries.Aggregator;
     /**
-     * Get the token pointer entries aggregator.
-     */
-    get tokenPointerEntries(): Entries.Aggregator;
-    /**
      * Get the node entries aggregator.
      */
     get nodeEntries(): Entries.Aggregator;
-    /**
-     * Get the node pointer entries aggregator.
-     */
-    get nodePointerEntries(): Entries.Aggregator;
     /**
      * Get the resulting lexer.
      */

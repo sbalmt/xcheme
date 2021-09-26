@@ -84,10 +84,10 @@ test("Output a 'NODE' rule with a reference to itself", () => {
   const token = project.tokenEntries.get('@REF1')!; // '@'
   expect(token).toBeDefined();
 
-  const pointer = project.nodePointerEntries.get('NODE')!;
-  expect(pointer).toBeDefined();
-  expect(pointer.pattern).toBe(
-    `new Core.EmitNodePattern(${pointer.identity}, 1, ` +
+  const node = project.nodeEntries.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.pattern).toBe(
+    `new Core.EmitNodePattern(${node.identity}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern(${token.identity}), ` +
       /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => NODE))` +
@@ -95,9 +95,9 @@ test("Output a 'NODE' rule with a reference to itself", () => {
       `)`
   );
 
-  const node = project.nodeEntries.get('NODE')!;
-  expect(node).toBeDefined();
-  expect(node.pattern).toBe(`new Core.RunFlowPattern(() => NODE)`);
+  const link = project.nodeEntries.get(`@REF${node.identity}`)!;
+  expect(link).toBeDefined();
+  expect(link.pattern).toBe('NODE');
 });
 
 test("Output a 'NODE' rule with an alias node that has a reference to itself", () => {
@@ -107,9 +107,9 @@ test("Output a 'NODE' rule with an alias node that has a reference to itself", (
   const token = project.tokenEntries.get('@REF1')!; // '@'
   expect(token).toBeDefined();
 
-  const pointer = project.nodePointerEntries.get('ALIAS')!;
-  expect(pointer).toBeDefined();
-  expect(pointer.pattern).toBe(
+  const alias = project.nodeEntries.get('ALIAS')!;
+  expect(alias).toBeDefined();
+  expect(alias.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern(${token.identity}), ` +
       /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => ALIAS)` +
@@ -182,6 +182,43 @@ test("Output a 'NODE' rule with a whole node map reference", () => {
     `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(NODE1, ` +
       /******/ `new Core.ExpectUnitPattern(${token3.identity})` +
+      /**/ `)` +
+      `)`
+  );
+});
+
+test("Output a 'NODE' rule with a whole node map reference and other patterns", () => {
+  const project = Helper.makeParser(
+    new Lang.TextCoder(),
+    "alias node NODE1 as map { <200> A as 'a', <201> B as 'b' }; node <202> NODE2 as NODE1 | '!';"
+  );
+
+  // Check the output code.
+  const token1 = project.tokenEntries.get('@REF1')!; // 'a'
+  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
+  const token3 = project.tokenEntries.get('@REF4')!; // '!'
+
+  expect(token1).toBeDefined();
+  expect(token2).toBeDefined();
+  expect(token3).toBeDefined();
+
+  const node1 = project.nodeEntries.get('NODE1')!;
+  expect(node1).toBeDefined();
+  expect(node1.pattern).toBe(
+    `new Core.MapFlowPattern(` +
+      /**/ `new Core.SetValueRoute(${200}, ${token1.identity}), ` +
+      /**/ `new Core.SetValueRoute(${201}, ${token2.identity})` +
+      `)`
+  );
+
+  const node2 = project.nodeEntries.get('NODE2')!;
+  expect(node2).toBeDefined();
+  expect(node2.pattern).toBe(
+    `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
+      /**/ `new Core.ChooseFlowPattern(NODE1, ` +
+      /******/ `new Core.SetValuePattern(${node2.identity}, ` +
+      /********/ `new Core.ExpectUnitPattern(${token3.identity})` +
+      /******/ `)` +
       /**/ `)` +
       `)`
   );

@@ -59,7 +59,7 @@ test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", 
   expect(checkTokens(context, [token.identity])).toBe(1);
 });
 
-test("Parse a 'NODE' rule with a whole token map reference", () => {
+test("Parse a 'TOKEN' rule with a whole token map reference", () => {
   const project = Helper.makeParser(
     new Lang.LiveCoder(),
     "alias token TOKEN1 as map { <100> A as 'a', <101> B as 'b' }; token TOKEN2 as TOKEN1 & '!';"
@@ -70,4 +70,17 @@ test("Parse a 'NODE' rule with a whole token map reference", () => {
   Helper.testLexer(project, context, 'a!b!');
 
   expect(checkTokens(context, [100, 101])).toBe(2);
+});
+
+test("Parse a 'TOKEN' rule with a whole token map reference and other patterns", () => {
+  const project = Helper.makeParser(
+    new Lang.LiveCoder(),
+    "alias token TOKEN1 as map { <100> A as 'a', <101> B as 'b' }; token <102> TOKEN2 as TOKEN1 | '!';"
+  );
+  const context = new Core.Context('test');
+
+  // Check the resulting tokens.
+  Helper.testLexer(project, context, 'a!b!');
+
+  expect(checkTokens(context, [100, 101, 102])).toBe(4);
 });

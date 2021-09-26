@@ -8,4 +8,5 @@
 
 ## Improvements
 
-- Share optimizer and maker data (to solve all references in the maker).
+- Refactor some code blocks.
+- Prioritize maps for loose tokens.

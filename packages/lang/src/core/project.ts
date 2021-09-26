@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Entries from './entries';
 
-import { Base, PointerEntry, PatternEntry } from '../maker/coder/base';
+import { Base, ReferenceEntry, PatternEntry } from '../maker/coder/base';
 
 /**
  * Project options.
@@ -44,39 +44,31 @@ export class Project {
   #tokenEntries = new Entries.Aggregator();
 
   /**
-   * Token pointer entries.
-   */
-  #tokenPointerEntries = new Entries.Aggregator();
-
-  /**
    * Node entries.
    */
   #nodeEntries = new Entries.Aggregator();
 
   /**
-   * Node pointer entries.
-   */
-  #nodePointerEntries = new Entries.Aggregator();
-
-  /**
-   * Get an array of patterns from the the specified aggregator.
-   * @param entries Patterns entry aggregator.
+   * Get an array of patterns from the the specified entries.
+   * @param entries Patterns entry.
    * @returns Returns the array of patterns.
    */
   #getPatterns(entries: Entries.Entry[]): PatternEntry[] {
-    return entries.map((entry) => entry.pattern);
+    return entries.filter((entry) => entry.pattern !== void 0).map((entry) => entry.pattern!);
   }
 
   /**
-   * Get an array of pointers from the specified aggregator.
-   * @param entries Pointers entry aggregator.
-   * @returns Returns the array of pointers.
+   * Get an array of references from the specified entries.
+   * @param entries References entries.
+   * @returns Returns the array of references.
    */
-  #getPointers(entries: Entries.Aggregator): PointerEntry[] {
-    return entries.patterns.map((entry) => ({
-      name: entry.name,
-      pattern: entry.pattern
-    }));
+  #getReferences(entries: Entries.Entry[]): ReferenceEntry[] {
+    return entries
+      .filter((entry) => entry.pattern !== void 0)
+      .map((entry) => ({
+        name: entry.identifier,
+        pattern: entry.pattern!
+      }));
   }
 
   /**
@@ -125,13 +117,6 @@ export class Project {
   }
 
   /**
-   * Get the token pointer entries aggregator.
-   */
-  get tokenPointerEntries(): Entries.Aggregator {
-    return this.#tokenPointerEntries;
-  }
-
-  /**
    * Get the node entries aggregator.
    */
   get nodeEntries(): Entries.Aggregator {
@@ -139,22 +124,13 @@ export class Project {
   }
 
   /**
-   * Get the node pointer entries aggregator.
-   */
-  get nodePointerEntries(): Entries.Aggregator {
-    return this.#nodePointerEntries;
-  }
-
-  /**
    * Get the resulting lexer.
    */
   get lexer(): string | Core.Pattern {
-    return this.#coder.getEntry(
-      'Lexer',
-      this.#getPointers(this.#tokenPointerEntries),
+    return this.#coder.getEntry('Lexer', this.#getReferences(this.#tokenEntries.referencePatterns), [
       ...this.#getPatterns(this.#skipEntries.patterns),
       ...this.#getPatterns(this.#tokenEntries.patterns)
-    );
+    ]);
   }
 
   /**
@@ -163,8 +139,8 @@ export class Project {
   get parser(): string | Core.Pattern {
     return this.#coder.getEntry(
       'Parser',
-      this.#getPointers(this.#nodePointerEntries),
-      ...this.#getPatterns(this.#nodeEntries.patterns)
+      this.#getReferences(this.#nodeEntries.referencePatterns),
+      this.#getPatterns(this.#nodeEntries.patterns)
     );
   }
 }

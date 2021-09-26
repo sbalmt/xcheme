@@ -12,19 +12,19 @@ const String = require("./string");
  * @param project Input project.
  * @param node Input node.
  * @param state Consumption state.
- * @param name Entry name.
+ * @param link Entry link name.
  */
-const assign = (project, node, state, name) => {
-    const current = state.references[name];
+const assign = (project, node, state, link) => {
+    const current = project.tokenEntries.get(link);
     if (current !== void 0) {
-        if (current.type !== 2 /* Loose */) {
+        if (current.origin !== 2 /* Loose */) {
             project.errors.push(new Core.Error(node.fragment, 4115 /* TOKEN_COLLISION */));
         }
     }
     else {
-        const identifier = node.fragment.data;
-        state.references[identifier] = state.entry;
-        state.references[name] = state.entry;
+        const entry = state.entry;
+        project.tokenEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
+        project.tokenEntries.link(link, entry.identifier);
     }
 };
 /**
@@ -41,8 +41,8 @@ const consume = (project, direction, parent, state) => {
     const type = state.type;
     state.type = 2 /* Token */;
     entry.identifier = node.fragment.data;
-    if (entry.type === 0 /* Undefined */) {
-        entry.type = 1 /* User */;
+    if (entry.origin === 0 /* Undefined */) {
+        entry.origin = 1 /* User */;
     }
     if (expression.value === 203 /* String */) {
         String.consume(project, 1 /* Right */, node, state);
@@ -51,16 +51,14 @@ const consume = (project, direction, parent, state) => {
     }
     else if (expression.value === 205 /* Range */) {
         Range.consume(project, 1 /* Right */, node, state);
-        const from = expression.left.fragment.data;
-        const to = expression.right.fragment.data;
-        const range = `${from}-${to}`;
+        const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
         assign(project, node, state, range);
     }
     else {
         Expression.consume(project, 1 /* Right */, node, state);
-        state.references[entry.identifier] = entry;
+        project.tokenEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
     }
-    parent.setChild(direction, new Directive.Node(node, entry.identity, entry.dynamic, state.alias));
+    parent.setChild(direction, new Directive.Node(node, entry));
     state.type = type;
 };
 exports.consume = consume;
