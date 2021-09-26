@@ -55,7 +55,7 @@ export default class Append extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  public consume(source: Base): boolean {
+  consume(source: Base): boolean {
     source.saveState();
     const output = source.output;
     let current = output.node;
