@@ -7,6 +7,7 @@ test("Output an 'AND' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(`new Core.ExpectUnitPattern('-', '+', '@')`);
 });
 
@@ -16,6 +17,7 @@ test("Output subsequent 'AND' rules (optimized)", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern('-', '+'), ` +

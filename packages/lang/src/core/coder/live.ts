@@ -7,7 +7,7 @@ import { Base } from './base';
 /**
  * Reference entry type.
  */
-type ReferenceEntry = {
+type Reference = {
   /**
    * Reference name.
    */
@@ -29,7 +29,7 @@ export class Live extends Base {
    * @param patterns Entry patterns.
    * @returns Returns the pattern.
    */
-  getEntry(name: string, references: ReferenceEntry[], patterns: Core.Pattern[]): Core.Pattern {
+  getEntry(name: string, references: Reference[], patterns: Core.Pattern[]): Core.Pattern {
     return new Core.ExpectFlowPattern(
       new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))),
       new Core.EndFlowPattern()

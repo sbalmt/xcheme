@@ -5,17 +5,17 @@ import * as Entries from '../../core/entries';
 /**
  * Pattern entry.
  */
-export type PatternEntry = string | Core.Pattern;
+export type Pattern = string | Core.Pattern;
 
 /**
  * Route entry.
  */
-export type RouteEntry = string | Core.Route;
+export type Route = string | Core.Route;
 
 /**
  * Reference entry type.
  */
-export type ReferenceEntry = {
+export type Reference = {
   /**
    * Reference name.
    */
@@ -23,7 +23,7 @@ export type ReferenceEntry = {
   /**
    * Reference pattern.
    */
-  pattern: PatternEntry;
+  pattern: Pattern;
 };
 
 /**
@@ -37,7 +37,7 @@ export class Base {
    * @param patterns Entry patterns.
    * @returns Should return the pattern.
    */
-  getEntry(name: string, references: ReferenceEntry[], patterns: PatternEntry[]): PatternEntry {
+  getEntry(name: string, references: Reference[], patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -48,7 +48,7 @@ export class Base {
    * @param pattern Optional route pattern.
    * @returns Should return the route.
    */
-  getRoute(path: (string | number)[], value?: number, pattern?: PatternEntry): RouteEntry {
+  getRoute(path: (string | number)[], value?: number, pattern?: Pattern): Route {
     throw "Method doesn't implemented.";
   }
 
@@ -57,7 +57,7 @@ export class Base {
    * @param routes Map routes.
    * @returns Should return the pattern.
    */
-  emitMapPattern(...routes: RouteEntry[]): PatternEntry {
+  emitMapPattern(...routes: Route[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -67,7 +67,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitTokenPattern(identity: string | number, ...patterns: PatternEntry[]): PatternEntry {
+  emitTokenPattern(identity: string | number, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -78,7 +78,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry {
+  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -88,7 +88,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitIdentityPattern(identity: string | number, ...patterns: PatternEntry[]): PatternEntry {
+  emitIdentityPattern(identity: string | number, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -99,7 +99,7 @@ export class Base {
    * @param failure Failure pattern.
    * @returns Should return the pattern.
    */
-  emitConditionPattern(test: PatternEntry, success: PatternEntry, failure?: PatternEntry): PatternEntry {
+  emitConditionPattern(test: Pattern, success: Pattern, failure?: Pattern): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -108,7 +108,7 @@ export class Base {
    * @param patterns Possible patterns.
    * @returns Should return the pattern.
    */
-  emitChoosePattern(...patterns: PatternEntry[]): PatternEntry {
+  emitChoosePattern(...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -117,7 +117,7 @@ export class Base {
    * @param units Possible units.
    * @returns Should return the pattern.
    */
-  emitChooseUnitsPattern(units: (string | number)[]): PatternEntry {
+  emitChooseUnitsPattern(units: (string | number)[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -126,7 +126,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitExpectPattern(...patterns: PatternEntry[]): PatternEntry {
+  emitExpectPattern(...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -135,7 +135,7 @@ export class Base {
    * @param units Expected units.
    * @returns Should return the pattern.
    */
-  emitExpectUnitsPattern(units: (string | number)[]): PatternEntry {
+  emitExpectUnitsPattern(units: (string | number)[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -144,7 +144,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitNotPattern(...patterns: PatternEntry[]): PatternEntry {
+  emitNotPattern(...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -153,7 +153,7 @@ export class Base {
    * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  emitOptPattern(...patterns: PatternEntry[]): PatternEntry {
+  emitOptPattern(...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -162,7 +162,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitRepeatPattern(...patterns: PatternEntry[]): PatternEntry {
+  emitRepeatPattern(...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -172,7 +172,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitPlacePattern(current: Core.Nodes, ...patterns: PatternEntry[]): PatternEntry {
+  emitPlacePattern(current: Core.Nodes, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -184,7 +184,7 @@ export class Base {
    * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  emitAppendPattern(identity: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry {
+  emitAppendPattern(identity: string | number, current: Core.Nodes, head: Pattern, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -196,7 +196,7 @@ export class Base {
    * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  emitPrependPattern(identity: string | number, current: Core.Nodes, head: PatternEntry, ...patterns: PatternEntry[]): PatternEntry {
+  emitPrependPattern(identity: string | number, current: Core.Nodes, head: Pattern, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -207,7 +207,7 @@ export class Base {
    * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  emitPivotPattern(identity: string | number, pivot: PatternEntry, ...patterns: PatternEntry[]): PatternEntry {
+  emitPivotPattern(identity: string | number, pivot: Pattern, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -217,7 +217,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitSymbolPattern(value: string | number, symbol: PatternEntry, ...patterns: PatternEntry[]): PatternEntry {
+  emitSymbolPattern(value: string | number, symbol: Pattern, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -226,7 +226,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitScopePattern(...patterns: PatternEntry[]): PatternEntry {
+  emitScopePattern(...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -236,7 +236,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitErrorPattern(value: number, ...patterns: PatternEntry[]): PatternEntry {
+  emitErrorPattern(value: number, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -246,7 +246,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emiHasPattern(state: number, ...patterns: PatternEntry[]): PatternEntry {
+  emiHasPattern(state: number, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -256,7 +256,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitSetPattern(state: number, ...patterns: PatternEntry[]): PatternEntry {
+  emitSetPattern(state: number, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -266,7 +266,7 @@ export class Base {
    * @param identifier Reference identifier.
    * @returns Should return the pattern.
    */
-  emitReferencePattern(entries: Entries.Aggregator, identifier: string): PatternEntry {
+  emitReferencePattern(entries: Entries.Aggregator, identifier: string): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -274,7 +274,7 @@ export class Base {
    * Should be implemented to return an any pattern.
    * @returns Should return the pattern.
    */
-  emitAnyPattern(): PatternEntry {
+  emitAnyPattern(): Pattern {
     throw "Method doesn't implemented.";
   }
 
@@ -284,7 +284,7 @@ export class Base {
    * @param to To unit value.
    * @returns Should return the pattern.
    */
-  emitRangePattern(from: string | number, to: string | number): PatternEntry {
+  emitRangePattern(from: string | number, to: string | number): Pattern {
     throw "Method doesn't implemented.";
   }
 }

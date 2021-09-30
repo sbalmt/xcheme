@@ -2,10 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
+const Member = require("../../core/nodes/member");
+const Mergeable = require("../../core/nodes/mergeable");
+const Identity = require("../../core/nodes/identity");
 const Parser = require("../../parser");
-const Member = require("../nodes/member");
-const Mergeable = require("../nodes/mergeable");
-const Identity = require("../nodes/identity");
 const Expression = require("./expression");
 /**
  * Get the candidate node based on the given input node.
@@ -31,32 +31,29 @@ const getCandidate = (node, parent) => {
     return void 0;
 };
 /**
- * Consume the specified input node optimizing its map pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the map pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Context state.
  */
 const consume = (project, direction, parent, state) => {
     let member = parent.getChild(direction).right;
-    const counter = state.counter;
     state.entry.dynamic = true;
     while (member !== void 0) {
         const expression = member.right;
         if (expression.value === 200 /* Identifier */) {
             if (state.type === 1 /* Skip */) {
-                project.errors.push(new Core.Error(expression.fragment, 4101 /* UNSUPPORTED_IDENTITY */));
+                project.addError(expression, 4101 /* UNSUPPORTED_IDENTITY */);
                 break;
             }
             const entry = state.entry;
             state.entry = {
-                type: 1 /* Normal */,
-                origin: 1 /* User */,
+                origin: 0 /* User */,
                 identity: expression.left !== void 0 ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
                 identifier: `${state.entry.identifier}@${expression.fragment.data}`,
-                dynamic: false,
-                references: 0,
-                pattern: void 0
+                alias: false,
+                dynamic: false
             };
             Expression.consume(project, 1 /* Right */, expression, state);
             const candidate = getCandidate(expression.right);
@@ -65,13 +62,13 @@ const consume = (project, direction, parent, state) => {
                 member.setChild(1 /* Right */, replacement);
             }
             else {
-                project.errors.push(new Core.Error(member.fragment, 4114 /* INVALID_MAP_ENTRY */));
+                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
             }
             if (state.type === 2 /* Token */) {
-                project.tokenEntries.add(state.entry.type, state.entry.origin, state.entry.identifier, state.entry.identity, state.entry.dynamic);
+                project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
             }
             else {
-                project.nodeEntries.add(state.entry.type, state.entry.origin, state.entry.identifier, state.entry.identity, state.entry.dynamic);
+                project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
             }
             state.entry = entry;
         }
@@ -79,10 +76,10 @@ const consume = (project, direction, parent, state) => {
             Expression.consume(project, 1 /* Right */, member, state);
             const candidate = getCandidate(member.right);
             if (candidate !== void 0) {
-                member.setChild(1 /* Right */, new Member.Node(member.right, counter, false, candidate));
+                member.setChild(1 /* Right */, new Member.Node(member.right, state.entry.identity, false, candidate));
             }
             else {
-                project.errors.push(new Core.Error(member.fragment, 4114 /* INVALID_MAP_ENTRY */));
+                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
             }
         }
         member = member.next;

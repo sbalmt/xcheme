@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Core = require("@xcheme/core");
-const Identity = require("../nodes/identity");
+const Identity = require("../../core/nodes/identity");
 /**
  * Get all fragments from the given access node.
  * @param node Access node.
@@ -21,8 +20,8 @@ const getPath = (node) => {
     return [node.fragment.data];
 };
 /**
- * Consume the specified input node resolving its access pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the access pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
@@ -31,15 +30,15 @@ const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     const identifier = getPath(node).join('@');
     if (state.type !== 3 /* Node */ || project.nodeEntries.has(identifier)) {
-        project.errors.push(new Core.Error(node.fragment, 4113 /* INVALID_MAP_ENTRY_REFERENCE */));
+        project.addError(node, 4113 /* INVALID_MAP_ENTRY_REFERENCE */);
     }
     else {
         const entry = project.tokenEntries.get(identifier);
         if (!entry) {
-            project.errors.push(new Core.Error(node.fragment, 4102 /* UNDEFINED_IDENTIFIER */));
+            project.addError(node, 4102 /* UNDEFINED_IDENTIFIER */);
         }
         else if (entry.dynamic) {
-            project.errors.push(new Core.Error(node.fragment, 4112 /* INVALID_MAP_REFERENCE */));
+            project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
         }
         else {
             parent.setChild(direction, new Identity.Node(node, entry.identity, entry.dynamic));

@@ -1,20 +1,20 @@
 import * as Core from '@xcheme/core';
-import { Project } from '../../core/project';
-import { State } from '../context';
-import type { PatternEntry } from '../coder/base';
+import * as Coder from '../../core/coder/base';
+import * as Project from '../../core/project';
+import * as Context from '../context';
 /**
- * Resolve the specified input node as an 'AND' pattern.
- * @param project Input project.
+ * Resolve the given input node as an 'AND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
+ * @param state Consumption state.
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
-export declare const resolve: (project: Project, node: Core.Node, state: State) => PatternEntry[] | undefined;
+export declare const resolve: (project: Project.Context, node: Core.Node, state: Context.State) => Coder.Pattern[] | undefined;
 /**
- * Consume the specified input node resolving its 'AND' pattern.
- * @param project Input project.
+ * Consume the given node resolving the 'AND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
-export declare const consume: (project: Project, node: Core.Node, state: State) => PatternEntry | undefined;
+export declare const consume: (project: Project.Context, node: Core.Node, state: Context.State) => Coder.Pattern | undefined;

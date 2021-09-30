@@ -4,7 +4,7 @@ import { Base } from './base';
 /**
  * Reference entry type.
  */
-declare type ReferenceEntry = {
+declare type Reference = {
     /**
      * Reference name.
      */
@@ -26,7 +26,7 @@ export declare class Text extends Base {
      * @param patterns Entry patterns.
      * @returns Returns the pattern.
      */
-    getEntry(name: string, references: ReferenceEntry[], patterns: string[]): string;
+    getEntry(name: string, references: Reference[], patterns: string[]): string;
     /**
      * Get a new route.
      * @param path Route path.

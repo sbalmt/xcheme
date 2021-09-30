@@ -1,23 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Core = require("@xcheme/core");
 const String = require("../../core/string");
 /**
- * Consume the specified input node resolving its range pattern.
- * @param project Input project.
+ * Consume the given node resolving the range pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
-    if (state.type === 2 /* Node */) {
-        project.errors.push(new Core.Error(node.fragment, 4100 /* UNSUPPORTED_NODE */));
-        return void 0;
+    const directive = state.directive;
+    if (directive.type !== 2 /* Node */) {
+        const from = String.extract(node.left.fragment.data);
+        const to = String.extract(node.right.fragment.data);
+        return project.coder.emitRangePattern(from, to);
     }
-    const from = String.extract(node.left.fragment.data);
-    const to = String.extract(node.right.fragment.data);
-    return project.coder.emitRangePattern(from, to);
+    project.addError(node, 4100 /* UNSUPPORTED_NODE */);
+    return void 0;
 };
 exports.consume = consume;
 //# sourceMappingURL=range.js.map

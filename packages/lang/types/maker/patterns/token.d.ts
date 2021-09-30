@@ -1,8 +1,8 @@
-import * as Directive from '../../optimizer/nodes/directive';
-import { Project } from '../../core/project';
+import * as Project from '../../core/project';
+import * as Context from '../context';
 /**
- * Consume the specified input node resolving its 'TOKEN' pattern.
- * @param project Input project.
- * @param directive Directive node.
+ * Consume the specified state resolving the 'TOKEN' directive.
+ * @param project Project context.
+ * @param state Consumption state.
  */
-export declare const consume: (project: Project, directive: Directive.Node) => void;
+export declare const consume: (project: Project.Context, state: Context.State) => void;

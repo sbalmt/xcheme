@@ -4,11 +4,11 @@ exports.consume = void 0;
 const Parser = require("../../parser");
 const Expression = require("./expression");
 /**
- * Consume the specified input node resolving its condition pattern.
- * @param project Input project.
+ * Consume the given node resolving the condition pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
     const test = Expression.consume(project, node.left, state);

@@ -1,6 +1,31 @@
 import * as Core from '@xcheme/core';
 import * as Entries from '../core/entries';
 /**
+ * Context entry.
+ */
+declare type Entry = {
+    /**
+     * Entry origin.
+     */
+    origin: Entries.Origins;
+    /**
+     * Entry identifier.
+     */
+    identifier: string;
+    /**
+     * Entry identity.
+     */
+    identity: number;
+    /**
+     * Determines whether or not the entry is an alias.
+     */
+    alias: boolean;
+    /**
+     * Determines whether or not the entry has a dynamic identity.
+     */
+    dynamic: boolean;
+};
+/**
  * Context types.
  */
 export declare const enum Types {
@@ -10,7 +35,7 @@ export declare const enum Types {
     Node = 3
 }
 /**
- * Store the consumption state for the context.
+ * Context consumption state.
  */
 export declare type State = {
     /**
@@ -18,17 +43,17 @@ export declare type State = {
      */
     type: Types;
     /**
-     * Anchor node.
+     * Anchor node from the AST.
      */
     anchor: Core.Node;
     /**
-     * Identity counter.
+     * Auto identity counter.
      */
     counter: number;
     /**
      * Current entry.
      */
-    entry: Entries.Entry;
+    entry: Entry;
 };
 /**
  * Get a new state based on the given parameters.
@@ -37,3 +62,4 @@ export declare type State = {
  * @returns Returns the new state.
  */
 export declare const getNewState: (anchor: Core.Node, counter: number) => State;
+export {};

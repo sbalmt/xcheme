@@ -4,29 +4,16 @@ import * as Core from '@xcheme/core';
  */
 declare type Pattern = string | Core.Pattern;
 /**
- * Entry types.
- */
-export declare const enum Types {
-    Undefined = 0,
-    Normal = 1,
-    Alias = 2
-}
-/**
  * Entry origins.
  */
 export declare const enum Origins {
-    Undefined = 0,
-    User = 1,
-    Loose = 2
+    User = 0,
+    Loose = 1
 }
 /**
  * Map entry.
  */
 export declare type Entry = {
-    /**
-     * Entry type.
-     */
-    type: Types;
     /**
      * Entry origin.
      */
@@ -39,6 +26,10 @@ export declare type Entry = {
      * Entry identity.
      */
     identity: number;
+    /**
+     * Determines whether or not the entry is an alias.
+     */
+    alias: boolean;
     /**
      * Determines whether or not the entry can have a dynamic identity.
      */
@@ -83,15 +74,13 @@ export declare class Aggregator {
     get(name: string): Entry | undefined;
     /**
      * Add a new pattern entry.
-     * @param type Entry type.
      * @param origin Entry origin.
      * @param identifier Entry identifier.
      * @param identity Entry identity.
-     * @param dynamic Determines whether or not the entry can have dynamic identity.
      * @throws Throws an error when the specified entry already exists.
      * @returns Returns the new entry.
      */
-    add(type: Types, origin: Origins, identifier: string, identity: number, dynamic: boolean): Entry;
+    add(origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry;
     /**
      * Link an existing entry to another name.
      * @param name Link name.

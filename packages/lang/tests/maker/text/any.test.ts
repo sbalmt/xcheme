@@ -7,5 +7,6 @@ test("Output an 'ANY' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(`new Core.AnyUnitPattern()`);
 });

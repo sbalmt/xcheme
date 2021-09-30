@@ -1,12 +1,11 @@
 import * as Core from '@xcheme/core';
 
+import * as Coder from '../../core/coder/base';
+import * as Project from '../../core/project';
 import * as Parser from '../../parser';
+import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
-import { Project } from '../../core/project';
-import { State } from '../context';
-
-import type { PatternEntry } from '../coder/base';
 
 import * as Reference from './reference';
 import * as String from './string';
@@ -30,13 +29,13 @@ import * as Has from './has';
 import * as Set from './set';
 
 /**
- * Consume the specified input node resolving its expression patterns.
- * @param project Input project.
+ * Consume the given node resolving the expression patterns.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
-export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
+export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   switch (node.value) {
     case Parser.Nodes.Reference:
       return Reference.consume(project, node, state);
@@ -49,7 +48,7 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
     case Parser.Nodes.Map:
       return Map.consume(project, node, state);
     case Parser.Nodes.Access:
-      return Access.consume(project, node, state);
+      return Access.consume(project, node);
     case Parser.Nodes.Then:
       return Condition.consume(project, node, state);
     case Parser.Nodes.Or:
@@ -96,7 +95,7 @@ export const consume = (project: Project, node: Core.Node, state: State): Patter
     case Parser.Nodes.Set:
       return Set.consume(project, node, state);
     default:
-      project.errors.push(new Core.Error(node.fragment, Errors.UNEXPECTED_NODE));
+      project.addError(node, Errors.UNEXPECTED_NODE);
   }
   return void 0;
 };

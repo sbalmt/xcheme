@@ -12,7 +12,7 @@ const program_1 = require("./program");
 const consumeText = (text, context) => {
     const source = new Core.TextSource(text, context);
     if (!program_1.Program.consume(source)) {
-        context.errors.push(new Core.Error(source.fragment, 4097 /* UNEXPECTED_TOKEN */));
+        context.addError(source.fragment, 4097 /* UNEXPECTED_TOKEN */);
         return false;
     }
     return true;

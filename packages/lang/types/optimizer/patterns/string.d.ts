@@ -1,11 +1,12 @@
 import * as Core from '@xcheme/core';
+import * as Project from '../../core/project';
 import * as Context from '../context';
-import { Project } from '../../core/project';
+import * as Nodes from '../nodes';
 /**
- * Consume the specified input node optimizing its string pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the string pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Context state.
  */
-export declare const consume: (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State) => void;
+export declare const consume: (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State) => void;

@@ -1,5 +1,6 @@
 import * as Core from '@xcheme/core';
 
+import * as Project from '../../core/project';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -10,16 +11,14 @@ import * as Range from './range';
 import * as Map from './map';
 import * as Access from './access';
 
-import { Project } from '../../core/project';
-
 /**
- * Consume the specified input node optimizing its expression pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the expression pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Context state.
  */
-export const consume = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.getChild(direction)!;
   switch (node.value) {
     case Parser.Nodes.Any:

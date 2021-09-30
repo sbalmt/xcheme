@@ -7,6 +7,7 @@ test("Output a 'PIVOT' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(`new Core.PivotNodePattern(0, 1, 0, new Core.ExpectUnitPattern('@'))`);
 });
 
@@ -16,6 +17,7 @@ test("Output a chained 'PIVOT' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
     `new Core.PivotNodePattern(0, 1, 0, ` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +

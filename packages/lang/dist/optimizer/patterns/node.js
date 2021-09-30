@@ -2,25 +2,35 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
-const Directive = require("../nodes/directive");
+const Directive = require("../../core/nodes/directive");
 const Expression = require("./expression");
 /**
- * Consume the specified input node resolving its 'NODE' pattern.
- * @param project Input project.
+ * Emit a new node entry and replace the current node by an optimized one.
+ * @param project Project context.
+ * @param direction Child node direction.
+ * @param parent Parent node.
+ * @param state Consumption state.
+ */
+const emit = (project, direction, parent, state) => {
+    const node = parent.getChild(direction);
+    const entry = project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+    const replacement = new Directive.Node(node, 2 /* Node */, entry);
+    parent.setChild(direction, replacement);
+};
+/**
+ * Consume a child node from the AST on the given parent and optimize the 'NODE' directive.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const entry = state.entry;
     const type = state.type;
     state.type = 3 /* Node */;
-    entry.origin = 1 /* User */;
-    entry.identifier = node.fragment.data;
+    state.entry.identifier = node.fragment.data;
     Expression.consume(project, 1 /* Right */, node, state);
-    parent.setChild(direction, new Directive.Node(node, entry));
-    project.nodeEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
+    emit(project, direction, parent, state);
     state.type = type;
 };
 exports.consume = consume;

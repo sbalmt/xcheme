@@ -13,13 +13,11 @@ const getNewState = (anchor, counter) => {
         anchor: anchor,
         counter,
         entry: {
-            type: 0 /* Undefined */,
-            origin: 0 /* Undefined */,
+            origin: 0 /* User */,
             identifier: '?',
             identity: counter,
-            dynamic: false,
-            references: 0,
-            pattern: undefined
+            alias: false,
+            dynamic: false
         }
     };
 };

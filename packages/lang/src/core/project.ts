@@ -1,27 +1,28 @@
 import * as Core from '@xcheme/core';
 
+import * as Coder from './coder/base';
 import * as Entries from './entries';
 
-import { Base, ReferenceEntry, PatternEntry } from '../maker/coder/base';
+import { Errors } from './errors';
 
 /**
  * Project options.
  */
 export type Options = {
   /**
-   * Initial identity for tokens, nodes and symbols.
+   * Initial identity number for tokens, nodes and symbols.
    */
   initialIdentity?: number;
 };
 
 /**
- * Store all the project entries, errors and options during the making process.
+ * Project context.
  */
-export class Project {
+export class Context {
   /**
    * Project coder.
    */
-  #coder: Base;
+  #coder: Coder.Base;
 
   /**
    * Project options.
@@ -53,7 +54,7 @@ export class Project {
    * @param entries Patterns entry.
    * @returns Returns the array of patterns.
    */
-  #getPatterns(entries: Entries.Entry[]): PatternEntry[] {
+  #getPatterns(entries: Entries.Entry[]): Coder.Pattern[] {
     return entries.filter((entry) => entry.pattern !== void 0).map((entry) => entry.pattern!);
   }
 
@@ -62,7 +63,7 @@ export class Project {
    * @param entries References entries.
    * @returns Returns the array of references.
    */
-  #getReferences(entries: Entries.Entry[]): ReferenceEntry[] {
+  #getReferences(entries: Entries.Entry[]): Coder.Reference[] {
     return entries
       .filter((entry) => entry.pattern !== void 0)
       .map((entry) => ({
@@ -76,7 +77,7 @@ export class Project {
    * @param coder Project coder.
    * @param options Project options.
    */
-  constructor(coder: Base, options: Options = {}) {
+  constructor(coder: Coder.Base, options: Options = {}) {
     this.#coder = coder;
     this.#options = options;
   }
@@ -84,7 +85,7 @@ export class Project {
   /**
    * Get the project coder.
    */
-  get coder(): Base {
+  get coder(): Coder.Base {
     return this.#coder;
   }
 
@@ -142,5 +143,14 @@ export class Project {
       this.#getReferences(this.#nodeEntries.referencePatterns),
       this.#getPatterns(this.#nodeEntries.patterns)
     );
+  }
+
+  /**
+   * Add a new error in the project.
+   * @param node Input node.
+   * @param value Error value.
+   */
+  addError(node: Core.Node, value: Errors): void {
+    this.#errors.push(new Core.Error(node.fragment, value));
   }
 }

@@ -15,7 +15,7 @@ export const tokenize = (program: Core.Pattern, text: string, context: Core.Cont
   const source = new Core.TextSource(text, context);
   Console.printLine('Tokenizing...');
   if (!program.consume(source)) {
-    context.errors.push(new Core.Error(source.fragment, Lang.Errors.UNEXPECTED_TOKEN));
+    context.addError(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
   } else {
     Console.clearLine();
     if (tokens) {

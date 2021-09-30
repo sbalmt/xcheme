@@ -3,6 +3,32 @@ import * as Core from '@xcheme/core';
 import * as Entries from '../core/entries';
 
 /**
+ * Context entry.
+ */
+type Entry = {
+  /**
+   * Entry origin.
+   */
+  origin: Entries.Origins;
+  /**
+   * Entry identifier.
+   */
+  identifier: string;
+  /**
+   * Entry identity.
+   */
+  identity: number;
+  /**
+   * Determines whether or not the entry is an alias.
+   */
+  alias: boolean;
+  /**
+   * Determines whether or not the entry has a dynamic identity.
+   */
+  dynamic: boolean;
+};
+
+/**
  * Context types.
  */
 export const enum Types {
@@ -13,7 +39,7 @@ export const enum Types {
 }
 
 /**
- * Store the consumption state for the context.
+ * Context consumption state.
  */
 export type State = {
   /**
@@ -21,17 +47,17 @@ export type State = {
    */
   type: Types;
   /**
-   * Anchor node.
+   * Anchor node from the AST.
    */
   anchor: Core.Node;
   /**
-   * Identity counter.
+   * Auto identity counter.
    */
   counter: number;
   /**
    * Current entry.
    */
-  entry: Entries.Entry;
+  entry: Entry;
 };
 
 /**
@@ -46,13 +72,11 @@ export const getNewState = (anchor: Core.Node, counter: number): State => {
     anchor: anchor,
     counter,
     entry: {
-      type: Entries.Types.Undefined,
-      origin: Entries.Origins.Undefined,
+      origin: Entries.Origins.User,
       identifier: '?',
       identity: counter,
-      dynamic: false,
-      references: 0,
-      pattern: undefined
+      alias: false,
+      dynamic: false
     }
   };
 };

@@ -7,6 +7,7 @@ test("Output a 'SKIP' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe("new Core.ExpectUnitPattern('@')");
 });
 
@@ -16,5 +17,6 @@ test("Output a 'SKIP' rule with an alias token reference", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe('new Core.RunFlowPattern(() => ALIAS)');
 });

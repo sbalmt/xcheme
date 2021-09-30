@@ -7,7 +7,7 @@ test("Output a 'PLACE' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
-
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(`new Core.PlaceNodePattern(1, new Core.ExpectUnitPattern('@'))`);
 });
 
@@ -17,5 +17,6 @@ test("Output a 'PLACE NEXT' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(`new Core.PlaceNodePattern(2, new Core.ExpectUnitPattern('@'))`);
 });

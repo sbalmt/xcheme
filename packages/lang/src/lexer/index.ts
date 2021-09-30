@@ -14,7 +14,7 @@ export { Tokens } from './tokens';
 export const consumeText = (text: string, context: Core.Context): boolean => {
   const source = new Core.TextSource(text, context);
   if (!Program.consume(source)) {
-    context.errors.push(new Core.Error(source.fragment, Errors.UNEXPECTED_TOKEN));
+    context.addError(source.fragment, Errors.UNEXPECTED_TOKEN);
     return false;
   }
   return true;

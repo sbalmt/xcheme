@@ -1,13 +1,13 @@
 import * as Core from '@xcheme/core';
-import { Project } from '../../core/project';
-import { State } from '../context';
-import type { PatternEntry } from '../coder/base';
+import * as Coder from '../../core/coder/base';
+import * as Project from '../../core/project';
+import * as Context from '../context';
 /**
- * Consume the specified input node resolving its 'PLACE' pattern.
- * @param project Input project.
+ * Consume the given node resolving the 'PLACE' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
+ * @param state Consumption state.
  * @param direction Placed node direction.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
-export declare const consume: (project: Project, node: Core.Node, state: State, direction: Core.Nodes) => PatternEntry | undefined;
+export declare const consume: (project: Project.Context, node: Core.Node, state: Context.State, direction: Core.Nodes) => Coder.Pattern | undefined;

@@ -13,7 +13,7 @@ const consumeTokens = (tokens, context) => {
     const source = new Core.TokenSource(tokens, context);
     if (!program_1.Program.consume(source)) {
         const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
-        context.errors.push(new Core.Error(fragment, 4098 /* UNEXPECTED_SYNTAX */));
+        context.addError(fragment, 4098 /* UNEXPECTED_SYNTAX */);
         return false;
     }
     return true;

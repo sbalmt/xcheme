@@ -8,7 +8,7 @@ import { Base } from './base';
 /**
  * Reference entry type.
  */
-type ReferenceEntry = {
+type Reference = {
   /**
    * Reference name.
    */
@@ -47,7 +47,7 @@ export class Text extends Base {
    * @param reference Reference entry.
    * @returns Returns the reference.
    */
-  #getReference(reference: ReferenceEntry): string {
+  #getReference(reference: Reference): string {
     return `const ${reference.name} = ${reference.pattern};`;
   }
 
@@ -68,7 +68,7 @@ export class Text extends Base {
    * @param patterns Entry patterns.
    * @returns Returns the pattern.
    */
-  getEntry(name: string, references: ReferenceEntry[], patterns: string[]): string {
+  getEntry(name: string, references: Reference[], patterns: string[]): string {
     const deps = references.map((entry) => this.#getReference(entry));
     return (
       deps +

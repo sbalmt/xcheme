@@ -8,6 +8,7 @@ test("Output a skip 'MAP' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
     `new Core.MapFlowPattern(` +
       /**/ `new Core.UnitRoute('a'), ` +
@@ -21,14 +22,19 @@ test("Output a token 'MAP' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token TOKEN as map { <100> A as 'a', 'b', 'c' };");
 
   // Check the output code.
+  const routeA = project.tokenEntries.get('TOKEN@A')!;
+  expect(routeA).toBeDefined();
+  expect(routeA.identity).toBe(100);
+
   const rule = project.tokenEntries.get('TOKEN')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
     `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
       /**/ `new Core.MapFlowPattern(` +
-      /******/ `new Core.SetValueRoute(${100}, 'a'), ` +
-      /******/ `new Core.SetValueRoute(${0}, 'b'), ` +
-      /******/ `new Core.SetValueRoute(${0}, 'c')` +
+      /******/ `new Core.SetValueRoute(${routeA.identity}, 'a'), ` +
+      /******/ `new Core.SetValueRoute(${rule.identity}, 'b'), ` +
+      /******/ `new Core.SetValueRoute(${rule.identity}, 'c')` +
       /**/ `)` +
       `)`
   );
@@ -40,6 +46,7 @@ test("Output a nested 'MAP' rule", () => {
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
   expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
     `new Core.MapFlowPattern(` +
       /**/ `new Core.FlowRoute(` +

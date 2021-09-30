@@ -1,24 +1,29 @@
 import * as Core from '@xcheme/core';
 
-import { Project } from '../../core/project';
-import { State } from '../context';
-
-import type { PatternEntry } from '../coder/base';
+import * as Coder from '../../core/coder/base';
+import * as Project from '../../core/project';
+import * as Context from '../context';
 
 import * as And from './and';
 
 /**
- * Consume the specified input node resolving its 'APPEND' pattern.
- * @param project Input project.
+ * Consume the given node resolving the 'APPEND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
+ * @param state Consumption state.
  * @param direction Append direction.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
-export const consume = (project: Project, node: Core.Node, state: State, direction: Core.Nodes): PatternEntry | undefined => {
+export const consume = (
+  project: Project.Context,
+  node: Core.Node,
+  state: Context.State,
+  direction: Core.Nodes
+): Coder.Pattern | undefined => {
   const patterns = And.resolve(project, node.right!, state);
   if (patterns !== void 0) {
-    return project.coder.emitAppendPattern(state.identity, direction, patterns[0], ...patterns.slice(1));
+    const identity = state.directive.identity;
+    return project.coder.emitAppendPattern(identity, direction, patterns[0], ...patterns.slice(1));
   }
   return void 0;
 };

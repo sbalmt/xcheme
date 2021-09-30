@@ -3,17 +3,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const And = require("./and");
 /**
- * Consume the specified input node resolving its 'APPEND' pattern.
- * @param project Input project.
+ * Consume the given node resolving the 'APPEND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
+ * @param state Consumption state.
  * @param direction Append direction.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state, direction) => {
     const patterns = And.resolve(project, node.right, state);
     if (patterns !== void 0) {
-        return project.coder.emitAppendPattern(state.identity, direction, patterns[0], ...patterns.slice(1));
+        const identity = state.directive.identity;
+        return project.coder.emitAppendPattern(identity, direction, patterns[0], ...patterns.slice(1));
     }
     return void 0;
 };

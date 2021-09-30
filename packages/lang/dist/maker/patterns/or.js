@@ -1,13 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = exports.resolve = void 0;
+const Mergeable = require("../../core/nodes/mergeable");
 const String = require("../../core/string");
-const Mergeable = require("../../optimizer/nodes/mergeable");
 const Parser = require("../../parser");
 const Expression = require("./expression");
 /**
  * Determines whether or not the given node contains a map pattern.
- * @param project Input project.
+ * @param project Project context.
  * @param node Input node.
  * @returns Returns true when the map pattern was found, false otherwise.
  */
@@ -22,11 +22,11 @@ const hasMapPattern = (project, node) => {
         (node.right !== void 0 && hasMapPattern(project, node.right)));
 };
 /**
- * Resolve the specified input node as an 'OR' pattern.
- * @param project Input project.
+ * Resolve the given node as an 'OR' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns an array containing all rules or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
 const resolve = (project, node, state) => {
     if (node.value !== 211 /* Or */) {
@@ -54,15 +54,16 @@ const resolve = (project, node, state) => {
         }
     }
     else {
+        const directive = state.directive;
         let left = exports.resolve(project, node.left, state);
         if (left !== void 0) {
-            if (state.dynamic && !hasMapPattern(project, node.left)) {
-                left = [project.coder.emitIdentityPattern(state.identity, ...left)];
+            if (directive.dynamic && !hasMapPattern(project, node.left)) {
+                left = [project.coder.emitIdentityPattern(directive.identity, ...left)];
             }
             let right = exports.resolve(project, node.right, state);
             if (right !== void 0) {
-                if (state.dynamic && !hasMapPattern(project, node.right)) {
-                    right = [project.coder.emitIdentityPattern(state.identity, ...right)];
+                if (directive.dynamic && !hasMapPattern(project, node.right)) {
+                    right = [project.coder.emitIdentityPattern(directive.identity, ...right)];
                 }
                 return [...left, ...right];
             }
@@ -72,11 +73,11 @@ const resolve = (project, node, state) => {
 };
 exports.resolve = resolve;
 /**
- * Consume the specified input node resolving its 'OR' rule.
- * @param project Input project.
+ * Consume the given node resolving the 'OR' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the rule is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
     const patterns = exports.resolve(project, node, state);

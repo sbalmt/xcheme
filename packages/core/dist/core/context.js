@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const error_1 = require("./error");
 const fragment_1 = require("./fragment");
 const location_1 = require("./location");
 const table_1 = require("./table");
@@ -65,6 +66,14 @@ class Context {
      */
     get name() {
         return this.#name;
+    }
+    /**
+     * Add a new error in the context.
+     * @param fragment Error fragment.
+     * @param value Error value.
+     */
+    addError(fragment, value) {
+        this.#errors.push(new error_1.default(fragment, value));
     }
 }
 exports.default = Context;

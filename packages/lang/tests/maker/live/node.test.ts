@@ -67,9 +67,9 @@ test("Parse a 'NODE' rule with a loose token map rule", () => {
   Helper.testLexer(project, context, 'abba');
 
   const token1 = project.tokenEntries.get('@REF1')!;
-  const token2 = project.tokenEntries.get('@REF2')!;
-
   expect(token1).toBeDefined();
+
+  const token2 = project.tokenEntries.get('@REF2')!;
   expect(token2).toBeDefined();
 
   expect(checkTokens(context, [token1.identity, token2.identity])).toBe(4);
@@ -187,11 +187,12 @@ test("Parse a 'NODE' rule with a whole node map reference", () => {
 
   // Check the resulting tokens.
   const token1 = project.tokenEntries.get('@REF1')!; // 'a'
-  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
-  const token3 = project.tokenEntries.get('@REF4')!; // '!'
-
   expect(token1).toBeDefined();
+
+  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
   expect(token2).toBeDefined();
+
+  const token3 = project.tokenEntries.get('@REF4')!; // '!'
   expect(token3).toBeDefined();
 
   Helper.testLexer(project, context, 'a!b!');
@@ -215,11 +216,12 @@ test("Parse a 'NODE' rule with a whole node map reference and other patterns", (
 
   // Check the resulting tokens.
   const token1 = project.tokenEntries.get('@REF1')!; // 'a'
-  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
-  const token3 = project.tokenEntries.get('@REF4')!; // '!'
-
   expect(token1).toBeDefined();
+
+  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
   expect(token2).toBeDefined();
+
+  const token3 = project.tokenEntries.get('@REF3')!; // '!'
   expect(token3).toBeDefined();
 
   Helper.testLexer(project, context, 'a!b!');

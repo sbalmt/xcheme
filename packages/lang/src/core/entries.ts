@@ -13,19 +13,9 @@ type Map = {
 };
 
 /**
- * Entry types.
- */
-export const enum Types {
-  Undefined,
-  Normal,
-  Alias
-}
-
-/**
  * Entry origins.
  */
 export const enum Origins {
-  Undefined,
   User,
   Loose
 }
@@ -34,10 +24,6 @@ export const enum Origins {
  * Map entry.
  */
 export type Entry = {
-  /**
-   * Entry type.
-   */
-  type: Types;
   /**
    * Entry origin.
    */
@@ -50,6 +36,10 @@ export type Entry = {
    * Entry identity.
    */
   identity: number;
+  /**
+   * Determines whether or not the entry is an alias.
+   */
+  alias: boolean;
   /**
    * Determines whether or not the entry can have a dynamic identity.
    */
@@ -82,14 +72,14 @@ export class Aggregator {
    * Get all patterns.
    */
   get patterns(): Entry[] {
-    return Object.values(this.#entries).filter((entry) => entry.references === 0 && entry.type === Types.Normal);
+    return Object.values(this.#entries).filter((entry) => entry.references === 0 && !entry.alias);
   }
 
   /**
    * Get all alias patterns.
    */
   get aliasPatterns(): Entry[] {
-    return Object.values(this.#entries).filter((entry) => entry.references === 0 && entry.type === Types.Alias);
+    return Object.values(this.#entries).filter((entry) => entry.references === 0 && entry.alias);
   }
 
   /**
@@ -119,26 +109,24 @@ export class Aggregator {
 
   /**
    * Add a new pattern entry.
-   * @param type Entry type.
    * @param origin Entry origin.
    * @param identifier Entry identifier.
    * @param identity Entry identity.
-   * @param dynamic Determines whether or not the entry can have dynamic identity.
    * @throws Throws an error when the specified entry already exists.
    * @returns Returns the new entry.
    */
-  add(type: Types, origin: Origins, identifier: string, identity: number, dynamic: boolean): Entry {
+  add(origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry {
     if (this.has(identifier)) {
-      throw `An entry named '${name}' already exists.`;
+      throw `An entry named '${identifier}' already exists.`;
     }
     return (this.#entries[identifier] = {
-      type,
       origin,
       identifier,
       identity,
-      dynamic,
-      references: 0,
-      pattern: undefined
+      alias: model?.alias ?? false,
+      dynamic: model?.dynamic ?? false,
+      references: model?.references ?? 0,
+      pattern: model?.pattern
     });
   }
 

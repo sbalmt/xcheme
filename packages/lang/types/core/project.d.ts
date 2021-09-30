@@ -1,30 +1,31 @@
 import * as Core from '@xcheme/core';
+import * as Coder from './coder/base';
 import * as Entries from './entries';
-import { Base } from '../maker/coder/base';
+import { Errors } from './errors';
 /**
  * Project options.
  */
 export declare type Options = {
     /**
-     * Initial identity for tokens, nodes and symbols.
+     * Initial identity number for tokens, nodes and symbols.
      */
     initialIdentity?: number;
 };
 /**
- * Store all the project entries, errors and options during the making process.
+ * Project context.
  */
-export declare class Project {
+export declare class Context {
     #private;
     /**
      * Default constructor.
      * @param coder Project coder.
      * @param options Project options.
      */
-    constructor(coder: Base, options?: Options);
+    constructor(coder: Coder.Base, options?: Options);
     /**
      * Get the project coder.
      */
-    get coder(): Base;
+    get coder(): Coder.Base;
     /**
      * Get the project options.
      */
@@ -53,4 +54,10 @@ export declare class Project {
      * Get the resulting parser.
      */
     get parser(): string | Core.Pattern;
+    /**
+     * Add a new error in the project.
+     * @param node Input node.
+     * @param value Error value.
+     */
+    addError(node: Core.Node, value: Errors): void;
 }

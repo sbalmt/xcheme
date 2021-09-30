@@ -4,7 +4,7 @@ import { Base } from './base';
 /**
  * Reference entry type.
  */
-declare type ReferenceEntry = {
+declare type Reference = {
     /**
      * Reference name.
      */
@@ -25,7 +25,7 @@ export declare class Live extends Base {
      * @param patterns Entry patterns.
      * @returns Returns the pattern.
      */
-    getEntry(name: string, references: ReferenceEntry[], patterns: Core.Pattern[]): Core.Pattern;
+    getEntry(name: string, references: Reference[], patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new route.
      * @param path Route path.

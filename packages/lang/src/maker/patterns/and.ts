@@ -1,25 +1,23 @@
 import * as Core from '@xcheme/core';
 
+import * as Mergeable from '../../core/nodes/mergeable';
+import * as Identity from '../../core/nodes/identity';
+import * as Coder from '../../core/coder/base';
 import * as String from '../../core/string';
-import * as Mergeable from '../../optimizer/nodes/mergeable';
-import * as Identity from '../../optimizer/nodes/identity';
+import * as Project from '../../core/project';
 import * as Parser from '../../parser';
-
-import { Project } from '../../core/project';
-import { State } from '../context';
-
-import type { PatternEntry } from '../coder/base';
+import * as Context from '../context';
 
 import * as Expression from './expression';
 
 /**
- * Resolve the specified input node as an 'AND' pattern.
- * @param project Input project.
+ * Resolve the given input node as an 'AND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
+ * @param state Consumption state.
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
-export const resolve = (project: Project, node: Core.Node, state: State): PatternEntry[] | undefined => {
+export const resolve = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern[] | undefined => {
   if (node.value !== Parser.Nodes.And) {
     const pattern = Expression.consume(project, node, state);
     if (pattern !== void 0) {
@@ -47,13 +45,13 @@ export const resolve = (project: Project, node: Core.Node, state: State): Patter
 };
 
 /**
- * Consume the specified input node resolving its 'AND' pattern.
- * @param project Input project.
+ * Consume the given node resolving the 'AND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
-export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
+export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const patterns = resolve(project, node, state);
   if (patterns !== void 0) {
     if (patterns.length > 1) {

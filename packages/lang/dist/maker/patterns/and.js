@@ -1,15 +1,15 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = exports.resolve = void 0;
+const Mergeable = require("../../core/nodes/mergeable");
 const String = require("../../core/string");
-const Mergeable = require("../../optimizer/nodes/mergeable");
 const Parser = require("../../parser");
 const Expression = require("./expression");
 /**
- * Resolve the specified input node as an 'AND' pattern.
- * @param project Input project.
+ * Resolve the given input node as an 'AND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
+ * @param state Consumption state.
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 const resolve = (project, node, state) => {
@@ -43,11 +43,11 @@ const resolve = (project, node, state) => {
 };
 exports.resolve = resolve;
 /**
- * Consume the specified input node resolving its 'AND' pattern.
- * @param project Input project.
+ * Consume the given node resolving the 'AND' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
     const patterns = exports.resolve(project, node, state);

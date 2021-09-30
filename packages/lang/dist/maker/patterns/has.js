@@ -3,11 +3,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const And = require("./and");
 /**
- * Consume the specified input node resolving its 'HAS' pattern.
- * @param project Input project.
+ * Consume the given node resolving the 'HAS' pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
     const param = node.right;

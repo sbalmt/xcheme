@@ -1,25 +1,26 @@
 import * as Core from '@xcheme/core';
 
+import * as Directive from '../../core/nodes/directive';
+import * as Coder from '../../core/coder/base';
+import * as Project from '../../core/project';
 import * as String from '../../core/string';
+import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
-import { Project } from '../../core/project';
-import { State, Types } from '../context';
-
-import type { PatternEntry } from '../coder/base';
 
 /**
- * Consume the given input node resolving its string patterns.
- * @param project Input project.
+ * Consume the given node resolving the string patterns.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
-export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
-  if (state.type === Types.Node) {
-    project.errors.push(new Core.Error(node.fragment, Errors.UNSUPPORTED_NODE));
-    return void 0;
+export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
+  const directive = state.directive;
+  if (directive.type !== Directive.Types.Node) {
+    const units = String.extract(node.fragment.data).split('');
+    return project.coder.emitExpectUnitsPattern(units);
   }
-  const units = String.extract(node.fragment.data).split('');
-  return project.coder.emitExpectUnitsPattern(units);
+  project.addError(node, Errors.UNSUPPORTED_NODE);
+  return void 0;
 };

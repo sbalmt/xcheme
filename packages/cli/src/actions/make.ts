@@ -13,7 +13,7 @@ import * as Errors from '../core/errors';
 /**
  * Global language options.
  */
-const globalOptions: Lang.Options = {
+const globalOptions: Lang.Project.Options = {
   initialIdentity: 0
 };
 
@@ -23,7 +23,7 @@ const globalOptions: Lang.Options = {
  * @param node Input node.
  * @returns Returns true in case of success, false otherwise.
  */
-const optimize = (project: Lang.Project, node: Core.Node): boolean => {
+const optimize = (project: Lang.Project.Context, node: Core.Node): boolean => {
   Console.printLine('Optimizing...');
   if (Lang.Optimizer.consumeNodes(node, project)) {
     Console.clearLine();
@@ -39,7 +39,7 @@ const optimize = (project: Lang.Project, node: Core.Node): boolean => {
  * @param node Input node.
  * @returns Returns true in case of success, false otherwise.
  */
-const make = (project: Lang.Project, node: Core.Node): boolean => {
+const make = (project: Lang.Project.Context, node: Core.Node): boolean => {
   Console.printLine('Making...');
   if (Lang.Maker.consumeNodes(node, project)) {
     Console.clearLine();
@@ -56,7 +56,7 @@ const make = (project: Lang.Project, node: Core.Node): boolean => {
  * @param state Debug state.
  * @returns Returns true in case of success, otherwise returns false.
  */
-const test = (project: Lang.Project, source: string, state: Options.Debug): boolean => {
+const test = (project: Lang.Project.Context, source: string, state: Options.Debug): boolean => {
   const context = new Core.Context('runner');
   if (Lexer.tokenize(project.lexer as Core.Pattern, source, context, state.tokens!)) {
     if (Parser.parse(project.parser as Core.Pattern, context.tokens, context, state.symbols!, state.nodes!)) {
@@ -73,7 +73,7 @@ const test = (project: Lang.Project, source: string, state: Options.Debug): bool
  * @param project Input project.
  * @param path Output file path.
  */
-const save = (project: Lang.Project, path: string | number): void => {
+const save = (project: Lang.Project.Context, path: string | number): void => {
   const lib = "const Core = require('@xcheme/core');";
   FS.writeFileSync(path, `${lib}\n${project.lexer}\n${project.parser}\n`);
   if (path !== 1) {
@@ -95,14 +95,14 @@ export const perform = (source: string | number, target: string | number, run: b
   if (Lexer.tokenize(Lang.Lexer, text, context, !run && state.tokens!)) {
     if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
       if (run) {
-        const project = new Lang.Project(new Lang.LiveCoder(), globalOptions);
+        const project = new Lang.Project.Context(new Lang.LiveCoder(), globalOptions);
         if (optimize(project, context.node) && make(project, context.node)) {
           const content = FS.readFileSync(target).toString();
           test(project, content, state);
           return true;
         }
       } else {
-        const project = new Lang.Project(new Lang.TextCoder(), globalOptions);
+        const project = new Lang.Project.Context(new Lang.TextCoder(), globalOptions);
         if (optimize(project, context.node) && make(project, context.node)) {
           save(project, target);
           return true;

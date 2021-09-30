@@ -24,7 +24,7 @@ export const parse = (
   Console.printLine('Parsing...');
   if (!program.consume(source)) {
     const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
-    context.errors.push(new Core.Error(fragment, Lang.Errors.UNEXPECTED_SYNTAX));
+    context.addError(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
   } else {
     Console.clearLine();
     if (symbols) {

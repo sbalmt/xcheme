@@ -1,15 +1,14 @@
 import * as Core from '@xcheme/core';
 
+import * as Member from '../../core/nodes/member';
+import * as Mergeable from '../../core/nodes/mergeable';
+import * as Identity from '../../core/nodes/identity';
+import * as Project from '../../core/project';
+import * as Entries from '../../core/entries';
 import * as Parser from '../../parser';
-import * as Member from '../nodes/member';
-import * as Mergeable from '../nodes/mergeable';
-import * as Identity from '../nodes/identity';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
-import { Project } from '../../core/project';
-
-import * as Entries from '../../core/entries';
 
 import * as Expression from './expression';
 
@@ -38,32 +37,29 @@ const getCandidate = (node: Core.Node, parent?: Core.Node): Core.Node | undefine
 };
 
 /**
- * Consume the specified input node optimizing its map pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the map pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Context state.
  */
-export const consume = (project: Project, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   let member = parent.getChild(direction)!.right;
-  const counter = state.counter;
   state.entry.dynamic = true;
   while (member !== void 0) {
     const expression = member.right!;
     if (expression.value === Parser.Nodes.Identifier) {
       if (state.type === Context.Types.Skip) {
-        project.errors.push(new Core.Error(expression.fragment, Errors.UNSUPPORTED_IDENTITY));
+        project.addError(expression, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
       const entry = state.entry;
       state.entry = {
-        type: Entries.Types.Normal,
         origin: Entries.Origins.User,
         identity: expression.left !== void 0 ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
         identifier: `${state.entry.identifier}@${expression.fragment.data}`,
-        dynamic: false,
-        references: 0,
-        pattern: void 0
+        alias: false,
+        dynamic: false
       };
       Expression.consume(project, Core.Nodes.Right, expression, state);
       const candidate = getCandidate(expression.right!);
@@ -71,33 +67,21 @@ export const consume = (project: Project, direction: Core.Nodes, parent: Core.No
         const replacement = new Member.Node(expression.right!, state.entry.identity, state.entry.dynamic, candidate);
         member.setChild(Core.Nodes.Right, replacement);
       } else {
-        project.errors.push(new Core.Error(member.fragment, Errors.INVALID_MAP_ENTRY));
+        project.addError(member, Errors.INVALID_MAP_ENTRY);
       }
       if (state.type === Context.Types.Token) {
-        project.tokenEntries.add(
-          state.entry.type,
-          state.entry.origin,
-          state.entry.identifier,
-          state.entry.identity,
-          state.entry.dynamic
-        );
+        project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
       } else {
-        project.nodeEntries.add(
-          state.entry.type,
-          state.entry.origin,
-          state.entry.identifier,
-          state.entry.identity,
-          state.entry.dynamic
-        );
+        project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
       }
       state.entry = entry;
     } else {
       Expression.consume(project, Core.Nodes.Right, member, state);
       const candidate = getCandidate(member.right!);
       if (candidate !== void 0) {
-        member.setChild(Core.Nodes.Right, new Member.Node(member.right!, counter, false, candidate));
+        member.setChild(Core.Nodes.Right, new Member.Node(member.right!, state.entry.identity, false, candidate));
       } else {
-        project.errors.push(new Core.Error(member.fragment, Errors.INVALID_MAP_ENTRY));
+        project.addError(member, Errors.INVALID_MAP_ENTRY);
       }
     }
     member = member.next!;

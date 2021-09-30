@@ -1,13 +1,12 @@
 import * as Core from '@xcheme/core';
 
+import * as Identity from '../../core/nodes/identity';
+import * as Mergeable from '../../core/nodes/mergeable';
+import * as Project from '../../core/project';
 import * as Parser from '../../parser';
-import * as Identity from '../nodes/identity';
-import * as Mergeable from '../nodes/mergeable';
 import * as Context from '../context';
 
 import * as Expression from './expression';
-
-import { Project } from '../../core/project';
 
 /**
  * Determines whether or not the given node contains mergeable units.
@@ -36,15 +35,15 @@ const isMergeableRefs = (node: Core.Node, operator: Parser.Nodes): boolean => {
 };
 
 /**
- * Consume the specified input node optimizing its mergeable pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the mergeable pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param type Mergeable node type.
  * @param state Context state.
  */
 export const consume = (
-  project: Project,
+  project: Project.Context,
   direction: Core.Nodes,
   parent: Core.Node,
   type: Parser.Nodes,

@@ -2,9 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
+const Identity = require("../../core/nodes/identity");
+const Mergeable = require("../../core/nodes/mergeable");
 const Parser = require("../../parser");
-const Identity = require("../nodes/identity");
-const Mergeable = require("../nodes/mergeable");
 const Expression = require("./expression");
 /**
  * Determines whether or not the given node contains mergeable units.
@@ -31,8 +31,8 @@ const isMergeableRefs = (node, operator) => {
     return node instanceof Identity.Node;
 };
 /**
- * Consume the specified input node optimizing its mergeable pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the mergeable pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param type Mergeable node type.

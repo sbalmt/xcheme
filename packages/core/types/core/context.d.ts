@@ -1,5 +1,6 @@
-import type Error from './error';
 import type Token from './token';
+import Error from './error';
+import Fragment from './fragment';
 import Table from './table';
 import Node from './node';
 /**
@@ -33,4 +34,10 @@ export default class Context {
      * Get the context name.
      */
     get name(): string;
+    /**
+     * Add a new error in the context.
+     * @param fragment Error fragment.
+     * @param value Error value.
+     */
+    addError(fragment: Fragment, value: string | number): void;
 }

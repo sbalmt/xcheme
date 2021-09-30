@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Project = void 0;
+exports.Context = void 0;
+const Core = require("@xcheme/core");
 const Entries = require("./entries");
 /**
- * Store all the project entries, errors and options during the making process.
+ * Project context.
  */
-class Project {
+class Context {
     /**
      * Project coder.
      */
@@ -111,6 +112,14 @@ class Project {
     get parser() {
         return this.#coder.getEntry('Parser', this.#getReferences(this.#nodeEntries.referencePatterns), this.#getPatterns(this.#nodeEntries.patterns));
     }
+    /**
+     * Add a new error in the project.
+     * @param node Input node.
+     * @param value Error value.
+     */
+    addError(node, value) {
+        this.#errors.push(new Core.Error(node.fragment, value));
+    }
 }
-exports.Project = Project;
+exports.Context = Context;
 //# sourceMappingURL=project.js.map

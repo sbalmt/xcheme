@@ -2,34 +2,42 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
+const Directive = require("../../core/nodes/directive");
 const Parser = require("../../parser");
-const Directive = require("../nodes/directive");
 const Expression = require("./expression");
 const Range = require("./range");
 const String = require("./string");
 /**
- * Assign a new reference to the current consumption state.
- * @param project Input project.
+ * Determines whether or not there are a collision for the given identifier.
+ * @param project Project context.
  * @param node Input node.
- * @param state Consumption state.
- * @param link Entry link name.
+ * @param identifier Entry identifier.
+ * @returns Returns true when the specified identifier already exists, false otherwise.
  */
-const assign = (project, node, state, link) => {
-    const current = project.tokenEntries.get(link);
-    if (current !== void 0) {
-        if (current.origin !== 2 /* Loose */) {
-            project.errors.push(new Core.Error(node.fragment, 4115 /* TOKEN_COLLISION */));
-        }
+const collision = (project, node, identifier) => {
+    const entry = project.tokenEntries.get(identifier);
+    if (entry?.origin === 0 /* User */) {
+        project.addError(node, 4115 /* TOKEN_COLLISION */);
+        return true;
     }
-    else {
-        const entry = state.entry;
-        project.tokenEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
-        project.tokenEntries.link(link, entry.identifier);
-    }
+    return false;
 };
 /**
- * Consume the specified input node resolving its 'TOKEN' pattern.
- * @param project Input project.
+ * Emit a new token entry and replace the current token node by an optimized one.
+ * @param project Project context.
+ * @param direction Child node direction.
+ * @param parent Parent node.
+ * @param state Consumption state.
+ */
+const emit = (project, direction, parent, state) => {
+    const node = parent.getChild(direction);
+    const entry = project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+    const replacement = new Directive.Node(node, 1 /* Token */, entry);
+    parent.setChild(direction, replacement);
+};
+/**
+ * Consume a child node from the AST on the given parent and optimize the 'TOKEN' directive.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
@@ -41,24 +49,26 @@ const consume = (project, direction, parent, state) => {
     const type = state.type;
     state.type = 2 /* Token */;
     entry.identifier = node.fragment.data;
-    if (entry.origin === 0 /* Undefined */) {
-        entry.origin = 1 /* User */;
-    }
     if (expression.value === 203 /* String */) {
         String.consume(project, 1 /* Right */, node, state);
         const word = node.right.fragment.data;
-        assign(project, node, state, word);
+        if (!collision(project, node, word)) {
+            emit(project, direction, parent, state);
+            project.tokenEntries.link(word, state.entry.identifier);
+        }
     }
     else if (expression.value === 205 /* Range */) {
         Range.consume(project, 1 /* Right */, node, state);
         const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
-        assign(project, node, state, range);
+        if (!collision(project, node, range)) {
+            emit(project, direction, parent, state);
+            project.tokenEntries.link(range, state.entry.identifier);
+        }
     }
     else {
         Expression.consume(project, 1 /* Right */, node, state);
-        project.tokenEntries.add(entry.type, entry.origin, entry.identifier, entry.identity, entry.dynamic);
+        emit(project, direction, parent, state);
     }
-    parent.setChild(direction, new Directive.Node(node, entry));
     state.type = type;
 };
 exports.consume = consume;

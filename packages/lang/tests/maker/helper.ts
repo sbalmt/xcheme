@@ -20,10 +20,10 @@ const printErrors = (errors: Core.Error[]): void => {
  * @param text Input text.
  * @returns Returns the generated project.
  */
-export const makeParser = (coder: BaseCoder, text: string): Project => {
-  const project = new Project(coder);
+export const makeParser = (coder: BaseCoder, text: string): Project.Context => {
+  const project = new Project.Context(coder);
   const context = new Core.Context('make');
-  let status;
+  let status: boolean;
 
   // Consume input text.
   if (!(status = Lexer.consumeText(text, context))) {
@@ -59,10 +59,10 @@ export const makeParser = (coder: BaseCoder, text: string): Project => {
  * @param errors Expected errors.
  * @returns Returns the generated project.
  */
-export const makeError = (coder: BaseCoder, text: string, errors: Errors[]): Project => {
-  const project = new Project(coder);
+export const makeError = (coder: BaseCoder, text: string, errors: Errors[]): Project.Context => {
+  const project = new Project.Context(coder);
   const context = new Core.Context('make');
-  let status;
+  let status: boolean;
 
   // Consume input text.
   if (!(status = Lexer.consumeText(text, context))) {
@@ -97,7 +97,7 @@ export const makeError = (coder: BaseCoder, text: string, errors: Errors[]): Pro
  * @param context Lexer context.
  * @param text Input text.
  */
-export const testLexer = (project: Project, context: Core.Context, text: string): void => {
+export const testLexer = (project: Project.Context, context: Core.Context, text: string): void => {
   const source = new Core.TextSource(text, context);
   const lexer = project.lexer as Core.Pattern;
 
@@ -118,7 +118,7 @@ export const testLexer = (project: Project, context: Core.Context, text: string)
  * @param context Parser context.
  * @param tokens Input tokens.
  */
-export const testParser = (project: Project, context: Core.Context, tokens: Core.Token[]): void => {
+export const testParser = (project: Project.Context, context: Core.Context, tokens: Core.Token[]): void => {
   const source = new Core.TokenSource(tokens, context);
   const parser = project.parser as Core.Pattern;
 

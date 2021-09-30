@@ -24,11 +24,11 @@ const Error = require("./error");
 const Has = require("./has");
 const Set = require("./set");
 /**
- * Consume the specified input node resolving its expression patterns.
- * @param project Input project.
+ * Consume the given node resolving the expression patterns.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
     switch (node.value) {
@@ -43,7 +43,7 @@ const consume = (project, node, state) => {
         case 207 /* Map */:
             return Map.consume(project, node, state);
         case 206 /* Access */:
-            return Access.consume(project, node, state);
+            return Access.consume(project, node);
         case 209 /* Then */:
             return Condition.consume(project, node, state);
         case 211 /* Or */:
@@ -90,7 +90,7 @@ const consume = (project, node, state) => {
         case 233 /* Set */:
             return Set.consume(project, node, state);
         default:
-            project.errors.push(new Core.Error(node.fragment, 4099 /* UNEXPECTED_NODE */));
+            project.addError(node, 4099 /* UNEXPECTED_NODE */);
     }
     return void 0;
 };

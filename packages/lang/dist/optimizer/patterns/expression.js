@@ -10,8 +10,8 @@ const Range = require("./range");
 const Map = require("./map");
 const Access = require("./access");
 /**
- * Consume the specified input node optimizing its expression pattern.
- * @param project Input project.
+ * Consume a child node from the AST on the given parent and optimize the expression pattern.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Context state.

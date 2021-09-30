@@ -9,4 +9,5 @@
 ## Improvements
 
 - Refactor some code blocks.
+- Optimize simple token collisions detection.
 - Prioritize maps for loose tokens.

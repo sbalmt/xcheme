@@ -1,22 +1,20 @@
 import * as Core from '@xcheme/core';
 
+import * as Coder from '../../core/coder/base';
+import * as Project from '../../core/project';
 import * as Parser from '../../parser';
-
-import { Project } from '../../core/project';
-import { State } from '../context';
-
-import type { PatternEntry } from '../coder/base';
+import * as Context from '../context';
 
 import * as Expression from './expression';
 
 /**
- * Consume the specified input node resolving its condition pattern.
- * @param project Input project.
+ * Consume the given node resolving the condition pattern.
+ * @param project Project context.
  * @param node Input node.
- * @param state Context state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @param state Consumption state.
+ * @returns Returns the pattern or undefined when the node is invalid.
  */
-export const consume = (project: Project, node: Core.Node, state: State): PatternEntry | undefined => {
+export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const test = Expression.consume(project, node.left!, state);
   if (test !== void 0) {
     const content = node.right!;
