@@ -195,7 +195,7 @@ export const nextItem = getItem('next', 'Modify the current node direction to ne
 /**
  * Completion item for a 'PIVOT' operator.
  */
-export const pivotItem = getItem('pivot', 'Create a new node and pivot the current ones if the next consumption is successful.', {
+export const pivotItem = getItem('pivot', 'Create a new node and pivot the current one if the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword
 });
 
@@ -225,7 +225,7 @@ export const errorItem = getItem('error', 'Create a new error if the next consum
 /**
  * Completion item for a 'HAS' operator.
  */
-export const hasItem = getItem('has', 'Perform the next consumption if the expected state match.', {
+export const hasItem = getItem('has', 'Perform the next consumption if the expected state matches.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'has <${1}>',
   commit: ['>']
