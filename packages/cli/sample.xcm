@@ -1,9 +1,1 @@
-token <100> A as 'a';
-token <101> B as 'b';
-
-alias node NODE1 as map {
-  <200> AE as A,
-  <201> BE as 'bb'
-};
-
-node <202> NODE2 as NODE1 | '!';
+// Test sample

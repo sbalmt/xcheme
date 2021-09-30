@@ -43,7 +43,7 @@ const consumeNodes = (node, project) => {
             }
         }
         counter = state.counter;
-        node = current;
+        node = node.next;
     }
     return project.errors.length === 0;
 };

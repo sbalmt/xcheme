@@ -43,7 +43,7 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
       }
     }
     counter = state.counter;
-    node = current;
+    node = node.next!;
   }
   return project.errors.length === 0;
 };
