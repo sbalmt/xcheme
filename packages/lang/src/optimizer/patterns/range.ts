@@ -3,12 +3,12 @@ import * as Core from '@xcheme/core';
 import * as Project from '../../core/project';
 import * as Entries from '../../core/entries';
 import * as Context from '../context';
+import * as Loose from '../loose';
 import * as Nodes from '../nodes';
 
 import { Errors } from '../../core/errors';
 
 import * as Expression from './expression';
-import * as Token from './token';
 
 /**
  * Consume a child node from the AST on the given parent and optimize the range pattern.
@@ -27,17 +27,7 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
         project.addError(node, Errors.TOKEN_COLLISION);
       }
     } else {
-      const temp = Context.getNewState(state.anchor, state.counter);
-      const identifier = `@REF${temp.entry.identity}`;
-      const token = Nodes.getToken(identifier, node.table, node.fragment.location, node);
-      temp.entry.origin = Entries.Origins.Loose;
-      temp.counter++;
-      Token.consume(project, Core.Nodes.Right, token, temp);
-      token.setChild(Core.Nodes.Next, state.anchor.next);
-      state.counter = temp.counter;
-      state.anchor.setChild(Core.Nodes.Next, token);
-      state.anchor = token;
-      entry = project.tokenEntries.get(range)!;
+      entry = Loose.emitToken(project, node, state, range);
     }
     const reference = Nodes.getReference(entry.identifier, node.table, node.fragment.location);
     parent.setChild(direction, reference);
