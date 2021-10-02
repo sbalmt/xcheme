@@ -7,11 +7,11 @@ skip ' ' | '\t' | '\r' | '\n';
 alias token T_DIGIT     as from '0' to '9';
 alias token T_INTEGER   as '0' | opt '-' & from '1' to '9' & opt repeat T_DIGIT;
 alias token T_FRACTION  as '.' & repeat T_DIGIT;
-alias token T_EXPOENT   as ('E' | 'e') & ('+' | '-') & T_DIGIT;
+alias token T_EXPONENT  as ('E' | 'e') & ('+' | '-') & T_DIGIT;
 alias token T_END       as not (from 'A' to 'Z' | from 'a' to 'z' | '_' | T_DIGIT);
 
 token T_STRING          as '"' & repeat ('\\' then * else not '"' then *) & '"';
-token T_NUMBER          as T_INTEGER & opt T_FRACTION & opt T_EXPOENT;
+token T_NUMBER          as T_INTEGER & opt T_FRACTION & opt T_EXPONENT;
 token T_OBJECT_OPEN     as '{';
 token T_OBJECT_CLOSE    as '}';
 token T_ARRAY_OPEN      as '[';
