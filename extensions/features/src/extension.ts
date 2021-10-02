@@ -1,14 +1,14 @@
 import * as VSCode from 'vscode';
 
-import * as Diagnostics from './core/diagnostics';
-import * as Completion from './core/completion';
+import * as Diagnostics from './diagnostics';
+import * as Completion from './completion';
 
 /**
  * Returns a new disposable with an auto completion provider.
  * @returns Returns the disposable.
  */
 const registerAutoCompletion = (): VSCode.Disposable => {
-  return VSCode.languages.registerCompletionItemProvider('xcheme', new Completion.Provider());
+  return VSCode.languages.registerCompletionItemProvider('xcheme', new Completion.Provider(), '.');
 };
 
 /**

@@ -2,8 +2,8 @@ import * as VSCode from 'vscode';
 
 import * as Lang from '@xcheme/lang';
 
-import * as Analysis from './analysis';
-import * as Errors from './diagnostics/errors';
+import * as Analysis from '../common/analysis';
+import * as Errors from './errors';
 
 /**
  * Update the specified diagnostics collection based on the given document.
@@ -19,11 +19,11 @@ export const update = (document: VSCode.TextDocument, collection: VSCode.Diagnos
       collection.set(document.uri, errors);
     } else {
       const project = new Lang.Project.Context(new Lang.TextCoder());
-      if (Lang.Optimizer.consumeNodes(context.node, project)) {
-        Lang.Maker.consumeNodes(context.node, project);
+      Lang.Optimizer.consumeNodes(context.node, project) && Lang.Maker.consumeNodes(context.node, project);
+      if (project.errors.length > 0) {
+        const errors = Errors.getDiagnostics(project.errors);
+        collection.set(document.uri, errors);
       }
-      const errors = Errors.getDiagnostics(project.errors);
-      collection.set(document.uri, errors);
     }
   }
 };

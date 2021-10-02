@@ -16,6 +16,10 @@ type ItemOptions = {
    * Commit characters during the completion.
    */
   commit?: string[];
+  /**
+   * Automatic include a whitespace.
+   */
+  space?: boolean;
 };
 
 /**
@@ -35,9 +39,8 @@ const retriggerCommand = {
  */
 export const getItem = (label: string, documentation: string, options: ItemOptions): VSCode.CompletionItem => {
   const text = options?.text ?? label;
-  const raw = options.kind === VSCode.CompletionItemKind.Text;
   const item = new VSCode.CompletionItem(label, options.kind);
-  item.insertText = new VSCode.SnippetString(raw ? text : `${text} `);
+  item.insertText = new VSCode.SnippetString(options.space ? `${text} ` : text);
   item.commitCharacters = options?.commit;
   item.documentation = documentation;
   item.command = retriggerCommand;
@@ -48,60 +51,66 @@ export const getItem = (label: string, documentation: string, options: ItemOptio
  * Completion item for a 'SKIP' directive.
  */
 export const skipItem = getItem('skip', 'Create a skip directive.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for an 'ALIAS' directive.
  */
 export const aliasItem = getItem('alias', 'Create an alias directive for a token or node.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'TOKEN' directive.
  */
 export const tokenItem = getItem('token', 'Create a token directive.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'NODE' directive.
  */
 export const nodeItem = getItem('node', 'Create a node directive.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for an identity.
  */
 export const identityItem = getItem('IDENTITY', 'Set an identity for the current directive.', {
+  kind: VSCode.CompletionItemKind.Text,
   text: '<${1}>',
-  commit: ['>'],
-  kind: VSCode.CompletionItemKind.Text
+  commit: ['>']
 });
 
 /**
  * Completion item for an identifier.
  */
 export const identifierItem = getItem('IDENTIFIER', 'Set an identifier for the current directive.', {
+  kind: VSCode.CompletionItemKind.Text,
   text: '${1}',
-  commit: [' ', '\n'],
-  kind: VSCode.CompletionItemKind.Text
+  commit: [' ', '\n']
 });
 
 /**
  * Completion item for an 'AS' operator.
  */
 export const asItem = getItem('as', 'Set an expression for the current directive.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'THEN' operator.
  */
 export const thenItem = getItem('then', 'Set a partial condition based on the last consumption state.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
@@ -133,84 +142,96 @@ export const andItem = getItem('and', 'Set another expected consumption.', {
  * Completion item for a 'NOT' operator.
  */
 export const notItem = getItem('not', 'Invert the next consumption state (true to false and vice versa).', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for an 'OPT' operator.
  */
 export const optItem = getItem('opt', 'Set the next consumption as optional.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'REPEAT' operator.
  */
 export const repeatItem = getItem('repeat', 'Repeat the next consumption in case of success after the first try.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'PLACE' operator.
  */
 export const placeItem = getItem('place', 'Place the resulting node from the next consumption in another direction.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for an 'APPEND' operator.
  */
 export const appendItem = getItem('append', 'Create and append a new node if the next consumption is successful.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'PREPEND' operator.
  */
 export const prependItem = getItem('prepend', 'Create and prepend a new node if the next consumption is successful.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'LEFT' modifier.
  */
 export const leftItem = getItem('left', 'Modify the current node direction to left.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'RIGHT' modifier.
  */
 export const rightItem = getItem('right', 'Modify the current node direction to right.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'NEXT' modifier.
  */
 export const nextItem = getItem('next', 'Modify the current node direction to next.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'PIVOT' operator.
  */
 export const pivotItem = getItem('pivot', 'Create a new node and pivot the current one if the next consumption is successful.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'SYMBOL' operator.
  */
 export const symbolItem = getItem('symbol', 'Create a new symbol if the next consumption is successful.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
  * Completion item for a 'SCOPE' operator.
  */
 export const scopeItem = getItem('scope', 'Create a new symbol scope for the next consumption.', {
-  kind: VSCode.CompletionItemKind.Keyword
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
 });
 
 /**
@@ -219,7 +240,8 @@ export const scopeItem = getItem('scope', 'Create a new symbol scope for the nex
 export const errorItem = getItem('error', 'Create a new error if the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'error <${1}>',
-  commit: ['>']
+  commit: ['>'],
+  space: true
 });
 
 /**
@@ -228,7 +250,8 @@ export const errorItem = getItem('error', 'Create a new error if the next consum
 export const hasItem = getItem('has', 'Perform the next consumption if the expected state matches.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'has <${1}>',
-  commit: ['>']
+  commit: ['>'],
+  space: true
 });
 
 /**
@@ -237,7 +260,25 @@ export const hasItem = getItem('has', 'Perform the next consumption if the expec
 export const setItem = getItem('set', 'Set the state if the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'set <${1}>',
-  commit: ['>']
+  commit: ['>'],
+  space: true
+});
+
+/**
+ * Completion item for an 'ACCESS' operator.
+ */
+export const accessItem = getItem('access', 'Access a map member.', {
+  kind: VSCode.CompletionItemKind.Operator,
+  text: '.'
+});
+
+/**
+ * Completion item for a 'MAP' operator.
+ */
+export const mapItem = getItem('map', 'Perform the next consumption in a prefix tree.', {
+  kind: VSCode.CompletionItemKind.Keyword,
+  text: 'map {${1}}',
+  commit: [',', '}']
 });
 
 /**
@@ -269,7 +310,7 @@ export const rangeItem = getItem('from to', 'Accept an unit range.', {
 /**
  * Completion list containing all binary operators.
  */
-export const binaryOperatorList = [thenItem, thenElseItem, orItem, andItem];
+export const binaryOperatorList = [thenItem, thenElseItem, orItem, andItem, accessItem];
 
 /**
  * Completion list containing all unary operators.
@@ -286,7 +327,8 @@ export const unaryOperatorList = [
   scopeItem,
   errorItem,
   hasItem,
-  setItem
+  setItem,
+  mapItem
 ];
 
 /**
