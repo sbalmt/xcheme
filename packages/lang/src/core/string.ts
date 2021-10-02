@@ -11,7 +11,7 @@ const addRegex = new RegExp(`(?:${charList.join('|')})`, 'g');
 /**
  * Regex for stripping slashes.
  */
-const stripRegex = new RegExp(`(?:${charList.join('|').replaceAll('\\', '\\\\')})`, 'g');
+const stripRegex = new RegExp(`(?:${charList.join('|').replace(/\\/g, '\\\\')})`, 'g');
 
 /**
  * Strip slashes in the specified text.
