@@ -53,7 +53,8 @@ export default class Emit extends Pattern {
           source.emit(error);
         } else {
           const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-          const record = new Record(fragment, node, result);
+          const record = new Record(fragment, result, node, source.output.link);
+          source.output.link = void 0;
           source.emit(record);
         }
       }

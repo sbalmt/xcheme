@@ -1,4 +1,5 @@
 import type Fragment from './fragment';
+import type Table from './table';
 import type Node from './node';
 
 /**
@@ -11,25 +12,32 @@ export default class Record {
   #fragment: Fragment;
 
   /**
-   * Record node.
-   */
-  #node: Node | undefined;
-
-  /**
    * Record value.
    */
   #value: string | number;
 
   /**
+   * Record node.
+   */
+  #node: Node | undefined;
+
+  /**
+   * Record table link.
+   */
+  #link: Table | undefined;
+
+  /**
    * Default constructor.
    * @param fragment Record fragment.
-   * @param node Record node.
    * @param value Record value.
+   * @param node Record node.
+   * @param link Record table link.
    */
-  constructor(fragment: Fragment, node: Node | undefined, value: string | number) {
+  constructor(fragment: Fragment, value: string | number, node?: Node, link?: Table) {
     this.#fragment = fragment;
-    this.#node = node;
     this.#value = value;
+    this.#node = node;
+    this.#link = link;
   }
 
   /**
@@ -40,6 +48,13 @@ export default class Record {
   }
 
   /**
+   * Get the record value.
+   */
+  get value() {
+    return this.#value;
+  }
+
+  /**
    * Get the record node.
    */
   get node(): Node | undefined {
@@ -47,9 +62,9 @@ export default class Record {
   }
 
   /**
-   * Get the record value.
+   * Get the record table link.
    */
-  get value() {
-    return this.#value;
+  get link(): Table | undefined {
+    return this.#link;
   }
 }

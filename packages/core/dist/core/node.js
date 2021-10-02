@@ -13,20 +13,20 @@ class Node {
      */
     #fragment;
     /**
-     * Node symbol table.
-     */
-    #table;
-    /**
      * Node value.
      */
     #value;
     /**
+     * Node symbol table.
+     */
+    #table;
+    /**
      * Default constructor
      * @param fragment Node fragment.
-     * @param table Node symbol table.
      * @param value Node value.
+     * @param table Node table.
      */
-    constructor(fragment, table, value) {
+    constructor(fragment, value, table) {
         this.#fragment = fragment;
         this.#table = table;
         this.#value = value;
@@ -38,16 +38,16 @@ class Node {
         return this.#fragment;
     }
     /**
-     * Get the symbol table associated to the node.
-     */
-    get table() {
-        return this.#table;
-    }
-    /**
      * Get the node value.
      */
     get value() {
         return this.#value;
+    }
+    /**
+     * Get the symbol table associated to the node.
+     */
+    get table() {
+        return this.#table;
     }
     /**
      * Get the child node on the left.

@@ -36,13 +36,6 @@ export default class Table {
   }
 
   /**
-   * Get the parent table.
-   */
-  get parent(): Table | undefined {
-    return this.#parent;
-  }
-
-  /**
    * Get all the record names in the table.
    */
   get names(): string[] {
@@ -54,6 +47,13 @@ export default class Table {
    */
   get length(): number {
     return this.#length;
+  }
+
+  /**
+   * Get the parent table.
+   */
+  get parent(): Table | undefined {
+    return this.#parent;
   }
 
   /**

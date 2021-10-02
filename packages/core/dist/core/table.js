@@ -25,12 +25,6 @@ class Table {
         this.#parent = parent;
     }
     /**
-     * Get the parent table.
-     */
-    get parent() {
-        return this.#parent;
-    }
-    /**
      * Get all the record names in the table.
      */
     get names() {
@@ -41,6 +35,12 @@ class Table {
      */
     get length() {
         return this.#length;
+    }
+    /**
+     * Get the parent table.
+     */
+    get parent() {
+        return this.#parent;
     }
     /**
      * Check whether or not there's a symbol record for the given name.

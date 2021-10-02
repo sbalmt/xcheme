@@ -11,7 +11,7 @@ test('Consume success', () => {
   let fragment;
 
   // Set the fake node before starting.
-  source.output.node = new Node(source.fragment, context.table, 0xfff);
+  source.output.node = new Node(source.fragment, 0xfff, context.table);
 
   // Test the consumption.
   expect(pattern.consume(source)).toBeTruthy();

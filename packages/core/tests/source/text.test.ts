@@ -169,7 +169,7 @@ test('Open/Close symbol table', () => {
   source.openTable();
 
   // Emit a new record to the output symbol table.
-  source.emit(new Record(source.fragment, context.node, 123));
+  source.emit(new Record(source.fragment, 123, context.node));
 
   // Test the output symbol table state.
   table = source.output.table!;
@@ -215,7 +215,7 @@ test('Emit node', () => {
   const source = new TextSource('abc', context);
 
   // Test node emission.
-  source.emit(new Node(source.fragment, context.table, 123));
+  source.emit(new Node(source.fragment, 123, context.table));
   expect(context.node.next).toBeDefined();
 
   // Test resulting node.
@@ -241,7 +241,7 @@ test('Emit record', () => {
   const source = new TextSource('abc', context);
 
   // Test record emission.
-  source.emit(new Record(source.fragment, context.node, 123));
+  source.emit(new Record(source.fragment, 123, context.node));
 
   // Test symbol table state.
   const table = context.table;
@@ -263,7 +263,7 @@ test('Emit record', () => {
   expect(fragment.location.line).toBe(0);
 
   // Test duplicate record.
-  expect(() => source.emit(new Record(source.fragment, context.node, 123))).toThrow(
+  expect(() => source.emit(new Record(source.fragment, 123, context.node))).toThrow(
     'Unable to add records with duplicate fragment data.'
   );
 });

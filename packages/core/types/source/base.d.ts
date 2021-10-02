@@ -17,6 +17,7 @@ declare type Output = {
      * Output table.
      */
     table: Table;
+    link?: Table;
     /**
      * Output value.
      */

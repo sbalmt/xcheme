@@ -21,6 +21,8 @@ type Output = {
    */
   table: Table;
 
+  link?: Table;
+
   /**
    * Output value.
    */
@@ -169,6 +171,9 @@ export default class Base {
   closeTable(): void {
     if (!this.#table.parent) {
       throw "There's no parent symbol table to collapse.";
+    }
+    if (this.#table.length > 0) {
+      this.#output.link = this.#table;
     }
     this.#table = this.#table.parent;
     this.#output.table = this.#table;

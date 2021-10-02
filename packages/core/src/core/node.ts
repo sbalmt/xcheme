@@ -34,22 +34,22 @@ export default class Node {
   #fragment: Fragment;
 
   /**
-   * Node symbol table.
-   */
-  #table: Table;
-
-  /**
    * Node value.
    */
   #value: string | number;
 
   /**
+   * Node symbol table.
+   */
+  #table: Table;
+
+  /**
    * Default constructor
    * @param fragment Node fragment.
-   * @param table Node symbol table.
    * @param value Node value.
+   * @param table Node table.
    */
-  constructor(fragment: Fragment, table: Table, value: string | number) {
+  constructor(fragment: Fragment, value: string | number, table: Table) {
     this.#fragment = fragment;
     this.#table = table;
     this.#value = value;
@@ -63,17 +63,17 @@ export default class Node {
   }
 
   /**
-   * Get the symbol table associated to the node.
-   */
-  get table(): Table {
-    return this.#table;
-  }
-
-  /**
    * Get the node value.
    */
   get value(): string | number {
     return this.#value;
+  }
+
+  /**
+   * Get the symbol table associated to the node.
+   */
+  get table(): Table {
+    return this.#table;
   }
 
   /**

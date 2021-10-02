@@ -25,7 +25,7 @@ class Context {
     /**
      * Context main node.
      */
-    #node = new node_1.default(new fragment_1.default('', 0, 0, new location_1.default(0, 0)), this.#table, 0x00);
+    #node = new node_1.default(new fragment_1.default('', 0, 0, new location_1.default(0, 0)), 0x00, this.#table);
     /**
      * Context name.
      */

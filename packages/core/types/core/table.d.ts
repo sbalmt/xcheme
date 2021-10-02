@@ -11,10 +11,6 @@ export default class Table {
      */
     constructor(parent?: Table);
     /**
-     * Get the parent table.
-     */
-    get parent(): Table | undefined;
-    /**
      * Get all the record names in the table.
      */
     get names(): string[];
@@ -22,6 +18,10 @@ export default class Table {
      * Get the number of entries in the table.
      */
     get length(): number;
+    /**
+     * Get the parent table.
+     */
+    get parent(): Table | undefined;
     /**
      * Check whether or not there's a symbol record for the given name.
      * @param name Symbol record name.

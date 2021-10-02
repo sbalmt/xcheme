@@ -45,7 +45,7 @@ class Emit extends pattern_1.default {
         if (status) {
             const { table, value } = source.output;
             const result = this.#value === base_1.default.Output ? value ?? -1 : this.#value;
-            const node = new node_1.default(source.fragment, table, result);
+            const node = new node_1.default(source.fragment, result, table);
             node.setChild(this.#output, source.output.node);
             source.output.node = void 0;
             source.emit(node);

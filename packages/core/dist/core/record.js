@@ -9,23 +9,29 @@ class Record {
      */
     #fragment;
     /**
-     * Record node.
-     */
-    #node;
-    /**
      * Record value.
      */
     #value;
     /**
+     * Record node.
+     */
+    #node;
+    /**
+     * Record table link.
+     */
+    #link;
+    /**
      * Default constructor.
      * @param fragment Record fragment.
-     * @param node Record node.
      * @param value Record value.
+     * @param node Record node.
+     * @param link Record table link.
      */
-    constructor(fragment, node, value) {
+    constructor(fragment, value, node, link) {
         this.#fragment = fragment;
-        this.#node = node;
         this.#value = value;
+        this.#node = node;
+        this.#link = link;
     }
     /**
      * Get the record fragment.
@@ -34,16 +40,22 @@ class Record {
         return this.#fragment;
     }
     /**
+     * Get the record value.
+     */
+    get value() {
+        return this.#value;
+    }
+    /**
      * Get the record node.
      */
     get node() {
         return this.#node;
     }
     /**
-     * Get the record value.
+     * Get the record table link.
      */
-    get value() {
-        return this.#value;
+    get link() {
+        return this.#link;
     }
 }
 exports.default = Record;

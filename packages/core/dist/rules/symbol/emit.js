@@ -51,7 +51,8 @@ class Emit extends pattern_1.default {
                 }
                 else {
                     const result = this.#value === base_1.default.Output ? value ?? -1 : this.#value;
-                    const record = new record_1.default(fragment, node, result);
+                    const record = new record_1.default(fragment, result, node, source.output.link);
+                    source.output.link = void 0;
                     source.emit(record);
                 }
             }

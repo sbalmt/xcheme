@@ -16,22 +16,22 @@ export default class Node {
     /**
      * Default constructor
      * @param fragment Node fragment.
-     * @param table Node symbol table.
      * @param value Node value.
+     * @param table Node table.
      */
-    constructor(fragment: Fragment, table: Table, value: string | number);
+    constructor(fragment: Fragment, value: string | number, table: Table);
     /**
      * Get the node fragment.
      */
     get fragment(): Fragment;
     /**
-     * Get the symbol table associated to the node.
-     */
-    get table(): Table;
-    /**
      * Get the node value.
      */
     get value(): string | number;
+    /**
+     * Get the symbol table associated to the node.
+     */
+    get table(): Table;
     /**
      * Get the child node on the left.
      */
