@@ -20,7 +20,10 @@
       "internalConsoleOptions": "neverOpen",
       "preLaunchTask": "${defaultBuildTask}",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/features", "${workspaceFolder}/samples"],
-      "outFiles": ["${workspaceFolder}/extensions/features/dist/**/*.js"]
+      "outFiles": ["${workspaceFolder}/extensions/features/dist/**/*.js"],
+      "sourceMapPathOverrides": {
+        "webpack://xcheme-language-features/*": "${workspaceFolder}/extensions/features/*"
+      }
     },
     {
       "type": "node",
