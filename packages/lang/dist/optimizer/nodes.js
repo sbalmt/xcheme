@@ -12,8 +12,8 @@ const Parser = require("../parser");
  */
 const getIdentity = (identity, table, location) => {
     const fragment = new Core.Fragment(identity, 0, identity.length, location);
-    const ident = new Core.Node(fragment, table, 202 /* Identity */);
-    return ident;
+    const node = new Core.Node(fragment, 202 /* Identity */, table);
+    return node;
 };
 exports.getIdentity = getIdentity;
 /**
@@ -26,11 +26,11 @@ exports.getIdentity = getIdentity;
 const getIdentifier = (identifier, table, location) => {
     const identity = identifier.substr(4);
     const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
-    const ident = new Core.Node(fragment, table, 200 /* Identifier */);
-    const record = new Core.Record(fragment, ident, 300 /* Token */);
-    ident.setChild(0 /* Left */, exports.getIdentity(identity, table, location));
+    const node = new Core.Node(fragment, 200 /* Identifier */, table);
+    const record = new Core.Record(fragment, 300 /* Token */, node);
+    node.setChild(0 /* Left */, exports.getIdentity(identity, table, location));
     table.add(record);
-    return ident;
+    return node;
 };
 exports.getIdentifier = getIdentifier;
 /**
@@ -43,11 +43,11 @@ exports.getIdentifier = getIdentifier;
  */
 const getToken = (identifier, table, location, expression) => {
     const fragment = new Core.Fragment('token', 0, 5, location);
-    const token = new Core.Node(fragment, table, 235 /* Token */);
+    const node = new Core.Node(fragment, 235 /* Token */, table);
     const ident = exports.getIdentifier(identifier, table, location);
     ident.setChild(1 /* Right */, expression);
-    token.setChild(1 /* Right */, ident);
-    return token;
+    node.setChild(1 /* Right */, ident);
+    return node;
 };
 exports.getToken = getToken;
 /**
@@ -55,12 +55,12 @@ exports.getToken = getToken;
  * @param identifier Node identifier.
  * @param table Node symbol table.
  * @param location Node location.
- * @returns Returns the node.
+ * @returns Returns the reference node.
  */
 const getReference = (identifier, table, location) => {
     const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
-    const reference = new Core.Node(fragment, table, 201 /* Reference */);
-    return reference;
+    const node = new Core.Node(fragment, 201 /* Reference */, table);
+    return node;
 };
 exports.getReference = getReference;
 //# sourceMappingURL=nodes.js.map

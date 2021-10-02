@@ -11,7 +11,7 @@ class Node extends Core.Node {
      * @param node Original node.
      */
     constructor(node) {
-        super(node.fragment, node.table, node.value);
+        super(node.fragment, node.value, node.table);
         this.setChild(0 /* Left */, node.left);
         this.setChild(1 /* Right */, node.right);
         this.setChild(2 /* Next */, node.next);

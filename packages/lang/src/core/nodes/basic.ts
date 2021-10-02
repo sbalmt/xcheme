@@ -11,7 +11,7 @@ export class Node extends Core.Node {
    * @param node Original node.
    */
   constructor(node: Core.Node) {
-    super(node.fragment, node.table, node.value);
+    super(node.fragment, node.value, node.table);
     this.setChild(Core.Nodes.Left, node.left);
     this.setChild(Core.Nodes.Right, node.right);
     this.setChild(Core.Nodes.Next, node.next);

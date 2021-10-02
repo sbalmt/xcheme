@@ -29,6 +29,6 @@ export declare const getToken: (identifier: string, table: Core.Table, location:
  * @param identifier Node identifier.
  * @param table Node symbol table.
  * @param location Node location.
- * @returns Returns the node.
+ * @returns Returns the reference node.
  */
 export declare const getReference: (identifier: string, table: Core.Table, location: Core.Location) => Core.Node;
