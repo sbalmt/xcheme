@@ -71,7 +71,7 @@ export class Text extends Base {
   getEntry(name: string, references: Reference[], patterns: string[]): string {
     const deps = references.map((entry) => this.#getReference(entry));
     return (
-      deps +
+      deps.join('') +
       this.#getExportEntry(
         name,
         this.#getPattern(

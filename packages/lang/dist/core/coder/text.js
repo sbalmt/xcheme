@@ -51,7 +51,7 @@ class Text extends base_1.Base {
      */
     getEntry(name, references, patterns) {
         const deps = references.map((entry) => this.#getReference(entry));
-        return (deps +
+        return (deps.join('') +
             this.#getExportEntry(name, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
     }
     /**
