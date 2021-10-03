@@ -14,7 +14,9 @@ const config = {
     extensions: ['.ts', '.js']
   },
   watchOptions: {
-    aggregateTimeout: 30,
+    poll: 1000,
+    aggregateTimeout: 200,
+    followSymlinks: true,
     ignored: /node_modules/
   },
   plugins: [new ShebangPlugin()],
