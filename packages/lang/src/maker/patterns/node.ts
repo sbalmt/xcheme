@@ -1,21 +1,9 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../../core/project';
-import * as Entries from '../../core/entries';
 import * as Context from '../context';
 
 import * as Expression from './expression';
-
-/**
- * Emit a new reference entry based on the given node entry.
- * @param project Project context.
- * @param entry Node entry.
- */
-const emit = (project: Project.Context, entry: Entries.Entry): void => {
-  const identifier = `@REF${entry.identity}`;
-  const reference = project.nodeEntries.add(entry.origin, identifier, entry.identity);
-  reference.pattern = project.coder.emitReferencePattern(project.nodeEntries, entry.identifier);
-};
 
 /**
  * Consume the specified state resolving the 'NODE' directive.
@@ -27,14 +15,16 @@ export const consume = (project: Project.Context, state: Context.State): void =>
   const expression = Expression.consume(project, directive.right!, state);
   if (expression !== void 0) {
     const entry = project.nodeEntries.get(directive.identifier)!;
-    if (!directive.alias) {
+    if (directive.alias) {
+      entry.pattern = expression;
+    } else {
       const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
       entry.pattern = project.coder.emitNodePattern(identity, Core.Nodes.Right, expression);
-    } else {
-      entry.pattern = expression;
-    }
-    if (entry.references > 0) {
-      emit(project, entry);
+      if (entry.references > 0) {
+        const identifier = `@REF${entry.identity}`;
+        const reference = project.nodeEntries.add(entry.origin, identifier, entry.identity);
+        reference.pattern = project.coder.emitReferencePattern(project.nodeEntries, entry.identifier);
+      }
     }
   }
 };
