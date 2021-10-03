@@ -110,7 +110,7 @@ export class Aggregator {
    */
   add(origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry {
     if (this.has(identifier)) {
-      throw `An entry named '${identifier}' already exists.`;
+      throw `Another entry named '${identifier}' can't be added.`;
     }
     return (this.#entries[identifier] = {
       origin,

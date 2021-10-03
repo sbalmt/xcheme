@@ -51,7 +51,7 @@ class Aggregator {
      */
     add(origin, identifier, identity, model) {
         if (this.has(identifier)) {
-            throw `An entry named '${identifier}' already exists.`;
+            throw `Another entry named '${identifier}' can't be added.`;
         }
         return (this.#entries[identifier] = {
             origin,
