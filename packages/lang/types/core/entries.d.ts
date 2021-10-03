@@ -53,13 +53,9 @@ export declare class Aggregator {
      */
     get patterns(): Entry[];
     /**
-     * Get all alias patterns.
-     */
-    get aliasPatterns(): Entry[];
-    /**
      * Get all reference patterns.
      */
-    get referencePatterns(): Entry[];
+    get references(): Entry[];
     /**
      * Determines whether or not the aggregator contains an entry with the given name.
      * @param name Entry name.

@@ -101,7 +101,7 @@ class Context {
      * Get the resulting lexer.
      */
     get lexer() {
-        return this.#coder.getEntry('Lexer', this.#getReferences(this.#tokenEntries.referencePatterns), [
+        return this.#coder.getEntry('Lexer', this.#getReferences(this.#tokenEntries.references), [
             ...this.#getPatterns(this.#skipEntries.patterns),
             ...this.#getPatterns(this.#tokenEntries.patterns)
         ]);
@@ -110,7 +110,7 @@ class Context {
      * Get the resulting parser.
      */
     get parser() {
-        return this.#coder.getEntry('Parser', this.#getReferences(this.#nodeEntries.referencePatterns), this.#getPatterns(this.#nodeEntries.patterns));
+        return this.#coder.getEntry('Parser', this.#getReferences(this.#nodeEntries.references), this.#getPatterns(this.#nodeEntries.patterns));
     }
     /**
      * Add a new error in the project.

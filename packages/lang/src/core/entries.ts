@@ -72,20 +72,13 @@ export class Aggregator {
    * Get all patterns.
    */
   get patterns(): Entry[] {
-    return Object.values(this.#entries).filter((entry) => entry.references === 0 && !entry.alias);
-  }
-
-  /**
-   * Get all alias patterns.
-   */
-  get aliasPatterns(): Entry[] {
-    return Object.values(this.#entries).filter((entry) => entry.references === 0 && entry.alias);
+    return Object.values(this.#entries).filter((entry) => !entry.alias && entry.references === 0);
   }
 
   /**
    * Get all reference patterns.
    */
-  get referencePatterns(): Entry[] {
+  get references(): Entry[] {
     return Object.values(this.#entries).filter((entry) => entry.references > 0);
   }
 

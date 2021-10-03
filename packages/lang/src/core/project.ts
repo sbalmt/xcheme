@@ -128,7 +128,7 @@ export class Context {
    * Get the resulting lexer.
    */
   get lexer(): string | Core.Pattern {
-    return this.#coder.getEntry('Lexer', this.#getReferences(this.#tokenEntries.referencePatterns), [
+    return this.#coder.getEntry('Lexer', this.#getReferences(this.#tokenEntries.references), [
       ...this.#getPatterns(this.#skipEntries.patterns),
       ...this.#getPatterns(this.#tokenEntries.patterns)
     ]);
@@ -140,7 +140,7 @@ export class Context {
   get parser(): string | Core.Pattern {
     return this.#coder.getEntry(
       'Parser',
-      this.#getReferences(this.#nodeEntries.referencePatterns),
+      this.#getReferences(this.#nodeEntries.references),
       this.#getPatterns(this.#nodeEntries.patterns)
     );
   }
