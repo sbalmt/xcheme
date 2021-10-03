@@ -18,7 +18,7 @@
       "name": "Run Features (Extension)",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "preLaunchTask": "${defaultBuildTask}",
+      "preLaunchTask": "Build Features",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/features", "${workspaceFolder}/samples"],
       "outFiles": ["${workspaceFolder}/extensions/features/dist/**/*.js"],
       "sourceMapPathOverrides": {
@@ -31,9 +31,13 @@
       "name": "Run CLI",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
+      "preLaunchTask": "Build CLI",
       "runtimeArgs": ["--inspect-brk", "cli/bin/xcm.js", "-s", "cli/sample.xcm"],
       "skipFiles": ["<node_internals>/**"],
-      "cwd": "${workspaceFolder}/packages"
+      "cwd": "${workspaceFolder}/packages",
+      "sourceMapPathOverrides": {
+        "webpack://@xcheme/cli/*": "${workspaceFolder}/packages/cli/*"
+      }
     },
     {
       "type": "node",

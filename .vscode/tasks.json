@@ -4,17 +4,27 @@
   "version": "2.0.0",
   "tasks": [
     {
+      "label": "Build Features",
       "type": "npm",
       "script": "watch",
+      "group": "build",
       "path": "extensions/features/",
       "problemMatcher": ["$ts-webpack-watch"],
       "isBackground": true,
       "presentation": {
         "reveal": "never"
-      },
-      "group": {
-        "kind": "build",
-        "isDefault": true
+      }
+    },
+    {
+      "label": "Build CLI",
+      "type": "npm",
+      "script": "watch",
+      "group": "build",
+      "path": "packages/cli/",
+      "problemMatcher": ["$ts-webpack-watch"],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "never"
       }
     }
   ]
