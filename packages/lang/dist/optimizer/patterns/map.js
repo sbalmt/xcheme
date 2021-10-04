@@ -60,15 +60,15 @@ const consume = (project, direction, parent, state) => {
             if (candidate !== void 0) {
                 const replacement = new Member.Node(expression.right, state.entry.identity, state.entry.dynamic, candidate);
                 member.setChild(1 /* Right */, replacement);
+                if (state.type === 2 /* Token */) {
+                    project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+                }
+                else {
+                    project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+                }
             }
             else {
                 project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
-            }
-            if (state.type === 2 /* Token */) {
-                project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
-            }
-            else {
-                project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
             }
             state.entry = entry;
         }

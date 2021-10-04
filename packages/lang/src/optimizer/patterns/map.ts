@@ -66,13 +66,13 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
       if (candidate !== void 0) {
         const replacement = new Member.Node(expression.right!, state.entry.identity, state.entry.dynamic, candidate);
         member.setChild(Core.Nodes.Right, replacement);
+        if (state.type === Context.Types.Token) {
+          project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+        } else {
+          project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+        }
       } else {
         project.addError(member, Errors.INVALID_MAP_ENTRY);
-      }
-      if (state.type === Context.Types.Token) {
-        project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
-      } else {
-        project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
       }
       state.entry = entry;
     } else {
