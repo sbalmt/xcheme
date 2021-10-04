@@ -30,7 +30,7 @@ const getCandidate = (node: Core.Node, parent?: Core.Node): Core.Node | undefine
       return node;
     }
     if (node.left !== void 0) {
-      return getCandidate(node.left);
+      return getCandidate(node.left, node);
     }
   }
   return void 0;

@@ -54,8 +54,8 @@ const consume = (project, node, state) => {
             }
             else {
                 let route;
-                if (current.right !== void 0 && current.right !== entry.right) {
-                    const pattern = Expression.consume(project, current.right, state);
+                if (!current.empty) {
+                    const pattern = Expression.consume(project, current, state);
                     if (current.dynamic || directive.type === 0 /* Skip */) {
                         route = project.coder.getRoute(units, void 0, pattern);
                     }

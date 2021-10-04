@@ -58,8 +58,8 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
         project.addError(node, Errors.UNEXPECTED_NODE);
       } else {
         let route;
-        if (current.right !== void 0 && current.right !== entry.right) {
-          const pattern = Expression.consume(project, current.right!, state);
+        if (!current.empty) {
+          const pattern = Expression.consume(project, current!, state);
           if (current.dynamic || directive.type === Directive.Types.Skip) {
             route = project.coder.getRoute(units, void 0, pattern);
           } else {

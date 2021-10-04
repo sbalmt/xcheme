@@ -25,7 +25,7 @@ const getCandidate = (node, parent) => {
             return node;
         }
         if (node.left !== void 0) {
-            return getCandidate(node.left);
+            return getCandidate(node.left, node);
         }
     }
     return void 0;

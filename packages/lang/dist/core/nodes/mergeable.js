@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Node = void 0;
+const Core = require("@xcheme/core");
 const Basic = require("./basic");
 /**
  * Mergeable node.
@@ -10,6 +11,10 @@ class Node extends Basic.Node {
      * Sequence type.
      */
     #type;
+    /**
+     * Sequence nodes.
+     */
+    #sequence;
     /**
      * Get all the mergeable nodes from the specified node in a sequence.
      * @param node Input node.
@@ -29,6 +34,10 @@ class Node extends Basic.Node {
     constructor(node, type) {
         super(node);
         this.#type = type;
+        this.#sequence = this.#getNodes(node);
+        this.setChild(0 /* Left */, void 0);
+        this.setChild(1 /* Right */, void 0);
+        this.setChild(2 /* Next */, void 0);
     }
     /**
      * Get the sequence type.
@@ -40,7 +49,7 @@ class Node extends Basic.Node {
      * Get the node sequence.
      */
     get sequence() {
-        return this.#getNodes(this);
+        return this.#sequence;
     }
 }
 exports.Node = Node;

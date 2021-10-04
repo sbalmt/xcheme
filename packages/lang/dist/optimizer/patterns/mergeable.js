@@ -14,7 +14,10 @@ const Expression = require("./expression");
  */
 const isMergeableUnits = (node, operator) => {
     if (node.value === operator) {
-        return isMergeableUnits(node.left, operator) && isMergeableUnits(node.right, operator);
+        if (!(node instanceof Mergeable.Node)) {
+            return isMergeableUnits(node.left, operator) && isMergeableUnits(node.right, operator);
+        }
+        return false;
     }
     return node.value === 203 /* String */;
 };
@@ -26,7 +29,10 @@ const isMergeableUnits = (node, operator) => {
  */
 const isMergeableRefs = (node, operator) => {
     if (node.value === operator) {
-        return isMergeableRefs(node.left, operator) && isMergeableRefs(node.right, operator);
+        if (!(node instanceof Mergeable.Node)) {
+            return isMergeableRefs(node.left, operator) && isMergeableRefs(node.right, operator);
+        }
+        return false;
     }
     return node instanceof Identity.Node;
 };

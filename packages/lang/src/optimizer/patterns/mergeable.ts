@@ -16,7 +16,10 @@ import * as Expression from './expression';
  */
 const isMergeableUnits = (node: Core.Node, operator: Parser.Nodes): boolean => {
   if (node.value === operator) {
-    return isMergeableUnits(node.left!, operator) && isMergeableUnits(node.right!, operator);
+    if (!(node instanceof Mergeable.Node)) {
+      return isMergeableUnits(node.left!, operator) && isMergeableUnits(node.right!, operator);
+    }
+    return false;
   }
   return node.value === Parser.Nodes.String;
 };
@@ -29,7 +32,10 @@ const isMergeableUnits = (node: Core.Node, operator: Parser.Nodes): boolean => {
  */
 const isMergeableRefs = (node: Core.Node, operator: Parser.Nodes): boolean => {
   if (node.value === operator) {
-    return isMergeableRefs(node.left!, operator) && isMergeableRefs(node.right!, operator);
+    if (!(node instanceof Mergeable.Node)) {
+      return isMergeableRefs(node.left!, operator) && isMergeableRefs(node.right!, operator);
+    }
+    return false;
   }
   return node instanceof Identity.Node;
 };

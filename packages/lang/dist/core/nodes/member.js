@@ -22,7 +22,13 @@ class Node extends Identity.Node {
         this.#entry = entry;
     }
     /**
-     * Get the node entry.
+     * Determines whether or not the member is empty.
+     */
+    get empty() {
+        return this.#entry.fragment === this.fragment;
+    }
+    /**
+     * Get the member entry.
      */
     get entry() {
         return this.#entry;

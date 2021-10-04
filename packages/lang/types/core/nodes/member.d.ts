@@ -14,7 +14,11 @@ export declare class Node extends Identity.Node {
      */
     constructor(node: Core.Node, identity: number, dynamic: boolean, entry: Core.Node);
     /**
-     * Get the node entry.
+     * Determines whether or not the member is empty.
+     */
+    get empty(): boolean;
+    /**
+     * Get the member entry.
      */
     get entry(): Core.Node;
 }
