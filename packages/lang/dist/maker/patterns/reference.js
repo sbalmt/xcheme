@@ -32,9 +32,6 @@ const resolveToken = (project, node, symbol) => {
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveNode = (project, node, symbol) => {
-    if (node instanceof Identity.Node) {
-        return project.coder.emitExpectUnitsPattern([node.identity]);
-    }
     if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
         const identifier = node.fragment.data;
         const entry = project.nodeEntries.get(identifier);
@@ -43,6 +40,9 @@ const resolveNode = (project, node, symbol) => {
             return project.coder.emitReferencePattern(project.nodeEntries, identifier);
         }
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+    }
+    if (node instanceof Identity.Node) {
+        return project.coder.emitExpectUnitsPattern([node.identity]);
     }
     return void 0;
 };

@@ -39,9 +39,6 @@ const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Re
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
 const resolveNode = (project: Project.Context, node: Core.Node, symbol: Core.Record): Coder.Pattern | undefined => {
-  if (node instanceof Identity.Node) {
-    return project.coder.emitExpectUnitsPattern([node.identity]);
-  }
   if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
     const identifier = node.fragment.data;
     const entry = project.nodeEntries.get(identifier);
@@ -50,6 +47,9 @@ const resolveNode = (project: Project.Context, node: Core.Node, symbol: Core.Rec
       return project.coder.emitReferencePattern(project.nodeEntries, identifier);
     }
     project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
+  }
+  if (node instanceof Identity.Node) {
+    return project.coder.emitExpectUnitsPattern([node.identity]);
   }
   return void 0;
 };
