@@ -172,7 +172,7 @@ export declare class Live extends Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    emiHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
+    emitHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new set pattern.
      * @param state New state value.

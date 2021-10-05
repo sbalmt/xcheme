@@ -301,7 +301,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emiHasPattern(state: number, ...patterns: string[]): string {
+   emitHasPattern(state: number, ...patterns: string[]): string {
     return this.#getPattern('HasStatePattern', state, ...patterns);
   }
 

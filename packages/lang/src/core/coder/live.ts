@@ -251,7 +251,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emiHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
+   emitHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
     return new Core.HasStatePattern(state, ...patterns);
   }
 

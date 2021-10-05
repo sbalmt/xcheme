@@ -246,7 +246,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emiHasPattern(state: number, ...patterns: Pattern[]): Pattern {
+   emitHasPattern(state: number, ...patterns: Pattern[]): Pattern {
     throw "Method doesn't implemented.";
   }
 

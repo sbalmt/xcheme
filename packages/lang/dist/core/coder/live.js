@@ -212,7 +212,7 @@ class Live extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    emiHasPattern(state, ...patterns) {
+    emitHasPattern(state, ...patterns) {
         return new Core.HasStatePattern(state, ...patterns);
     }
     /**

@@ -249,7 +249,7 @@ class Text extends base_1.Base {
      * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    emiHasPattern(state, ...patterns) {
+    emitHasPattern(state, ...patterns) {
         return this.#getPattern('HasStatePattern', state, ...patterns);
     }
     /**

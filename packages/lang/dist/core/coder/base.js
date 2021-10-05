@@ -200,7 +200,7 @@ class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    emiHasPattern(state, ...patterns) {
+    emitHasPattern(state, ...patterns) {
         throw "Method doesn't implemented.";
     }
     /**

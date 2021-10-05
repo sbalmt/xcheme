@@ -178,7 +178,7 @@ export declare class Base {
      * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    emiHasPattern(state: number, ...patterns: Pattern[]): Pattern;
+    emitHasPattern(state: number, ...patterns: Pattern[]): Pattern;
     /**
      * Should be implemented to return a set pattern.
      * @param state New state value.
