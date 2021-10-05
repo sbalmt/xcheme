@@ -1,3 +1,5 @@
+import * as Core from '@xcheme/core';
+
 import * as Helper from '../helper';
 import * as Lang from '../../../src/index';
 
@@ -11,8 +13,8 @@ test("Output a 'PIVOT' rule", () => {
   expect(rule.pattern).toBe(`new Core.PivotNodePattern(0, 1, 0, new Core.ExpectUnitPattern('@'))`);
 });
 
-test("Output a chained 'PIVOT' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip pivot ('@' & repeat '*');");
+test("Output a 'PIVOT' rule with chained patterns", () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "skip pivot ('@' & '*' & '*');");
 
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
@@ -21,7 +23,25 @@ test("Output a chained 'PIVOT' rule", () => {
   expect(rule.pattern).toBe(
     `new Core.PivotNodePattern(0, 1, 0, ` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +
-      /**/ `new Core.RepeatFlowPattern(new Core.ExpectUnitPattern('*'))` +
+      /**/ `new Core.ExpectUnitPattern('*', '*')` +
+      `)`
+  );
+});
+
+test("Output a 'PIVOT' rule with a map", () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "skip pivot map { 'a', 'b', 'c'};");
+
+  // Check the output code.
+  const rule = project.skipEntries.get('@SKIP0')!;
+  expect(rule).toBeDefined();
+  expect(rule.identity).toBe(0);
+  expect(rule.pattern).toBe(
+    `new Core.PivotNodePattern(${Core.BaseSource.Output}, 1, 0, ` +
+      /**/ `new Core.MapFlowPattern(` +
+      /******/ `new Core.UnitRoute('a'), ` +
+      /******/ `new Core.UnitRoute('b'), ` +
+      /******/ `new Core.UnitRoute('c')` +
+      /**/ `)` +
       `)`
   );
 });

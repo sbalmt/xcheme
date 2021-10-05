@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const And = require("./and");
+const Core = require("@xcheme/core");
+const Nodes = require("../resolvers/nodes");
 /**
  * Consume the given node resolving the 'PIVOT' pattern.
  * @param project Project context.
@@ -10,10 +11,12 @@ const And = require("./and");
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
-    const patterns = And.resolve(project, node.right, state);
+    const patterns = Nodes.resolve(project, node.right, state);
     if (patterns !== void 0) {
-        const identity = state.directive.identity;
-        return project.coder.emitPivotPattern(identity, patterns[0], ...patterns.slice(1));
+        const [test, ...remaining] = patterns;
+        const { directive } = state;
+        const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
+        return project.coder.emitPivotPattern(identity, test, ...remaining);
     }
     return void 0;
 };

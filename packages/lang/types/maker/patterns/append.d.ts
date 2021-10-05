@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Nodes from '../resolvers/nodes';
 import * as Context from '../context';
 /**
  * Consume the given node resolving the 'APPEND' pattern.

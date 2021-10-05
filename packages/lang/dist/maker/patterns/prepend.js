@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const And = require("./and");
+const Core = require("@xcheme/core");
+const Nodes = require("../resolvers/nodes");
 /**
  * Consume the given node resolving the 'PREPEND' pattern.
  * @param project Project context.
@@ -11,10 +12,12 @@ const And = require("./and");
  * @returns Returns the consumption result or undefined when the node is invalid.
  */
 const consume = (project, node, state, direction) => {
-    const patterns = And.resolve(project, node.right, state);
+    const patterns = Nodes.resolve(project, node.right, state);
     if (patterns !== void 0) {
-        const identity = state.directive.identity;
-        return project.coder.emitPrependPattern(identity, direction, patterns[0], ...patterns.slice(1));
+        const [test, ...remaining] = patterns;
+        const { directive } = state;
+        const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
+        return project.coder.emitPrependPattern(identity, direction, test, ...remaining);
     }
     return void 0;
 };
