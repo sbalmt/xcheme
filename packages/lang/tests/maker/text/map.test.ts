@@ -18,7 +18,7 @@ test("Output a skip 'MAP' rule", () => {
   );
 });
 
-test("Output a nested 'MAP' rule", () => {
+test("Output a nested skip 'MAP' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & map { '1', '2' }, 'b', 'c' };");
 
   // Check the output code.
@@ -39,7 +39,7 @@ test("Output a nested 'MAP' rule", () => {
   );
 });
 
-test("Output a compound 'MAP' rule", () => {
+test("Output a compound skip 'MAP' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & opt 'b' & repeat 'c' };");
 
   // Check the output code.
