@@ -12,8 +12,9 @@ const And = require("./and");
 const consume = (project, node, state) => {
     const patterns = And.resolve(project, node.right, state);
     if (patterns !== void 0) {
+        const [test, ...remaining] = patterns;
         const directive = state.directive;
-        return project.coder.emitSymbolPattern(directive.identity, patterns[0], ...patterns.slice(1));
+        return project.coder.emitSymbolPattern(directive.identity, test, ...remaining);
     }
     return void 0;
 };

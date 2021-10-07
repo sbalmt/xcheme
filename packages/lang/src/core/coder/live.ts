@@ -44,16 +44,17 @@ export class Live extends Base {
    * @returns Returns the route.
    */
   getRoute(path: (string | number)[], value?: number, pattern?: Core.Pattern): Core.Route {
+    const [test, ...remaining] = path;
     if (value !== void 0) {
       if (pattern !== void 0) {
         return new Core.SetValueRoute(value, pattern, ...path);
       }
-      return new Core.SetValueRoute(value, path[0], ...path.slice(1));
+      return new Core.SetValueRoute(value, test, ...remaining);
     }
     if (pattern !== void 0) {
-      return new Core.FlowRoute(pattern, path[0], ...path.slice(1));
+      return new Core.FlowRoute(pattern, test, ...remaining);
     }
-    return new Core.UnitRoute(path[0], ...path.slice(1));
+    return new Core.UnitRoute(test, ...remaining);
   }
 
   /**
@@ -251,7 +252,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-   emitHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
     return new Core.HasStatePattern(state, ...patterns);
   }
 

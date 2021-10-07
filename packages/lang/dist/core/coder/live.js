@@ -25,16 +25,17 @@ class Live extends base_1.Base {
      * @returns Returns the route.
      */
     getRoute(path, value, pattern) {
+        const [test, ...remaining] = path;
         if (value !== void 0) {
             if (pattern !== void 0) {
                 return new Core.SetValueRoute(value, pattern, ...path);
             }
-            return new Core.SetValueRoute(value, path[0], ...path.slice(1));
+            return new Core.SetValueRoute(value, test, ...remaining);
         }
         if (pattern !== void 0) {
-            return new Core.FlowRoute(pattern, path[0], ...path.slice(1));
+            return new Core.FlowRoute(pattern, test, ...remaining);
         }
-        return new Core.UnitRoute(path[0], ...path.slice(1));
+        return new Core.UnitRoute(test, ...remaining);
     }
     /**
      * Get a new map pattern.

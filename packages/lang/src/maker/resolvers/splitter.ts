@@ -11,9 +11,7 @@ import * as Context from '../context';
 import * as And from '../patterns/and';
 
 /**
- * Resolve the given node considering that the output will be used in a node emission pattern.
- * REMARKS: When emitting a node into the AST, the first pattern (a.k.a test pattern)
- * must be separate of the remaining patterns.
+ * Resolve the given node splitting the first part from the mergeable in an 'AND' pattern.
  * @param project Project context.
  * @param node Input node.
  * @param state Consumption state.
@@ -21,14 +19,14 @@ import * as And from '../patterns/and';
  */
 export const resolve = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern[] | undefined => {
   if (node.value === Parser.Nodes.And && node instanceof Mergeable.Node && node.sequence.length > 1) {
-    const test = node.sequence.shift()!;
+    const record = node.sequence.shift()!;
     const patterns = And.resolve(project, node, state);
     if (patterns !== void 0) {
       let units;
       if (node.type === Parser.Nodes.String) {
-        units = String.extract(test.fragment.data).split('');
+        units = String.extract(record.fragment.data).split('');
       } else {
-        units = [(test as Identity.Node).identity];
+        units = [(record as Identity.Node).identity];
       }
       return [project.coder.emitExpectUnitsPattern(units), ...patterns];
     }

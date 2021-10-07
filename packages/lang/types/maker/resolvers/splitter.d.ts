@@ -3,9 +3,7 @@ import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Context from '../context';
 /**
- * Resolve the given node considering that the output will be used in a node emission pattern.
- * REMARKS: When emitting a node into the AST, the first pattern (a.k.a test pattern)
- * must be separate of the remaining patterns.
+ * Resolve the given node splitting the first part from the mergeable in an 'AND' pattern.
  * @param project Project context.
  * @param node Input node.
  * @param state Consumption state.

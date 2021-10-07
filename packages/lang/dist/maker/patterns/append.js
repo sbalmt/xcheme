@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Nodes = require("../resolvers/nodes");
+const Splitter = require("../resolvers/splitter");
 /**
  * Consume the given node resolving the 'APPEND' pattern.
  * @param project Project context.
@@ -11,7 +11,7 @@ const Nodes = require("../resolvers/nodes");
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state, direction) => {
-    const patterns = Nodes.resolve(project, node.right, state);
+    const patterns = Splitter.resolve(project, node.right, state);
     if (patterns !== void 0) {
         const identity = state.directive.identity;
         const [test, ...remaining] = patterns;

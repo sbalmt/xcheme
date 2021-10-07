@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
-import * as Nodes from '../resolvers/nodes';
+import * as Splitter from '../resolvers/splitter';
 import * as Context from '../context';
 
 /**
@@ -19,7 +19,7 @@ export const consume = (
   state: Context.State,
   direction: Core.Nodes
 ): Coder.Pattern | undefined => {
-  const patterns = Nodes.resolve(project, node.right!, state);
+  const patterns = Splitter.resolve(project, node.right!, state);
   if (patterns !== void 0) {
     const identity = state.directive.identity;
     const [test, ...remaining] = patterns;
