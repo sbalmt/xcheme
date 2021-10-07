@@ -20,7 +20,7 @@ import * as And from '../patterns/and';
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 export const resolve = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern[] | undefined => {
-  if (node instanceof Mergeable.Node && node.sequence.length > 1) {
+  if (node.value === Parser.Nodes.And && node instanceof Mergeable.Node && node.sequence.length > 1) {
     const test = node.sequence.shift()!;
     const patterns = And.resolve(project, node, state);
     if (patterns !== void 0) {

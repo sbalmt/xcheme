@@ -29,3 +29,17 @@ test("Parse an 'APPEND' rule", () => {
 
   Helper.testLexer(project, context, '@@@');
 });
+
+test("Parse an 'APPEND' rule with multiple patterns", () => {
+  const project = Helper.makeParser(new Lang.LiveCoder(), "skip append ('@' | '*');");
+  const context = new Core.Context('test');
+
+  Helper.testLexer(project, context, '@*');
+});
+
+test("Parse an 'APPEND' rule with chained patterns", () => {
+  const project = Helper.makeParser(new Lang.LiveCoder(), "skip append ('@' & '*' & '*');");
+  const context = new Core.Context('test');
+
+  Helper.testLexer(project, context, '@**');
+});

@@ -15,7 +15,7 @@ const And = require("../patterns/and");
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 const resolve = (project, node, state) => {
-    if (node instanceof Mergeable.Node && node.sequence.length > 1) {
+    if (node.value === 212 /* And */ && node instanceof Mergeable.Node && node.sequence.length > 1) {
         const test = node.sequence.shift();
         const patterns = And.resolve(project, node, state);
         if (patterns !== void 0) {

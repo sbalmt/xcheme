@@ -9,6 +9,13 @@ test("Parse a 'PIVOT' rule", () => {
   Helper.testLexer(project, context, '@@@');
 });
 
+test("Parse a 'PIVOT' rule with multiple patterns", () => {
+  const project = Helper.makeParser(new Lang.LiveCoder(), "skip pivot ('@' | '*');");
+  const context = new Core.Context('test');
+
+  Helper.testLexer(project, context, '@*');
+});
+
 test("Parse a 'PIVOT' rule with chained patterns", () => {
   const project = Helper.makeParser(new Lang.LiveCoder(), "skip pivot ('@' & '*' & '*');");
   const context = new Core.Context('test');
