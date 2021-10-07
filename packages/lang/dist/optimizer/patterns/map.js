@@ -14,7 +14,7 @@ const Expression = require("./expression");
  * @returns Returns the candidate node or undefined when there's no candidates.
  */
 const getCandidate = (node, parent) => {
-    if (node.value !== 210 /* Then */ && node.value !== 212 /* Or */) {
+    if (node.value !== 209 /* Then */ && node.value !== 211 /* Or */) {
         if (node.value === 204 /* String */ || node instanceof Identity.Node || node instanceof Mergeable.Node) {
             if (parent !== void 0) {
                 const right = parent.right;

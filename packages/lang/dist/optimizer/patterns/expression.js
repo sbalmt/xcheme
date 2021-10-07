@@ -29,17 +29,17 @@ const consume = (project, direction, parent, state) => {
         case 204 /* String */:
             String.consume(project, direction, parent, state);
             break;
-        case 208 /* Map */:
+        case 207 /* Map */:
             Map.consume(project, direction, parent, state);
             break;
-        case 207 /* Access */:
+        case 234 /* Access */:
             Access.consume(project, direction, parent, state);
             break;
-        case 212 /* Or */:
-            Mergeable.consume(project, direction, parent, 212 /* Or */, state);
+        case 211 /* Or */:
+            Mergeable.consume(project, direction, parent, 211 /* Or */, state);
             break;
-        case 213 /* And */:
-            Mergeable.consume(project, direction, parent, 213 /* And */, state);
+        case 212 /* And */:
+            Mergeable.consume(project, direction, parent, 212 /* And */, state);
             break;
         default:
             exports.consume(project, 1 /* Right */, node, state);

@@ -7,63 +7,62 @@ const tokens = [
   ...[
     // Identifier
     { name: 'NAME', value: Lexer.Tokens.Identifier },
-    // Number
+    // Identity or State
     { name: '1234567890', value: Lexer.Tokens.Number },
+    // Auto identity
     { name: 'auto', value: Lexer.Tokens.Auto },
     // String
     { name: "'text'", value: Lexer.Tokens.String },
     // Any unit
     { name: 'any', value: Lexer.Tokens.Any },
-    { name: '*', value: Lexer.Tokens.Any },
     // Unit range
     { name: 'from', value: Lexer.Tokens.From },
-    { name: 'to', value: Lexer.Tokens.To }
-  ],
-  // Functions
-  ...[
-    // Error
-    { name: 'error', value: Lexer.Tokens.Error },
-    // State
-    { name: 'has', value: Lexer.Tokens.Has },
-    { name: 'set', value: Lexer.Tokens.Set }
+    { name: 'to', value: Lexer.Tokens.To },
+    // Map
+    { name: 'map', value: Lexer.Tokens.Map }
   ],
   // Operators
   ...[
+    // Condition
+    { name: 'then', value: Lexer.Tokens.Then },
+    { name: 'else', value: Lexer.Tokens.Else },
+    // Logical
+    { name: 'or', value: Lexer.Tokens.Or },
+    { name: 'and', value: Lexer.Tokens.And },
     // Unary
     { name: 'not', value: Lexer.Tokens.Not },
     { name: 'opt', value: Lexer.Tokens.Opt },
     { name: 'repeat', value: Lexer.Tokens.Repeat },
-    { name: 'map', value: Lexer.Tokens.Map },
     // Node
     { name: 'place', value: Lexer.Tokens.Place },
-    { name: 'pivot', value: Lexer.Tokens.Pivot },
     { name: 'append', value: Lexer.Tokens.Append },
     { name: 'prepend', value: Lexer.Tokens.Prepend },
+    { name: 'pivot', value: Lexer.Tokens.Pivot },
     { name: 'next', value: Lexer.Tokens.Next },
     { name: 'left', value: Lexer.Tokens.Left },
     { name: 'right', value: Lexer.Tokens.Right },
     // Symbol
     { name: 'symbol', value: Lexer.Tokens.Symbol },
     { name: 'scope', value: Lexer.Tokens.Scope },
-    // Logical
-    { name: 'and', value: Lexer.Tokens.And },
-    { name: '&', value: Lexer.Tokens.And },
-    { name: 'or', value: Lexer.Tokens.Or },
-    { name: '|', value: Lexer.Tokens.Or },
-    // Condition
-    { name: 'then', value: Lexer.Tokens.Then },
-    { name: 'else', value: Lexer.Tokens.Else }
+    // Error
+    { name: 'error', value: Lexer.Tokens.Error },
+    // State
+    { name: 'has', value: Lexer.Tokens.Has },
+    { name: 'set', value: Lexer.Tokens.Set }
   ],
   // Entry points
   ...[
     { name: 'skip', value: Lexer.Tokens.Skip },
-    { name: 'alias', value: Lexer.Tokens.Alias },
     { name: 'token', value: Lexer.Tokens.Token },
     { name: 'node', value: Lexer.Tokens.Node },
+    { name: 'alias', value: Lexer.Tokens.Alias },
     { name: 'as', value: Lexer.Tokens.As }
   ],
   // Syntax symbols
   ...[
+    { name: '*', value: Lexer.Tokens.Asterisk },
+    { name: '&', value: Lexer.Tokens.Ampersand },
+    { name: '|', value: Lexer.Tokens.VerticalBar },
     { name: '.', value: Lexer.Tokens.Period },
     { name: ',', value: Lexer.Tokens.Comma },
     { name: ';', value: Lexer.Tokens.Semicolon },

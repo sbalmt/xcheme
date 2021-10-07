@@ -40,54 +40,54 @@ const consume = (project, node, state) => {
             return project.coder.emitAnyPattern();
         case 206 /* Range */:
             return Range.consume(project, node, state);
-        case 208 /* Map */:
+        case 207 /* Map */:
             return Map.consume(project, node, state);
-        case 207 /* Access */:
+        case 234 /* Access */:
             return Access.consume(project, node);
-        case 210 /* Then */:
+        case 209 /* Then */:
             return Condition.consume(project, node, state);
-        case 212 /* Or */:
+        case 211 /* Or */:
             return Or.consume(project, node, state);
-        case 213 /* And */:
+        case 212 /* And */:
             return And.consume(project, node, state);
-        case 214 /* Not */:
+        case 213 /* Not */:
             return Not.consume(project, node, state);
-        case 215 /* Opt */:
+        case 214 /* Opt */:
             return Option.consume(project, node, state);
-        case 216 /* Repeat */:
+        case 215 /* Repeat */:
             return Repeat.consume(project, node, state);
-        case 220 /* Place */:
-        case 219 /* PlaceRight */:
+        case 219 /* Place */:
+        case 218 /* PlaceRight */:
             return Place.consume(project, node, state, 1 /* Right */);
-        case 217 /* PlaceNext */:
+        case 216 /* PlaceNext */:
             return Place.consume(project, node, state, 2 /* Next */);
-        case 218 /* PlaceLeft */:
+        case 217 /* PlaceLeft */:
             return Place.consume(project, node, state, 0 /* Left */);
-        case 224 /* Append */:
-        case 223 /* AppendRight */:
+        case 223 /* Append */:
+        case 222 /* AppendRight */:
             return Append.consume(project, node, state, 1 /* Right */);
-        case 221 /* AppendNext */:
+        case 220 /* AppendNext */:
             return Append.consume(project, node, state, 2 /* Next */);
-        case 222 /* AppendLeft */:
+        case 221 /* AppendLeft */:
             return Append.consume(project, node, state, 0 /* Left */);
-        case 228 /* Prepend */:
-        case 227 /* PrependRight */:
+        case 227 /* Prepend */:
+        case 226 /* PrependRight */:
             return Prepend.consume(project, node, state, 1 /* Right */);
-        case 225 /* PrependNext */:
+        case 224 /* PrependNext */:
             return Prepend.consume(project, node, state, 2 /* Next */);
-        case 226 /* PrependLeft */:
+        case 225 /* PrependLeft */:
             return Prepend.consume(project, node, state, 0 /* Left */);
-        case 229 /* Pivot */:
+        case 228 /* Pivot */:
             return Pivot.consume(project, node, state);
-        case 230 /* Symbol */:
+        case 229 /* Symbol */:
             return Symbol.consume(project, node, state);
-        case 231 /* Scope */:
+        case 230 /* Scope */:
             return Scope.consume(project, node, state);
-        case 232 /* Error */:
+        case 231 /* Error */:
             return Error.consume(project, node, state);
-        case 233 /* Has */:
+        case 232 /* Has */:
             return Has.consume(project, node, state);
-        case 234 /* Set */:
+        case 233 /* Set */:
             return Set.consume(project, node, state);
         default:
             project.addError(node, 4099 /* UNEXPECTED_NODE */);

@@ -121,6 +121,7 @@ const generalOperands = new Core.AppendNodePattern(
   Core.Nodes.Right,
   new Core.MapFlowPattern(
     new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Any),
+    new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Asterisk),
     new Core.SetValueRoute(Nodes.String, Lexer.Tokens.String),
     new Core.SetValueRoute(Nodes.Reference, Lexer.Tokens.Identifier)
   )
@@ -165,15 +166,15 @@ const conditionExpression = new Core.OptFlowPattern(
  */
 const expression: Core.Pattern = new Core.ExpectFlowPattern(
   new BinaryExpression(
-    new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.Or, Lexer.Tokens.Or)),
+    new Core.SetValuePattern(Nodes.Or, new Core.ChooseUnitPattern(Lexer.Tokens.Or, Lexer.Tokens.VerticalBar)),
     new BinaryExpression(
-      new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.And, Lexer.Tokens.And)),
+      new Core.SetValuePattern(Nodes.And, new Core.ChooseUnitPattern(Lexer.Tokens.And, Lexer.Tokens.Ampersand)),
       new UnaryExpression(
         unaryOperators,
         new Core.PlaceNodePattern(
           Core.Nodes.Right,
           new BinaryExpression(
-            new Core.MapFlowPattern(new Core.SetValueRoute(Nodes.Access, Lexer.Tokens.Period)),
+            new Core.SetValuePattern(Nodes.Access, new Core.ExpectUnitPattern(Lexer.Tokens.Period)),
             new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)
           )
         )
