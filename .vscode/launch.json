@@ -10,7 +10,7 @@
       "name": "Run Basics (Extension)",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/basics", "${workspaceFolder}/samples"]
+      "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/basics", "--disable-extensions", "${workspaceFolder}/samples"]
     },
     {
       "type": "extensionHost",
