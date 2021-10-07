@@ -21,7 +21,7 @@ class Node extends Identity.Node {
      * @param entry Node entry.
      */
     constructor(node, type, entry) {
-        super(node, entry.identity, entry.dynamic);
+        super(node, entry.identity);
         this.#type = type;
         this.#entry = entry;
     }
@@ -30,6 +30,12 @@ class Node extends Identity.Node {
      */
     get type() {
         return this.#type;
+    }
+    /**
+     * Get whether or not the directive can have a dynamic identity.
+     */
+    get dynamic() {
+        return this.#entry.dynamic;
     }
     /**
      * Get whether or not the directive is an alias.

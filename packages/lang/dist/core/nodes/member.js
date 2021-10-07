@@ -7,31 +7,41 @@ const Identity = require("./identity");
  */
 class Node extends Identity.Node {
     /**
-     * Member entry.
+     * Node entry.
      */
     #entry;
     /**
+     * Member route node.
+     */
+    #route;
+    /**
      * Default constructor.
      * @param node Original node.
-     * @param identity Entry identity.
-     * @param dynamic Determines whether or not the member can have a dynamic identity.
-     * @param entry Entry node.
+     * @param entry Node entry.
+     * @param route Route node.
      */
-    constructor(node, identity, dynamic, entry) {
-        super(node, identity, dynamic);
+    constructor(node, entry, route) {
+        super(node, entry.identity);
         this.#entry = entry;
+        this.#route = route;
     }
     /**
-     * Determines whether or not the member is empty.
+     * Get whether or not the directive can have a dynamic identity.
+     */
+    get dynamic() {
+        return this.#entry.dynamic;
+    }
+    /**
+     * Determines whether or not the member has a route.
      */
     get empty() {
-        return this.#entry.fragment === this.fragment;
+        return this.#route.fragment === this.fragment;
     }
     /**
-     * Get the member entry.
+     * Get the member route.
      */
-    get entry() {
-        return this.#entry;
+    get route() {
+        return this.#route;
     }
 }
 exports.Node = Node;

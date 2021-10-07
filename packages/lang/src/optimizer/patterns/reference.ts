@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../../core/project';
+import * as Entries from '../../core/entries';
 import * as Identity from '../../core/nodes/identity';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -27,8 +28,16 @@ const resolveToken = (project: Project.Context, node: Core.Node, state: Context.
   } else {
     const identifier = node.fragment.data;
     const entry = project.tokenEntries.get(identifier);
-    if (entry?.dynamic) {
-      state.entry.dynamic = true;
+    if (entry !== void 0) {
+      if (entry.dynamic) {
+        state.entry.dynamic = true;
+      }
+    } else {
+      project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+        if (state.entry.identifier !== identifier && entry.dynamic) {
+          project.tokenEntries.get(state.entry.identifier)!.dynamic = true;
+        }
+      });
     }
   }
 };
@@ -53,26 +62,36 @@ const resolveNode = (
   const identifier = node.fragment.data;
   if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
     const entry = project.nodeEntries.get(identifier);
-    if (entry?.dynamic) {
-      state.entry.dynamic = true;
-    }
-  } else {
-    const entry = project.tokenEntries.get(identifier);
-    if (symbol.value === Parser.Symbols.Token) {
-      if (entry !== void 0) {
-        if (entry.dynamic) {
-          project.addError(node, Errors.INVALID_MAP_REFERENCE);
-        } else {
-          parent.setChild(direction, new Identity.Node(node, entry.identity, entry.dynamic));
-        }
-      } else {
-        project.addError(node, Errors.UNRESOLVED_TOKEN_REFERENCE);
+    if (entry !== void 0) {
+      if (entry.dynamic) {
+        state.entry.dynamic = true;
       }
-    } else if (symbol.value === Parser.Symbols.AliasToken) {
-      project.addError(node, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
     } else {
-      project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
+      project.nodeEntries.on(identifier, (entry: Entries.Entry) => {
+        if (state.entry.identifier !== identifier && entry.dynamic) {
+          project.nodeEntries.get(state.entry.identifier)!.dynamic = true;
+        }
+      });
     }
+  } else if (symbol.value === Parser.Symbols.Token) {
+    const entry = project.tokenEntries.get(identifier);
+    if (entry !== void 0) {
+      if (entry.dynamic) {
+        project.addError(node, Errors.INVALID_MAP_REFERENCE);
+      } else {
+        parent.setChild(direction, new Identity.Node(node, entry.identity));
+      }
+    } else {
+      project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+        if (state.entry.identifier !== identifier) {
+          parent.setChild(direction, new Identity.Node(node, entry.identity));
+        }
+      });
+    }
+  } else if (symbol.value === Parser.Symbols.AliasToken) {
+    project.addError(node, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
+  } else {
+    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 

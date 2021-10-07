@@ -47,8 +47,7 @@ const consume = (project, node, state) => {
             project.addError(node, 4100 /* UNSUPPORTED_NODE */);
         }
         else {
-            const entry = current.entry;
-            const units = resolve(entry);
+            const units = resolve(current.route);
             if (units === void 0) {
                 project.addError(node, 4099 /* UNEXPECTED_NODE */);
             }

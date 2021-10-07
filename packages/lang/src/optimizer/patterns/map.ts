@@ -64,13 +64,14 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
       Expression.consume(project, Core.Nodes.Right, expression, state);
       const candidate = getCandidate(expression.right!);
       if (candidate !== void 0) {
-        const replacement = new Member.Node(expression.right!, state.entry.identity, state.entry.dynamic, candidate);
-        member.setChild(Core.Nodes.Right, replacement);
+        const { origin, identifier, identity } = state.entry;
+        const replacement = new Member.Node(expression.right!, state.entry, candidate);
         if (state.type === Context.Types.Token) {
-          project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+          project.tokenEntries.add(origin, identifier, identity, state.entry);
         } else {
-          project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+          project.nodeEntries.add(origin, identifier, identity, state.entry);
         }
+        member.setChild(Core.Nodes.Right, replacement);
       } else {
         project.addError(member, Errors.INVALID_MAP_ENTRY);
       }
@@ -79,7 +80,8 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
       Expression.consume(project, Core.Nodes.Right, member, state);
       const candidate = getCandidate(member.right!);
       if (candidate !== void 0) {
-        member.setChild(Core.Nodes.Right, new Member.Node(member.right!, state.entry.identity, false, candidate));
+        const entry = { ...state.entry };
+        member.setChild(Core.Nodes.Right, new Member.Node(member.right!, entry, candidate));
       } else {
         project.addError(member, Errors.INVALID_MAP_ENTRY);
       }

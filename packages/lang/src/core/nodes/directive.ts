@@ -1,6 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Entries from '../entries';
 import * as Identity from './identity';
 
 /**
@@ -11,6 +10,28 @@ export const enum Types {
   Token,
   Node
 }
+
+/**
+ * Directive entry.
+ */
+export type Entry = {
+  /**
+   * Entry identifier.
+   */
+  identifier: string;
+  /**
+   * Entry identity.
+   */
+  identity: number;
+  /**
+   * Determines whether or not the entry is an alias.
+   */
+  alias: boolean;
+  /**
+   * Determines whether or not the entry can have a dynamic identity.
+   */
+  dynamic: boolean;
+};
 
 /**
  * Directive node.
@@ -24,7 +45,7 @@ export class Node extends Identity.Node {
   /**
    * Node entry.
    */
-  #entry: Entries.Entry;
+  #entry: Entry;
 
   /**
    * Default constructor.
@@ -32,8 +53,8 @@ export class Node extends Identity.Node {
    * @param type Directive type.
    * @param entry Node entry.
    */
-  constructor(node: Core.Node, type: Types, entry: Entries.Entry) {
-    super(node, entry.identity, entry.dynamic);
+  constructor(node: Core.Node, type: Types, entry: Entry) {
+    super(node, entry.identity);
     this.#type = type;
     this.#entry = entry;
   }
@@ -43,6 +64,13 @@ export class Node extends Identity.Node {
    */
   get type(): Types {
     return this.#type;
+  }
+
+  /**
+   * Get whether or not the directive can have a dynamic identity.
+   */
+  get dynamic(): boolean {
+    return this.#entry.dynamic;
   }
 
   /**

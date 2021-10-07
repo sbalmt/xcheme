@@ -4,6 +4,10 @@ import * as Core from '@xcheme/core';
  */
 declare type Pattern = string | Core.Pattern;
 /**
+ * Event callback.
+ */
+declare type EventCallback = (entry: Entry) => void;
+/**
  * Entry origins.
  */
 export declare const enum Origins {
@@ -79,11 +83,17 @@ export declare class Aggregator {
     add(origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry;
     /**
      * Link an existing entry to another name.
-     * @param name Link name.
-     * @param identifier Pattern identifier.
+     * @param identifier Link identifier.
+     * @param alias Alias identifier.
      * @throws Throws an error when the specified name already exists or the given identifier doesn't exists.
      * @returns Returns the linked entry.
      */
-    link(name: string, identifier: string): Entry;
+    link(identifier: string, alias: string): Entry;
+    /**
+     * Add an event to be triggered when an entry with the given identifier is added.
+     * @param identifier Entry identifier.
+     * @param callback Trigger callback.
+     */
+    on(identifier: string, callback: EventCallback): void;
 }
 export {};

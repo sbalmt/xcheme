@@ -9,10 +9,6 @@ test('Node referring an alias token (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "alias token TOKEN as '@'; node NODE as TOKEN;", [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]);
 });
 
-test('Node referring an unresolved token (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "node NODE as TOKEN; token TOKEN as '@';", [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]);
-});
-
 test('Node referring an undefined token map entry (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN as map { 'a' }; node NODE as TOKEN.A;", [Lang.Errors.UNDEFINED_IDENTIFIER]);
 });

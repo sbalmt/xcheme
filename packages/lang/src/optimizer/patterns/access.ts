@@ -41,7 +41,7 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
     } else if (entry.dynamic) {
       project.addError(node, Errors.INVALID_MAP_REFERENCE);
     } else {
-      parent.setChild(direction, new Identity.Node(node, entry.identity, entry.dynamic));
+      parent.setChild(direction, new Identity.Node(node, entry.identity));
     }
   }
 };

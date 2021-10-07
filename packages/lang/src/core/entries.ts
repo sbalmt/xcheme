@@ -6,9 +6,21 @@ import * as Core from '@xcheme/core';
 type Pattern = string | Core.Pattern;
 
 /**
- * Map of entries.
+ * Event callback.
  */
-type Map = {
+type EventCallback = (entry: Entry) => void;
+
+/**
+ * Map of aggregator events.
+ */
+type EventMap = {
+  [identifier: string]: EventCallback[];
+};
+
+/**
+ * Map of aggregator entries.
+ */
+type EntryMap = {
   [name: string]: Entry;
 };
 
@@ -61,12 +73,17 @@ export class Aggregator {
   /**
    * Entry map.
    */
-  #entries: Map = {};
+  #entries: EntryMap = {};
 
   /**
    * Link map.
    */
-  #links: Map = {};
+  #links: EntryMap = {};
+
+  /**
+   * Event map.
+   */
+  #events: EventMap = {};
 
   /**
    * Get all patterns.
@@ -112,7 +129,8 @@ export class Aggregator {
     if (this.has(identifier)) {
       throw `Another entry named '${identifier}' can't be added.`;
     }
-    return (this.#entries[identifier] = {
+    const events = this.#events[identifier];
+    const entry = (this.#entries[identifier] = {
       origin,
       identifier,
       identity,
@@ -121,21 +139,42 @@ export class Aggregator {
       references: model?.references ?? 0,
       pattern: model?.pattern
     });
+    if (events !== void 0) {
+      delete this.#events[identifier];
+      for (const event of events) {
+        event(entry);
+      }
+    }
+    return entry;
   }
 
   /**
    * Link an existing entry to another name.
-   * @param name Link name.
-   * @param identifier Pattern identifier.
+   * @param identifier Link identifier.
+   * @param alias Alias identifier.
    * @throws Throws an error when the specified name already exists or the given identifier doesn't exists.
    * @returns Returns the linked entry.
    */
-  link(name: string, identifier: string): Entry {
-    if (this.has(name)) {
-      throw `An entry named '${name}' already exists.`;
-    } else if (!this.has(identifier)) {
-      throw `An entry named '${identifier}' doesn't exists.`;
+  link(identifier: string, alias: string): Entry {
+    if (this.has(identifier)) {
+      throw `An entry named '${identifier}' already exists.`;
+    } else if (!this.has(alias)) {
+      throw `An entry named '${alias}' doesn't exists.`;
     }
-    return (this.#links[name] = this.get(identifier)!);
+    return (this.#links[identifier] = this.get(alias)!);
+  }
+
+  /**
+   * Add an event to be triggered when an entry with the given identifier is added.
+   * @param identifier Entry identifier.
+   * @param callback Trigger callback.
+   */
+  on(identifier: string, callback: EventCallback): void {
+    const events = this.#events[identifier];
+    if (events !== void 0) {
+      events.push(callback);
+    } else {
+      this.#events[identifier] = [callback];
+    }
   }
 }

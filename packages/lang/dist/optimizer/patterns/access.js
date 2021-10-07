@@ -41,7 +41,7 @@ const consume = (project, direction, parent, state) => {
             project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
         }
         else {
-            parent.setChild(direction, new Identity.Node(node, entry.identity, entry.dynamic));
+            parent.setChild(direction, new Identity.Node(node, entry.identity));
         }
     }
 };

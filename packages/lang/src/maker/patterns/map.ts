@@ -52,8 +52,7 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
     if (!(current instanceof Member.Node)) {
       project.addError(node, Errors.UNSUPPORTED_NODE);
     } else {
-      const entry = current.entry;
-      const units = resolve(entry);
+      const units = resolve(current.route);
       if (units === void 0) {
         project.addError(node, Errors.UNEXPECTED_NODE);
       } else {

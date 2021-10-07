@@ -58,14 +58,15 @@ const consume = (project, direction, parent, state) => {
             Expression.consume(project, 1 /* Right */, expression, state);
             const candidate = getCandidate(expression.right);
             if (candidate !== void 0) {
-                const replacement = new Member.Node(expression.right, state.entry.identity, state.entry.dynamic, candidate);
-                member.setChild(1 /* Right */, replacement);
+                const { origin, identifier, identity } = state.entry;
+                const replacement = new Member.Node(expression.right, state.entry, candidate);
                 if (state.type === 2 /* Token */) {
-                    project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+                    project.tokenEntries.add(origin, identifier, identity, state.entry);
                 }
                 else {
-                    project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+                    project.nodeEntries.add(origin, identifier, identity, state.entry);
                 }
+                member.setChild(1 /* Right */, replacement);
             }
             else {
                 project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
@@ -76,7 +77,8 @@ const consume = (project, direction, parent, state) => {
             Expression.consume(project, 1 /* Right */, member, state);
             const candidate = getCandidate(member.right);
             if (candidate !== void 0) {
-                member.setChild(1 /* Right */, new Member.Node(member.right, state.entry.identity, false, candidate));
+                const entry = { ...state.entry };
+                member.setChild(1 /* Right */, new Member.Node(member.right, entry, candidate));
             }
             else {
                 project.addError(member, 4114 /* INVALID_MAP_ENTRY */);

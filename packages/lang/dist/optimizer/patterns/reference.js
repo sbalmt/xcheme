@@ -26,8 +26,17 @@ const resolveToken = (project, node, state, symbol) => {
     else {
         const identifier = node.fragment.data;
         const entry = project.tokenEntries.get(identifier);
-        if (entry?.dynamic) {
-            state.entry.dynamic = true;
+        if (entry !== void 0) {
+            if (entry.dynamic) {
+                state.entry.dynamic = true;
+            }
+        }
+        else {
+            project.tokenEntries.on(identifier, (entry) => {
+                if (state.entry.identifier !== identifier && entry.dynamic) {
+                    project.tokenEntries.get(state.entry.identifier).dynamic = true;
+                }
+            });
         }
     }
 };
@@ -45,31 +54,42 @@ const resolveNode = (project, direction, parent, state, symbol) => {
     const identifier = node.fragment.data;
     if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
         const entry = project.nodeEntries.get(identifier);
-        if (entry?.dynamic) {
-            state.entry.dynamic = true;
-        }
-    }
-    else {
-        const entry = project.tokenEntries.get(identifier);
-        if (symbol.value === 300 /* Token */) {
-            if (entry !== void 0) {
-                if (entry.dynamic) {
-                    project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
-                }
-                else {
-                    parent.setChild(direction, new Identity.Node(node, entry.identity, entry.dynamic));
-                }
+        if (entry !== void 0) {
+            if (entry.dynamic) {
+                state.entry.dynamic = true;
             }
-            else {
-                project.addError(node, 4104 /* UNRESOLVED_TOKEN_REFERENCE */);
-            }
-        }
-        else if (symbol.value === 303 /* AliasToken */) {
-            project.addError(node, 4110 /* INVALID_ALIAS_TOKEN_REFERENCE */);
         }
         else {
-            project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+            project.nodeEntries.on(identifier, (entry) => {
+                if (state.entry.identifier !== identifier && entry.dynamic) {
+                    project.nodeEntries.get(state.entry.identifier).dynamic = true;
+                }
+            });
         }
+    }
+    else if (symbol.value === 300 /* Token */) {
+        const entry = project.tokenEntries.get(identifier);
+        if (entry !== void 0) {
+            if (entry.dynamic) {
+                project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
+            }
+            else {
+                parent.setChild(direction, new Identity.Node(node, entry.identity));
+            }
+        }
+        else {
+            project.tokenEntries.on(identifier, (entry) => {
+                if (state.entry.identifier !== identifier) {
+                    parent.setChild(direction, new Identity.Node(node, entry.identity));
+                }
+            });
+        }
+    }
+    else if (symbol.value === 303 /* AliasToken */) {
+        project.addError(node, 4110 /* INVALID_ALIAS_TOKEN_REFERENCE */);
+    }
+    else {
+        project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
     }
 };
 /**
