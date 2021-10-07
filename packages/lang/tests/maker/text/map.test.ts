@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 import * as Helper from '../helper';
 import * as Lang from '../../../src/index';
 
-test("Output a skip 'MAP' rule", () => {
+test("Output a 'MAP' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a', 'b', 'c' };");
 
   // Check the output code.
@@ -18,7 +18,7 @@ test("Output a skip 'MAP' rule", () => {
   );
 });
 
-test("Output a nested skip 'MAP' rule", () => {
+test("Output a 'MAP' rule with a nested map pattern", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & map { '1', '2' }, 'b', 'c' };");
 
   // Check the output code.
@@ -39,7 +39,7 @@ test("Output a nested skip 'MAP' rule", () => {
   );
 });
 
-test("Output a compound skip 'MAP' rule", () => {
+test("Output a 'MAP' rule with compound patterns", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & opt 'b' & repeat 'c' };");
 
   // Check the output code.
@@ -58,7 +58,7 @@ test("Output a compound skip 'MAP' rule", () => {
   );
 });
 
-test("Output a token 'MAP' rule", () => {
+test("Output a 'MAP' rule with a token pattern", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token <auto> TOKEN as map { <100> A as 'a', 'b', 'c' };");
 
   // Check the output code.
@@ -80,7 +80,7 @@ test("Output a token 'MAP' rule", () => {
   );
 });
 
-test("Output a node 'MAP' rule", () => {
+test("Output a 'MAP' rule with a node pattern", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "node <auto> NODE as map { <100> A as 'a', 'b', 'c' };");
 
   // Check the output code.

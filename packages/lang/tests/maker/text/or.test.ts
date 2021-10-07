@@ -1,7 +1,7 @@
 import * as Helper from '../helper';
 import * as Lang from '../../../src/index';
 
-test("Output subsequent 'OR' rules (simple)", () => {
+test("Output an 'OR' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip '-' | '+' | '@';");
 
   // Check the output code.
@@ -11,7 +11,7 @@ test("Output subsequent 'OR' rules (simple)", () => {
   expect(rule.pattern).toBe(`new Core.ChooseUnitPattern('-', '+', '@')`);
 });
 
-test("Output subsequent 'OR' rules (complex)", () => {
+test("Output an 'OR' rule optimized with a map", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip '-' | '+' | '123' | 'abc';");
 
   // Check the output code.
@@ -28,7 +28,7 @@ test("Output subsequent 'OR' rules (complex)", () => {
   );
 });
 
-test("Output subsequent 'OR' rules (optimized)", () => {
+test("Output an 'OR' rule with a complex sequence", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip repeat '-' | '+' | '@' & ('1' | '2') | 'A' | 'B';");
 
   // Check the output code.

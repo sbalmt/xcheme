@@ -9,7 +9,7 @@ test("Parse an 'AND' rule", () => {
   Helper.testLexer(project, context, '-+@-+@');
 });
 
-test("Parse subsequent 'AND' rules (optimized)", () => {
+test("Parse an 'AND' rule with an optimized sequence", () => {
   const project = Helper.makeParser(new Lang.LiveCoder(), "skip '-' & '+' & repeat ('@' | 'A') & '1' & '2';");
   const context = new Core.Context('test');
 

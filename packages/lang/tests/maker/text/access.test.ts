@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 import * as Helper from '../helper';
 import * as Lang from '../../../src/index';
 
-test("Output a token 'ACCESS' rule", () => {
+test("Output an 'ACCESS' rule with a token map", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token <auto> TOKEN as map { <100> A as 'a' }; node NODE as TOKEN.A;");
 
   // Check the output code.
@@ -27,7 +27,7 @@ test("Output a token 'ACCESS' rule", () => {
   expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, new Core.ExpectUnitPattern(${route.identity}))`);
 });
 
-test("Output a nested token 'ACCESS' rule", () => {
+test("Output an 'ACCESS' rule with a nested token map", () => {
   const project = Helper.makeParser(
     new Lang.TextCoder(),
     "token <auto> TOKEN as map { <100> A as 'a' & map { <200> B as 'b', C as 'c' } }; node NODE as TOKEN.A.B;"

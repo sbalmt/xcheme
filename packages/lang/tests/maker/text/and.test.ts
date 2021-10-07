@@ -11,7 +11,7 @@ test("Output an 'AND' rule", () => {
   expect(rule.pattern).toBe(`new Core.ExpectUnitPattern('-', '+', '@')`);
 });
 
-test("Output subsequent 'AND' rules (optimized)", () => {
+test("Output an 'AND' rule with an optimized sequence", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip '-' & '+' & repeat ('@' | 'A') & '12';");
 
   // Check the output code.
