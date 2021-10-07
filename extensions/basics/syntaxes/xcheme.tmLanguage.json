@@ -200,7 +200,11 @@
 					"include": "#comments"
 				},
 				{
-					"name": "constant.numeric",
+					"name": "constant.language.xcheme",
+					"match": "\\b(auto)\\b"
+				},
+				{
+					"name": "constant.numeric.xcheme",
 					"match": "[[:digit:]]*"
 				}
 			]
