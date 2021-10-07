@@ -9,8 +9,8 @@ test("Parse a 'SYMBOL' rule", () => {
   Helper.testLexer(project, context, '@');
 });
 
-test("Parse a chained 'SYMBOL' rule", () => {
-  const project = Helper.makeParser(new Lang.LiveCoder(), "skip symbol ('@' & repeat '*');");
+test("Parse a 'SYMBOL' rule with chained patterns", () => {
+  const project = Helper.makeParser(new Lang.LiveCoder(), "skip symbol ('@' & '*' & '*');");
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '@**');

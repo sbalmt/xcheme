@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const And = require("./and");
+const Splitter = require("../resolvers/splitter");
 /**
  * Consume the given node resolving the 'SYMBOL' pattern.
  * @param project Project context.
@@ -10,10 +10,10 @@ const And = require("./and");
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
-    const patterns = And.resolve(project, node.right, state);
+    const patterns = Splitter.resolve(project, node.right, state);
     if (patterns !== void 0) {
-        const [test, ...remaining] = patterns;
         const directive = state.directive;
+        const [test, ...remaining] = patterns;
         return project.coder.emitSymbolPattern(directive.identity, test, ...remaining);
     }
     return void 0;
