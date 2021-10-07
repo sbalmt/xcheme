@@ -163,11 +163,11 @@
 					"match": "\\b(to)\\b"
 				},
 				{
-					"include": "#alphabet-expression"
+					"include": "#string-expression"
 				}
 			]
 		},
-		"alphabet-expression": {
+		"string-expression": {
 			"name": "string.quoted.single.xcheme",
 			"begin": "'",
 			"end": "'",
@@ -271,7 +271,7 @@
 					"include": "#range-expression"
 				},
 				{
-					"include": "#alphabet-expression"
+					"include": "#string-expression"
 				},
 				{
 					"include": "#reference-expression"
