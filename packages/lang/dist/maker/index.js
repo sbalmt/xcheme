@@ -14,7 +14,7 @@ const Node = require("./patterns/node");
  */
 const consumeNodes = (node, project) => {
     while ((node = node.next) !== void 0) {
-        if (node.value === 234 /* Skip */) {
+        if (node.value === 235 /* Skip */) {
             if (!(node instanceof Directive.Node)) {
                 project.addError(node, 4099 /* UNEXPECTED_NODE */);
             }
@@ -31,16 +31,16 @@ const consumeNodes = (node, project) => {
             else {
                 const state = { directive };
                 switch (node.value) {
-                    case 235 /* Token */:
+                    case 236 /* Token */:
                         Token.consume(project, state);
                         break;
-                    case 236 /* Node */:
+                    case 237 /* Node */:
                         Node.consume(project, state);
                         break;
-                    case 237 /* AliasToken */:
+                    case 238 /* AliasToken */:
                         Token.consume(project, state);
                         break;
-                    case 238 /* AliasNode */:
+                    case 239 /* AliasNode */:
                         Node.consume(project, state);
                         break;
                     default:

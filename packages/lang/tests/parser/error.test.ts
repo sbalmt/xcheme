@@ -27,7 +27,7 @@ test("Consume expected 'ERROR' rule", () => {
 
   const state = expression.right!;
   expect(state).toBeDefined();
-  expect(state.value).toBe(Parser.Nodes.Identity);
+  expect(state.value).toBe(Parser.Nodes.State);
   expect(state.fragment.data).toBe('1');
   expect(state.left).toBeUndefined();
   expect(state.right).toBeDefined();

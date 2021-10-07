@@ -76,7 +76,7 @@ test("Output a 'TOKEN' rule with an alias token that has a reference to itself",
 test("Output a 'TOKEN' rule with a whole token map reference", () => {
   const project = Helper.makeParser(
     new Lang.TextCoder(),
-    "alias token TOKEN1 as map { <100> A as 'a', <101> B as 'b' }; token TOKEN2 as TOKEN1 & '!';"
+    "alias token TOKEN1 as map { <100> A as 'a', <101> B as 'b' }; token <auto> TOKEN2 as TOKEN1 & '!';"
   );
 
   // Check the output code.
@@ -100,50 +100,11 @@ test("Output a 'TOKEN' rule with a whole token map reference", () => {
 
   const token2 = project.tokenEntries.get('TOKEN2')!;
   expect(token2).toBeDefined();
-  expect(token2.identity).toBe(1);
+  expect(token2.identity).toBe(Core.BaseSource.Output);
   expect(token2.pattern).toBe(
     `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
       /**/ `new Core.ExpectFlowPattern(TOKEN1, ` +
       /******/ `new Core.ExpectUnitPattern('!')` +
-      /**/ `)` +
-      `)`
-  );
-});
-
-test("Output a 'TOKEN' rule with a whole token map reference and other patterns", () => {
-  const project = Helper.makeParser(
-    new Lang.TextCoder(),
-    "alias token TOKEN1 as map { <100> A as 'a', <101> B as 'b' }; token <102> TOKEN2 as TOKEN1 | '!';"
-  );
-
-  // Check the output code.
-  const tokenRouteA = project.tokenEntries.get('TOKEN1@A')!;
-  expect(tokenRouteA).toBeDefined();
-  expect(tokenRouteA.identity).toBe(100);
-
-  const tokenRouteB = project.tokenEntries.get('TOKEN1@B')!;
-  expect(tokenRouteB).toBeDefined();
-  expect(tokenRouteB.identity).toBe(101);
-
-  const token1 = project.tokenEntries.get('TOKEN1')!;
-  expect(token1).toBeDefined();
-  expect(token1.identity).toBe(0);
-  expect(token1.pattern).toBe(
-    `new Core.MapFlowPattern(` +
-      /**/ `new Core.SetValueRoute(${tokenRouteA.identity}, 'a'), ` +
-      /**/ `new Core.SetValueRoute(${tokenRouteB.identity}, 'b')` +
-      `)`
-  );
-
-  const token2 = project.tokenEntries.get('TOKEN2')!;
-  expect(token2).toBeDefined();
-  expect(token2.identity).toBe(102);
-  expect(token2.pattern).toBe(
-    `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
-      /**/ `new Core.ChooseFlowPattern(TOKEN1, ` +
-      /******/ `new Core.SetValuePattern(${token2.identity}, ` +
-      /********/ `new Core.ExpectUnitPattern('!')` +
-      /******/ `)` +
       /**/ `)` +
       `)`
   );

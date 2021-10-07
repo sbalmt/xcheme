@@ -69,7 +69,7 @@ export type State = {
 export const getNewState = (anchor: Core.Node, counter: number): State => {
   return {
     type: Types.Undefined,
-    anchor: anchor,
+    anchor,
     counter,
     entry: {
       origin: Entries.Origins.User,

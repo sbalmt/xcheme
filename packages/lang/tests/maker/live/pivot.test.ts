@@ -15,10 +15,3 @@ test("Parse a 'PIVOT' rule with chained patterns", () => {
 
   Helper.testLexer(project, context, '@**');
 });
-
-test("Parse a 'PIVOT' rule with a map", () => {
-  const project = Helper.makeParser(new Lang.LiveCoder(), "skip pivot map { 'a', 'b', 'c' };");
-  const context = new Core.Context('test');
-
-  Helper.testLexer(project, context, 'abcaabbcc');
-});

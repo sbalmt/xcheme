@@ -13,14 +13,14 @@ const Expression = require("./expression");
  * @returns Returns the units array or undefined when the given entry isn't supported.
  */
 const resolve = (node) => {
-    if (node.value === 203 /* String */) {
+    if (node.value === 204 /* String */) {
         return String.extract(node.fragment.data).split('');
     }
     else if (node instanceof Identity.Node) {
         return [node.identity];
     }
     else if (node instanceof Mergeable.Node) {
-        if (node.type !== 203 /* String */) {
+        if (node.type !== 204 /* String */) {
             return node.sequence.map((node) => node.identity);
         }
         return node.sequence

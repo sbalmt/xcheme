@@ -19,27 +19,27 @@ const Access = require("./access");
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     switch (node.value) {
-        case 204 /* Any */:
-        case 205 /* Range */:
+        case 205 /* Any */:
+        case 206 /* Range */:
             Range.consume(project, direction, parent, state);
             break;
         case 201 /* Reference */:
             Reference.consume(project, direction, parent, state);
             break;
-        case 203 /* String */:
+        case 204 /* String */:
             String.consume(project, direction, parent, state);
             break;
-        case 207 /* Map */:
+        case 208 /* Map */:
             Map.consume(project, direction, parent, state);
             break;
-        case 206 /* Access */:
+        case 207 /* Access */:
             Access.consume(project, direction, parent, state);
             break;
-        case 211 /* Or */:
-            Mergeable.consume(project, direction, parent, 211 /* Or */, state);
+        case 212 /* Or */:
+            Mergeable.consume(project, direction, parent, 212 /* Or */, state);
             break;
-        case 212 /* And */:
-            Mergeable.consume(project, direction, parent, 212 /* And */, state);
+        case 213 /* And */:
+            Mergeable.consume(project, direction, parent, 213 /* And */, state);
             break;
         default:
             exports.consume(project, 1 /* Right */, node, state);

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Core = require("@xcheme/core");
 const Nodes = require("../resolvers/nodes");
 /**
  * Consume the given node resolving the 'PIVOT' pattern.
@@ -13,9 +12,8 @@ const Nodes = require("../resolvers/nodes");
 const consume = (project, node, state) => {
     const patterns = Nodes.resolve(project, node.right, state);
     if (patterns !== void 0) {
+        const identity = state.directive.identity;
         const [test, ...remaining] = patterns;
-        const { directive } = state;
-        const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
         return project.coder.emitPivotPattern(identity, test, ...remaining);
     }
     return void 0;

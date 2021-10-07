@@ -15,9 +15,8 @@ import * as Context from '../context';
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const patterns = Nodes.resolve(project, node.right!, state);
   if (patterns !== void 0) {
+    const identity = state.directive.identity;
     const [test, ...remaining] = patterns;
-    const { directive } = state;
-    const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
     return project.coder.emitPivotPattern(identity, test, ...remaining);
   }
   return void 0;

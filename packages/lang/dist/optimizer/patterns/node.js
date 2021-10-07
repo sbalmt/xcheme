@@ -12,8 +12,9 @@ const Expression = require("./expression");
  * @param state Consumption state.
  */
 const emit = (project, direction, parent, state) => {
+    const { origin, identifier, identity } = state.entry;
     const node = parent.getChild(direction);
-    const entry = project.nodeEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+    const entry = project.nodeEntries.add(origin, identifier, identity, state.entry);
     const replacement = new Directive.Node(node, 2 /* Node */, entry);
     parent.setChild(direction, replacement);
 };

@@ -6,22 +6,6 @@ const String = require("../../core/string");
 const Parser = require("../../parser");
 const Expression = require("./expression");
 /**
- * Determines whether or not the given node contains a map pattern.
- * @param project Project context.
- * @param node Input node.
- * @returns Returns true when the map pattern was found, false otherwise.
- */
-const hasMapPattern = (project, node) => {
-    if (node.value === 201 /* Reference */) {
-        const identifier = node.fragment.data;
-        const entry = project.tokenEntries.get(identifier) ?? project.nodeEntries.get(identifier);
-        return entry?.dynamic ?? false;
-    }
-    return (node.value === 207 /* Map */ ||
-        (node.left !== void 0 && hasMapPattern(project, node.left)) ||
-        (node.right !== void 0 && hasMapPattern(project, node.right)));
-};
-/**
  * Resolve the given node as an 'OR' pattern.
  * @param project Project context.
  * @param node Input node.
@@ -29,14 +13,14 @@ const hasMapPattern = (project, node) => {
  * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
 const resolve = (project, node, state) => {
-    if (node.value !== 211 /* Or */) {
+    if (node.value !== 212 /* Or */) {
         const pattern = Expression.consume(project, node, state);
         if (pattern !== void 0) {
             return [pattern];
         }
     }
     else if (node instanceof Mergeable.Node) {
-        if (node.type === 203 /* String */) {
+        if (node.type === 204 /* String */) {
             const fragments = node.sequence.map((node) => String.extract(node.fragment.data));
             if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1) !== void 0) {
                 const routes = fragments.map((fragment) => project.coder.getRoute(fragment.split('')));
@@ -54,17 +38,10 @@ const resolve = (project, node, state) => {
         }
     }
     else {
-        const directive = state.directive;
-        let left = exports.resolve(project, node.left, state);
+        const left = exports.resolve(project, node.left, state);
         if (left !== void 0) {
-            if (directive.dynamic && !hasMapPattern(project, node.left)) {
-                left = [project.coder.emitIdentityPattern(directive.identity, ...left)];
-            }
-            let right = exports.resolve(project, node.right, state);
+            const right = exports.resolve(project, node.right, state);
             if (right !== void 0) {
-                if (directive.dynamic && !hasMapPattern(project, node.right)) {
-                    right = [project.coder.emitIdentityPattern(directive.identity, ...right)];
-                }
                 return [...left, ...right];
             }
         }

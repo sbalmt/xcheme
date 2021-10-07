@@ -13,7 +13,7 @@ const Expression = require("./expression");
  * @returns Returns an array containing all rules or undefined when the pattern is invalid.
  */
 const resolve = (project, node, state) => {
-    if (node.value !== 212 /* And */) {
+    if (node.value !== 213 /* And */) {
         const pattern = Expression.consume(project, node, state);
         if (pattern !== void 0) {
             return [pattern];
@@ -21,7 +21,7 @@ const resolve = (project, node, state) => {
     }
     else if (node instanceof Mergeable.Node) {
         let units;
-        if (node.type === 203 /* String */) {
+        if (node.type === 204 /* String */) {
             const words = node.sequence.map((node) => String.extract(node.fragment.data));
             units = words.join('').split('');
         }

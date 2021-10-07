@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Core = require("@xcheme/core");
 const Expression = require("./expression");
 /**
  * Consume the specified state resolving the 'TOKEN' directive.
@@ -17,7 +16,7 @@ const consume = (project, state) => {
             entry.pattern = expression;
         }
         else {
-            const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
+            const identity = directive.identity;
             entry.pattern = project.coder.emitTokenPattern(identity, expression);
             if (entry.references > 0) {
                 const identifier = `@REF${entry.identity}`;

@@ -32,6 +32,7 @@ export const enum Tokens {
   Token,
   Node,
   Alias,
+  Auto,
   As,
   Period,
   Comma,

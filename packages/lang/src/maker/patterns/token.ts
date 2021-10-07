@@ -1,5 +1,3 @@
-import * as Core from '@xcheme/core';
-
 import * as Project from '../../core/project';
 import * as Context from '../context';
 
@@ -18,7 +16,7 @@ export const consume = (project: Project.Context, state: Context.State): void =>
     if (directive.alias) {
       entry.pattern = expression;
     } else {
-      const identity = directive.dynamic ? Core.BaseSource.Output : directive.identity;
+      const identity = directive.identity;
       entry.pattern = project.coder.emitTokenPattern(identity, expression);
       if (entry.references > 0) {
         const identifier = `@REF${entry.identity}`;

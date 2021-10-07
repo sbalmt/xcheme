@@ -19,7 +19,7 @@ const isMergeableUnits = (node, operator) => {
         }
         return false;
     }
-    return node.value === 203 /* String */;
+    return node.value === 204 /* String */;
 };
 /**
  * Determines whether or not the given node contains mergeable references.
@@ -58,7 +58,7 @@ const consume = (project, direction, parent, type, state) => {
     }
     else {
         if (isMergeableUnits(node, type)) {
-            parent.setChild(direction, new Mergeable.Node(node, 203 /* String */));
+            parent.setChild(direction, new Mergeable.Node(node, 204 /* String */));
         }
         else {
             Expression.consume(project, 0 /* Left */, node, state);

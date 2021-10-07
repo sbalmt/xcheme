@@ -5,6 +5,7 @@ export const enum Nodes {
   Identifier = 200,
   Reference,
   Identity,
+  State,
   String,
   Any,
   Range,

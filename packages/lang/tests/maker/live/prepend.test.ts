@@ -29,10 +29,3 @@ test("Parse a 'PREPEND' rule", () => {
 
   Helper.testLexer(project, context, '@@@');
 });
-
-test("Parse a 'PREPEND' rule with a map", () => {
-  const project = Helper.makeParser(new Lang.LiveCoder(), "skip prepend map { 'a', 'b', 'c' };");
-  const context = new Core.Context('test');
-
-  Helper.testLexer(project, context, 'abcaabbcc');
-});

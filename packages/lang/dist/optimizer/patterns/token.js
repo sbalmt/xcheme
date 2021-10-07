@@ -30,8 +30,9 @@ const collision = (project, node, identifier) => {
  * @param state Consumption state.
  */
 const emit = (project, direction, parent, state) => {
+    const { origin, identifier, identity } = state.entry;
     const node = parent.getChild(direction);
-    const entry = project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+    const entry = project.tokenEntries.add(origin, identifier, identity, state.entry);
     const replacement = new Directive.Node(node, 1 /* Token */, entry);
     parent.setChild(direction, replacement);
 };
@@ -49,7 +50,7 @@ const consume = (project, direction, parent, state) => {
     const type = state.type;
     state.type = 2 /* Token */;
     entry.identifier = node.fragment.data;
-    if (expression.value === 203 /* String */) {
+    if (expression.value === 204 /* String */) {
         String.consume(project, 1 /* Right */, node, state);
         const word = node.right.fragment.data;
         if (!collision(project, node, word)) {
@@ -57,7 +58,7 @@ const consume = (project, direction, parent, state) => {
             project.tokenEntries.link(word, state.entry.identifier);
         }
     }
-    else if (expression.value === 205 /* Range */) {
+    else if (expression.value === 206 /* Range */) {
         Range.consume(project, 1 /* Right */, node, state);
         const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
         if (!collision(project, node, range)) {

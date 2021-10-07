@@ -17,6 +17,20 @@ const identity = new Core.ExpectFlowPattern(
     Nodes.Identity,
     Core.Nodes.Left,
     Core.Nodes.Right,
+    new Core.ChooseUnitPattern(Lexer.Tokens.Number, Lexer.Tokens.Auto),
+    new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
+  )
+);
+
+/**
+ * State pattern.
+ */
+const state = new Core.ExpectFlowPattern(
+  new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
+  new Core.AppendNodePattern(
+    Nodes.State,
+    Core.Nodes.Left,
+    Core.Nodes.Right,
     new Core.ExpectUnitPattern(Lexer.Tokens.Number),
     new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
   )
@@ -44,9 +58,9 @@ const unaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.Pivot, Lexer.Tokens.Pivot),
   new Core.SetValueRoute(Nodes.Symbol, Lexer.Tokens.Symbol),
   new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
-  new Core.SetValueRoute(Nodes.Error, identity, Lexer.Tokens.Error),
-  new Core.SetValueRoute(Nodes.Has, identity, Lexer.Tokens.Has),
-  new Core.SetValueRoute(Nodes.Set, identity, Lexer.Tokens.Set)
+  new Core.SetValueRoute(Nodes.Error, state, Lexer.Tokens.Error),
+  new Core.SetValueRoute(Nodes.Has, state, Lexer.Tokens.Has),
+  new Core.SetValueRoute(Nodes.Set, state, Lexer.Tokens.Set)
 );
 
 /**

@@ -59,7 +59,7 @@ test("Output a compound skip 'MAP' rule", () => {
 });
 
 test("Output a token 'MAP' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "token TOKEN as map { <100> A as 'a', 'b', 'c' };");
+  const project = Helper.makeParser(new Lang.TextCoder(), "token <auto> TOKEN as map { <100> A as 'a', 'b', 'c' };");
 
   // Check the output code.
   const routeA = project.tokenEntries.get('TOKEN@A')!;
@@ -68,7 +68,7 @@ test("Output a token 'MAP' rule", () => {
 
   const rule = project.tokenEntries.get('TOKEN')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
+  expect(rule.identity).toBe(Core.BaseSource.Output);
   expect(rule.pattern).toBe(
     `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
       /**/ `new Core.MapFlowPattern(` +
@@ -81,19 +81,19 @@ test("Output a token 'MAP' rule", () => {
 });
 
 test("Output a node 'MAP' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "node NODE as map { <100> A as 'a', 'b', 'c' };");
+  const project = Helper.makeParser(new Lang.TextCoder(), "node <auto> NODE as map { <100> A as 'a', 'b', 'c' };");
 
   // Check the output code.
-  const token1 = project.tokenEntries.get('@REF1')!; // 'a'
-  expect(token1.identity).toBe(1);
+  const token1 = project.tokenEntries.get('@REF0')!; // 'a'
+  expect(token1.identity).toBe(0);
   expect(token1).toBeDefined();
 
-  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
-  expect(token2.identity).toBe(2);
+  const token2 = project.tokenEntries.get('@REF1')!; // 'b'
+  expect(token2.identity).toBe(1);
   expect(token2).toBeDefined();
 
-  const token3 = project.tokenEntries.get('@REF3')!; // 'c'
-  expect(token3.identity).toBe(3);
+  const token3 = project.tokenEntries.get('@REF2')!; // 'c'
+  expect(token3.identity).toBe(2);
   expect(token3).toBeDefined();
 
   const routeA = project.nodeEntries.get('NODE@A')!;
@@ -102,7 +102,7 @@ test("Output a node 'MAP' rule", () => {
 
   const rule = project.nodeEntries.get('NODE')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
+  expect(rule.identity).toBe(Core.BaseSource.Output);
   expect(rule.pattern).toBe(
     `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
       /**/ `new Core.MapFlowPattern(` +

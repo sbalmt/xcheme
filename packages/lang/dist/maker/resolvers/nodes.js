@@ -20,7 +20,7 @@ const resolve = (project, node, state) => {
         const patterns = And.resolve(project, node, state);
         if (patterns !== void 0) {
             let units;
-            if (node.type === 203 /* String */) {
+            if (node.type === 204 /* String */) {
                 units = String.extract(test.fragment.data).split('');
             }
             else {

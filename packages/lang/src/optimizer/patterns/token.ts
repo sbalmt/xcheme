@@ -36,8 +36,9 @@ const collision = (project: Project.Context, node: Core.Node, identifier: string
  * @param state Consumption state.
  */
 const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+  const { origin, identifier, identity } = state.entry;
   const node = parent.getChild(direction)!;
-  const entry = project.tokenEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+  const entry = project.tokenEntries.add(origin, identifier, identity, state.entry);
   const replacement = new Directive.Node(node, Directive.Types.Token, entry);
   parent.setChild(direction, replacement);
 };

@@ -10,7 +10,7 @@ exports.getNewState = void 0;
 const getNewState = (anchor, counter) => {
     return {
         type: 0 /* Undefined */,
-        anchor: anchor,
+        anchor,
         counter,
         entry: {
             origin: 0 /* User */,

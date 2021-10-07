@@ -11,25 +11,6 @@ import * as Context from '../context';
 import * as Expression from './expression';
 
 /**
- * Determines whether or not the given node contains a map pattern.
- * @param project Project context.
- * @param node Input node.
- * @returns Returns true when the map pattern was found, false otherwise.
- */
-const hasMapPattern = (project: Project.Context, node: Core.Node): boolean => {
-  if (node.value === Parser.Nodes.Reference) {
-    const identifier = node.fragment.data;
-    const entry = project.tokenEntries.get(identifier) ?? project.nodeEntries.get(identifier);
-    return entry?.dynamic ?? false;
-  }
-  return (
-    node.value === Parser.Nodes.Map ||
-    (node.left !== void 0 && hasMapPattern(project, node.left)) ||
-    (node.right !== void 0 && hasMapPattern(project, node.right))
-  );
-};
-
-/**
  * Resolve the given node as an 'OR' pattern.
  * @param project Project context.
  * @param node Input node.
@@ -59,17 +40,10 @@ export const resolve = (project: Project.Context, node: Core.Node, state: Contex
       return [project.coder.emitChooseUnitsPattern(units)];
     }
   } else {
-    const directive = state.directive;
-    let left = resolve(project, node.left!, state);
+    const left = resolve(project, node.left!, state);
     if (left !== void 0) {
-      if (directive.dynamic && !hasMapPattern(project, node.left!)) {
-        left = [project.coder.emitIdentityPattern(directive.identity, ...left)];
-      }
-      let right = resolve(project, node.right!, state);
+      const right = resolve(project, node.right!, state);
       if (right !== void 0) {
-        if (directive.dynamic && !hasMapPattern(project, node.right!)) {
-          right = [project.coder.emitIdentityPattern(directive.identity, ...right)];
-        }
         return [...left, ...right];
       }
     }

@@ -40,7 +40,7 @@ test("Parse a 'NODE' rule with a loose token reference", () => {
   expect(checkNodes(context, [node.identity])).toBe(2);
 });
 
-test("Parse a 'NODE' rule with a loose token range rule", () => {
+test("Parse a 'NODE' rule with a loose token range reference", () => {
   const project = Helper.makeParser(new Lang.LiveCoder(), "node NODE as from '0' to '9';");
   const context = new Core.Context('test');
 
@@ -59,7 +59,7 @@ test("Parse a 'NODE' rule with a loose token range rule", () => {
   expect(checkNodes(context, [node.identity])).toBe(10);
 });
 
-test("Parse a 'NODE' rule with a loose token map rule", () => {
+test("Parse a 'NODE' rule with a loose token map reference", () => {
   const project = Helper.makeParser(new Lang.LiveCoder(), "node NODE as map { 'a', 'b' };");
   const context = new Core.Context('test');
 
@@ -158,10 +158,10 @@ test("Parse a 'NODE' rule with an alias node that has a reference to itself", ()
   expect(checkNodes(context, [node.identity])).toBe(1);
 });
 
-test("Parse a 'NODE' rule with token map entry references", () => {
+test("Parse a 'NODE' rule with a token map entry references", () => {
   const project = Helper.makeParser(
     new Lang.LiveCoder(),
-    "token TOKEN as map { <100> A as 'a', <101> B as 'b' }; node NODE as map { <200> A as TOKEN.A, <201> B as TOKEN.B };"
+    "token <auto> TOKEN as map { <100> A as 'a', <101> B as 'b' }; node <auto> NODE as map { <200> A as TOKEN.A, <201> B as TOKEN.B };"
   );
   const context = new Core.Context('test');
 
@@ -181,36 +181,7 @@ test("Parse a 'NODE' rule with token map entry references", () => {
 test("Parse a 'NODE' rule with a whole node map reference", () => {
   const project = Helper.makeParser(
     new Lang.LiveCoder(),
-    "alias node NODE1 as map { <200> A as 'a', <201> B as 'b' }; node NODE2 as NODE1 & '!';"
-  );
-  const context = new Core.Context('test');
-
-  // Check the resulting tokens.
-  const token1 = project.tokenEntries.get('@REF1')!; // 'a'
-  expect(token1).toBeDefined();
-
-  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
-  expect(token2).toBeDefined();
-
-  const token3 = project.tokenEntries.get('@REF4')!; // '!'
-  expect(token3).toBeDefined();
-
-  Helper.testLexer(project, context, 'a!b!');
-
-  expect(checkTokens(context, [token1.identity, token2.identity, token3.identity])).toBe(4);
-
-  // Check the resulting nodes.
-  Helper.testParser(project, context, context.tokens);
-
-  const node = project.nodeEntries.get('NODE2')!;
-  expect(node).toBeDefined();
-  expect(checkNodes(context, [200, 201])).toBe(2);
-});
-
-test("Parse a 'NODE' rule with a whole node map reference and other patterns", () => {
-  const project = Helper.makeParser(
-    new Lang.LiveCoder(),
-    "alias node NODE1 as map { <200> A as 'a', <201> B as 'b' }; node <202> NODE2 as NODE1 | '!';"
+    "alias node NODE1 as map { <200> A as 'a', <201> B as 'b' }; node <auto> NODE2 as NODE1 & '!';"
   );
   const context = new Core.Context('test');
 
@@ -233,5 +204,5 @@ test("Parse a 'NODE' rule with a whole node map reference and other patterns", (
 
   const node = project.nodeEntries.get('NODE2')!;
   expect(node).toBeDefined();
-  expect(checkNodes(context, [200, 201, 202])).toBe(4);
+  expect(checkNodes(context, [200, 201])).toBe(2);
 });
