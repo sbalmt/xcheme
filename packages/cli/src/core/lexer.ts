@@ -18,9 +18,9 @@ export const tokenize = (program: Core.Pattern, text: string, context: Core.Cont
     context.addError(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
   } else {
     Console.clearLine();
-    if (tokens) {
-      Tokens.print(context.tokens);
-    }
+  }
+  if (tokens) {
+    Tokens.print(context.tokens);
   }
   return context.errors.length === 0;
 };

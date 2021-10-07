@@ -27,12 +27,12 @@ export const parse = (
     context.addError(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
   } else {
     Console.clearLine();
-    if (symbols) {
-      Symbols.print(context.node);
-    }
-    if (nodes) {
-      Nodes.print(context.node);
-    }
+  }
+  if (symbols) {
+    Symbols.print(context.node);
+  }
+  if (nodes) {
+    Nodes.print(context.node);
   }
   return context.errors.length === 0;
 };
