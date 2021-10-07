@@ -15,7 +15,8 @@ class Route extends route_1.default {
      */
     constructor(value, first, ...units) {
         if (first instanceof pattern_1.default) {
-            super(new emit_1.default(value, first), units[0], ...units.slice(1));
+            const [test, ...remaining] = units;
+            super(new emit_1.default(value, first), test, ...remaining);
         }
         else {
             super(new emit_1.default(value), first, ...units);

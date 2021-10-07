@@ -14,7 +14,8 @@ export default class Route extends Base {
    */
   constructor(value: string | number, first: Pattern | string | number, ...units: (string | number)[]) {
     if (first instanceof Pattern) {
-      super(new Set(value, first), units[0], ...units.slice(1));
+      const [test, ...remaining] = units;
+      super(new Set(value, first), test, ...remaining);
     } else {
       super(new Set(value), first, ...units);
     }
