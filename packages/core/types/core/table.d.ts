@@ -46,4 +46,8 @@ export default class Table {
      * @returns Returns the corresponding record or undefined when the record wasn't found.
      */
     find(name: Fragment | string): Record | undefined;
+    /**
+     * Iterable generator.
+     */
+    [Symbol.iterator](): Generator<Record, void, unknown>;
 }

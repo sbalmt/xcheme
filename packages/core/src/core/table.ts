@@ -100,4 +100,13 @@ export default class Table {
     }
     return record;
   }
+
+  /**
+   * Iterable generator.
+   */
+  *[Symbol.iterator]() {
+    for (const name in this.#records) {
+      yield this.#records[name];
+    }
+  }
 }

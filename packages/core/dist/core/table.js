@@ -83,6 +83,14 @@ class Table {
         }
         return record;
     }
+    /**
+     * Iterable generator.
+     */
+    *[Symbol.iterator]() {
+        for (const name in this.#records) {
+            yield this.#records[name];
+        }
+    }
 }
 exports.default = Table;
 //# sourceMappingURL=table.js.map
