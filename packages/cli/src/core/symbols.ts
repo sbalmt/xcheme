@@ -4,72 +4,34 @@ import * as Console from './console';
 import * as Fragment from './fragment';
 
 /**
- * Get the formatted record code.
- * @param record Input record.
- * @returns Returns the formatted record code.
+ * Print all the symbols in the given table.
+ * @param table Symbol table.
+ * @param deep Input depth.
  */
-const getCode = (record: Core.Record): string => {
-  return record.value.toString();
-};
-
-/**
- * Get the formatted scope name.
- * @param table Input table.
- * @returns Returns the formatted scope name.
- */
-const getScope = (table: Core.Table): string => {
-  return (table.parent ? 'Inner' : 'Global').padEnd(7, ' ');
-};
-
-/**
- * Get the formatted level.
- * @param table Input table.
- * @returns Return the formatted level.
- */
-const getLevel = (table: Core.Table): string => {
-  let total = 1;
-  while ((table = table.parent!)) {
-    total++;
-  }
-  return total.toString().padStart(3, ' ');
-};
-
-/**
- * Print recursively all the symbols in the given node and its children.
- * @param parent Parent node.
- * @param node Current node.
- * @param prefix Current prefix.
- */
-const printTable = (node: Core.Node, cache: Set<Core.Table>): void => {
-  while ((node = node.next!)) {
-    if (!cache.has(node.table)) {
-      cache.add(node.table);
-      const scope = getScope(node.table);
-      const level = getLevel(node.table);
-      for (const name of node.table.names) {
-        const record = node.table.get(name)!;
-        const location = Fragment.getLocation(record.fragment);
-        Console.printLine(` ${location} ${scope} ${level} ${getCode(record)} ${name}`);
-      }
+const printTable = (table: Core.Table, deep: number): void => {
+  const scope = (deep > 0 ? 'Inner' : 'Global').padEnd(7, ' ');
+  const padding = deep > 0 ? '   '.repeat(deep - 1) : '';
+  const level = deep.toString().padStart(3, ' ');
+  let index = 1;
+  for (const record of table) {
+    const value = record.value;
+    const identifier = record.fragment.data;
+    const location = Fragment.getLocation(record.fragment);
+    const connector = deep > 0 ? (index === table.length ? ' └─ ' : ' ├─ ') : ' ';
+    Console.printLine(` ${location} ${scope} ${level} ${value} ${padding}${connector}${identifier}`);
+    if (record.link !== void 0) {
+      printTable(record.link, deep + 1);
     }
-    if (node.left) {
-      printTable(node.left, cache);
-    }
-    if (node.right) {
-      printTable(node.right, cache);
-    }
-    if (node.next) {
-      printTable(node.next, cache);
-    }
+    index++;
   }
 };
 
 /**
- * Print a symbol table for the specified node.
- * @param node Input node.
+ * Print all the symbol for the given symbol table.
+ * @param table Symbol table.
  */
-export const print = (node: Core.Node): void => {
+export const print = (table: Core.Table): void => {
   Console.printLine('Symbols:\n');
-  printTable(node, new Set());
+  printTable(table, 0);
   Console.printLine('');
 };

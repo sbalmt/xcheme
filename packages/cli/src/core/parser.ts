@@ -29,7 +29,7 @@ export const parse = (
     Console.clearLine();
   }
   if (symbols) {
-    Symbols.print(context.node);
+    Symbols.print(context.table);
   }
   if (nodes) {
     Nodes.print(context.node);
