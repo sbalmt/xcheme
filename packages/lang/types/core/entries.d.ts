@@ -90,7 +90,7 @@ export declare class Aggregator {
      */
     link(identifier: string, alias: string): Entry;
     /**
-     * Add an event to be triggered when an entry with the given identifier is added.
+     * Add an event to be triggered once when an entry with the given identifier is added.
      * @param identifier Entry identifier.
      * @param callback Trigger callback.
      */

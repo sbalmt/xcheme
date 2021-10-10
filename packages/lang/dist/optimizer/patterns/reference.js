@@ -4,6 +4,41 @@ exports.consume = void 0;
 const Identity = require("../../core/nodes/identity");
 const Parser = require("../../parser");
 /**
+ * Validate the corresponding reference for the specified symbol in a 'SKIP' directive.
+ * REMARKS: Skips can only accept alias tokens references.
+ * @param project Project context.
+ * @param node Input node.
+ * @param symbol Referenced symbol.
+ */
+const resolveSkip = (project, node, symbol) => {
+    if (symbol.value !== 303 /* AliasToken */) {
+        if (symbol.value === 300 /* Token */) {
+            project.addError(node, 4108 /* INVALID_TOKEN_REFERENCE */);
+        }
+        else if (symbol.value === 301 /* Node */) {
+            project.addError(node, 4109 /* INVALID_NODE_REFERENCE */);
+        }
+        else if (symbol.value === 302 /* AliasNode */) {
+            project.addError(node, 4111 /* INVALID_ALIAS_NODE_REFERENCE */);
+        }
+        else {
+            project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+        }
+    }
+    else {
+        const identifier = node.fragment.data;
+        const entry = project.tokenEntries.get(identifier);
+        if (entry !== void 0) {
+            entry.references++;
+        }
+        else {
+            project.tokenEntries.on(identifier, (entry) => {
+                entry.references++;
+            });
+        }
+    }
+};
+/**
  * Resolve the corresponding reference for the specified symbol in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
@@ -27,12 +62,14 @@ const resolveToken = (project, node, state, symbol) => {
         const identifier = node.fragment.data;
         const entry = project.tokenEntries.get(identifier);
         if (entry !== void 0) {
+            entry.references++;
             if (entry.dynamic) {
                 state.entry.dynamic = true;
             }
         }
         else {
             project.tokenEntries.on(identifier, (entry) => {
+                entry.references++;
                 if (state.entry.identifier !== identifier && entry.dynamic) {
                     project.tokenEntries.get(state.entry.identifier).dynamic = true;
                 }
@@ -55,12 +92,14 @@ const resolveNode = (project, direction, parent, state, symbol) => {
     if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
         const entry = project.nodeEntries.get(identifier);
         if (entry !== void 0) {
+            entry.references++;
             if (entry.dynamic) {
                 state.entry.dynamic = true;
             }
         }
         else {
             project.nodeEntries.on(identifier, (entry) => {
+                entry.references++;
                 if (state.entry.identifier !== identifier && entry.dynamic) {
                     project.nodeEntries.get(state.entry.identifier).dynamic = true;
                 }
@@ -70,15 +109,17 @@ const resolveNode = (project, direction, parent, state, symbol) => {
     else if (symbol.value === 300 /* Token */) {
         const entry = project.tokenEntries.get(identifier);
         if (entry !== void 0) {
-            if (entry.dynamic) {
-                project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
+            entry.references++;
+            if (!entry.dynamic) {
+                parent.setChild(direction, new Identity.Node(node, entry.identity));
             }
             else {
-                parent.setChild(direction, new Identity.Node(node, entry.identity));
+                project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
             }
         }
         else {
             project.tokenEntries.on(identifier, (entry) => {
+                entry.references++;
                 if (state.entry.identifier !== identifier) {
                     parent.setChild(direction, new Identity.Node(node, entry.identity));
                 }
@@ -90,29 +131,6 @@ const resolveNode = (project, direction, parent, state, symbol) => {
     }
     else {
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
-    }
-};
-/**
- * Validate the corresponding reference for the specified symbol in a 'SKIP' directive.
- * REMARKS: Skips can only accept alias tokens references.
- * @param project Project context.
- * @param node Input node.
- * @param symbol Referenced symbol.
- */
-const resolveSkip = (project, node, symbol) => {
-    if (symbol.value !== 303 /* AliasToken */) {
-        if (symbol.value === 300 /* Token */) {
-            project.addError(node, 4108 /* INVALID_TOKEN_REFERENCE */);
-        }
-        else if (symbol.value === 301 /* Node */) {
-            project.addError(node, 4109 /* INVALID_NODE_REFERENCE */);
-        }
-        else if (symbol.value === 302 /* AliasNode */) {
-            project.addError(node, 4111 /* INVALID_ALIAS_NODE_REFERENCE */);
-        }
-        else {
-            project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
-        }
     }
 };
 /**

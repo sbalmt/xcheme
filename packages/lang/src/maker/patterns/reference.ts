@@ -4,10 +4,46 @@ import * as Directive from '../../core/nodes/directive';
 import * as Identity from '../../core/nodes/identity';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Entries from '../../core/entries';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
+
+/**
+ * Get the reference pattern for the given entry.
+ * REMARKS: When the reference is used only once, the referenced pattern is returned instead of the reference pattern.
+ * @param coder Project coder.
+ * @param aggregator Entries aggregator.
+ * @param entry Reference entry.
+ * @returns Returns the reference pattern.
+ */
+const getReference = (coder: Coder.Base, aggregator: Entries.Aggregator, entry: Entries.Entry): Coder.Pattern => {
+  if (!entry.pattern || entry.references > 1) {
+    return coder.emitReferencePattern(aggregator, entry.identifier);
+  }
+  return entry.pattern;
+};
+
+/**
+ * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
+ * REMARKS: Skips can only accept alias tokens references.
+ * @param project Project context.
+ * @param node Input node.
+ * @param symbol Referenced symbol.
+ * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
+ */
+const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record): Coder.Pattern | undefined => {
+  if (symbol.value === Parser.Symbols.AliasToken) {
+    const identifier = node.fragment.data;
+    const entry = project.tokenEntries.get(identifier);
+    if (entry !== void 0) {
+      return getReference(project.coder, project.tokenEntries, entry);
+    }
+    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
+  }
+  return void 0;
+};
 
 /**
  * Resolve the corresponding reference for the specified symbol in a 'TOKEN' directive.
@@ -22,8 +58,7 @@ const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Re
     const identifier = node.fragment.data;
     const entry = project.tokenEntries.get(identifier);
     if (entry !== void 0) {
-      entry.references++;
-      return project.coder.emitReferencePattern(project.tokenEntries, identifier);
+      return getReference(project.coder, project.tokenEntries, entry);
     }
     project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
   }
@@ -43,34 +78,12 @@ const resolveNode = (project: Project.Context, node: Core.Node, symbol: Core.Rec
     const identifier = node.fragment.data;
     const entry = project.nodeEntries.get(identifier);
     if (entry !== void 0) {
-      entry.references++;
-      return project.coder.emitReferencePattern(project.nodeEntries, identifier);
+      return getReference(project.coder, project.nodeEntries, entry);
     }
     project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
   }
   if (node instanceof Identity.Node) {
     return project.coder.emitExpectUnitsPattern([node.identity]);
-  }
-  return void 0;
-};
-
-/**
- * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
- * REMARKS: Skips can only accept alias tokens references.
- * @param project Project context.
- * @param node Input node.
- * @param symbol Referenced symbol.
- * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
- */
-const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record): Coder.Pattern | undefined => {
-  if (symbol.value === Parser.Symbols.AliasToken) {
-    const identifier = node.fragment.data;
-    const entry = project.tokenEntries.get(identifier);
-    if (entry !== void 0) {
-      entry.references++;
-      return project.coder.emitReferencePattern(project.tokenEntries, identifier);
-    }
-    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
   }
   return void 0;
 };
@@ -88,12 +101,12 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   if (symbol !== void 0) {
     const directive = state.directive;
     switch (directive.type) {
+      case Directive.Types.Skip:
+        return resolveSkip(project, node, symbol);
       case Directive.Types.Token:
         return resolveToken(project, node, symbol);
       case Directive.Types.Node:
         return resolveNode(project, node, symbol);
-      case Directive.Types.Skip:
-        return resolveSkip(project, node, symbol);
     }
   }
   project.addError(node, Errors.UNDEFINED_IDENTIFIER);

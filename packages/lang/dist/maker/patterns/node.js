@@ -20,7 +20,7 @@ const consume = (project, state) => {
             const identity = directive.identity;
             entry.pattern = project.coder.emitNodePattern(identity, 1 /* Right */, expression);
             if (entry.references > 0) {
-                const identifier = `@REF${entry.identity}`;
+                const identifier = `@LINK${entry.identity}`;
                 const reference = project.nodeEntries.add(entry.origin, identifier, entry.identity);
                 reference.pattern = project.coder.emitReferencePattern(project.nodeEntries, entry.identifier);
             }

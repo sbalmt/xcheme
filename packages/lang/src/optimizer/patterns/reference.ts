@@ -9,6 +9,37 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 
 /**
+ * Validate the corresponding reference for the specified symbol in a 'SKIP' directive.
+ * REMARKS: Skips can only accept alias tokens references.
+ * @param project Project context.
+ * @param node Input node.
+ * @param symbol Referenced symbol.
+ */
+const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record): void => {
+  if (symbol.value !== Parser.Symbols.AliasToken) {
+    if (symbol.value === Parser.Symbols.Token) {
+      project.addError(node, Errors.INVALID_TOKEN_REFERENCE);
+    } else if (symbol.value === Parser.Symbols.Node) {
+      project.addError(node, Errors.INVALID_NODE_REFERENCE);
+    } else if (symbol.value === Parser.Symbols.AliasNode) {
+      project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
+    } else {
+      project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
+    }
+  } else {
+    const identifier = node.fragment.data;
+    const entry = project.tokenEntries.get(identifier);
+    if (entry !== void 0) {
+      entry.references++;
+    } else {
+      project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+        entry.references++;
+      });
+    }
+  }
+};
+
+/**
  * Resolve the corresponding reference for the specified symbol in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
@@ -29,11 +60,13 @@ const resolveToken = (project: Project.Context, node: Core.Node, state: Context.
     const identifier = node.fragment.data;
     const entry = project.tokenEntries.get(identifier);
     if (entry !== void 0) {
+      entry.references++;
       if (entry.dynamic) {
         state.entry.dynamic = true;
       }
     } else {
       project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+        entry.references++;
         if (state.entry.identifier !== identifier && entry.dynamic) {
           project.tokenEntries.get(state.entry.identifier)!.dynamic = true;
         }
@@ -63,11 +96,13 @@ const resolveNode = (
   if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
     const entry = project.nodeEntries.get(identifier);
     if (entry !== void 0) {
+      entry.references++;
       if (entry.dynamic) {
         state.entry.dynamic = true;
       }
     } else {
       project.nodeEntries.on(identifier, (entry: Entries.Entry) => {
+        entry.references++;
         if (state.entry.identifier !== identifier && entry.dynamic) {
           project.nodeEntries.get(state.entry.identifier)!.dynamic = true;
         }
@@ -76,13 +111,15 @@ const resolveNode = (
   } else if (symbol.value === Parser.Symbols.Token) {
     const entry = project.tokenEntries.get(identifier);
     if (entry !== void 0) {
-      if (entry.dynamic) {
-        project.addError(node, Errors.INVALID_MAP_REFERENCE);
-      } else {
+      entry.references++;
+      if (!entry.dynamic) {
         parent.setChild(direction, new Identity.Node(node, entry.identity));
+      } else {
+        project.addError(node, Errors.INVALID_MAP_REFERENCE);
       }
     } else {
       project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+        entry.references++;
         if (state.entry.identifier !== identifier) {
           parent.setChild(direction, new Identity.Node(node, entry.identity));
         }
@@ -92,27 +129,6 @@ const resolveNode = (
     project.addError(node, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
   } else {
     project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
-  }
-};
-
-/**
- * Validate the corresponding reference for the specified symbol in a 'SKIP' directive.
- * REMARKS: Skips can only accept alias tokens references.
- * @param project Project context.
- * @param node Input node.
- * @param symbol Referenced symbol.
- */
-const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record): void => {
-  if (symbol.value !== Parser.Symbols.AliasToken) {
-    if (symbol.value === Parser.Symbols.Token) {
-      project.addError(node, Errors.INVALID_TOKEN_REFERENCE);
-    } else if (symbol.value === Parser.Symbols.Node) {
-      project.addError(node, Errors.INVALID_NODE_REFERENCE);
-    } else if (symbol.value === Parser.Symbols.AliasNode) {
-      project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
-    } else {
-      project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
-    }
   }
 };
 
