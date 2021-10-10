@@ -27,12 +27,12 @@ export declare type Reference = {
 export declare class Base {
     /**
      * Should be implemented to return an entry pattern.
-     * @param name Entry name.
+     * @param identifier Entry identifier.
      * @param references Entry references.
      * @param patterns Entry patterns.
      * @returns Should return the pattern.
      */
-    getEntry(name: string, references: Reference[], patterns: Pattern[]): Pattern;
+    getEntry(identifier: string, references: Reference[], patterns: Pattern[]): Pattern;
     /**
      * Should be implemented to return a route.
      * @param path Route path.

@@ -9,12 +9,12 @@ const base_1 = require("./base");
 class Live extends base_1.Base {
     /**
      * Get a new entry pattern.
-     * @param name Entry name.
+     * @param identifier Entry identifier.
      * @param references Entry references.
      * @param patterns Entry patterns.
      * @returns Returns the pattern.
      */
-    getEntry(name, references, patterns) {
+    getEntry(identifier, references, patterns) {
         return new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))), new Core.EndFlowPattern());
     }
     /**

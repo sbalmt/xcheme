@@ -7,12 +7,12 @@ exports.Base = void 0;
 class Base {
     /**
      * Should be implemented to return an entry pattern.
-     * @param name Entry name.
+     * @param identifier Entry identifier.
      * @param references Entry references.
      * @param patterns Entry patterns.
      * @returns Should return the pattern.
      */
-    getEntry(name, references, patterns) {
+    getEntry(identifier, references, patterns) {
         throw "Method doesn't implemented.";
     }
     /**

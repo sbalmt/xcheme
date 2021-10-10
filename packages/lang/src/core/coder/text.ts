@@ -24,6 +24,15 @@ type Reference = {
  */
 export class Text extends Base {
   /**
+   * Get a formatted identifier based on the given input.
+   * @param identifier Input identifier.
+   * @returns Returns the formatted identifier.
+   */
+  #getIdentifier(identifier: string): string {
+    return 'U_' + identifier.replace(/[^a-zA-Z0-9]/g, '');
+  }
+
+  /**
    * Get string units.
    * @param string Input string.
    * @returns Returns the string units.
@@ -48,32 +57,32 @@ export class Text extends Base {
    * @returns Returns the reference.
    */
   #getReference(reference: Reference): string {
-    return `const ${reference.name} = ${reference.pattern};`;
+    return `const ${this.#getIdentifier(reference.name)} = ${reference.pattern};`;
   }
 
   /**
    * Get a new export entry.
-   * @param name Export entry name.
+   * @param identifier Export entry identifier.
    * @param pattern Export entry pattern.
    * @returns Returns the export entry.
    */
-  #getExportEntry(name: string, pattern: string): string {
-    return `exports.${name} = ${pattern};`;
+  #getExportEntry(identifier: string, pattern: string): string {
+    return `exports.${identifier} = ${pattern};`;
   }
 
   /**
    * Get a new entry pattern.
-   * @param name Entry name.
+   * @param identifier Entry identifier.
    * @param references Entry references.
    * @param patterns Entry patterns.
    * @returns Returns the pattern.
    */
-  getEntry(name: string, references: Reference[], patterns: string[]): string {
+  getEntry(identifier: string, references: Reference[], patterns: string[]): string {
     const deps = references.map((entry) => this.#getReference(entry));
     return (
       deps.join('') +
       this.#getExportEntry(
-        name,
+        identifier,
         this.#getPattern(
           'ExpectFlowPattern',
           this.#getPattern(
@@ -301,7 +310,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-   emitHasPattern(state: number, ...patterns: string[]): string {
+  emitHasPattern(state: number, ...patterns: string[]): string {
     return this.#getPattern('HasStatePattern', state, ...patterns);
   }
 
@@ -324,9 +333,9 @@ export class Text extends Base {
   emitReferencePattern(entries: Entries.Aggregator, identifier: string): string {
     const entry = entries.get(identifier)!;
     if (!entry.pattern) {
-      return this.#getPattern('RunFlowPattern', `() => ${identifier}`);
+      return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(identifier)}`);
     }
-    return identifier;
+    return this.#getIdentifier(identifier);
   }
 
   /**

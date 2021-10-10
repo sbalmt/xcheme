@@ -9,6 +9,14 @@ const base_1 = require("./base");
  */
 class Text extends base_1.Base {
     /**
+     * Get a formatted identifier based on the given input.
+     * @param identifier Input identifier.
+     * @returns Returns the formatted identifier.
+     */
+    #getIdentifier(identifier) {
+        return 'U_' + identifier.replace(/[^a-zA-Z0-9]/g, '');
+    }
+    /**
      * Get string units.
      * @param string Input string.
      * @returns Returns the string units.
@@ -31,28 +39,28 @@ class Text extends base_1.Base {
      * @returns Returns the reference.
      */
     #getReference(reference) {
-        return `const ${reference.name} = ${reference.pattern};`;
+        return `const ${this.#getIdentifier(reference.name)} = ${reference.pattern};`;
     }
     /**
      * Get a new export entry.
-     * @param name Export entry name.
+     * @param identifier Export entry identifier.
      * @param pattern Export entry pattern.
      * @returns Returns the export entry.
      */
-    #getExportEntry(name, pattern) {
-        return `exports.${name} = ${pattern};`;
+    #getExportEntry(identifier, pattern) {
+        return `exports.${identifier} = ${pattern};`;
     }
     /**
      * Get a new entry pattern.
-     * @param name Entry name.
+     * @param identifier Entry identifier.
      * @param references Entry references.
      * @param patterns Entry patterns.
      * @returns Returns the pattern.
      */
-    getEntry(name, references, patterns) {
+    getEntry(identifier, references, patterns) {
         const deps = references.map((entry) => this.#getReference(entry));
         return (deps.join('') +
-            this.#getExportEntry(name, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
+            this.#getExportEntry(identifier, this.#getPattern('ExpectFlowPattern', this.#getPattern('OptFlowPattern', this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))), this.#getPattern('EndFlowPattern'))));
     }
     /**
      * Get a new route.
@@ -270,9 +278,9 @@ class Text extends base_1.Base {
     emitReferencePattern(entries, identifier) {
         const entry = entries.get(identifier);
         if (!entry.pattern) {
-            return this.#getPattern('RunFlowPattern', `() => ${identifier}`);
+            return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(identifier)}`);
         }
-        return identifier;
+        return this.#getIdentifier(identifier);
     }
     /**
      * Get a new any pattern.
