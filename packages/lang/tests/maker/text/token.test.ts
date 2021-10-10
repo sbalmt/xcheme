@@ -24,7 +24,7 @@ test("Output a 'TOKEN' rule with an alias token reference", () => {
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(1);
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, new Core.ExpectUnitPattern('@'))`);
 });
 
 test("Output a 'TOKEN' rule with a reference to itself", () => {
@@ -39,16 +39,16 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern('@'), ` +
       /******/ `new Core.OptFlowPattern(` +
-      /**********/ `new Core.RunFlowPattern(() => TOKEN)` +
+      /**********/ `new Core.RunFlowPattern(() => U_TOKEN)` +
       /******/ `)` +
       /**/ `)` +
       `)`
   );
 
-  const link = project.tokenEntries.get(`@REF${token.identity}`)!;
+  const link = project.tokenEntries.get(`@LINK${token.identity}`)!;
   expect(link).toBeDefined();
   expect(link.identity).toBe(token.identity);
-  expect(link.pattern).toBe('TOKEN');
+  expect(link.pattern).toBe('U_TOKEN');
 });
 
 test("Output a 'TOKEN' rule with an alias token that has a reference to itself", () => {
@@ -62,7 +62,7 @@ test("Output a 'TOKEN' rule with an alias token that has a reference to itself",
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +
       /**/ `new Core.OptFlowPattern(` +
-      /******/ `new Core.RunFlowPattern(() => ALIAS)` +
+      /******/ `new Core.RunFlowPattern(() => U_ALIAS)` +
       /**/ `)` +
       `)`
   );
@@ -70,7 +70,7 @@ test("Output a 'TOKEN' rule with an alias token that has a reference to itself",
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(1);
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, U_ALIAS)`);
 });
 
 test("Output a 'TOKEN' rule with a whole token map reference", () => {
@@ -103,7 +103,11 @@ test("Output a 'TOKEN' rule with a whole token map reference", () => {
   expect(token2.identity).toBe(Core.BaseSource.Output);
   expect(token2.pattern).toBe(
     `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
-      /**/ `new Core.ExpectFlowPattern(TOKEN1, ` +
+      /**/ `new Core.ExpectFlowPattern(` +
+      /******/ `new Core.MapFlowPattern(` +
+      /**********/ `new Core.SetValueRoute(${tokenRouteA.identity}, 'a'), ` +
+      /**********/ `new Core.SetValueRoute(${tokenRouteB.identity}, 'b')` +
+      /******/ `), ` +
       /******/ `new Core.ExpectUnitPattern('!')` +
       /**/ `)` +
       `)`
