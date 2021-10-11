@@ -4,90 +4,72 @@ import * as Console from './console';
 import * as Fragment from './fragment';
 
 /**
- * Get the prefix for the given node.
- * @param dir Node direction.
- * @param node Input node.
- * @param inner Determines whether or not this is an inner node.
- * @returns Returns the corresponding entry.
+ * Get the node indent based on the specified state.
+ * @param state Determines whether or not there are next nodes.
+ * @returns Returns the node indent.
  */
-const getPrefix = (dir: string, node: Core.Node, inner: boolean): string => {
-  if (
-    (dir === 'L' && (node.right || (node.next && !inner))) ||
-    (dir === 'R' && node.next && inner) ||
-    (dir === 'N' && node.next?.next && !inner)
-  ) {
-    return '├─ ';
-  }
-  return '└─ ';
+const getIndent = (state: boolean): string => {
+  return state ? '│  ' : '   ';
 };
 
 /**
- * Get the indentation for the given tree.
- * @param dir Tree direction.
- * @param node Tree node.
- * @param inner Determines whether or not this is an inner tree.
- * @returns Returns the corresponding indentation.
+ * Get the node prefix based on the specified state.
+ * @param state Determines whether or not there are next nodes.
+ * @returns Returns the node prefix.
  */
-const getIndent = (dir: string, node: Core.Node, inner: boolean): string => {
-  if (
-    (dir === 'L' && (node.right || (node.next && !inner))) ||
-    (dir === 'R' && node.next && inner) ||
-    (dir === 'N' && node.next?.next && !inner)
-  ) {
-    return '│  ';
-  }
-  return '   ';
+const getPrefix = (state: boolean): string => {
+  return state ? '├─ ' : '└─ ';
 };
 
 /**
- * Print recursively the specified node and all its children in a tree format.
- * @param dir Node direction.
+ * Get the node name based on the given direction.
+ * @param direction Node direction.
+ * @returns Returns the node name.
+ */
+const getName = (direction: Core.Nodes): string => {
+  switch (direction) {
+    case Core.Nodes.Left:
+      return 'L';
+    case Core.Nodes.Right:
+      return 'R';
+    case Core.Nodes.Next:
+      return 'N';
+  }
+};
+
+/**
+ * Print recursively all the child nodes in the given parent node.
+ * @param direction Child node direction.
  * @param parent Parent node.
- * @param node Current node.
- * @param prefix Current prefix.
- * @param inner Determines whether or not this is an inner tree.
+ * @param prefix Node prefix.
+ * @param indent Node ident.
  */
-const printTree = (dir: string, parent: Core.Node | undefined, node: Core.Node, prefix: string, inner: boolean): void => {
+const printTree = (direction: Core.Nodes, parent: Core.Node, prefix: string, indent: string): void => {
+  const node = parent.getChild(direction)!;
   const fragment = Fragment.getMessage(node.fragment);
   const location = Fragment.getLocation(node.fragment);
-  const entry = parent ? getPrefix(dir, parent, inner) : '';
   const code = node.value.toString();
-  Console.printLine(` ${location} ${prefix}${entry}${dir} ${code} "${fragment}"`);
-  if (parent) {
-    prefix += getIndent(dir, parent, inner);
-  }
+  const name = getName(direction);
+  Console.printLine(` ${location} ${prefix}${name} ${code} "${fragment}"`);
   if (node.left) {
-    printTree('L', node, node.left, prefix, true);
+    const state = node.right !== void 0 || node.next !== void 0;
+    printTree(Core.Nodes.Left, node, indent + getPrefix(state), indent + getIndent(state));
   }
   if (node.right) {
-    printTree('R', node, node.right, prefix, true);
+    const state = node.next !== void 0;
+    printTree(Core.Nodes.Right, node, indent + getPrefix(state), indent + getIndent(state));
   }
-  if (node.next && inner) {
-    printList(node, node, prefix);
-  }
-};
-
-/**
- * Print recursively the specified node and all its children in a list format.
- * @param parent Parent node.
- * @param node Current node.
- * @param prefix Current prefix.
- */
-const printList = (parent: Core.Node | undefined, node: Core.Node, prefix: string): void => {
-  while ((node = node.next!)) {
-    printTree('N', parent, node, prefix, false);
-    if (parent) {
-      parent = node;
-    }
+  if (node.next) {
+    printTree(Core.Nodes.Next, node, indent, indent);
   }
 };
 
 /**
- * Print a tree for the specified node.
+ * Print the corresponding tree for the given node.
  * @param node Input node.
  */
 export const print = (node: Core.Node): void => {
   Console.printLine('Nodes:\n');
-  printList(void 0, node, '');
+  printTree(Core.Nodes.Next, node, '', '');
   Console.printLine('');
 };
