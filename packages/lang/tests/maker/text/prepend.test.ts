@@ -52,7 +52,7 @@ test("Output a 'PREPEND' rule with multiple patterns", () => {
 });
 
 test("Output a 'PREPEND' rule with chained patterns", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip prepend ('@' & '*' & '*');");
+  const project = Helper.makeParser(new Lang.TextCoder(), "skip prepend ('@' & '*' & '*' & opt '!');");
 
   // Check the output code.
   const rule = project.skipEntries.get('@SKIP0')!;
@@ -61,7 +61,10 @@ test("Output a 'PREPEND' rule with chained patterns", () => {
   expect(rule.pattern).toBe(
     `new Core.PrependNodePattern(0, 1, 1, ` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +
-      /**/ `new Core.ExpectUnitPattern('*', '*')` +
+      /**/ `new Core.ExpectUnitPattern('*', '*'), ` +
+      /**/ `new Core.OptFlowPattern(` +
+      /******/ `new Core.ExpectUnitPattern('!')` +
+      /**/ `)` +
       `)`
   );
 });

@@ -38,8 +38,8 @@ test("Parse a 'PREPEND' rule with multiple patterns", () => {
 });
 
 test("Parse a 'PREPEND' rule with chained patterns", () => {
-  const project = Helper.makeParser(new Lang.LiveCoder(), "skip prepend ('@' & '*' & '*');");
+  const project = Helper.makeParser(new Lang.LiveCoder(), "skip prepend ('@' & '*' & '*' & opt '!');");
   const context = new Core.Context('test');
 
-  Helper.testLexer(project, context, '@**');
+  Helper.testLexer(project, context, '@**!');
 });
