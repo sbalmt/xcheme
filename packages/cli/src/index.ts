@@ -16,6 +16,6 @@ try {
     const target = flags.target ? flags.target : 1;
     Make.perform(source, target, !!flags.run, flags.debug);
   }
-} catch (ex) {
+} catch (ex: any) {
   console.log(ex.message ?? ex);
 }
