@@ -46,7 +46,7 @@ class Context {
      */
     #getReferences(entries) {
         return entries
-            .filter((entry) => entry.pattern !== void 0 && entry.references > 1)
+            .filter((entry) => entry.pattern !== void 0 && (entry.force || entry.references > 1))
             .map((entry) => ({ name: entry.identifier, pattern: entry.pattern }));
     }
     /**

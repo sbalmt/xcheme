@@ -34,6 +34,7 @@ const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Rec
     } else {
       project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
         entry.references++;
+        entry.force = true;
       });
     }
   }
@@ -67,6 +68,7 @@ const resolveToken = (project: Project.Context, node: Core.Node, state: Context.
     } else {
       project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
         entry.references++;
+        entry.force = true;
         if (state.entry.identifier !== identifier && entry.dynamic) {
           project.tokenEntries.get(state.entry.identifier)!.dynamic = true;
         }
@@ -103,6 +105,7 @@ const resolveNode = (
     } else {
       project.nodeEntries.on(identifier, (entry: Entries.Entry) => {
         entry.references++;
+        entry.force = true;
         if (state.entry.identifier !== identifier && entry.dynamic) {
           project.nodeEntries.get(state.entry.identifier)!.dynamic = true;
         }
@@ -120,6 +123,7 @@ const resolveNode = (
     } else {
       project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
         entry.references++;
+        entry.force = true;
         if (state.entry.identifier !== identifier) {
           parent.setChild(direction, new Identity.Node(node, entry.identity));
         }

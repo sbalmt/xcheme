@@ -64,6 +64,7 @@ class Aggregator {
             identity,
             alias: model?.alias ?? false,
             dynamic: model?.dynamic ?? false,
+            force: model?.force ?? false,
             references: model?.references ?? 0,
             pattern: model?.pattern
         });

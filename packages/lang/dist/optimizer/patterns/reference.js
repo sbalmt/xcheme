@@ -34,6 +34,7 @@ const resolveSkip = (project, node, symbol) => {
         else {
             project.tokenEntries.on(identifier, (entry) => {
                 entry.references++;
+                entry.force = true;
             });
         }
     }
@@ -70,6 +71,7 @@ const resolveToken = (project, node, state, symbol) => {
         else {
             project.tokenEntries.on(identifier, (entry) => {
                 entry.references++;
+                entry.force = true;
                 if (state.entry.identifier !== identifier && entry.dynamic) {
                     project.tokenEntries.get(state.entry.identifier).dynamic = true;
                 }
@@ -100,6 +102,7 @@ const resolveNode = (project, direction, parent, state, symbol) => {
         else {
             project.nodeEntries.on(identifier, (entry) => {
                 entry.references++;
+                entry.force = true;
                 if (state.entry.identifier !== identifier && entry.dynamic) {
                     project.nodeEntries.get(state.entry.identifier).dynamic = true;
                 }
@@ -120,6 +123,7 @@ const resolveNode = (project, direction, parent, state, symbol) => {
         else {
             project.tokenEntries.on(identifier, (entry) => {
                 entry.references++;
+                entry.force = true;
                 if (state.entry.identifier !== identifier) {
                     parent.setChild(direction, new Identity.Node(node, entry.identity));
                 }

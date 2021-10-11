@@ -22,6 +22,7 @@ export const consume = (project: Project.Context, state: Context.State): void =>
         const identifier = `@LINK${entry.identity}`;
         const reference = project.tokenEntries.add(entry.origin, identifier, entry.identity);
         reference.pattern = project.coder.emitReferencePattern(project.tokenEntries, entry.identifier);
+        entry.references++;
       }
     }
   }

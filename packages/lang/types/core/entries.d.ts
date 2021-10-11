@@ -19,15 +19,15 @@ export declare const enum Origins {
  */
 export declare type Entry = {
     /**
-     * Entry origin.
+     * Determine whether or not an entry was created by a user directive or a loose token.
      */
     origin: Origins;
     /**
-     * Entry identifier.
+     * Unique identifier used for locating the entry.
      */
     identifier: string;
     /**
-     * Entry identity.
+     * Unique identity number for the entry.
      */
     identity: number;
     /**
@@ -38,6 +38,10 @@ export declare type Entry = {
      * Determines whether or not the entry can have a dynamic identity.
      */
     dynamic: boolean;
+    /**
+     * Determines whether or not the entry output is forced due to have dependents.
+     */
+    force: boolean;
     /**
      * Number of references to the entry.
      */
