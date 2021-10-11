@@ -6,112 +6,113 @@ skip '/*' & opt repeat (not '*/' then *) & '*/';
 skip '//' & opt repeat (not '\n' then *);
 
 // Lexer
-alias token T_ALPHA   as from 'A' to 'Z' | from 'a' to 'z';
-alias token T_DIGIT   as from '0' to '9';
-alias token T_EXTRA   as '_';
-alias token T_WORD    as T_ALPHA | T_DIGIT | T_EXTRA;
-alias token T_END     as not T_WORD;
+alias token T_EXTRA as '_';
+alias token T_ALPHA as from 'A' to 'Z' | from 'a' to 'z';
+alias token T_DIGIT as from '0' to '9';
+alias token T_WORD  as T_EXTRA | T_ALPHA | T_DIGIT;
+alias token T_END   as not T_WORD;
 
-token<101> T_NUMBER   as '0' | from '1' to '9' & opt repeat T_DIGIT;
-token<102> T_STRING   as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
+token<auto> T_KEYWORDS as map {
+  <103> ANY       as 'any',
+  <104> FROM      as 'from',
+  <105> TO        as 'to',
+  <106> MAP       as 'map',
+  <107> THEN      as 'then',
+  <108> ELSE      as 'else',
+  <109> OR        as 'or',
+  <110> AND       as 'and',
+  <111> NOT       as 'not',
+  <112> OPT       as 'opt',
+  <113> REPEAT    as 'repeat',
+  <114> PLACE     as 'place',
+  <115> APPEND    as 'append',
+  <116> PREPEND   as 'prepend',
+  <117> PIVOT     as 'pivot',
+  <118> NEXT      as 'next',
+  <119> LEFT      as 'left',
+  <120> RIGHT     as 'right',
+  <121> SYMBOL    as 'symbol',
+  <122> SCOPE     as 'scope',
+  <123> ERROR     as 'error',
+  <124> HAS       as 'has',
+  <125> SET       as 'set',
+  <126> SKIP      as 'skip',
+  <127> TOKEN     as 'token',
+  <128> NODE      as 'node',
+  <129> ALIAS     as 'alias',
+  <130> AUTO      as 'auto',
+  <131> AS        as 'as'
+} & T_END;
 
-token<103> T_ANY      as ('any' & T_END) | '*';
-token<104> T_FROM     as 'from' & T_END;
-token<105> T_TO       as 'to' & T_END;
+token<auto> T_SYMBOLS as map {
+  <132> ASTERISK        as '*',
+  <133> VERTICAL_BAR    as '|',
+  <134> AMPERSAND       as '&',
+  <135> PERIOD          as '.',
+  <136> COMMA           as ',',
+  <137> SEMICOLON       as ';',
+  <138> OPEN_BRACES     as '{',
+  <139> CLOSE_BRACES    as '}',
+  <140> GROUP_OPEN      as '(',
+  <141> GROUP_CLOSE     as ')',
+  <142> IDENTITY_OPEN   as '<',
+  <143> IDENTITY_CLOSE  as '>'
+};
 
-token<106> T_THEN     as 'then' & T_END;
-token<107> T_ELSE     as 'else' & T_END;
-
-token<108> T_OR       as ('or' & T_END) | '|';
-token<109> T_AND      as ('and' & T_END) | '&';
-
-token<110> T_NOT      as 'not' & T_END;
-token<111> T_OPT      as 'opt' & T_END;
-token<112> T_REPEAT   as 'repeat' & T_END;
-
-token<113> T_PLACE    as 'place' & T_END;
-token<114> T_APPEND   as 'append' & T_END;
-token<115> T_PRPEND   as 'prepend' & T_END;
-token<116> T_PIVOT    as 'pivot' & T_END;
-token<117> T_NEXT     as 'next' & T_END;
-token<118> T_LEFT     as 'left' & T_END;
-token<119> T_RIGHT    as 'right' & T_END;
-
-token<120> T_SYMBOL   as 'symbol' & T_END;
-token<121> T_SCOPE    as 'scope' & T_END;
-
-token<122> T_ERROR    as 'error' & T_END;
-
-token<123> T_HAS      as 'has' & T_END;
-token<124> T_SET      as 'set' & T_END;
-
-token<125> T_SKIP     as 'skip' & T_END;
-token<126> T_TOKEN    as 'token' & T_END;
-token<127> T_NODE     as 'node' & T_END;
-token<128> T_ALIAS    as 'alias' & T_END;
-token<129> T_AS       as 'as' & T_END;
-
-token<130> T_SEMICOLON      as ';';
-token<131> T_GROUP_OPEN     as '(';
-token<132> T_GROUP_CLOSE    as ')';
-token<133> T_IDENTITY_OPEN  as '<';
-token<134> T_IDENTITY_CLOSE as '>';
-
-token<100> T_IDENTIFIER     as (T_ALPHA | T_EXTRA) & opt repeat T_WORD;
+token<100> T_IDENTIFIER as (T_ALPHA | T_EXTRA) & opt repeat T_WORD;
+token<101> T_NUMBER     as '0' | from '1' to '9' & opt repeat T_DIGIT;
+token<102> T_STRING     as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
 
 // Parser
-alias node GROUP            as place (T_GROUP_OPEN & EXPRESSION & T_GROUP_CLOSE);
-alias node OPERAND          as ANY | ALPHABET | REFERENCE | RANGE | GROUP;
-alias node EXPRESSION       as OR & opt THEN;
+alias node GROUP      as place (T_SYMBOLS.GROUP_OPEN & EXPRESSION & T_SYMBOLS.GROUP_CLOSE);
+alias node OPERAND    as MAP | RANGE | ANY | STRING | REFERENCE | GROUP;
+alias node EXPRESSION as OR & opt THEN;
+alias node MAP_BLOCK  as T_SYMBOLS.OPEN_BRACES & MEMBERS & T_SYMBOLS.CLOSE_BRACES;
 
+alias node<200> IDENTIFIER  as symbol (pivot T_IDENTIFIER & T_KEYWORDS.AS & place EXPRESSION);
 alias node<201> REFERENCE   as append T_IDENTIFIER;
-alias node<202> IDENTITY    as T_IDENTITY_OPEN & append (T_NUMBER & T_IDENTITY_CLOSE);
-alias node<203> ALPHABET    as append T_STRING;
-alias node<204> ANY         as append T_ANY;
-alias node<205> RANGE       as place (T_FROM & ALPHABET & pivot (T_TO & ALPHABET));
+alias node<202> IDENTITY    as T_SYMBOLS.IDENTITY_OPEN & append ((T_NUMBER | T_KEYWORDS.AUTO) & T_SYMBOLS.IDENTITY_CLOSE);
+alias node<203> STATE       as T_SYMBOLS.IDENTITY_OPEN & append (T_NUMBER & T_SYMBOLS.IDENTITY_CLOSE);
+alias node<204> STRING      as append T_STRING;
+alias node<205> ANY         as append (T_KEYWORDS.ANY | T_SYMBOLS.ASTERISK);
+alias node<206> RANGE       as place (T_KEYWORDS.FROM & STRING & pivot (T_KEYWORDS.TO & STRING));
+alias node<207> MAP         as scope (T_KEYWORDS.MAP & append MAP_BLOCK);
+alias node<208> MEMBERS     as append next ((opt IDENTITY & IDENTIFIER) | EXPRESSION) & opt (T_SYMBOLS.COMMA & MEMBERS);
 
-alias node<230> SET         as append (T_SET & IDENTITY);
-alias node<229> HAS         as append (T_HAS & IDENTITY);
-alias node<228> ERROR       as append (T_ERROR & IDENTITY);
-alias node<227> SCOPE       as append T_SCOPE; 
-alias node<226> SYMBOL      as append T_SYMBOL; 
-alias node<225> PIVOT       as append T_PIVOT;
+alias node<auto> UNARY as opt repeat append map {
+  <213> NOT       as T_KEYWORDS.NOT,
+  <214> OPT       as T_KEYWORDS.OPT,
+  <215> REPEAT    as T_KEYWORDS.REPEAT,
+  <216> PLACE_N   as T_KEYWORDS.PLACE & T_KEYWORDS.NEXT,
+  <217> PLACE_L   as T_KEYWORDS.PLACE & T_KEYWORDS.LEFT,
+  <218> PLACE_R   as T_KEYWORDS.PLACE & T_KEYWORDS.RIGHT,
+  <219> PLACE     as T_KEYWORDS.PLACE,
+  <220> APPEND_N  as T_KEYWORDS.APPEND & T_KEYWORDS.NEXT,
+  <221> APPEND_L  as T_KEYWORDS.APPEND & T_KEYWORDS.LEFT,
+  <222> APPEND_R  as T_KEYWORDS.APPEND & T_KEYWORDS.RIGHT,
+  <223> APPEND    as T_KEYWORDS.APPEND,
+  <224> PREPEND_N as T_KEYWORDS.PREPEND & T_KEYWORDS.NEXT,
+  <225> PREPEND_L as T_KEYWORDS.PREPEND & T_KEYWORDS.LEFT,
+  <226> PREPEND_R as T_KEYWORDS.PREPEND & T_KEYWORDS.RIGHT,
+  <227> PREPEND   as T_KEYWORDS.PREPEND,
+  <228> PIVOT     as T_KEYWORDS.PIVOT,
+  <229> SYMBOL    as T_KEYWORDS.SYMBOL,
+  <230> SCOPE     as T_KEYWORDS.SCOPE,
+  <231> ERROR     as T_KEYWORDS.ERROR & STATE,
+  <232> HAS       as T_KEYWORDS.HAS & STATE,
+  <233> SET       as T_KEYWORDS.SET & STATE
+} & place ACCESS;
 
-alias node<224> PREPEND     as append T_PRPEND;
-alias node<223> PREPEND_R   as append (T_PRPEND & T_RIGHT);
-alias node<222> PREPEND_L   as append (T_PRPEND & T_LEFT);
-alias node<221> PREPEND_N   as append (T_PRPEND & T_NEXT);
+alias node<234> ACCESS  as OPERAND & opt repeat pivot (T_SYMBOLS.PERIOD & OPERAND);
+alias node<212> AND     as UNARY & opt repeat pivot ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
+alias node<211> OR      as AND & opt repeat pivot ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
+alias node<210> ELSE    as pivot (T_KEYWORDS.ELSE & EXPRESSION);
+alias node<209> THEN    as pivot (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
 
-alias node<220> APPEND      as append T_APPEND;
-alias node<219> APPEND_R    as append (T_APPEND & T_RIGHT);
-alias node<218> APPEND_L    as append (T_APPEND & T_LEFT);
-alias node<217> APPEND_N    as append (T_APPEND & T_NEXT);
-
-alias node<216> PLACE       as append T_PLACE;
-alias node<215> PLACE_R     as append (T_PLACE & T_RIGHT);
-alias node<214> PLACE_L     as append (T_PLACE & T_LEFT);
-alias node<213> PLACE_N     as append (T_PLACE & T_NEXT);
-
-alias node<212> REPEAT      as append T_REPEAT;
-alias node<211> OPTIONAL    as append T_OPT;
-alias node<210> NOT         as append T_NOT;
-
-alias node UNARY  as  opt repeat (NOT | OPTIONAL | REPEAT |
-                      PLACE_N | PLACE_L | PLACE_R | PLACE |
-                      APPEND_N | APPEND_L | APPEND_R | APPEND |
-                      PREPEND_N | PREPEND_L | PREPEND_R | PREPEND |
-                      PIVOT | SYMBOL | SCOPE | ERROR | SET | HAS) & OPERAND;
-
-alias node<209> AND   as UNARY & opt repeat pivot (T_AND & UNARY);
-alias node<208> OR    as AND & opt repeat pivot (T_OR & AND);
-
-alias node<207> ELSE  as pivot (T_ELSE & EXPRESSION);
-alias node<206> THEN  as pivot (T_THEN & EXPRESSION & opt ELSE);
-
-alias node<200> IDENTIFIER  as (pivot T_IDENTIFIER & T_AS & place EXPRESSION);
-
-node<231> SKIP        as T_SKIP & place EXPRESSION & T_SEMICOLON;
-node<232> TOKEN       as T_TOKEN & opt IDENTITY & symbol IDENTIFIER & T_SEMICOLON;
-node<233> NODE        as T_NODE & opt IDENTITY & symbol IDENTIFIER & T_SEMICOLON;
-node<234> ALIAS_TOKEN as T_ALIAS & T_TOKEN & opt IDENTITY & symbol IDENTIFIER & T_SEMICOLON;
-node<235> ALIAS_NODE  as T_ALIAS & T_NODE & opt IDENTITY & symbol IDENTIFIER & T_SEMICOLON;
+node<auto> STATEMENTS as map {
+  <235> SKIP        as T_KEYWORDS.SKIP & place EXPRESSION,
+  <236> TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
+  <237> NODE        as T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER,
+  <238> ALIAS_TOKEN as T_KEYWORDS.ALIAS & T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
+  <239> ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER
+} & T_SYMBOLS.SEMICOLON;
