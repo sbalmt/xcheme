@@ -35,6 +35,12 @@ test('Node referring a whole nested token map (reference error)', () => {
   ]);
 });
 
+test('Node referring an alias token map entry (reference error)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "alias token TOKEN as map { A as 'a' }; node NODE as TOKEN.A;", [
+    Lang.Errors.INVALID_MAP_ENTRY_REFERENCE
+  ]);
+});
+
 test('Node referring a loose token already defined (token collision)', () => {
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN as '@'; node NODE as TOKEN & '@';", [Lang.Errors.TOKEN_COLLISION]);
 });

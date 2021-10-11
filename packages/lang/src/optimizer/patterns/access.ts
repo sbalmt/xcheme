@@ -31,17 +31,21 @@ const getPath = (node: Core.Node): string[] => {
  */
 export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.getChild(direction)!;
-  const identifier = getPath(node).join('@');
+  const path = getPath(node);
+  const identifier = path.join('@');
   if (state.type !== Context.Types.Node || project.nodeEntries.has(identifier)) {
     project.addError(node, Errors.INVALID_MAP_ENTRY_REFERENCE);
   } else {
-    const entry = project.tokenEntries.get(identifier);
-    if (!entry) {
+    const directive = project.tokenEntries.get(path[0]);
+    const member = project.tokenEntries.get(identifier);
+    if (!directive || !member) {
       project.addError(node, Errors.UNDEFINED_IDENTIFIER);
-    } else if (entry.dynamic) {
+    } else if (member.dynamic) {
       project.addError(node, Errors.INVALID_MAP_REFERENCE);
+    } else if (directive.alias) {
+      project.addError(node, Errors.INVALID_MAP_ENTRY_REFERENCE);
     } else {
-      parent.setChild(direction, new Identity.Node(node, entry.identity));
+      parent.setChild(direction, new Identity.Node(node, member.identity));
     }
   }
 };

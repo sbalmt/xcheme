@@ -28,20 +28,25 @@ const getPath = (node) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const identifier = getPath(node).join('@');
+    const path = getPath(node);
+    const identifier = path.join('@');
     if (state.type !== 3 /* Node */ || project.nodeEntries.has(identifier)) {
         project.addError(node, 4113 /* INVALID_MAP_ENTRY_REFERENCE */);
     }
     else {
-        const entry = project.tokenEntries.get(identifier);
-        if (!entry) {
+        const directive = project.tokenEntries.get(path[0]);
+        const member = project.tokenEntries.get(identifier);
+        if (!directive || !member) {
             project.addError(node, 4102 /* UNDEFINED_IDENTIFIER */);
         }
-        else if (entry.dynamic) {
+        else if (member.dynamic) {
             project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
         }
+        else if (directive.alias) {
+            project.addError(node, 4113 /* INVALID_MAP_ENTRY_REFERENCE */);
+        }
         else {
-            parent.setChild(direction, new Identity.Node(node, entry.identity));
+            parent.setChild(direction, new Identity.Node(node, member.identity));
         }
     }
 };
