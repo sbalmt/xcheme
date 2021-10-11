@@ -4,15 +4,6 @@ import * as Console from './console';
 import * as Fragment from './fragment';
 
 /**
- * Get the formatted node code.
- * @param node Input node.
- * @returns Returns the formatted node code.
- */
-const getCode = (node: Core.Node): string => {
-  return node.value.toString();
-};
-
-/**
  * Get the prefix for the given node.
  * @param dir Node direction.
  * @param node Input node.
@@ -60,7 +51,8 @@ const printTree = (dir: string, parent: Core.Node | undefined, node: Core.Node, 
   const fragment = Fragment.getMessage(node.fragment);
   const location = Fragment.getLocation(node.fragment);
   const entry = parent ? getPrefix(dir, parent, inner) : '';
-  Console.printLine(` ${location} ${prefix}${entry}${dir} ${getCode(node)} "${fragment}"`);
+  const code = node.value.toString();
+  Console.printLine(` ${location} ${prefix}${entry}${dir} ${code} "${fragment}"`);
   if (parent) {
     prefix += getIndent(dir, parent, inner);
   }
