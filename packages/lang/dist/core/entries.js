@@ -18,16 +18,22 @@ class Aggregator {
      */
     #events = {};
     /**
-     * Get all patterns.
+     * Get all entries.
      */
-    get patterns() {
-        return Object.values(this.#entries).filter((entry) => !entry.alias && entry.references === 0);
+    get all() {
+        return Object.values(this.#entries);
     }
     /**
-     * Get all reference patterns.
+     * Get all pattern entries.
+     */
+    get patterns() {
+        return this.all.filter((entry) => !entry.alias && entry.references === 0);
+    }
+    /**
+     * Get all reference pattern entries.
      */
     get references() {
-        return Object.values(this.#entries).filter((entry) => entry.references > 0);
+        return this.all.filter((entry) => entry.references > 0);
     }
     /**
      * Determines whether or not the aggregator contains an entry with the given name.

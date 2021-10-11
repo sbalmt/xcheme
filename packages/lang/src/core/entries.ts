@@ -90,17 +90,24 @@ export class Aggregator {
   #events: EventMap = {};
 
   /**
-   * Get all patterns.
+   * Get all entries.
    */
-  get patterns(): Entry[] {
-    return Object.values(this.#entries).filter((entry) => !entry.alias && entry.references === 0);
+  get all(): Entry[] {
+    return Object.values(this.#entries);
   }
 
   /**
-   * Get all reference patterns.
+   * Get all pattern entries.
+   */
+  get patterns(): Entry[] {
+    return this.all.filter((entry) => !entry.alias && entry.references === 0);
+  }
+
+  /**
+   * Get all reference pattern entries.
    */
   get references(): Entry[] {
-    return Object.values(this.#entries).filter((entry) => entry.references > 0);
+    return this.all.filter((entry) => entry.references > 0);
   }
 
   /**

@@ -57,11 +57,15 @@ export declare type Entry = {
 export declare class Aggregator {
     #private;
     /**
-     * Get all patterns.
+     * Get all entries.
+     */
+    get all(): Entry[];
+    /**
+     * Get all pattern entries.
      */
     get patterns(): Entry[];
     /**
-     * Get all reference patterns.
+     * Get all reference pattern entries.
      */
     get references(): Entry[];
     /**
