@@ -4,7 +4,7 @@ exports.consume = void 0;
 const Identity = require("../../core/nodes/identity");
 const Parser = require("../../parser");
 /**
- * Validate the corresponding reference for the specified symbol in a 'SKIP' directive.
+ * Validate the corresponding reference for the specified symbol and node in a 'SKIP' directive.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
  * @param node Input node.
@@ -40,14 +40,13 @@ const resolveSkip = (project, node, symbol) => {
     }
 };
 /**
- * Resolve the corresponding reference for the specified symbol in a 'TOKEN' directive.
+ * Resolve and validate the corresponding reference for the specified symbol and node in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param state Context state.
  * @param symbol Referenced symbol.
  */
-const resolveToken = (project, node, state, symbol) => {
+const resolveToken = (project, node, symbol) => {
     if (symbol.value !== 300 /* Token */ && symbol.value !== 303 /* AliasToken */) {
         if (symbol.value === 301 /* Node */) {
             project.addError(node, 4109 /* INVALID_NODE_REFERENCE */);
@@ -64,48 +63,35 @@ const resolveToken = (project, node, state, symbol) => {
         const entry = project.tokenEntries.get(identifier);
         if (entry !== void 0) {
             entry.references++;
-            if (entry.dynamic) {
-                state.entry.dynamic = true;
-            }
         }
         else {
             project.tokenEntries.on(identifier, (entry) => {
                 entry.references++;
                 entry.force = true;
-                if (state.entry.identifier !== identifier && entry.dynamic) {
-                    project.tokenEntries.get(state.entry.identifier).dynamic = true;
-                }
             });
         }
     }
 };
 /**
- * Resolve the corresponding reference for the specified symbol in a 'NODE' directive.
+ * Resolve and validate the corresponding reference for the specified symbol and node in a 'NODE' directive.
  * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param state Context state.
  * @param symbol Referenced symbol.
  */
-const resolveNode = (project, direction, parent, state, symbol) => {
+const resolveNode = (project, direction, parent, symbol) => {
     const node = parent.getChild(direction);
     const identifier = node.fragment.data;
     if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
         const entry = project.nodeEntries.get(identifier);
         if (entry !== void 0) {
             entry.references++;
-            if (entry.dynamic) {
-                state.entry.dynamic = true;
-            }
         }
         else {
             project.nodeEntries.on(identifier, (entry) => {
                 entry.references++;
                 entry.force = true;
-                if (state.entry.identifier !== identifier && entry.dynamic) {
-                    project.nodeEntries.get(state.entry.identifier).dynamic = true;
-                }
             });
         }
     }
@@ -124,8 +110,11 @@ const resolveNode = (project, direction, parent, state, symbol) => {
             project.tokenEntries.on(identifier, (entry) => {
                 entry.references++;
                 entry.force = true;
-                if (state.entry.identifier !== identifier) {
+                if (!entry.dynamic) {
                     parent.setChild(direction, new Identity.Node(node, entry.identity));
+                }
+                else {
+                    project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
                 }
             });
         }
@@ -157,10 +146,10 @@ const consume = (project, direction, parent, state) => {
                 resolveSkip(project, node, symbol);
                 break;
             case 2 /* Token */:
-                resolveToken(project, node, state, symbol);
+                resolveToken(project, node, symbol);
                 break;
             case 3 /* Node */:
-                resolveNode(project, direction, parent, state, symbol);
+                resolveNode(project, direction, parent, symbol);
                 break;
         }
     }

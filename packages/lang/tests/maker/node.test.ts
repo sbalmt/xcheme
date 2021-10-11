@@ -29,7 +29,7 @@ test('Node referring a whole token map (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN as map { A as 'a' }; node NODE as TOKEN;", [Lang.Errors.INVALID_MAP_REFERENCE]);
 });
 
-test('Node referring a whole nested token map (reference error)', () => {
+test('Node referring a whole nested token map entry (reference error)', () => {
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN as map { A as 'a' & map { B as 'b' } }; node NODE as TOKEN.A;", [
     Lang.Errors.INVALID_MAP_REFERENCE
   ]);

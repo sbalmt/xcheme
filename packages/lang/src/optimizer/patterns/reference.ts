@@ -9,7 +9,7 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 
 /**
- * Validate the corresponding reference for the specified symbol in a 'SKIP' directive.
+ * Validate the corresponding reference for the specified symbol and node in a 'SKIP' directive.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
  * @param node Input node.
@@ -41,14 +41,13 @@ const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Rec
 };
 
 /**
- * Resolve the corresponding reference for the specified symbol in a 'TOKEN' directive.
+ * Resolve and validate the corresponding reference for the specified symbol and node in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param state Context state.
  * @param symbol Referenced symbol.
  */
-const resolveToken = (project: Project.Context, node: Core.Node, state: Context.State, symbol: Core.Record): void => {
+const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Record): void => {
   if (symbol.value !== Parser.Symbols.Token && symbol.value !== Parser.Symbols.AliasToken) {
     if (symbol.value === Parser.Symbols.Node) {
       project.addError(node, Errors.INVALID_NODE_REFERENCE);
@@ -62,53 +61,34 @@ const resolveToken = (project: Project.Context, node: Core.Node, state: Context.
     const entry = project.tokenEntries.get(identifier);
     if (entry !== void 0) {
       entry.references++;
-      if (entry.dynamic) {
-        state.entry.dynamic = true;
-      }
     } else {
       project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
         entry.references++;
         entry.force = true;
-        if (state.entry.identifier !== identifier && entry.dynamic) {
-          project.tokenEntries.get(state.entry.identifier)!.dynamic = true;
-        }
       });
     }
   }
 };
 
 /**
- * Resolve the corresponding reference for the specified symbol in a 'NODE' directive.
+ * Resolve and validate the corresponding reference for the specified symbol and node in a 'NODE' directive.
  * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param state Context state.
  * @param symbol Referenced symbol.
  */
-const resolveNode = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Core.Node,
-  state: Context.State,
-  symbol: Core.Record
-): void => {
+const resolveNode = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, symbol: Core.Record): void => {
   const node = parent.getChild(direction)!;
   const identifier = node.fragment.data;
   if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
     const entry = project.nodeEntries.get(identifier);
     if (entry !== void 0) {
       entry.references++;
-      if (entry.dynamic) {
-        state.entry.dynamic = true;
-      }
     } else {
       project.nodeEntries.on(identifier, (entry: Entries.Entry) => {
         entry.references++;
         entry.force = true;
-        if (state.entry.identifier !== identifier && entry.dynamic) {
-          project.nodeEntries.get(state.entry.identifier)!.dynamic = true;
-        }
       });
     }
   } else if (symbol.value === Parser.Symbols.Token) {
@@ -124,8 +104,10 @@ const resolveNode = (
       project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
         entry.references++;
         entry.force = true;
-        if (state.entry.identifier !== identifier) {
+        if (!entry.dynamic) {
           parent.setChild(direction, new Identity.Node(node, entry.identity));
+        } else {
+          project.addError(node, Errors.INVALID_MAP_REFERENCE);
         }
       });
     }
@@ -155,10 +137,10 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
         resolveSkip(project, node, symbol);
         break;
       case Context.Types.Token:
-        resolveToken(project, node, state, symbol);
+        resolveToken(project, node, symbol);
         break;
       case Context.Types.Node:
-        resolveNode(project, direction, parent, state, symbol);
+        resolveNode(project, direction, parent, symbol);
         break;
     }
   }
