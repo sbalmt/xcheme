@@ -24,15 +24,15 @@ token A_S_STR   as has<2> ('\'' & repeat ('\\' then * else not '\'' then *) & '\
 token A_D_STR   as has<2> ('"' & repeat ('\\' then * else not '"' then *) & '"');
 
 // Parser
-alias node<110> A_VALUE   as append (A_S_STR | A_D_STR);
-alias node<111> A_ENTRY   as append (A_NAME & opt (A_ASSIGN & A_VALUE));
+alias node<207> A_VALUE   as append (A_S_STR | A_D_STR);
+alias node<206> A_ENTRY   as append (A_NAME & opt (A_ASSIGN & A_VALUE));
 alias node      A_LIST    as opt repeat A_ENTRY;
 
-alias node<120> C_DATA    as append repeat T_DATA;
-alias node<130> E_CLOSED  as T_OPEN & append (T_NAME & A_LIST & T_END & T_CLOSE);
-alias node<131> E_GROUPED as T_OPEN & append (T_NAME & A_LIST & T_CLOSE & opt CHILDREN) & opt (T_OPEN & T_END & T_NAME & T_CLOSE);
+alias node<205> C_DATA    as append repeat T_DATA;
+alias node<204> E_CLOSED  as T_OPEN & append (T_NAME & A_LIST & T_END & T_CLOSE);
+alias node<203> E_GROUPED as T_OPEN & append (T_NAME & A_LIST & T_CLOSE & opt CHILDREN) & opt (T_OPEN & T_END & T_NAME & T_CLOSE);
 
-alias node<100> DOCUMENT  as T_OPEN & D_START & append (repeat D_TYPE & D_END);
+alias node<202> DOCUMENT  as T_OPEN & D_START & append (repeat D_TYPE & D_END);
 alias node      CHILDREN  as repeat place next (C_DATA | E_CLOSED | E_GROUPED);
 
 node<200> TYPE as DOCUMENT;
