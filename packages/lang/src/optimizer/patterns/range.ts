@@ -1,12 +1,9 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../../core/project';
-import * as Entries from '../../core/entries';
 import * as Context from '../context';
 import * as Loose from '../loose';
 import * as Nodes from '../nodes';
-
-import { Errors } from '../../core/errors';
 
 import * as Expression from './expression';
 
@@ -20,15 +17,8 @@ import * as Expression from './expression';
 export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   if (state.type === Context.Types.Node) {
     const node = parent.getChild(direction)!;
-    const range = `${node.left!.fragment.data}-${node.right!.fragment.data}`;
-    let entry = project.tokenEntries.get(range);
-    if (entry !== void 0) {
-      if (entry.origin === Entries.Origins.User) {
-        project.addError(node, Errors.TOKEN_COLLISION);
-      }
-    } else {
-      entry = Loose.emitToken(project, node, state, range);
-    }
+    const name = `${node.left!.fragment.data}-${node.right!.fragment.data}`;
+    const entry = Loose.resolve(project, node, state, name);
     const reference = Nodes.getReference(entry.identifier, node.table, node.fragment.location);
     parent.setChild(direction, reference);
     Expression.consume(project, direction, parent, state);

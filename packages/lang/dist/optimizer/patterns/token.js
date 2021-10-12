@@ -4,24 +4,10 @@ exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Directive = require("../../core/nodes/directive");
 const Parser = require("../../parser");
+const Loose = require("../loose");
 const Expression = require("./expression");
 const Range = require("./range");
 const String = require("./string");
-/**
- * Determines whether or not there are a collision for the given identifier.
- * @param project Project context.
- * @param node Input node.
- * @param identifier Entry identifier.
- * @returns Returns true when the specified identifier already exists, false otherwise.
- */
-const collision = (project, node, identifier) => {
-    const entry = project.tokenEntries.get(identifier);
-    if (entry?.origin === 0 /* User */) {
-        project.addError(node, 4115 /* TOKEN_COLLISION */);
-        return true;
-    }
-    return false;
-};
 /**
  * Emit a new token entry and replace the current token node by an optimized one.
  * @param project Project context.
@@ -52,8 +38,8 @@ const consume = (project, direction, parent, state) => {
     entry.identifier = node.fragment.data;
     if (expression.value === 204 /* String */) {
         String.consume(project, 1 /* Right */, node, state);
-        const word = node.right.fragment.data;
-        if (!collision(project, node, word)) {
+        const word = expression.fragment.data;
+        if (!Loose.collision(project, expression, word)) {
             emit(project, direction, parent, state);
             project.tokenEntries.link(word, state.entry.identifier);
         }
@@ -61,7 +47,7 @@ const consume = (project, direction, parent, state) => {
     else if (expression.value === 206 /* Range */) {
         Range.consume(project, 1 /* Right */, node, state);
         const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
-        if (!collision(project, node, range)) {
+        if (!Loose.collision(project, expression, range)) {
             emit(project, direction, parent, state);
             project.tokenEntries.link(range, state.entry.identifier);
         }

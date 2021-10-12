@@ -7,6 +7,7 @@ import * as Project from '../../core/project';
 import * as Entries from '../../core/entries';
 import * as Parser from '../../parser';
 import * as Context from '../context';
+import * as Loose from '../loose';
 
 import { Errors } from '../../core/errors';
 
@@ -64,6 +65,9 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
       Expression.consume(project, Core.Nodes.Right, expression, state);
       const candidate = getCandidate(expression.right!);
       if (candidate !== void 0) {
+        if (candidate.value === Parser.Nodes.String) {
+          Loose.collision(project, candidate, candidate.fragment.data);
+        }
         const { origin, identifier, identity } = state.entry;
         const replacement = new Member.Node(expression.right!, state.entry, candidate);
         if (state.type === Context.Types.Token) {
@@ -80,8 +84,10 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
       Expression.consume(project, Core.Nodes.Right, member, state);
       const candidate = getCandidate(member.right!);
       if (candidate !== void 0) {
-        const entry = { ...state.entry };
-        member.setChild(Core.Nodes.Right, new Member.Node(member.right!, entry, candidate));
+        if (candidate.value === Parser.Nodes.String) {
+          Loose.collision(project, candidate, candidate.fragment.data);
+        }
+        member.setChild(Core.Nodes.Right, new Member.Node(member.right!, { ...state.entry }, candidate));
       } else {
         project.addError(member, Errors.INVALID_MAP_ENTRY);
       }

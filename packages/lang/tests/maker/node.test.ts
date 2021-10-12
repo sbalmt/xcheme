@@ -42,7 +42,7 @@ test('Node referring an alias token map entry (reference error)', () => {
 });
 
 test('Node referring a loose token already defined (token collision)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "token TOKEN as '@'; node NODE as TOKEN & '@';", [Lang.Errors.TOKEN_COLLISION]);
+  Helper.makeError(new Lang.LiveCoder(), "token TOKEN as '@'; node NODE as '@';", [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Node referring a loose token range already defined (token collision)', () => {

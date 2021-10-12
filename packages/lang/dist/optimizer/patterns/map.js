@@ -6,6 +6,7 @@ const Member = require("../../core/nodes/member");
 const Mergeable = require("../../core/nodes/mergeable");
 const Identity = require("../../core/nodes/identity");
 const Parser = require("../../parser");
+const Loose = require("../loose");
 const Expression = require("./expression");
 /**
  * Get the candidate node based on the given input node.
@@ -58,6 +59,9 @@ const consume = (project, direction, parent, state) => {
             Expression.consume(project, 1 /* Right */, expression, state);
             const candidate = getCandidate(expression.right);
             if (candidate !== void 0) {
+                if (candidate.value === 204 /* String */) {
+                    Loose.collision(project, candidate, candidate.fragment.data);
+                }
                 const { origin, identifier, identity } = state.entry;
                 const replacement = new Member.Node(expression.right, state.entry, candidate);
                 if (state.type === 2 /* Token */) {
@@ -77,8 +81,10 @@ const consume = (project, direction, parent, state) => {
             Expression.consume(project, 1 /* Right */, member, state);
             const candidate = getCandidate(member.right);
             if (candidate !== void 0) {
-                const entry = { ...state.entry };
-                member.setChild(1 /* Right */, new Member.Node(member.right, entry, candidate));
+                if (candidate.value === 204 /* String */) {
+                    Loose.collision(project, candidate, candidate.fragment.data);
+                }
+                member.setChild(1 /* Right */, new Member.Node(member.right, { ...state.entry }, candidate));
             }
             else {
                 project.addError(member, 4114 /* INVALID_MAP_ENTRY */);

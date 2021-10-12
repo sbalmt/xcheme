@@ -37,8 +37,32 @@ test('Token referring an alias node map entry (reference error)', () => {
   ]);
 });
 
+test('Loose token already defined (token collision)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "node NODE as '@'; token TOKEN as '@';", [Lang.Errors.TOKEN_COLLISION]);
+});
+
+test('Loose token range already defined (token collision)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "node NODE as from '0' to '9'; token TOKEN as from '0' to '9';", [
+    Lang.Errors.TOKEN_COLLISION
+  ]);
+});
+
+test('Loose token map entry already defined (token collision)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "node NODE as map { '@' }; token TOKEN as '@';", [Lang.Errors.TOKEN_COLLISION]);
+});
+
 test('Token already defined (token collision)', () => {
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as '@'; token TOKEN2 as '@';", [Lang.Errors.TOKEN_COLLISION]);
+});
+
+test('Token range already defined (token collision)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as from '0' to '9'; token TOKEN2 as from '0' to '9';", [
+    Lang.Errors.TOKEN_COLLISION
+  ]);
+});
+
+test('Token map entry already defined (token collision)', () => {
+  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as '@'; token TOKEN2 as map { '@' };", [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Token with an identity', () => {

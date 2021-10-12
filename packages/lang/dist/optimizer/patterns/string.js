@@ -14,16 +14,8 @@ const Expression = require("./expression");
 const consume = (project, direction, parent, state) => {
     if (state.type === 3 /* Node */) {
         const node = parent.getChild(direction);
-        const word = node.fragment.data;
-        let entry = project.tokenEntries.get(word);
-        if (entry !== void 0) {
-            if (entry.origin === 0 /* User */) {
-                project.addError(node, 4115 /* TOKEN_COLLISION */);
-            }
-        }
-        else {
-            entry = Loose.emitToken(project, node, state, word);
-        }
+        const name = node.fragment.data;
+        const entry = Loose.resolve(project, node, state, name);
         const reference = Nodes.getReference(entry.identifier, node.table, node.fragment.location);
         parent.setChild(direction, reference);
         Expression.consume(project, direction, parent, state);

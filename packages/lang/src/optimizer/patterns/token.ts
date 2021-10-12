@@ -2,31 +2,13 @@ import * as Core from '@xcheme/core';
 
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
-import * as Entries from '../../core/entries';
 import * as Parser from '../../parser';
 import * as Context from '../context';
-
-import { Errors } from '../../core/errors';
+import * as Loose from '../loose';
 
 import * as Expression from './expression';
 import * as Range from './range';
 import * as String from './string';
-
-/**
- * Determines whether or not there are a collision for the given identifier.
- * @param project Project context.
- * @param node Input node.
- * @param identifier Entry identifier.
- * @returns Returns true when the specified identifier already exists, false otherwise.
- */
-const collision = (project: Project.Context, node: Core.Node, identifier: string): boolean => {
-  const entry = project.tokenEntries.get(identifier);
-  if (entry?.origin === Entries.Origins.User) {
-    project.addError(node, Errors.TOKEN_COLLISION);
-    return true;
-  }
-  return false;
-};
 
 /**
  * Emit a new token entry and replace the current token node by an optimized one.
@@ -59,15 +41,15 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
   entry.identifier = node.fragment.data;
   if (expression.value === Parser.Nodes.String) {
     String.consume(project, Core.Nodes.Right, node, state);
-    const word = node.right!.fragment.data;
-    if (!collision(project, node, word)) {
+    const word = expression.fragment.data;
+    if (!Loose.collision(project, expression, word)) {
       emit(project, direction, parent, state);
       project.tokenEntries.link(word, state.entry.identifier);
     }
   } else if (expression.value === Parser.Nodes.Range) {
     Range.consume(project, Core.Nodes.Right, node, state);
     const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
-    if (!collision(project, node, range)) {
+    if (!Loose.collision(project, expression, range)) {
       emit(project, direction, parent, state);
       project.tokenEntries.link(range, state.entry.identifier);
     }
