@@ -18,10 +18,10 @@ token<auto> T_MAP as map {
 token<105> T_IDENTIFIER  as repeat (not (WHITESPACE | '=' | '[' | ']') then *);
 
 // Parser
-alias node LITERAL  as append T_IDENTIFIER;
-alias node STRING   as append (T_MAP.DQ_STRING | T_MAP.SQ_STRING);
-alias node ENTRY    as append (T_IDENTIFIER & T_MAP.ASSIGNMENT & (LITERAL | STRING));
-alias node ENTRIES  as ENTRY & opt place next ENTRIES;
+alias node<205> LITERAL  as append T_IDENTIFIER;
+alias node<204> STRING   as append (T_MAP.DQ_STRING | T_MAP.SQ_STRING);
+alias node<203> ENTRY    as append (T_IDENTIFIER & T_MAP.ASSIGNMENT & (LITERAL | STRING));
+alias node<202> ENTRIES  as ENTRY & opt place next ENTRIES;
 
 node<200> SECTION   as T_MAP.SECTION_OPEN & append (T_IDENTIFIER & T_MAP.SECTION_CLOSE & opt ENTRIES);
 node<201> GLOBAL    as ENTRY;
