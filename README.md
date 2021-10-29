@@ -5,13 +5,39 @@
 ![ts](https://badgen.net/badge/-/TypeScript?icon=typescript&label&labelColor=blue&color=555555)
 ![license](https://badgen.net/github/license/balmanth/xcheme)
 
-A simple compiler builder.
+A set of tools that includes a brand new programming language for generating lexers and parsers for other languages.
+
+```xcm
+skip ' ' | '\t' | '\r' | '\n';
+
+alias token T_H as 'h' | 'H';
+alias token T_E as 'e' | 'E';
+alias token T_L as 'l' | 'L';
+alias token T_O as 'o' | 'O';
+
+token T_HELLO as T_H & T_E & T_L & T_L & T_O;
+token T_EP    as repeat '!';
+
+node HELLO as T_HELLO & opt T_EP;
+```
 
 ## Documentation
 
-Learn more about using XCHEME.
+Learn more about XCHEME.
 
-- [Get started](./docs/basics.md)
+- [Get started](./documents/basics.md)
+- [Mastering directives](./documents/directives.md)
+- [Mastering references](./documents/references.md)
+
+## Samples
+
+Take a look at the samples and learn even more.
+
+- [Hello World](./samples/hello)
+- [INI](./samples/ini)
+- [HTML](./samples/html)
+- [JSON](./samples/json)
+- [XCHEME](./samples/xcheme)
 
 ## Packages
 
