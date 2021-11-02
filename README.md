@@ -26,8 +26,10 @@ node HELLO as T_HELLO & opt T_EP;
 Learn more about XCHEME.
 
 - [Get started](./documents/basics.md)
-- [Mastering directives](./documents/directives.md)
-- [Mastering references](./documents/references.md)
+- [Directives](./documents/directives.md)
+- [Operators](./documents/operators.md)
+- [Operands](./documents/operands.md)
+- [References](./documents/references.md)
 
 ## Samples
 

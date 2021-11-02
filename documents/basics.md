@@ -1,10 +1,10 @@
 # XCHEME - Basics
 
-XCHEME Lang is a programming language designed for developing lexers and parsers for other languages, it can be a brand new language or some from the current market. This article will help you to get started with XCHEME Lang and furthers your understanding of what can be achieved in a short period of time.
+XCHEME Lang is a programming language designed for developing lexers and parsers for other languages, it can be a brand new language or some from the current market. This article will help you to get started with XCHEME and furthers your understanding of what can be achieved with this technology.
 
 ## What is XCHEME?
 
-XCHEME Lang (Or just "XCHEME") is a set of common directives and expressions for validating portions of strings, each directive or expression is an atomic pattern (a small action, e.g: `repeat`, `expect`, `choose`) that must be valid for making the analysis process to keep going ahead, up to the end of the string. By using atomic patterns, it's possible to join a variety of components and create complex validation rules which will produce _Tokens_ and _Nodes_ (Organized as an AST) for post-processing.
+XCHEME Lang (Or just "XCHEME") is a set of case-sensitive directives and expressions commonly used for validating portions of strings, each directive and expression is an atomic pattern (a small action, e.g: `repeat`, `expect`, `choose`, etc...) that must be valid for make the analysis process move on to the end of the string. By using atomic patterns, it's possible to combine a variety of components and create complex validation rules that will produce _Tokens_ and _Nodes_ already in an AST (Abstract Syntax Tree) for post-processing.
 
 ## A _Hello world!_ example
 
@@ -63,12 +63,13 @@ Nodes:
 
 ## What happened?
 
-We've just used XCHEME to make a parser that's able to consume combinations of _Hello world_ sentences, we also printed all the tokens and nodes produced in the analysis process. To understand better what happened take a time to delve into the next steps.
+We just used XCHEME to make a parser that's able to consume combinations of _Hello world_ sentences, we also printed all the tokens and nodes produced in the analysis process. To better understanding of what happened and start to create your own lexers and parsers take a time to delve into the next steps.
 
 ## Next steps
 
-- [Mastering directives](./directives.md)
-- [Mastering references](./references.md)
+- [Directives](./directives.md)
+- [References](./references.md)
+- [Operators](./operators.md)
 
 ## License
 

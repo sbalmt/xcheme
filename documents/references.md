@@ -4,7 +4,7 @@ References can be very useful to avoid duplicating your code, in other words, in
 
 ## Directives
 
-As seen in the [directives](./directives.md) section, there are some considerations when writing your parser, the directive order implies in the parsing behavior, and that's why a _token_ directive can't reference a _node_ directive for example... So let's take a look at the directive reference rules.
+As seen in the [directives](./directives.md) section, there are some notes to consider when writing your parser, the directive order implies in the parsing behavior, and that's why a _token_ directive can't reference a _node_ directive for example... So let's take a look at the directive reference rules.
 
 #### Token directives
 
@@ -38,6 +38,12 @@ The _skip_ directive can only have references to an _alias token_ directive. As 
 | skip      | alias token | ✔ Allowed |
 | skip      | node        | ❌ Denied |
 | skip      | alias node  | ❌ Denied |
+
+## Next steps
+
+- [Directives](./directives.md)
+- [Operators](./operators.md)
+- [Operands](./operands.md)
 
 ## License
 

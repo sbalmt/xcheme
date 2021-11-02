@@ -16,10 +16,10 @@ Syntax with an explicit identity:
 token <IDENTITY> IDENTIFIER as EXPRESSION;
 ```
 
-Example:
+For example:
 
 ```xcm
-token <100> T_FOO as 'foo';
+token<100> T_FOO as 'foo';
 ```
 
 > Expect a `foo` string to produce a `T_FOO` token with the identity `100`.
@@ -30,7 +30,7 @@ Syntax without an identity.
 token IDENTIFIER as EXPRESSION;
 ```
 
-Example:
+For example:
 
 ```xcm
 token T_BAR as 'bar';
@@ -48,10 +48,10 @@ Syntax with an explicit identity:
 node <IDENTITY> IDENTIFIER as EXPRESSION;
 ```
 
-Example:
+For example:
 
 ```xcm
-node <200> FOO as T_FOO;
+node<200> FOO as T_FOO;
 ```
 
 > Expect a `T_FOO` token to produce a `FOO` node with the identity `200`.
@@ -62,7 +62,7 @@ Syntax without an identity:
 node IDENTIFIER as EXPRESSION;
 ```
 
-Example:
+For example:
 
 ```xcm
 node BAR as T_BAR;
@@ -80,7 +80,7 @@ Syntax:
 skip EXPRESSION;
 ```
 
-Example:
+For example:
 
 ```xcm
 skip '\r' | '\n';
@@ -114,7 +114,7 @@ alias node <IDENTITY> IDENTIFIER as EXPRESSION;
 
 Unlike the common _token_ or _node_ directive, an _alias_ directive should be referenced by a common directive to take effect. And by talking about references, let's see how to manage references in the next steps.
 
-## Considerations
+## Notes
 
 Something you must consider when writing your parser is the order of the declarations, for example, no matter where a _skip_ directive is placed, _skip_ directives always performs first. See below the expected behavior for each directive type.
 
@@ -136,7 +136,9 @@ Follow the _token_ or _node_ considerations and performs according to the refere
 
 ## Next steps
 
-- [Mastering references](./references.md)
+- [Operators](./operators.md)
+- [Operands](./operands.md)
+- [References](./references.md)
 
 ## License
 
