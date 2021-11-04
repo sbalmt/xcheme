@@ -4,7 +4,7 @@ In XCHEME all expressions are composed of operands and [operators](./operators.m
 
 ## Operand types
 
-The following table lists all the available operands, click on the description to know more.
+The following table lists all the available operands Click on the description to know about.
 
 | Description                     | Operand         |
 | ------------------------------- | --------------- |
@@ -16,7 +16,7 @@ The following table lists all the available operands, click on the description t
 
 ## Any operand
 
-The `any` operand is used when you want to accept any character in a _token_ directive or any token in a _node_ directive.
+The `any` operand is used when we want to accept any character in a _token_ directive or any token in a _node_ directive.
 
 Syntax:
 
@@ -44,7 +44,7 @@ node<200> N_ANY as *;
 
 ## Range operand
 
-The range operand is used when you ant to accept a range of characters in a _token_ directive. When a range operand is used in a _node_ directive a _token_ directive is generated automatically, that's called _loose token_ directive.
+The range operand is used when we want to accept a range of characters in a _token_ directive. When a range operand is used in a _node_ directive a new _token_ directive is generated automatically, that's called _loose token_ directive.
 
 Syntax:
 
@@ -70,7 +70,7 @@ node<200> N_DIGIT as from '0' to '9';
 
 ## String operand
 
-The string operand is used when you want to accept a string in a _token_ directive. When strings are used in a _node_ directive a _loose token_ directive will be generated.
+The string operand is used when we want to accept a string in a _token_ directive. When strings are used in a _node_ directive a _loose token_ directive will be generated.
 
 Syntax:
 
@@ -96,7 +96,7 @@ node<200> N_NAME as 'name';
 
 ## Reference operand
 
-The reference operand is used when you want to reuse an expression from a _token_ or _node_ directive without duplicating it. There are some rules for using references, you can learn more [here](./references.md).
+The reference operand is used when we want to reuse an expression from a _token_ or _node_ directive without duplicating it. There are some rules for using references, you can learn more [here](./references.md).
 
 For example:
 
@@ -110,7 +110,7 @@ token<100> T_REF as T_X;
 
 ## Map operand
 
-The map operand is used when you want to group character or strings in a _token_ directive or a set of tokens in a _node_ directive.
+The map operand is used when we want to group characters or strings in a _token_ directive or a set of tokens in a _node_ directive.
 
 Syntax:
 
@@ -133,7 +133,7 @@ token<100> T_XYZ as map {
 
 > For each `'x'`,`'y'` or `'z'` occurrence a new token `T_XYZ` will be generated.
 
-Using maps in this way is more efficient than three _token_ directives, but in some cases we would like to define an individual identity for each map entry as we can do using one directive for each token, let's see how to do that.
+Using maps in this way is more efficient than three _token_ directives, but in some cases we would like to define an individual identity for each map entry as we can do using one _token_ directive for each token, let's see how to do that.
 
 ```xcm
 token<auto> T_XYZ as map {

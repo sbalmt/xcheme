@@ -1,14 +1,10 @@
 # XCHEME - Directives
 
-By using directives, you tell XCHEME how to tokenize an input string in the generated lexer, how to parse a token list in the generated parser and, in some cases, your want to tell as well how to ignore some characters, like whitespaces, tabs, etc... There are three main directives you should know, and both of them are written almost in the same form.
+By using directives, we tell XCHEME how to tokenize an input string in the generated lexer, how to parse a token list in the generated parser and, in some cases, we want to tell as well how to ignore characters like whitespaces, tabs, etc... Something you must consider when writing your parser is the order of the declarations, for example, no matter where a _skip_ directive is placed in the code, _skip_ directives always performs first. There are three main directives we should know about, and both of them are written almost in the same way, let's see how to write them and what is the expected behavior for each one.
 
-## Directives
+## Token directives
 
-Let's take a look at all the directives types and how write them.
-
-#### Token directives
-
-The _token_ directive is used to consume an input string and produce an output token as the directive result. The output token will compound a token list that will be input to the parser in the parsing step. There are two ways to declare _token_ directives.
+The _token_ directive is used to consume an input string and produce an output token as the directive evaluation result. The output token will compose a token list that will be passed as input to the parser in the parsing step. It performs in the lexer step, after all the _skip_ directives and before all the _node_ directives, for multiple _token_ directives, the second one performs after the first one and so on. There are two ways to declare _token_ directives as shown below.
 
 Syntax with an explicit identity:
 
@@ -22,7 +18,7 @@ For example:
 token<100> T_FOO as 'foo';
 ```
 
-> Expect a `foo` string to produce a `T_FOO` token with the identity `100`.
+> Expect a `'foo'` string to produce a `T_FOO` token with the identity number `100`.
 
 Syntax without an identity.
 
@@ -36,11 +32,11 @@ For example:
 token T_BAR as 'bar';
 ```
 
-> Expect a `bar` string to produce a `T_BAR` token with an identity generated automatically.
+> Expect a `'bar'` string to produce a `T_BAR` token with an identity generated automatically.
 
-#### Node directives
+## Node directives
 
-The _node_ directive is used to consume an input token and produce an output node as the directive result. The output node will be attached in the main AST. There are also two ways to declare _node_ directives.
+The _node_ directive is used to consume an input token and produce an output node as the directive evaluation result. The output node will be attached into the main AST during the parsing step. There are two ways to declare _node_ directives and both of them performs in the parsing step, after all the _skip_ and _token_ directives, for multiple _node_ directives, the second one performs after the first one and so on.
 
 Syntax with an explicit identity:
 
@@ -54,7 +50,7 @@ For example:
 node<200> FOO as T_FOO;
 ```
 
-> Expect a `T_FOO` token to produce a `FOO` node with the identity `200`.
+> Expect a `T_FOO` token to produce a `FOO` node with the identity number `200`.
 
 Syntax without an identity:
 
@@ -70,9 +66,9 @@ node BAR as T_BAR;
 
 > Expect a `T_BAR` token to produce a `BAR` node with an identity generated automatically.
 
-#### Skip directives
+## Skip directives
 
-The _skip_ directive is used to consume an input string without producing any directive output. All the _skip_ directives have no identities or identifiers and therefore cannot be referenced.
+The _skip_ directive is used to consume an input string without producing any output result. All the _skip_ directives have no identities or identifiers and therefore cannot be referenced. It performs in the lexer step and before everything, for multiple _skip_ directives, the second one performs after the first one and so on.
 
 Syntax:
 
@@ -88,9 +84,9 @@ skip '\r' | '\n';
 
 > Expect a CR or LF character and go ahead without producing any output.
 
-## Aliases
+## Alias directives
 
-In some cases you want to reuse a _token_ or _node_ directive to avoid duplicating your code, but if you declare a _token_ or _node_ as in the examples above, it will output the directive result and may become unexpected behavior. That's why you should combine the `alias` modifier.
+In some cases we want to reuse a _token_ or a _node_ directive to avoid duplicating the code, but if we declare it as in the examples above, it will output the directive result and may become unexpected behavior. That's why we must prefix the `alias` modifier in the directive declaration. An _alias_ directive performs in its respective _token_ step or _node_ step respecting the reference order.
 
 #### Alias token
 
@@ -100,7 +96,7 @@ The _alias token_ directive is used to consume an input string without producing
 alias token <IDENTITY> IDENTIFIER as EXPRESSION;
 ```
 
-> Try the syntax without an identity as well.
+> The syntax without an identity also works.
 
 #### Alias node
 
@@ -110,29 +106,9 @@ The _alias node_ directive is used to consume an input token without producing a
 alias node <IDENTITY> IDENTIFIER as EXPRESSION;
 ```
 
-> Try the syntax form without an identity as well.
+> Try as well the syntax without an identity.
 
-Unlike the common _token_ or _node_ directive, an _alias_ directive should be referenced by a common directive to take effect. And by talking about references, let's see how to manage references in the next steps.
-
-## Notes
-
-Something you must consider when writing your parser is the order of the declarations, for example, no matter where a _skip_ directive is placed, _skip_ directives always performs first. See below the expected behavior for each directive type.
-
-#### Skip directives
-
-Perform in the lexer step and before everything. For multiple _skip_ directives, the second one performs after the first one and so on.
-
-#### Token directives
-
-Performs in the lexer step, after all the _skip_ directives and before all the _node_ directives. For multiple _token_ directives, the second one performs after the first one and so on.
-
-#### Node directives
-
-Performs in the parsing step, after all the _skip_ and _token_ directives. For multiple _node_ directives, the second one performs after the first one and so on.
-
-#### Alias directives
-
-Follow the _token_ or _node_ considerations and performs according to the reference order.
+Unlike the common _token_ or _node_ directive, an _alias_ directive must be referenced by a non aliased directive to take effect. And talking about references, let's see how to manage references in the next steps.
 
 ## Next steps
 

@@ -5,7 +5,7 @@
 ![ts](https://badgen.net/badge/-/TypeScript?icon=typescript&label&labelColor=blue&color=555555)
 ![license](https://badgen.net/github/license/balmanth/xcheme)
 
-A set of tools that includes a brand new programming language for generating lexers and parsers for other languages.
+A set of tools that includes a programming language for generating lexers and parsers for other languages.
 
 ```xcm
 skip ' ' | '\t' | '\r' | '\n';
@@ -25,7 +25,7 @@ node HELLO as T_HELLO & opt T_EP;
 
 Learn more about XCHEME.
 
-- [Get started](./documents/basics.md)
+- [Basics](./documents/basics.md)
 - [Directives](./documents/directives.md)
 - [Operators](./documents/operators.md)
 - [Operands](./documents/operands.md)

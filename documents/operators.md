@@ -1,6 +1,6 @@
 # XCHEME - Operators
 
-For making expressions in XCHEME you must use operators and [operands](./operands.md), and there are three types of operators: _Unary_, _Binary_ and _Ternary_, let's take a look at how to work with them.
+For making expressions in XCHEME you must use operators and [operands](./operands.md), and there are three operator types: _Unary_, _Binary_ and _Ternary_, let's take a look at how to work with them.
 
 #### Unary operators
 
@@ -34,7 +34,7 @@ operand then operand else operand
 
 ## Operator precedence
 
-The following table lists the precedence and associativity of all operators from top to bottom, in descending precedence.
+The following table lists the precedence and associativity of all operators from top to bottom, in descending precedence. Click on the description to know about.
 
 | Precedence | Description                              | Associativity | Operator        |
 | ---------- | ---------------------------------------- | ------------- | --------------- |
@@ -59,7 +59,7 @@ The following table lists the precedence and associativity of all operators from
 
 ## Assignment operators
 
-The assignment operator is a binary operator that assigns to its left operand an expression in its right operand.
+The assignment operator is a binary operator that assigns to its left operand, an expression in its right operand.
 
 Syntax:
 
@@ -73,7 +73,7 @@ For example:
 token<100> T_X as 'x';
 ```
 
-> Expects the expression value `'x'` during the directive evaluation.
+> Expect an occurrence of `'x'` during the directive evaluation.
 
 ## Conditional operators
 
@@ -85,7 +85,7 @@ Syntax:
 operand then operand else operand
 ```
 
-The `else` part of the syntax can be omitted when it's not necessary, although in this case is better to use the `and` operation.
+The `else` part of the syntax can be omitted when it's not necessary, although in this case is better to use an `and` operation.
 
 Syntax:
 
@@ -99,7 +99,7 @@ For example:
 token<100> T_X as 'x' then * else 'y';
 ```
 
-> Accept any character after `'x'`, otherwise it can only accept `'y'` during the expression evaluation.
+> After an occurrence of `'x'`, any character is accepted, otherwise, only an occurrence of `'y'` will be accepted during the expression evaluation.
 
 ## Logical operators
 
@@ -107,7 +107,7 @@ There are three types of logical operators, as we will see below.
 
 #### Logical or
 
-The logical `or` operator is a binary operator used when you want to try to evaluate a set of expressions and expect at least one to be `true`.
+The logical `or` operator is a binary operator used when we want to try to evaluate a set of expressions and expect at least one to be `true`.
 
 Syntax:
 
@@ -115,7 +115,7 @@ Syntax:
 operand or operand
 ```
 
-> The operators `or` and `|` are interchangeable.
+> Note: `or` and `|` are interchangeable.
 
 For example:
 
@@ -123,11 +123,11 @@ For example:
 token<100> T_XY as 'x' | 'y';
 ```
 
-> Accept `'x'` or `'y'` during the expression evaluation.
+> Accept an occurrence of `'x'` or `'y'` during the expression evaluation.
 
 #### Logical and
 
-The logical `and` operator is a binary operator used when you want to evaluate a set of expressions and expect all of them to be `true`.
+The logical `and` operator is a binary operator used when we want to evaluate a set of expressions and expect all of them to be `true`.
 
 Syntax:
 
@@ -135,7 +135,7 @@ Syntax:
 operand and operand
 ```
 
-> The operators `and` and `&` are interchangeable.
+> Note: `and` and `&` are interchangeable.
 
 For example:
 
@@ -143,11 +143,11 @@ For example:
 token<100> T_XY as 'x' & 'y';
 ```
 
-> Accept `'xy'` during the expression evaluation.
+> Accept an occurrence of `'xy'` during the expression evaluation.
 
 #### Logical not
 
-The logical `not` operator is a unary operator used when you want to evaluate an expression and invert the operation result, from `true` to `false` and vice versa.
+The logical `not` operator is a unary operator used when we want to evaluate an expression and invert the operation result, from `true` to `false` and vice versa.
 
 Syntax:
 
@@ -169,7 +169,7 @@ There are two types of control operators, as we will see below.
 
 #### Control repeat
 
-The control `repeat` operator is a unary operator used when you want to evaluate an expression and, in case of success, try to evaluate once more whenever the evaluation is `true`.
+The control `repeat` operator is a unary operator used when we want to evaluate an expression and, in case of success, try to evaluate once more whenever the last evaluation is `true`.
 
 Syntax:
 
@@ -187,7 +187,7 @@ token<100> T_X as repeat 'x';
 
 #### Control option
 
-The control option (`opt`) operator is a unary operator used when you want to make an expression to be not required for the current expression evaluation.
+The control option (`opt`) operator is a unary operator used when we want to make an expression to be not required during the current expression evaluation.
 
 Syntax:
 
@@ -201,15 +201,15 @@ For example:
 token<100> T_XY as 'x' & opt 'y';
 ```
 
-> Accept `'x'` or `'xy'` during the expression evaluation.
+> Accept an occurrence of `'x'` or `'xy'` during the expression evaluation.
 
 ## AST operators
 
-There are some operators to manage how the generated nodes must be inserted into the AST (Abstract Syntax Tree), let's take a look at those operators.
+There are some operators to manage how the generated nodes must be inserted into the AST, let's take a look at those operators.
 
 #### Append operator
 
-The `append` operator is a unary operator used when you want to append a new node into the AST after evaluating its operand as `true`.
+The `append` operator is a unary operator used when we want to append a new node into the AST after evaluating its operand as `true`.
 
 Syntax:
 
@@ -231,7 +231,7 @@ node<200> N_X as append right T_X;
 
 #### Prepend operator
 
-The `prepend` operator is a unary operator used when you want to prepend a new node into the AST after evaluating its operand as `true`.
+The `prepend` operator is a unary operator used when we want to prepend a new node into the AST after evaluating its operand as `true`.
 
 Syntax:
 
@@ -249,11 +249,11 @@ token<100> T_X as 'x';
 node<200> N_X as prepend next T_X;
 ```
 
-> Prepend a new node as the next child of the active AST node when the `T_X` token was found during the expression evaluation.
+> Prepend a new node as the next child of the active AST node when the `T_X` token is found during the expression evaluation.
 
 #### Place operator
 
-The `place` operator is a unary operator used when you want to isolate an expression that generates a new node and insert the resulting node into the AST replacing original direction.
+The `place` operator is a unary operator used when we want to isolate an expression that generates a new node and insert the resulting node into the AST replacing its original direction.
 
 Syntax:
 
@@ -277,7 +277,7 @@ node<201> N as place next N_X;
 
 #### Pivot operator
 
-The `pivot` operator is a binary operator used when you want to pivot a new node into the AST after evaluating its both operands as `true`. The pivoted node is a subtree where the generated nodes before the operator are placed on the left and the generated nodes after the operator are placed on the right.
+The `pivot` operator is a binary operator used when we want to pivot a new node into the AST after evaluating its both operands as `true`. The pivoted node is a subtree where the generated node before the operator is placed on the left and the generated node after the operator (if there's one) is placed on the right.
 
 Syntax:
 
@@ -298,7 +298,7 @@ alias node<201> N_Z as append T_Z;
 node<202> N_XYZ as N_X & pivot (T_Y & N_Z);
 ```
 
-> After evaluating `N_X` and `N_Z` and generating the nodes to append into the ATS, the active node on the `left` of the operator and the active node on the `right` of the operator will be attached (preserving its respective directions) into the pivot node when the evaluation of `T_Y` is `true`.
+> After evaluating `N_X`, `N_Z` and generating the nodes to append into the ATS, the generated node on the `left` of the operator and the generated node on the `right` of the operator will be attached (preserving its respective directions) into the pivot node when the evaluation of `T_Y` is `true`.
 
 ## Symbol tables
 
@@ -306,7 +306,7 @@ There are some operators to manage how the generated symbols must be inserted in
 
 #### Symbol record
 
-The `symbol` record operator is a unary operator used when you want to put a new symbol into the symbol table after evaluating its operand as `true`.
+The `symbol` record operator is a unary operator used when we want to put a new symbol into the symbol table after evaluating its operand as `true`.
 
 Syntax:
 
@@ -326,7 +326,7 @@ node<200> N_X as symbol T_X;
 
 #### Symbol scope
 
-The symbol `scope` operator is a unary operator used when you want to generate a new scope in the symbol table for putting all the next symbols that could be generated during its operand evaluation, after the evaluation if the scope remains empty it will be discarded and won't be linked to the active symbol record.
+The symbol `scope` operator is a unary operator used when we want to generate a new scope in the symbol table for putting all the next symbols that could be generated during its evaluation, after the evaluation if the scope remains empty it will be discarded and won't be linked to the active symbol record.
 
 Syntax:
 
@@ -350,7 +350,7 @@ node<202> N_XY as N_X & scope N_Y;
 
 ## Error operator
 
-The `error` operator is a unary operator used when you want to emit a graceful error after evaluating its operand as `true` and not stopping the current analysis step.
+The `error` operator is a unary operator used when we want to emit an error after evaluating its operand as `true` and not stopping the current analysis step.
 
 Syntax:
 
@@ -376,7 +376,7 @@ There are two types of state operators, as we will see below.
 
 #### State set
 
-The `set` state operator is a unary operator used when you want to set a new state in the current analysis step.
+The `set` state operator is a unary operator used when we want to set a new state in the current analysis step.
 
 Syntax:
 
@@ -396,7 +396,7 @@ token<100> T_X as set<1> 'x';
 
 #### State has
 
-The `has` state operator is a unary operator used when you want to check if there's a specific state in the analysis process.
+The `has` state operator is a unary operator used when we want to check if there's a specific state in the analysis process.
 
 Syntax:
 
@@ -417,7 +417,7 @@ token<101> T_Y as has<1> 'y';
 
 ## Member access operator
 
-The member access operator is a binary operator used when you want to access a `map` member during the expression evaluation.
+The member access operator is a binary operator used when we want to access a `map` entries during the expression evaluation.
 
 Syntax:
 
@@ -436,11 +436,11 @@ token<auto> T as map {
 node<200> N_XY as T.X & repeat T.Y;
 ```
 
-> Accept a combination of `T.X` and one or more occurrences of `T.Y` during the expression evaluation.
+> Accept an occurrence of `T.X` and one or more occurrences of `T.Y` during the expression evaluation.
 
 ## Grouping operator
 
-The grouping operator controls the precedence of evaluation in expressions.
+The grouping operator controls the evaluation precedence in expressions.
 
 Syntax:
 
@@ -454,7 +454,7 @@ For example:
 token<100> T_XYZ as 'x' & (repeat 'y' & 'z');
 ```
 
-> Accept `'x'` combined with one or more occurrences of `'yz'` during the expression evaluation.
+> Accept an occurrence of `'x'` combined with one or more occurrences of `'yz'` during the expression evaluation.
 
 ## Next steps
 
