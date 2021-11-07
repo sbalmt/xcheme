@@ -34,6 +34,8 @@ export const enum Tokens {
   Alias,
   Auto,
   As,
+  Import,
+  Export,
   Asterisk,
   VerticalBar,
   Ampersand,

@@ -38,9 +38,9 @@ const resolve = (project, node, state) => {
         }
     }
     else {
-        const left = exports.resolve(project, node.left, state);
+        const left = (0, exports.resolve)(project, node.left, state);
         if (left !== void 0) {
-            const right = exports.resolve(project, node.right, state);
+            const right = (0, exports.resolve)(project, node.right, state);
             if (right !== void 0) {
                 return [...left, ...right];
             }
@@ -57,7 +57,7 @@ exports.resolve = resolve;
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node, state) => {
-    const patterns = exports.resolve(project, node, state);
+    const patterns = (0, exports.resolve)(project, node, state);
     if (patterns !== void 0) {
         if (patterns.length > 1) {
             return project.coder.emitChoosePattern(...patterns);

@@ -35,9 +35,9 @@ const split = (project, node, state) => {
  * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
 const traverse = (project, node, state) => {
-    const left = exports.resolve(project, node.left, state);
+    const left = (0, exports.resolve)(project, node.left, state);
     if (left !== void 0) {
-        const right = exports.resolve(project, node.right, state);
+        const right = (0, exports.resolve)(project, node.right, state);
         if (right !== void 0) {
             return [...left, ...right];
         }

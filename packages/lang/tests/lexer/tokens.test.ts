@@ -50,13 +50,18 @@ const tokens = [
     { name: 'has', value: Lexer.Tokens.Has },
     { name: 'set', value: Lexer.Tokens.Set }
   ],
-  // Entry points
+  // Directives
   ...[
     { name: 'skip', value: Lexer.Tokens.Skip },
     { name: 'token', value: Lexer.Tokens.Token },
     { name: 'node', value: Lexer.Tokens.Node },
     { name: 'alias', value: Lexer.Tokens.Alias },
     { name: 'as', value: Lexer.Tokens.As }
+  ],
+  // Modularization
+  ...[
+    { name: 'import', value: Lexer.Tokens.Import },
+    { name: 'export', value: Lexer.Tokens.Export }
   ],
   // Syntax symbols
   ...[

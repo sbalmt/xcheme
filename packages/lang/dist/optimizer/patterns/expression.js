@@ -42,7 +42,7 @@ const consume = (project, direction, parent, state) => {
             Mergeable.consume(project, direction, parent, 212 /* And */, state);
             break;
         default:
-            exports.consume(project, 1 /* Right */, node, state);
+            (0, exports.consume)(project, 1 /* Right */, node, state);
     }
 };
 exports.consume = consume;

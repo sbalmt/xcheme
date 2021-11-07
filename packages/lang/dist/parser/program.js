@@ -9,11 +9,11 @@ const unary_1 = require("./patterns/unary");
 /**
  * Identity pattern.
  */
-const identity = new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(142 /* OpenChevron */), new Core.AppendNodePattern(202 /* Identity */, 0 /* Left */, 1 /* Right */, new Core.ChooseUnitPattern(101 /* Number */, 130 /* Auto */), new Core.ExpectUnitPattern(143 /* CloseChevron */)));
+const identity = new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(144 /* OpenChevron */), new Core.AppendNodePattern(202 /* Identity */, 0 /* Left */, 1 /* Right */, new Core.ChooseUnitPattern(101 /* Number */, 130 /* Auto */), new Core.ExpectUnitPattern(145 /* CloseChevron */)));
 /**
  * State pattern.
  */
-const state = new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(142 /* OpenChevron */), new Core.AppendNodePattern(203 /* State */, 0 /* Left */, 1 /* Right */, new Core.ExpectUnitPattern(101 /* Number */), new Core.ExpectUnitPattern(143 /* CloseChevron */)));
+const state = new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(144 /* OpenChevron */), new Core.AppendNodePattern(203 /* State */, 0 /* Left */, 1 /* Right */, new Core.ExpectUnitPattern(101 /* Number */), new Core.ExpectUnitPattern(145 /* CloseChevron */)));
 /**
  * Unary operators pattern.
  */
@@ -21,11 +21,11 @@ const unaryOperators = new Core.MapFlowPattern(new Core.SetValueRoute(213 /* Not
 /**
  * Map members pattern.
  */
-const mapMembers = new Core.ExpectFlowPattern(new Core.AppendNodePattern(208 /* Member */, 1 /* Right */, 2 /* Next */, new Core.ChooseFlowPattern(new directive_1.default(304 /* Member */, identity, new Core.RunFlowPattern(() => expression)), new Core.RunFlowPattern(() => expression))), new Core.OptFlowPattern(new Core.ExpectUnitPattern(136 /* Comma */), new Core.RunFlowPattern(() => mapMembers)));
+const mapMembers = new Core.ExpectFlowPattern(new Core.AppendNodePattern(208 /* Member */, 1 /* Right */, 2 /* Next */, new Core.ChooseFlowPattern(new directive_1.default(304 /* Member */, identity, new Core.RunFlowPattern(() => expression)), new Core.RunFlowPattern(() => expression))), new Core.OptFlowPattern(new Core.ExpectUnitPattern(138 /* Comma */), new Core.RunFlowPattern(() => mapMembers)));
 /**
  * Map operand pattern.
  */
-const mapOperand = new Core.ScopeSymbolPattern(new Core.ExpectUnitPattern(106 /* Map */), new Core.AppendNodePattern(207 /* Map */, 1 /* Right */, 1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(138 /* OpenBraces */), new Core.OptFlowPattern(mapMembers), new Core.ExpectUnitPattern(139 /* CloseBraces */))));
+const mapOperand = new Core.ScopeSymbolPattern(new Core.ExpectUnitPattern(106 /* Map */), new Core.AppendNodePattern(207 /* Map */, 1 /* Right */, 1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(140 /* OpenBraces */), new Core.OptFlowPattern(mapMembers), new Core.ExpectUnitPattern(141 /* CloseBraces */))));
 /**
  * Range operand pattern.
  */
@@ -33,11 +33,11 @@ const rangeOperand = new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectUni
 /**
  * General operands pattern.
  */
-const generalOperands = new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */, new Core.MapFlowPattern(new Core.SetValueRoute(205 /* Any */, 103 /* Any */), new Core.SetValueRoute(205 /* Any */, 132 /* Asterisk */), new Core.SetValueRoute(204 /* String */, 102 /* String */), new Core.SetValueRoute(201 /* Reference */, 100 /* Identifier */)));
+const generalOperands = new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */, new Core.MapFlowPattern(new Core.SetValueRoute(205 /* Any */, 103 /* Any */), new Core.SetValueRoute(205 /* Any */, 134 /* Asterisk */), new Core.SetValueRoute(204 /* String */, 102 /* String */), new Core.SetValueRoute(201 /* Reference */, 100 /* Identifier */)));
 /**
  * Group expression pattern.
  */
-const groupExpression = new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(140 /* OpenParenthesis */), new Core.RunFlowPattern(() => expression), new Core.ExpectUnitPattern(141 /* CloseParenthesis */)));
+const groupExpression = new Core.PlaceNodePattern(1 /* Right */, new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(142 /* OpenParenthesis */), new Core.RunFlowPattern(() => expression), new Core.ExpectUnitPattern(143 /* CloseParenthesis */)));
 /**
  * Condition expression pattern.
  */
@@ -45,7 +45,7 @@ const conditionExpression = new Core.OptFlowPattern(new Core.PivotNodePattern(20
 /**
  * Expression pattern.
  */
-const expression = new Core.ExpectFlowPattern(new binary_1.default(new Core.SetValuePattern(211 /* Or */, new Core.ChooseUnitPattern(109 /* Or */, 133 /* VerticalBar */)), new binary_1.default(new Core.SetValuePattern(212 /* And */, new Core.ChooseUnitPattern(110 /* And */, 134 /* Ampersand */)), new unary_1.default(unaryOperators, new Core.PlaceNodePattern(1 /* Right */, new binary_1.default(new Core.SetValuePattern(234 /* Access */, new Core.ExpectUnitPattern(135 /* Period */)), new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)))))), conditionExpression);
+const expression = new Core.ExpectFlowPattern(new binary_1.default(new Core.SetValuePattern(211 /* Or */, new Core.ChooseUnitPattern(109 /* Or */, 135 /* VerticalBar */)), new binary_1.default(new Core.SetValuePattern(212 /* And */, new Core.ChooseUnitPattern(110 /* And */, 136 /* Ampersand */)), new unary_1.default(unaryOperators, new Core.PlaceNodePattern(1 /* Right */, new binary_1.default(new Core.SetValuePattern(234 /* Access */, new Core.ExpectUnitPattern(137 /* Period */)), new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)))))), conditionExpression);
 /**
  * Skip directive route.
  */
@@ -69,5 +69,5 @@ const aliasNode = new Core.SetValueRoute(239 /* AliasNode */, new directive_1.de
 /**
  * Main parser pattern.
  */
-exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(skip, token, node, aliasToken, aliasNode), new Core.ExpectUnitPattern(137 /* Semicolon */))))), new Core.EndFlowPattern());
+exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(skip, token, node, aliasToken, aliasNode), new Core.ExpectUnitPattern(139 /* Semicolon */))))), new Core.EndFlowPattern());
 //# sourceMappingURL=program.js.map
