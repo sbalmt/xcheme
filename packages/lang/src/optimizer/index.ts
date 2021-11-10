@@ -9,19 +9,19 @@ import * as Token from './patterns/token';
 import * as Node from './patterns/node';
 
 /**
- * Get the identity from the given node.
+ * Resolve the identity from the given node.
  * @param node Input node.
- * @returns Returns the identity or undefined when there's no identity.
+ * @returns Returns the identity.
  */
-const getIdentity = (node: Core.Node): number | undefined => {
-  if (node.left !== void 0) {
+ const resolveIdentity = (node: Core.Node): number => {
+  if (node.left) {
     const identity = node.left.fragment.data;
     if (identity === 'auto') {
       return Core.BaseSource.Output;
     }
     return parseInt(identity);
   }
-  return void 0;
+  return NaN;
 };
 
 /**
@@ -39,7 +39,7 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
       state.counter++;
       Skip.consume(project, Core.Nodes.Next, node, state);
     } else {
-      state.entry.identity = getIdentity(current.right!) || state.counter++;
+      state.entry.identity = resolveIdentity(current.right!) || state.counter++;
       switch (current.value) {
         case Parser.Nodes.Token:
           Token.consume(project, Core.Nodes.Right, current, state);
