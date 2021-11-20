@@ -5,6 +5,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
  */
 class Location {
     /**
+     * Location name.
+     */
+    #name;
+    /**
      * Location line.
      */
     #line;
@@ -14,12 +18,20 @@ class Location {
     #column;
     /**
      * Default constructor.
+     * @param name Location name.
      * @param line Location line.
      * @param column Location column.
      */
-    constructor(line, column) {
+    constructor(name, line, column) {
+        this.#name = name;
         this.#line = line;
         this.#column = column;
+    }
+    /**
+     * Get the location name.
+     */
+    get name() {
+        return this.#name;
     }
     /**
      * Get the location line.

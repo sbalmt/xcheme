@@ -21,6 +21,9 @@ type Output = {
    */
   table: Table;
 
+  /**
+   * Record link table.
+   */
   link?: Table;
 
   /**
@@ -71,6 +74,13 @@ export default class Base {
       state: 0,
       table: this.#table
     };
+  }
+
+  /**
+   * Get the source context name.
+   */
+  get name(): string {
+    return this.#context.name;
   }
 
   /**

@@ -17,6 +17,9 @@ declare type Output = {
      * Output table.
      */
     table: Table;
+    /**
+     * Record link table.
+     */
     link?: Table;
     /**
      * Output value.
@@ -41,6 +44,10 @@ export default class Base {
      * @param context Source context.
      */
     constructor(context: Context);
+    /**
+     * Get the source context name.
+     */
+    get name(): string;
     /**
      * Get the current source output.
      */

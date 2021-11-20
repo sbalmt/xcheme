@@ -63,12 +63,12 @@ class Text extends base_1.default {
         if (this.#states.length > 0) {
             const state = this.#states[this.#states.length - 1];
             if (this.offset > state.offset) {
-                const location = new location_1.default(state.line, state.column);
+                const location = new location_1.default(this.name, state.line, state.column);
                 return new fragment_1.default(this.#data, state.offset, this.offset, location);
             }
         }
         const length = this.offset + (this.length > 0 ? 1 : 0);
-        const location = new location_1.default(this.#current.line, this.#current.column);
+        const location = new location_1.default(this.name, this.#current.line, this.#current.column);
         return new fragment_1.default(this.#data, this.offset, length, location);
     }
     /**

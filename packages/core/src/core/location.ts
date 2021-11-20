@@ -3,6 +3,11 @@
  */
 export default class Location {
   /**
+   * Location name.
+   */
+  #name: string;
+
+  /**
    * Location line.
    */
   #line: number;
@@ -14,12 +19,21 @@ export default class Location {
 
   /**
    * Default constructor.
+   * @param name Location name.
    * @param line Location line.
    * @param column Location column.
    */
-  constructor(line: number, column: number) {
+  constructor(name: string, line: number, column: number) {
+    this.#name = name;
     this.#line = line;
     this.#column = column;
+  }
+
+  /**
+   * Get the location name.
+   */
+  get name(): string {
+    return this.#name;
   }
 
   /**

@@ -25,7 +25,7 @@ class Context {
     /**
      * Context main node.
      */
-    #node = new node_1.default(new fragment_1.default('', 0, 0, new location_1.default(0, 0)), 0x00, this.#table);
+    #node;
     /**
      * Context name.
      */
@@ -35,6 +35,7 @@ class Context {
      * @param name Context name.
      */
     constructor(name) {
+        this.#node = new node_1.default(new fragment_1.default('', 0, 0, new location_1.default(name, 0, 0)), 0x00, this.#table);
         this.#name = name;
     }
     /**

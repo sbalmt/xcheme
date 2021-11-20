@@ -29,7 +29,7 @@ export default class Context {
   /**
    * Context main node.
    */
-  #node = new Node(new Fragment('', 0, 0, new Location(0, 0)), 0x00, this.#table);
+  #node: Node;
 
   /**
    * Context name.
@@ -41,6 +41,7 @@ export default class Context {
    * @param name Context name.
    */
   constructor(name: string) {
+    this.#node = new Node(new Fragment('', 0, 0, new Location(name, 0, 0)), 0x00, this.#table);
     this.#name = name;
   }
 

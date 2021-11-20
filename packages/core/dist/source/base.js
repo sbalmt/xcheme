@@ -40,6 +40,12 @@ class Base {
         };
     }
     /**
+     * Get the source context name.
+     */
+    get name() {
+        return this.#context.name;
+    }
+    /**
      * Get the current source output.
      */
     get output() {

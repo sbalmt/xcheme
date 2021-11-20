@@ -92,12 +92,12 @@ export default class Text extends Base {
     if (this.#states.length > 0) {
       const state = this.#states[this.#states.length - 1];
       if (this.offset > state.offset) {
-        const location = new Location(state.line, state.column);
+        const location = new Location(this.name, state.line, state.column);
         return new Fragment(this.#data, state.offset, this.offset, location);
       }
     }
     const length = this.offset + (this.length > 0 ? 1 : 0);
-    const location = new Location(this.#current.line, this.#current.column);
+    const location = new Location(this.name, this.#current.line, this.#current.column);
     return new Fragment(this.#data, this.offset, length, location);
   }
 

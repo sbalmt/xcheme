@@ -5,10 +5,15 @@ export default class Location {
     #private;
     /**
      * Default constructor.
+     * @param name Location name.
      * @param line Location line.
      * @param column Location column.
      */
-    constructor(line: number, column: number);
+    constructor(name: string, line: number, column: number);
+    /**
+     * Get the location name.
+     */
+    get name(): string;
     /**
      * Get the location line.
      */
