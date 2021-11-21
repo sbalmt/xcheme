@@ -111,7 +111,7 @@ test("Output a 'NODE' rule with a reference to itself", () => {
       `)`
   );
 
-  const link = project.nodeEntries.get(`@LINK${node.identity}`)!;
+  const link = project.nodeEntries.get(`@${node.identifier}`)!;
   expect(link).toBeDefined();
   expect(link.identity).toBe(node.identity);
   expect(link.pattern).toBe('U_NODE');

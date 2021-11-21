@@ -21,9 +21,9 @@ export const consume = (project: Project.Context, state: Context.State): void =>
       const identity = directive.identity;
       entry.pattern = project.coder.emitNodePattern(identity, Core.Nodes.Right, expression);
       if (entry.references > 0) {
-        const identifier = `@LINK${entry.identity}`;
-        const reference = project.nodeEntries.add(entry.origin, identifier, entry.identity);
-        reference.pattern = project.coder.emitReferencePattern(project.nodeEntries, entry.identifier);
+        const identifier = `@${entry.identifier}`;
+        const link = project.nodeEntries.create(entry.origin, identifier, entry.identity);
+        link.pattern = project.coder.emitReferencePattern(project.nodeEntries, entry.identifier);
         entry.references++;
       }
     }

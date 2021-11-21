@@ -45,7 +45,7 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
       `)`
   );
 
-  const link = project.tokenEntries.get(`@LINK${token.identity}`)!;
+  const link = project.tokenEntries.get(`@${token.identifier}`)!;
   expect(link).toBeDefined();
   expect(link.identity).toBe(token.identity);
   expect(link.pattern).toBe('U_TOKEN');
