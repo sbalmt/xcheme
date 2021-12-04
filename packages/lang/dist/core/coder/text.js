@@ -14,7 +14,7 @@ class Text extends base_1.Base {
      * @returns Returns the formatted identifier.
      */
     #getIdentifier(identifier) {
-        return 'U_' + identifier.replace(/[^a-zA-Z0-9]/g, '');
+        return identifier.replace(/[^a-zA-Z0-9]/g, '');
     }
     /**
      * Get string units.
@@ -271,16 +271,19 @@ class Text extends base_1.Base {
     }
     /**
      * Get a new reference pattern.
-     * @param entries Pointer entries.
-     * @param identifier Reference identifier.
+     * @param entry Referenced entry.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entries, identifier) {
-        const entry = entries.get(identifier);
+    emitReferencePattern(entry) {
         if (!entry.pattern) {
-            return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(identifier)}`);
+            return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(entry.name)}`);
         }
-        return this.#getIdentifier(identifier);
+        else if (entry.references > 1) {
+            return this.#getIdentifier(entry.name);
+        }
+        else {
+            return entry.pattern;
+        }
     }
     /**
      * Get a new any pattern.

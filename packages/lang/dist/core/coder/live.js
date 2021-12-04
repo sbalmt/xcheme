@@ -227,14 +227,12 @@ class Live extends base_1.Base {
     }
     /**
      * Get a new reference pattern.
-     * @param entries Pointer entries.
-     * @param identifier Reference identifier.
+     * @param entry Referenced entry.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entries, identifier) {
-        const entry = entries.get(identifier);
+    emitReferencePattern(entry) {
         if (!entry.pattern) {
-            return new Core.RunFlowPattern(() => entries.get(identifier).pattern);
+            return new Core.RunFlowPattern(() => entry.pattern);
         }
         return entry.pattern;
     }

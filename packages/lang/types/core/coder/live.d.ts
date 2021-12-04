@@ -182,11 +182,10 @@ export declare class Live extends Base {
     emitSetPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
      * Get a new reference pattern.
-     * @param entries Pointer entries.
-     * @param identifier Reference identifier.
+     * @param entry Referenced entry.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entries: Entries.Aggregator, identifier: string): Core.Pattern;
+    emitReferencePattern(entry: Entries.Entry): Core.Pattern;
     /**
      * Get a new any pattern.
      * @returns Returns the pattern.

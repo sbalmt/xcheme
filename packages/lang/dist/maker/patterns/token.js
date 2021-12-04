@@ -19,10 +19,10 @@ const consume = (project, state) => {
             const identity = directive.identity;
             entry.pattern = project.coder.emitTokenPattern(identity, expression);
             if (entry.references > 0) {
+                entry.references++;
                 const identifier = `@${entry.identifier}`;
                 const link = project.tokenEntries.create(entry.origin, identifier, entry.identity);
-                link.pattern = project.coder.emitReferencePattern(project.tokenEntries, entry.identifier);
-                entry.references++;
+                link.pattern = project.coder.emitReferencePattern(entry);
             }
         }
     }

@@ -29,7 +29,7 @@ export class Text extends Base {
    * @returns Returns the formatted identifier.
    */
   #getIdentifier(identifier: string): string {
-    return 'U_' + identifier.replace(/[^a-zA-Z0-9]/g, '');
+    return identifier.replace(/[^a-zA-Z0-9]/g, '');
   }
 
   /**
@@ -326,16 +326,17 @@ export class Text extends Base {
 
   /**
    * Get a new reference pattern.
-   * @param entries Pointer entries.
-   * @param identifier Reference identifier.
+   * @param entry Referenced entry.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(entries: Entries.Aggregator, identifier: string): string {
-    const entry = entries.get(identifier)!;
+  emitReferencePattern(entry: Entries.Entry): string {
     if (!entry.pattern) {
-      return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(identifier)}`);
+      return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(entry.name)}`);
+    } else if (entry.references > 1) {
+      return this.#getIdentifier(entry.name);
+    } else {
+      return entry.pattern as string;
     }
-    return this.#getIdentifier(identifier);
   }
 
   /**

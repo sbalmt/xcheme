@@ -268,14 +268,12 @@ export class Live extends Base {
 
   /**
    * Get a new reference pattern.
-   * @param entries Pointer entries.
-   * @param identifier Reference identifier.
+   * @param entry Referenced entry.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(entries: Entries.Aggregator, identifier: string): Core.Pattern {
-    const entry = entries.get(identifier)!;
+  emitReferencePattern(entry: Entries.Entry): Core.Pattern {
     if (!entry.pattern) {
-      return new Core.RunFlowPattern(() => entries.get(identifier)!.pattern as Core.Pattern);
+      return new Core.RunFlowPattern(() => entry!.pattern as Core.Pattern);
     }
     return entry.pattern as Core.Pattern;
   }

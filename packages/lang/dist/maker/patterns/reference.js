@@ -4,20 +4,6 @@ exports.consume = void 0;
 const Identity = require("../../core/nodes/identity");
 const Parser = require("../../parser");
 /**
- * Get the reference pattern for the given entry.
- * REMARKS: When the reference is used only once, the referenced pattern is returned instead of the reference pattern.
- * @param coder Project coder.
- * @param aggregator Entries aggregator.
- * @param entry Reference entry.
- * @returns Returns the reference pattern.
- */
-const getReference = (coder, aggregator, entry) => {
-    if (!entry.pattern || entry.references > 1) {
-        return coder.emitReferencePattern(aggregator, entry.identifier);
-    }
-    return entry.pattern;
-};
-/**
  * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
@@ -30,7 +16,7 @@ const resolveSkip = (project, node, symbol) => {
         const identifier = node.fragment.data;
         const entry = project.tokenEntries.get(identifier);
         if (entry !== void 0) {
-            return getReference(project.coder, project.tokenEntries, entry);
+            return project.coder.emitReferencePattern(entry);
         }
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
     }
@@ -49,7 +35,7 @@ const resolveToken = (project, node, symbol) => {
         const identifier = node.fragment.data;
         const entry = project.tokenEntries.get(identifier);
         if (entry !== void 0) {
-            return getReference(project.coder, project.tokenEntries, entry);
+            return project.coder.emitReferencePattern(entry);
         }
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
     }
@@ -68,7 +54,7 @@ const resolveNode = (project, node, symbol) => {
         const identifier = node.fragment.data;
         const entry = project.nodeEntries.get(identifier);
         if (entry !== void 0) {
-            return getReference(project.coder, project.nodeEntries, entry);
+            return project.coder.emitReferencePattern(entry);
         }
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
     }

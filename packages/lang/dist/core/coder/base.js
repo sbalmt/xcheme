@@ -214,11 +214,10 @@ class Base {
     }
     /**
      * Should be implemented to return a reference pattern.
-     * @param entries Pointer entries.
-     * @param identifier Reference identifier.
+     * @param entry Referenced entry.
      * @returns Should return the pattern.
      */
-    emitReferencePattern(entries, identifier) {
+    emitReferencePattern(entry) {
         throw "Method doesn't implemented.";
     }
     /**

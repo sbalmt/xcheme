@@ -106,7 +106,7 @@ test("Output a 'NODE' rule with a reference to itself", () => {
     `new Core.EmitNodePattern(${node.identity}, 1, ` +
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern(${token.identity}), ` +
-      /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => U_NODE))` +
+      /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => NODE))` +
       /**/ `)` +
       `)`
   );
@@ -114,7 +114,7 @@ test("Output a 'NODE' rule with a reference to itself", () => {
   const link = project.nodeEntries.get(`@${node.identifier}`)!;
   expect(link).toBeDefined();
   expect(link.identity).toBe(node.identity);
-  expect(link.pattern).toBe('U_NODE');
+  expect(link.pattern).toBe('NODE');
 });
 
 test("Output a 'NODE' rule with an alias node that has a reference to itself", () => {
@@ -131,7 +131,7 @@ test("Output a 'NODE' rule with an alias node that has a reference to itself", (
   expect(alias.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern(${token.identity}), ` +
-      /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => U_ALIAS)` +
+      /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => ALIAS)` +
       /**/ `)` +
       `)`
   );
@@ -139,7 +139,7 @@ test("Output a 'NODE' rule with an alias node that has a reference to itself", (
   const node = project.nodeEntries.get('NODE')!;
   expect(node).toBeDefined();
   expect(node.identity).toBe(2);
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, U_ALIAS)`);
+  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, ALIAS)`);
 });
 
 test("Output a 'NODE' rule with a token map entry references", () => {

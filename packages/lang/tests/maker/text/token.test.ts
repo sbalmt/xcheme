@@ -39,7 +39,7 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern('@'), ` +
       /******/ `new Core.OptFlowPattern(` +
-      /**********/ `new Core.RunFlowPattern(() => U_TOKEN)` +
+      /**********/ `new Core.RunFlowPattern(() => TOKEN)` +
       /******/ `)` +
       /**/ `)` +
       `)`
@@ -48,7 +48,7 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
   const link = project.tokenEntries.get(`@${token.identifier}`)!;
   expect(link).toBeDefined();
   expect(link.identity).toBe(token.identity);
-  expect(link.pattern).toBe('U_TOKEN');
+  expect(link.pattern).toBe('TOKEN');
 });
 
 test("Output a 'TOKEN' rule with an alias token that has a reference to itself", () => {
@@ -62,7 +62,7 @@ test("Output a 'TOKEN' rule with an alias token that has a reference to itself",
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +
       /**/ `new Core.OptFlowPattern(` +
-      /******/ `new Core.RunFlowPattern(() => U_ALIAS)` +
+      /******/ `new Core.RunFlowPattern(() => ALIAS)` +
       /**/ `)` +
       `)`
   );
@@ -70,7 +70,7 @@ test("Output a 'TOKEN' rule with an alias token that has a reference to itself",
   const token = project.tokenEntries.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(1);
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, U_ALIAS)`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
 });
 
 test("Output a 'TOKEN' rule with a whole token map reference", () => {

@@ -183,11 +183,10 @@ export declare class Text extends Base {
     emitSetPattern(state: number, ...patterns: string[]): string;
     /**
      * Get a new reference pattern.
-     * @param entries Pointer entries.
-     * @param identifier Reference identifier.
+     * @param entry Referenced entry.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entries: Entries.Aggregator, identifier: string): string;
+    emitReferencePattern(entry: Entries.Entry): string;
     /**
      * Get a new any pattern.
      * @returns Returns the pattern.

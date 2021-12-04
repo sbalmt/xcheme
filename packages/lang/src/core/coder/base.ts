@@ -262,11 +262,10 @@ export class Base {
 
   /**
    * Should be implemented to return a reference pattern.
-   * @param entries Pointer entries.
-   * @param identifier Reference identifier.
+   * @param entry Referenced entry.
    * @returns Should return the pattern.
    */
-  emitReferencePattern(entries: Entries.Aggregator, identifier: string): Pattern {
+  emitReferencePattern(entry: Entries.Entry): Pattern {
     throw "Method doesn't implemented.";
   }
 
