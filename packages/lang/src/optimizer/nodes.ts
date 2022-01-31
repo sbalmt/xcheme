@@ -23,7 +23,7 @@ export const getIdentity = (identity: string, table: Core.Table, location: Core.
  * @returns Returns the node.
  */
 export const getIdentifier = (identifier: string, table: Core.Table, location: Core.Location): Core.Node => {
-  const identity = identifier.substr(4);
+  const identity = identifier.substring(4);
   const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
   const node = new Core.Node(fragment, Parser.Nodes.Identifier, table);
   const record = new Core.Record(fragment, Parser.Symbols.Token, node);

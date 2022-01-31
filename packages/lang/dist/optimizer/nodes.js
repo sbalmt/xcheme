@@ -24,7 +24,7 @@ exports.getIdentity = getIdentity;
  * @returns Returns the node.
  */
 const getIdentifier = (identifier, table, location) => {
-    const identity = identifier.substr(4);
+    const identity = identifier.substring(4);
     const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
     const node = new Core.Node(fragment, 200 /* Identifier */, table);
     const record = new Core.Record(fragment, 300 /* Token */, node);

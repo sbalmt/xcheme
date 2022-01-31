@@ -15,14 +15,14 @@ const Expression = require("./expression");
 const resolve = (project, node, state) => {
     if (node.value !== 211 /* Or */) {
         const pattern = Expression.consume(project, node, state);
-        if (pattern !== void 0) {
+        if (pattern) {
             return [pattern];
         }
     }
     else if (node instanceof Mergeable.Node) {
         if (node.type === 204 /* String */) {
             const fragments = node.sequence.map((node) => String.extract(node.fragment.data));
-            if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1) !== void 0) {
+            if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1)) {
                 const routes = fragments.map((fragment) => project.coder.getRoute(fragment.split('')));
                 return [project.coder.emitMapPattern(...routes)];
             }
@@ -39,9 +39,9 @@ const resolve = (project, node, state) => {
     }
     else {
         const left = (0, exports.resolve)(project, node.left, state);
-        if (left !== void 0) {
+        if (left) {
             const right = (0, exports.resolve)(project, node.right, state);
-            if (right !== void 0) {
+            if (right) {
                 return [...left, ...right];
             }
         }
@@ -58,7 +58,7 @@ exports.resolve = resolve;
  */
 const consume = (project, node, state) => {
     const patterns = (0, exports.resolve)(project, node, state);
-    if (patterns !== void 0) {
+    if (patterns) {
         if (patterns.length > 1) {
             return project.coder.emitChoosePattern(...patterns);
         }

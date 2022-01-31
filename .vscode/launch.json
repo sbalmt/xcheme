@@ -32,9 +32,9 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "preLaunchTask": "Build CLI",
-      "runtimeArgs": ["--inspect-brk", "cli/bin/xcm.js", "-s", "cli/sample.xcm"],
+      "runtimeArgs": ["--inspect-brk", "./bin/xcm.js", "-s", "./sample.xcm"],
       "skipFiles": ["<node_internals>/**"],
-      "cwd": "${workspaceFolder}/packages",
+      "cwd": "${workspaceFolder}/packages/cli",
       "sourceMapPathOverrides": {
         "webpack://@xcheme/cli/*": "${workspaceFolder}/packages/cli/*"
       }

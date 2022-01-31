@@ -15,7 +15,7 @@ const And = require("../patterns/and");
 const split = (project, node, state) => {
     const record = node.sequence.shift();
     const patterns = And.resolve(project, node, state);
-    if (patterns !== void 0) {
+    if (patterns) {
         let units;
         if (node.type === 204 /* String */) {
             units = String.extract(record.fragment.data).split('');
@@ -36,9 +36,9 @@ const split = (project, node, state) => {
  */
 const traverse = (project, node, state) => {
     const left = (0, exports.resolve)(project, node.left, state);
-    if (left !== void 0) {
+    if (left) {
         const right = (0, exports.resolve)(project, node.right, state);
-        if (right !== void 0) {
+        if (right) {
             return [...left, ...right];
         }
     }

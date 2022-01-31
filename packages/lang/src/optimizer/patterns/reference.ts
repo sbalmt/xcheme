@@ -15,7 +15,7 @@ import { Errors } from '../../core/errors';
  * @param node Input node.
  * @param symbol Referenced symbol.
  */
-const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record): void => {
+const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record, state: Context.State): void => {
   if (symbol.value !== Parser.Symbols.AliasToken) {
     if (symbol.value === Parser.Symbols.Token) {
       project.addError(node, Errors.INVALID_TOKEN_REFERENCE);
@@ -28,13 +28,14 @@ const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Rec
     }
   } else {
     const identifier = node.fragment.data;
-    const entry = project.tokenEntries.get(identifier);
-    if (entry !== void 0) {
+    const entry = project.local.get(identifier);
+    if (entry) {
+      state.entry.dependencies.push(entry);
       entry.references++;
     } else {
-      project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+      project.local.on(identifier, (entry: Entries.Entry) => {
+        state.entry.dependencies.push(entry);
         entry.references++;
-        entry.force = true;
       });
     }
   }
@@ -47,7 +48,7 @@ const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Rec
  * @param node Input node.
  * @param symbol Referenced symbol.
  */
-const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Record): void => {
+const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Record, state: Context.State): void => {
   if (symbol.value !== Parser.Symbols.Token && symbol.value !== Parser.Symbols.AliasToken) {
     if (symbol.value === Parser.Symbols.Node) {
       project.addError(node, Errors.INVALID_NODE_REFERENCE);
@@ -58,13 +59,14 @@ const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Re
     }
   } else {
     const identifier = node.fragment.data;
-    const entry = project.tokenEntries.get(identifier);
-    if (entry !== void 0) {
+    const entry = project.local.get(identifier);
+    if (entry) {
+      state.entry.dependencies.push(entry);
       entry.references++;
     } else {
-      project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+      project.local.on(identifier, (entry: Entries.Entry) => {
+        state.entry.dependencies.push(entry);
         entry.references++;
-        entry.force = true;
       });
     }
   }
@@ -78,32 +80,42 @@ const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Re
  * @param parent Parent node.
  * @param symbol Referenced symbol.
  */
-const resolveNode = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, symbol: Core.Record): void => {
+const resolveNode = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Core.Node,
+  symbol: Core.Record,
+  state: Context.State
+): void => {
   const node = parent.getChild(direction)!;
   const identifier = node.fragment.data;
   if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
-    const entry = project.nodeEntries.get(identifier);
-    if (entry !== void 0) {
+    const entry = project.local.get(identifier);
+    if (entry) {
+      state.entry.dependencies.push(entry);
       entry.references++;
     } else {
-      project.nodeEntries.on(identifier, (entry: Entries.Entry) => {
+      project.local.on(identifier, (entry: Entries.Entry) => {
+        state.entry.dependencies.push(entry);
         entry.references++;
-        entry.force = true;
       });
     }
   } else if (symbol.value === Parser.Symbols.Token) {
-    const entry = project.tokenEntries.get(identifier);
-    if (entry !== void 0) {
+    const entry = project.local.get(identifier);
+    if (entry) {
+      state.entry.dependencies.push(entry);
       entry.references++;
+      // TODO: Check these lines below.
       if (!entry.dynamic) {
         parent.setChild(direction, new Identity.Node(node, entry.identity));
       } else {
         project.addError(node, Errors.INVALID_MAP_REFERENCE);
       }
     } else {
-      project.tokenEntries.on(identifier, (entry: Entries.Entry) => {
+      project.local.on(identifier, (entry: Entries.Entry) => {
+        state.entry.dependencies.push(entry);
         entry.references++;
-        entry.force = true;
+        // TODO: Check these lines below.
         if (!entry.dynamic) {
           parent.setChild(direction, new Identity.Node(node, entry.identity));
         } else {
@@ -129,18 +141,18 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
   const node = parent.getChild(direction)!;
   const identifier = node.fragment.data;
   const symbol = node.table.find(identifier);
-  if (symbol === void 0) {
+  if (!symbol) {
     project.addError(node, Errors.UNDEFINED_IDENTIFIER);
   } else {
-    switch (state.type) {
-      case Context.Types.Skip:
-        resolveSkip(project, node, symbol);
+    switch (state.entry.type) {
+      case Entries.Types.Skip:
+        resolveSkip(project, node, symbol, state);
         break;
-      case Context.Types.Token:
-        resolveToken(project, node, symbol);
+      case Entries.Types.Token:
+        resolveToken(project, node, symbol, state);
         break;
-      case Context.Types.Node:
-        resolveNode(project, direction, parent, symbol);
+      case Entries.Types.Node:
+        resolveNode(project, direction, parent, symbol, state);
         break;
     }
   }

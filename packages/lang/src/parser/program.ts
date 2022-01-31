@@ -220,18 +220,49 @@ const aliasNode = new Core.SetValueRoute(
 );
 
 /**
+ * Export identifier route.
+ */
+const exportIdentifier = new Core.SetValueRoute(Nodes.Identifier, Lexer.Tokens.Identifier);
+
+/**
+ * Export aliases route.
+ */
+const exportAliases = new Core.SetValueRoute(
+  Nodes.Export,
+  new Core.AppendNodePattern(
+    Core.BaseSource.Output,
+    Core.Nodes.Right,
+    Core.Nodes.Right,
+    new Core.MapFlowPattern(token, node, aliasToken, aliasNode, exportIdentifier)
+  ),
+  Lexer.Tokens.Export
+);
+
+/**
+ * Import module route.
+ */
+const importModule = new Core.SetValueRoute(
+  Nodes.Import,
+  new Core.AppendNodePattern(
+    Core.BaseSource.Output,
+    Core.Nodes.Right,
+    Core.Nodes.Right,
+    new Core.ExpectUnitPattern(Lexer.Tokens.String)
+  ),
+  Lexer.Tokens.Import
+);
+
+/**
  * Main parser pattern.
  */
 export const Program = new Core.ExpectFlowPattern(
   new Core.OptFlowPattern(
     new Core.RepeatFlowPattern(
-      new Core.ChooseFlowPattern(
-        new Core.EmitNodePattern(
-          Core.BaseSource.Output,
-          Core.Nodes.Right,
-          new Core.MapFlowPattern(skip, token, node, aliasToken, aliasNode),
-          new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)
-        )
+      new Core.EmitNodePattern(
+        Core.BaseSource.Output,
+        Core.Nodes.Right,
+        new Core.MapFlowPattern(importModule, skip, token, node, aliasToken, aliasNode, exportAliases),
+        new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)
       )
     )
   ),

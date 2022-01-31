@@ -20,7 +20,7 @@ import * as And from '../patterns/and';
 const split = (project: Project.Context, node: Mergeable.Node, state: Context.State): Coder.Pattern[] | undefined => {
   const record = node.sequence.shift()!;
   const patterns = And.resolve(project, node, state);
-  if (patterns !== void 0) {
+  if (patterns) {
     let units;
     if (node.type === Parser.Nodes.String) {
       units = String.extract(record.fragment.data).split('');
@@ -41,9 +41,9 @@ const split = (project: Project.Context, node: Mergeable.Node, state: Context.St
  */
 const traverse = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern[] | undefined => {
   const left = resolve(project, node.left!, state);
-  if (left !== void 0) {
+  if (left) {
     const right = resolve(project, node.right!, state);
-    if (right !== void 0) {
+    if (right) {
       return [...left, ...right];
     }
   }

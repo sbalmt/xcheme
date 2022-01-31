@@ -13,6 +13,7 @@
     "noImplicitThis": true,
     "noUnusedLocals": true,
     "forceConsistentCasingInFileNames": true,
+    "useDefineForClassFields": true,
     "moduleResolution": "Node",
     "esModuleInterop": false
   },

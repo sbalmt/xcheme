@@ -29,7 +29,7 @@ export class Text extends Base {
    * @returns Returns the formatted identifier.
    */
   #getIdentifier(identifier: string): string {
-    return identifier.replace(/[^a-zA-Z0-9]/g, '');
+    return identifier.replace(/[^a-zA-Z0-9]+/g, '_');
   }
 
   /**
@@ -103,13 +103,13 @@ export class Text extends Base {
    * @returns Returns the route.
    */
   getRoute(path: (string | number)[], value?: number, pattern?: string): string {
-    if (value !== void 0) {
-      if (pattern !== void 0) {
+    if (value) {
+      if (pattern) {
         return this.#getPattern('SetValueRoute', value, pattern, ...this.#getUnits(path));
       }
       return this.#getPattern('SetValueRoute', value, ...this.#getUnits(path));
     }
-    if (pattern !== void 0) {
+    if (pattern) {
       return this.#getPattern('FlowRoute', pattern, ...this.#getUnits(path));
     }
     return this.#getPattern('UnitRoute', ...this.#getUnits(path));

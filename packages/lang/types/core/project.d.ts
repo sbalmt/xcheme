@@ -3,13 +3,27 @@ import * as Coder from './coder/base';
 import * as Entries from './entries';
 import { Errors } from './errors';
 /**
+ * Map of aggregators.
+ */
+export declare type AggregatorMap = {
+    [key: string]: Entries.Aggregator;
+};
+/**
  * Project options.
  */
 export declare type Options = {
     /**
-     * Initial identity number for tokens, nodes and symbols.
+     * Determines the project root path.
+     */
+    rootPath?: string;
+    /**
+     * Initial identity for for directives with no explicit identities.
      */
     initialIdentity?: number;
+    /**
+     * Callback for loading the imported file contents.
+     */
+    loadFileHook?: (file: string) => string | undefined;
 };
 /**
  * Project context.
@@ -18,10 +32,11 @@ export declare class Context {
     #private;
     /**
      * Default constructor.
+     * @param name Project name.
      * @param coder Project coder.
      * @param options Project options.
      */
-    constructor(coder: Coder.Base, options?: Options);
+    constructor(name: string, coder: Coder.Base, options?: Options);
     /**
      * Get the project coder.
      */
@@ -31,21 +46,17 @@ export declare class Context {
      */
     get options(): Options;
     /**
+     * Get the local entries aggregator.
+     */
+    get local(): Entries.Aggregator;
+    /**
+     * Get the external entries aggregator.
+     */
+    get external(): AggregatorMap;
+    /**
      * Get the project errors.
      */
     get errors(): Core.Error[];
-    /**
-     * Get the skip entries aggregator.
-     */
-    get skipEntries(): Entries.Aggregator;
-    /**
-     * Get the token entries aggregator.
-     */
-    get tokenEntries(): Entries.Aggregator;
-    /**
-     * Get the node entries aggregator.
-     */
-    get nodeEntries(): Entries.Aggregator;
     /**
      * Get the resulting lexer.
      */

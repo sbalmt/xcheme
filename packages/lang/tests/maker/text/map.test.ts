@@ -6,7 +6,7 @@ test("Output a 'MAP' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a', 'b', 'c' };");
 
   // Check the output code.
-  const rule = project.skipEntries.get('@SKIP0')!;
+  const rule = project.local.get('@SKIP0')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
@@ -22,7 +22,7 @@ test("Output a 'MAP' rule with a nested map pattern", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & map { '1', '2' }, 'b', 'c' };");
 
   // Check the output code.
-  const rule = project.skipEntries.get('@SKIP0')!;
+  const rule = project.local.get('@SKIP0')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
@@ -43,7 +43,7 @@ test("Output a 'MAP' rule with compound patterns", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & opt 'b' & repeat 'c' };");
 
   // Check the output code.
-  const rule = project.skipEntries.get('@SKIP0')!;
+  const rule = project.local.get('@SKIP0')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
@@ -62,11 +62,11 @@ test("Output a 'MAP' rule with a token pattern", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token <auto> TOKEN as map { <100> A as 'a', 'b', 'c' };");
 
   // Check the output code.
-  const routeA = project.tokenEntries.get('TOKEN@A')!;
+  const routeA = project.local.get('TOKEN@A')!;
   expect(routeA).toBeDefined();
   expect(routeA.identity).toBe(100);
 
-  const rule = project.tokenEntries.get('TOKEN')!;
+  const rule = project.local.get('TOKEN')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(Core.BaseSource.Output);
   expect(rule.pattern).toBe(
@@ -84,23 +84,23 @@ test("Output a 'MAP' rule with a node pattern", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "node <auto> NODE as map { <100> A as 'a', 'b', 'c' };");
 
   // Check the output code.
-  const token1 = project.tokenEntries.get('@REF0')!; // 'a'
+  const token1 = project.local.get('@REF0')!; // 'a'
   expect(token1.identity).toBe(0);
   expect(token1).toBeDefined();
 
-  const token2 = project.tokenEntries.get('@REF1')!; // 'b'
+  const token2 = project.local.get('@REF1')!; // 'b'
   expect(token2.identity).toBe(1);
   expect(token2).toBeDefined();
 
-  const token3 = project.tokenEntries.get('@REF2')!; // 'c'
+  const token3 = project.local.get('@REF2')!; // 'c'
   expect(token3.identity).toBe(2);
   expect(token3).toBeDefined();
 
-  const routeA = project.nodeEntries.get('NODE@A')!;
+  const routeA = project.local.get('NODE@A')!;
   expect(routeA).toBeDefined();
   expect(routeA.identity).toBe(100);
 
-  const rule = project.nodeEntries.get('NODE')!;
+  const rule = project.local.get('NODE')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(Core.BaseSource.Output);
   expect(rule.pattern).toBe(

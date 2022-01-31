@@ -12,20 +12,20 @@ const Expression = require("./expression");
  */
 const consume = (project, node, state) => {
     const test = Expression.consume(project, node.left, state);
-    if (test !== void 0) {
+    if (test) {
         const content = node.right;
         if (content.value === 210 /* Else */) {
             const success = Expression.consume(project, content.left, state);
-            if (success !== void 0) {
+            if (success) {
                 const failure = Expression.consume(project, content.right, state);
-                if (failure !== void 0) {
+                if (failure) {
                     return project.coder.emitConditionPattern(test, success, failure);
                 }
             }
         }
         else {
             const success = Expression.consume(project, content, state);
-            if (success !== void 0) {
+            if (success) {
                 return project.coder.emitConditionPattern(test, success);
             }
         }

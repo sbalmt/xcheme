@@ -47,13 +47,13 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   let member = node.right!;
   const directive = state.directive;
   const routes = [];
-  while (member !== void 0) {
+  while (member) {
     const current = member.right!;
     if (!(current instanceof Member.Node)) {
       project.addError(node, Errors.UNSUPPORTED_NODE);
     } else {
       const units = resolve(current.route);
-      if (units === void 0) {
+      if (!units) {
         project.addError(node, Errors.UNEXPECTED_NODE);
       } else {
         let route;

@@ -12,7 +12,7 @@ const Expression = require("./expression");
  * @param state Context state.
  */
 const consume = (project, direction, parent, state) => {
-    if (state.type === 3 /* Node */) {
+    if (state.entry.type === 3 /* Node */) {
         const node = parent.getChild(direction);
         const name = node.fragment.data;
         const entry = Loose.resolve(project, node, state, name);

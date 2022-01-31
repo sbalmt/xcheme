@@ -8,13 +8,13 @@ const Identity = require("../../core/nodes/identity");
  * @returns Returns all the extracted path.
  */
 const getPath = (node) => {
-    if (node.left !== void 0 && node.right !== void 0) {
+    if (node.left && node.right) {
         return [...getPath(node.left), ...getPath(node.right)];
     }
-    else if (node.left !== void 0) {
+    else if (node.left) {
         return getPath(node.left);
     }
-    else if (node.right !== void 0) {
+    else if (node.right) {
         return getPath(node.right);
     }
     return [node.fragment.data];
@@ -30,12 +30,12 @@ const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     const path = getPath(node);
     const identifier = path.join('@');
-    if (state.type !== 3 /* Node */ || project.nodeEntries.has(identifier)) {
+    if (state.entry.type !== 3 /* Node */ || project.local.get(identifier)?.type === 3 /* Node */) {
         project.addError(node, 4113 /* INVALID_MAP_ENTRY_REFERENCE */);
     }
     else {
-        const directive = project.tokenEntries.get(path[0]);
-        const member = project.tokenEntries.get(identifier);
+        const directive = project.local.get(path[0]);
+        const member = project.local.get(identifier);
         if (!directive || !member) {
             project.addError(node, 4102 /* UNDEFINED_IDENTIFIER */);
         }

@@ -6,7 +6,7 @@ test("Output a 'TOKEN' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token TOKEN as '@';");
 
   // Check the output code.
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(0);
   expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, new Core.ExpectUnitPattern('@'))`);
@@ -16,12 +16,12 @@ test("Output a 'TOKEN' rule with an alias token reference", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
 
   // Check the output code.
-  const alias = project.tokenEntries.get('ALIAS')!;
+  const alias = project.local.get('ALIAS')!;
   expect(alias).toBeDefined();
   expect(alias.identity).toBe(0);
   expect(alias.pattern).toBe(`new Core.ExpectUnitPattern('@')`);
 
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(1);
   expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, new Core.ExpectUnitPattern('@'))`);
@@ -31,7 +31,7 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token TOKEN as '@' & opt TOKEN;");
 
   // Check the output code.
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(0);
   expect(token.pattern).toBe(
@@ -39,38 +39,38 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
       /**/ `new Core.ExpectFlowPattern(` +
       /******/ `new Core.ExpectUnitPattern('@'), ` +
       /******/ `new Core.OptFlowPattern(` +
-      /**********/ `new Core.RunFlowPattern(() => TOKEN)` +
+      /**********/ `new Core.RunFlowPattern(() => L0_TOKEN)` +
       /******/ `)` +
       /**/ `)` +
       `)`
   );
 
-  const link = project.tokenEntries.get(`@${token.identifier}`)!;
+  const link = project.local.get(`@${token.identifier}`)!;
   expect(link).toBeDefined();
   expect(link.identity).toBe(token.identity);
-  expect(link.pattern).toBe('TOKEN');
+  expect(link.pattern).toBe('L0_TOKEN');
 });
 
 test("Output a 'TOKEN' rule with an alias token that has a reference to itself", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "alias token ALIAS as '@' & opt ALIAS; token TOKEN as ALIAS;");
 
   // Check the output code.
-  const alias = project.tokenEntries.get('ALIAS')!;
+  const alias = project.local.get('ALIAS')!;
   expect(alias).toBeDefined();
   expect(alias.identity).toBe(0);
   expect(alias.pattern).toBe(
     `new Core.ExpectFlowPattern(` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +
       /**/ `new Core.OptFlowPattern(` +
-      /******/ `new Core.RunFlowPattern(() => ALIAS)` +
+      /******/ `new Core.RunFlowPattern(() => L0_ALIAS)` +
       /**/ `)` +
       `)`
   );
 
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(1);
-  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, ALIAS)`);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, L0_ALIAS)`);
 });
 
 test("Output a 'TOKEN' rule with a whole token map reference", () => {
@@ -80,15 +80,15 @@ test("Output a 'TOKEN' rule with a whole token map reference", () => {
   );
 
   // Check the output code.
-  const tokenRouteA = project.tokenEntries.get('TOKEN1@A')!;
+  const tokenRouteA = project.local.get('TOKEN1@A')!;
   expect(tokenRouteA).toBeDefined();
   expect(tokenRouteA.identity).toBe(100);
 
-  const tokenRouteB = project.tokenEntries.get('TOKEN1@B')!;
+  const tokenRouteB = project.local.get('TOKEN1@B')!;
   expect(tokenRouteB).toBeDefined();
   expect(tokenRouteB.identity).toBe(101);
 
-  const token1 = project.tokenEntries.get('TOKEN1')!;
+  const token1 = project.local.get('TOKEN1')!;
   expect(token1).toBeDefined();
   expect(token1.identity).toBe(0);
   expect(token1.pattern).toBe(
@@ -98,7 +98,7 @@ test("Output a 'TOKEN' rule with a whole token map reference", () => {
       `)`
   );
 
-  const token2 = project.tokenEntries.get('TOKEN2')!;
+  const token2 = project.local.get('TOKEN2')!;
   expect(token2).toBeDefined();
   expect(token2.identity).toBe(Core.BaseSource.Output);
   expect(token2.pattern).toBe(
@@ -112,4 +112,19 @@ test("Output a 'TOKEN' rule with a whole token map reference", () => {
       /**/ `)` +
       `)`
   );
+});
+
+test("Output a 'TOKEN' rule with an imported alias pattern", () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "import './module2'; token <3030> TOKEN as EXTERNAL_TOKEN1;");
+
+  // Check the output code.
+  const externalToken = project.local.get('EXTERNAL_TOKEN1')!;
+  expect(externalToken).toBeDefined();
+  expect(externalToken.identity).toBe(1010);
+  expect(externalToken.pattern).toBe(`L2_ALIAS_TOKEN`);
+
+  const token = project.local.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.identity).toBe(3030);
+  expect(token.pattern).toBe(`new Core.EmitTokenPattern(${token.identity}, L2_ALIAS_TOKEN)`);
 });

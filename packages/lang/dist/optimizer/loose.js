@@ -14,16 +14,15 @@ const Nodes = require("./nodes");
  * @returns Returns the generated pattern entry.
  */
 const emit = (project, node, state, name) => {
-    const temp = Context.getNewState(state.anchor, state.counter);
+    const temp = Context.getNewState(state.anchor, Context.getCount(project));
     const token = Nodes.getToken(`@REF${temp.entry.identity}`, node.table, node.fragment.location, node);
     temp.entry.origin = 1 /* Loose */;
-    temp.counter++;
     Token.consume(project, 1 /* Right */, token, temp);
+    const entry = project.local.get(name);
     token.setChild(2 /* Next */, state.anchor.next);
-    state.counter = temp.counter;
     state.anchor.setChild(2 /* Next */, token);
     state.anchor = token;
-    return project.tokenEntries.get(name);
+    return entry;
 };
 /**
  * Determines whether or not there are an entry collision for the given name.
@@ -33,8 +32,8 @@ const emit = (project, node, state, name) => {
  * @returns Returns true when the specified name already exists, false otherwise.
  */
 const collision = (project, node, name) => {
-    if (project.tokenEntries.has(name)) {
-        project.addError(node, 4115 /* TOKEN_COLLISION */);
+    if (project.local.has(name)) {
+        project.addError(node, 4116 /* TOKEN_COLLISION */);
         return true;
     }
     return false;
@@ -49,10 +48,10 @@ exports.collision = collision;
  * @returns Returns the loose pattern entry.
  */
 const resolve = (project, node, state, name) => {
-    const entry = project.tokenEntries.get(name);
-    if (entry !== void 0) {
+    const entry = project.local.get(name);
+    if (entry) {
         if (entry.origin === 0 /* User */) {
-            project.addError(node, 4115 /* TOKEN_COLLISION */);
+            project.addError(node, 4116 /* TOKEN_COLLISION */);
         }
         return entry;
     }

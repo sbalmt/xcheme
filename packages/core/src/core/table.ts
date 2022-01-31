@@ -95,7 +95,7 @@ export default class Table {
    */
   find(name: Fragment | string): Record | undefined {
     const record = this.get(name);
-    if (record === void 0 && this.#parent !== void 0) {
+    if (!record && this.#parent) {
       return this.#parent.find(name);
     }
     return record;

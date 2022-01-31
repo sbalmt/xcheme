@@ -1,5 +1,6 @@
 import * as Core from '@xcheme/core';
 
+import * as Entries from '../../core/entries';
 import * as Project from '../../core/project';
 import * as Context from '../context';
 import * as Loose from '../loose';
@@ -15,7 +16,7 @@ import * as Expression from './expression';
  * @param state Context state.
  */
 export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
-  if (state.type === Context.Types.Node) {
+  if (state.entry.type === Entries.Types.Node) {
     const node = parent.getChild(direction)!;
     const name = node.fragment.data;
     const entry = Loose.resolve(project, node, state, name);

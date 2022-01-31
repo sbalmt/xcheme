@@ -28,14 +28,14 @@ test("Parse a 'NODE' rule with a loose token reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('@REF1')!; // '@'
+  const token = project.local.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [node.identity])).toBe(2);
 });
@@ -47,14 +47,14 @@ test("Parse a 'NODE' rule with a loose token range reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '0123456789');
 
-  const token = project.tokenEntries.get('@REF1')!;
+  const token = project.local.get('@REF1')!;
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(10);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [node.identity])).toBe(10);
 });
@@ -66,10 +66,10 @@ test("Parse a 'NODE' rule with a loose token map reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, 'abba');
 
-  const token1 = project.tokenEntries.get('@REF1')!;
+  const token1 = project.local.get('@REF1')!;
   expect(token1).toBeDefined();
 
-  const token2 = project.tokenEntries.get('@REF2')!;
+  const token2 = project.local.get('@REF2')!;
   expect(token2).toBeDefined();
 
   expect(checkTokens(context, [token1.identity, token2.identity])).toBe(4);
@@ -77,7 +77,7 @@ test("Parse a 'NODE' rule with a loose token map reference", () => {
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [0])).toBe(4);
 });
@@ -89,14 +89,14 @@ test("Parse a 'NODE' rule with a token reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [node.identity])).toBe(3);
 });
@@ -108,14 +108,14 @@ test("Parse a 'NODE' rule with an alias node reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('@REF1')!; // '@'
+  const token = project.local.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [node.identity])).toBe(3);
 });
@@ -127,14 +127,14 @@ test("Parse a 'NODE' rule with a reference to itself", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('@REF1')!; // '@'
+  const token = project.local.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [node.identity])).toBe(3);
 });
@@ -146,14 +146,14 @@ test("Parse a 'NODE' rule with an alias node that has a reference to itself", ()
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('@REF1')!; // '@'
+  const token = project.local.get('@REF1')!; // '@'
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [node.identity])).toBe(1);
 });
@@ -173,7 +173,7 @@ test("Parse a 'NODE' rule with a token map entry references", () => {
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [200, 201])).toBe(4);
 });
@@ -186,13 +186,13 @@ test("Parse a 'NODE' rule with a whole node map reference", () => {
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
-  const token1 = project.tokenEntries.get('@REF1')!; // 'a'
+  const token1 = project.local.get('@REF1')!; // 'a'
   expect(token1).toBeDefined();
 
-  const token2 = project.tokenEntries.get('@REF2')!; // 'b'
+  const token2 = project.local.get('@REF2')!; // 'b'
   expect(token2).toBeDefined();
 
-  const token3 = project.tokenEntries.get('@REF3')!; // '!'
+  const token3 = project.local.get('@REF3')!; // '!'
   expect(token3).toBeDefined();
 
   Helper.testLexer(project, context, 'a!b!');
@@ -202,7 +202,22 @@ test("Parse a 'NODE' rule with a whole node map reference", () => {
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);
 
-  const node = project.nodeEntries.get('NODE2')!;
+  const node = project.local.get('NODE2')!;
   expect(node).toBeDefined();
   expect(checkNodes(context, [200, 201])).toBe(2);
+});
+
+test("Parse a 'NODE' rule with an imported alias pattern", () => {
+  const project = Helper.makeParser(new Lang.LiveCoder(), "import './module2'; node NODE as EXTERNAL_NODE1;");
+  const context = new Core.Context('test');
+
+  // Check the resulting tokens.
+  Helper.testLexer(project, context, 'node1node1');
+
+  // Check the resulting nodes.
+  Helper.testParser(project, context, context.tokens);
+
+  const node = project.local.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(checkNodes(context, [node.identity])).toBe(2);
 });

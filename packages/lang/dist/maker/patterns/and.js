@@ -15,7 +15,7 @@ const Expression = require("./expression");
 const resolve = (project, node, state) => {
     if (node.value !== 212 /* And */) {
         const pattern = Expression.consume(project, node, state);
-        if (pattern !== void 0) {
+        if (pattern) {
             return [pattern];
         }
     }
@@ -32,9 +32,9 @@ const resolve = (project, node, state) => {
     }
     else {
         const left = (0, exports.resolve)(project, node.left, state);
-        if (left !== void 0) {
+        if (left) {
             const right = (0, exports.resolve)(project, node.right, state);
-            if (right !== void 0) {
+            if (right) {
                 return [...left, ...right];
             }
         }
@@ -51,7 +51,7 @@ exports.resolve = resolve;
  */
 const consume = (project, node, state) => {
     const patterns = (0, exports.resolve)(project, node, state);
-    if (patterns !== void 0) {
+    if (patterns) {
         if (patterns.length > 1) {
             return project.coder.emitExpectPattern(...patterns);
         }

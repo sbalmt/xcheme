@@ -10,8 +10,8 @@ const Expression = require("./expression");
 const consume = (project, state) => {
     const directive = state.directive;
     const expression = Expression.consume(project, directive.right, state);
-    if (expression !== void 0) {
-        const entry = project.skipEntries.get(directive.identifier);
+    if (expression) {
+        const entry = project.local.get(directive.identifier);
         entry.pattern = expression;
     }
 };

@@ -12,8 +12,9 @@ const Expression = require("./expression");
  * @param state Consumption state.
  */
 const emit = (project, direction, parent, state) => {
+    const { origin, identifier, identity } = state.entry;
     const node = parent.getChild(direction);
-    const entry = project.skipEntries.add(state.entry.origin, state.entry.identifier, state.entry.identity, state.entry);
+    const entry = project.local.create(1 /* Skip */, origin, identifier, identity, state.entry);
     const replacement = new Directive.Node(node, 0 /* Skip */, entry);
     parent.setChild(direction, replacement);
 };
@@ -26,12 +27,11 @@ const emit = (project, direction, parent, state) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const type = state.type;
-    state.type = 1 /* Skip */;
-    state.entry.identifier = `@SKIP${state.entry.identity}`;
+    const entry = state.entry;
+    entry.type = 1 /* Skip */;
+    entry.identifier = `@SKIP${entry.identity}`;
     Expression.consume(project, 1 /* Right */, node, state);
     emit(project, direction, parent, state);
-    state.type = type;
 };
 exports.consume = consume;
 //# sourceMappingURL=skip.js.map

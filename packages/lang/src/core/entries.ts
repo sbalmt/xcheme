@@ -25,6 +25,16 @@ type EntryMap = {
 };
 
 /**
+ * Entry types.
+ */
+export const enum Types {
+  Unknown,
+  Skip,
+  Token,
+  Node
+}
+
+/**
  * Entry origins.
  */
 export const enum Origins {
@@ -36,6 +46,14 @@ export const enum Origins {
  * Map entry.
  */
 export type Entry = {
+  /**
+   * Entry name.
+   */
+  name: string;
+  /**
+   * Entry type.
+   */
+  type: Types;
   /**
    * Determine whether or not an entry was created by a user directive or a loose token.
    */
@@ -57,13 +75,29 @@ export type Entry = {
    */
   dynamic: boolean;
   /**
-   * Determines whether or not the entry output is forced due to have dependents.
+   * Determines whether or not the entry can be exported.
    */
-  force: boolean;
+  exported: boolean;
+  /**
+   * Determines whether or not the entry is imported.
+   */
+  imported: boolean;
   /**
    * Number of references to the entry.
    */
   references: number;
+  /**
+   * Entry dependencies.
+   */
+  dependencies: Entry[];
+  /**
+   * Entry dependents.
+   */
+  dependents: Entry[];
+  /**
+   * Entry location.
+   */
+  location: string;
   /**
    * Entry pattern.
    */
@@ -74,6 +108,16 @@ export type Entry = {
  * Aggregate pattern entries during the making process.
  */
 export class Aggregator {
+  /**
+   * Aggregator name.
+   */
+  #name: string;
+
+  /**
+   * Aggregator location.
+   */
+  #location: string;
+
   /**
    * Entry map.
    */
@@ -90,6 +134,43 @@ export class Aggregator {
   #events: EventMap = {};
 
   /**
+   * Get the entry that correspond to the given name.
+   * @param name Entry name.
+   * @returns Returns the corresponding entry.
+   * @throws Throws an exception when the given entry wasn't found.
+   */
+  #get(name: string): Entry {
+    if (!this.has(name)) {
+      throw `An entry named '${name}' doesn't exists.`;
+    }
+    return this.get(name)!;
+  }
+
+  /**
+   * Default constructor.
+   * @param name Aggregator name.
+   * @param location Aggregator location.
+   */
+  constructor(name: string, location: string) {
+    this.#name = name;
+    this.#location = location;
+  }
+
+  /**
+   * Get the aggregator name.
+   */
+  get name(): string {
+    return this.#name;
+  }
+
+  /**
+   * Get the aggregator location.
+   */
+  get location(): string {
+    return this.#location;
+  }
+
+  /**
    * Get all entries.
    */
   get all(): Entry[] {
@@ -97,14 +178,35 @@ export class Aggregator {
   }
 
   /**
-   * Get all pattern entries.
+   * Get all alias entries.
    */
-  get patterns(): Entry[] {
-    return this.all.filter((entry) => !entry.alias && entry.references === 0);
+  get aliases(): Entry[] {
+    return this.all.filter((entry) => entry.alias);
   }
 
   /**
-   * Get all reference pattern entries.
+   * Get all exported entries.
+   */
+  get exports(): Entry[] {
+    return this.all.filter((entry) => entry.exported);
+  }
+
+  /**
+   * Get all imported entries.
+   */
+  get imports(): Entry[] {
+    return this.all.filter((entry) => entry.imported);
+  }
+
+  /**
+   * Get all pattern entries.
+   */
+  get patterns(): Entry[] {
+    return this.all.filter((entry) => !entry.alias && !entry.references);
+  }
+
+  /**
+   * Get all reference entries.
    */
   get references(): Entry[] {
     return this.all.filter((entry) => entry.references > 0);
@@ -129,29 +231,64 @@ export class Aggregator {
   }
 
   /**
-   * Add a new pattern entry.
-   * @param origin Entry origin.
-   * @param identifier Entry identifier.
-   * @param identity Entry identity.
-   * @throws Throws an error when the specified entry already exists.
-   * @returns Returns the new entry.
+   * Get an array containing all entries that corresponds to one or more specified types.
+   * @param types Entry types.
+   * @returns Returns an array containing all entries found.
    */
-  add(origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry {
+  getAllByType(types: Types[]): Entry[] {
+    return this.all.filter((entry) => types.includes(entry.type));
+  }
+
+  /**
+   * Get an array containing all exported entries that corresponds to one or more specified types.
+   * @param types Entry types.
+   * @returns Returns an array containing all entries found.
+   */
+  getExportsByType(types: Types[]): Entry[] {
+    return this.all.filter((entry) => entry.exported && types.includes(entry.type));
+  }
+
+  /**
+   * Get an array containing all imported entries that corresponds to one or more specified types.
+   * @param types Entry types.
+   * @returns Returns an array containing all entries found.
+   */
+  getImportsByType(types: Types[]): Entry[] {
+    return this.all.filter((entry) => entry.exported && types.includes(entry.type));
+  }
+
+  /**
+   * Get an array containing all pattern entries that corresponds to one or more specified types.
+   * @param types Entry types.
+   * @returns Returns an array containing all entries found.
+   */
+  getPatternsByType(types: Types[]): Entry[] {
+    return this.all.filter((entry) => !entry.alias && !entry.references && types.includes(entry.type));
+  }
+
+  /**
+   * Get an array containing all reference entries that corresponds to one or more specified types.
+   * @param types Entry types.
+   * @returns Returns an array containing all entries found.
+   */
+  getReferencesByType(types: Types[]): Entry[] {
+    return this.all.filter((entry) => entry.references > 0 && types.includes(entry.type));
+  }
+
+  /**
+   * Add the specified pattern entry.
+   * @param entry Pattern entry.
+   * @throws Throws an error when the specified entry already exists.
+   * @returns Returns the added entry.
+   */
+  add(entry: Entry): Entry {
+    const { identifier } = entry;
     if (this.has(identifier)) {
       throw `Another entry named '${identifier}' can't be added.`;
     }
     const events = this.#events[identifier];
-    const entry = (this.#entries[identifier] = {
-      origin,
-      identifier,
-      identity,
-      alias: model?.alias ?? false,
-      dynamic: model?.dynamic ?? false,
-      force: model?.force ?? false,
-      references: model?.references ?? 0,
-      pattern: model?.pattern
-    });
-    if (events !== void 0) {
+    this.#entries[identifier] = entry;
+    if (events) {
       delete this.#events[identifier];
       for (const event of events) {
         event(entry);
@@ -161,7 +298,36 @@ export class Aggregator {
   }
 
   /**
-   * Link an existing entry to another name.
+   * Create and add a new pattern entry.
+   * @param type Entry type.
+   * @param origin Entry origin.
+   * @param identifier Entry identifier.
+   * @param identity Entry identity.
+   * @param model Optional entry model.
+   * @throws Throws an error when the specified entry already exists.
+   * @returns Returns the added entry.
+   */
+  create(type: Types, origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry {
+    return this.add({
+      name: `${this.#name}:${identifier}`,
+      type,
+      origin,
+      identifier,
+      identity,
+      alias: model?.alias ?? false,
+      dynamic: model?.dynamic ?? false,
+      exported: model?.exported ?? false,
+      imported: model?.imported ?? false,
+      references: model?.references ?? 0,
+      dependencies: model?.dependencies ?? [],
+      dependents: model?.dependents ?? [],
+      location: model?.location ?? this.#location,
+      pattern: model?.pattern
+    });
+  }
+
+  /**
+   * Link an existing entry to another one.
    * @param identifier Link identifier.
    * @param alias Alias identifier.
    * @throws Throws an error when the specified name already exists or the given identifier doesn't exists.
@@ -170,10 +336,10 @@ export class Aggregator {
   link(identifier: string, alias: string): Entry {
     if (this.has(identifier)) {
       throw `An entry named '${identifier}' already exists.`;
-    } else if (!this.has(alias)) {
-      throw `An entry named '${alias}' doesn't exists.`;
     }
-    return (this.#links[identifier] = this.get(alias)!);
+    const entry = this.#get(alias);
+    this.#links[identifier] = entry;
+    return entry;
   }
 
   /**
@@ -183,10 +349,10 @@ export class Aggregator {
    */
   on(identifier: string, callback: EventCallback): void {
     const events = this.#events[identifier];
-    if (events !== void 0) {
-      events.push(callback);
-    } else {
+    if (!events) {
       this.#events[identifier] = [callback];
+    } else {
+      events.push(callback);
     }
   }
 }

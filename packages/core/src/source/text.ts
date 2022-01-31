@@ -78,7 +78,7 @@ export default class Text extends Base {
    */
   get value(): string {
     const value = this.#data[this.offset];
-    if (value === void 0) {
+    if (!value) {
       throw "There's no value to get.";
     }
     return value;
@@ -127,7 +127,7 @@ export default class Text extends Base {
    * @throws Throws an error when there's no state to restore.
    */
   restoreState(): void {
-    if ((this.#current = this.#states[this.#states.length - 1]) === void 0) {
+    if (!(this.#current = this.#states[this.#states.length - 1])) {
       throw "There's no state to restore.";
     }
   }

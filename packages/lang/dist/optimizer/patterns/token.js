@@ -18,7 +18,7 @@ const String = require("./string");
 const emit = (project, direction, parent, state) => {
     const { origin, identifier, identity } = state.entry;
     const node = parent.getChild(direction);
-    const entry = project.tokenEntries.add(origin, identifier, identity, state.entry);
+    const entry = project.local.create(2 /* Token */, origin, identifier, identity, state.entry);
     const replacement = new Directive.Node(node, 1 /* Token */, entry);
     parent.setChild(direction, replacement);
 };
@@ -33,15 +33,14 @@ const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     const expression = node.right;
     const entry = state.entry;
-    const type = state.type;
-    state.type = 2 /* Token */;
+    entry.type = 2 /* Token */;
     entry.identifier = node.fragment.data;
     if (expression.value === 204 /* String */) {
         String.consume(project, 1 /* Right */, node, state);
         const word = expression.fragment.data;
         if (!Loose.collision(project, expression, word)) {
             emit(project, direction, parent, state);
-            project.tokenEntries.link(word, state.entry.identifier);
+            project.local.link(word, entry.identifier);
         }
     }
     else if (expression.value === 206 /* Range */) {
@@ -49,14 +48,13 @@ const consume = (project, direction, parent, state) => {
         const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
         if (!Loose.collision(project, expression, range)) {
             emit(project, direction, parent, state);
-            project.tokenEntries.link(range, state.entry.identifier);
+            project.local.link(range, entry.identifier);
         }
     }
     else {
         Expression.consume(project, 1 /* Right */, node, state);
         emit(project, direction, parent, state);
     }
-    state.type = type;
 };
 exports.consume = consume;
 //# sourceMappingURL=token.js.map

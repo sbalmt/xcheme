@@ -11,8 +11,8 @@ import * as Expression from './expression';
 export const consume = (project: Project.Context, state: Context.State): void => {
   const directive = state.directive;
   const expression = Expression.consume(project, directive.right!, state);
-  if (expression !== void 0) {
-    const entry = project.tokenEntries.get(directive.identifier)!;
+  if (expression) {
+    const entry = project.local.get(directive.identifier)!;
     if (directive.alias) {
       entry.pattern = expression;
     } else {
@@ -21,8 +21,10 @@ export const consume = (project: Project.Context, state: Context.State): void =>
       if (entry.references > 0) {
         entry.references++;
         const identifier = `@${entry.identifier}`;
-        const link = project.tokenEntries.create(entry.origin, identifier, entry.identity);
+        const link = project.local.create(entry.type, entry.origin, identifier, entry.identity);
         link.pattern = project.coder.emitReferencePattern(entry);
+        link.dependencies.push(entry);
+        entry.dependents.push(link);
       }
     }
   }

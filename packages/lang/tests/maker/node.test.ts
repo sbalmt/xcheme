@@ -59,7 +59,25 @@ test('Node with an identity', () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "node <2020> NODE as '@';");
 
   // Check the resulting node.
-  const node = project.nodeEntries.get('NODE')!;
+  const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
   expect(node.identity).toBe(2020);
+});
+
+test('Node with an exported pattern', () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "export alias node NODE as '@';");
+
+  // Check the resulting node.
+  const node = project.local.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.exported).toBeTruthy();
+});
+
+test('Node with an imported pattern', () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "import './module1'; node <4040> NODE as EXTERNAL_NODE1;");
+
+  // Check the resulting node.
+  const node = project.local.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.identity).toBe(4040);
 });

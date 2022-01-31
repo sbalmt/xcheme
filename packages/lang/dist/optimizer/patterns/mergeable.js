@@ -49,7 +49,7 @@ const consume = (project, direction, parent, type, state) => {
     if (node.value !== type) {
         Expression.consume(project, direction, parent, state);
     }
-    else if (state.type === 3 /* Node */) {
+    else if (state.entry.type === 3 /* Node */) {
         Expression.consume(project, 0 /* Left */, node, state);
         Expression.consume(project, 1 /* Right */, node, state);
         if (isMergeableRefs(node, type)) {

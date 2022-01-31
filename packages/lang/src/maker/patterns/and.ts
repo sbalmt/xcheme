@@ -20,7 +20,7 @@ import * as Expression from './expression';
 export const resolve = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern[] | undefined => {
   if (node.value !== Parser.Nodes.And) {
     const pattern = Expression.consume(project, node, state);
-    if (pattern !== void 0) {
+    if (pattern) {
       return [pattern];
     }
   } else if (node instanceof Mergeable.Node) {
@@ -34,9 +34,9 @@ export const resolve = (project: Project.Context, node: Core.Node, state: Contex
     return [project.coder.emitExpectUnitsPattern(units)];
   } else {
     const left = resolve(project, node.left!, state);
-    if (left !== void 0) {
+    if (left) {
       const right = resolve(project, node.right!, state);
-      if (right !== void 0) {
+      if (right) {
         return [...left, ...right];
       }
     }
@@ -53,7 +53,7 @@ export const resolve = (project: Project.Context, node: Core.Node, state: Contex
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const patterns = resolve(project, node, state);
-  if (patterns !== void 0) {
+  if (patterns) {
     if (patterns.length > 1) {
       return project.coder.emitExpectPattern(...patterns);
     }

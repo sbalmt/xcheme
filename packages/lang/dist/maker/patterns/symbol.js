@@ -11,7 +11,7 @@ const Splitter = require("../resolvers/splitter");
  */
 const consume = (project, node, state) => {
     const patterns = Splitter.resolve(project, node.right, state);
-    if (patterns !== void 0) {
+    if (patterns) {
         const directive = state.directive;
         const [test, ...remaining] = patterns;
         return project.coder.emitSymbolPattern(directive.identity, test, ...remaining);

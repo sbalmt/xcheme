@@ -5,9 +5,9 @@ import Location from '../../src/core/location';
 const text = 'abc';
 
 const tokens = [
-  new Token(new Fragment(text, 0, 1, new Location(0, 0)), 0x1a),
-  new Token(new Fragment(text, 1, 2, new Location(0, 1)), 0x2b),
-  new Token(new Fragment(text, 2, 3, new Location(0, 2)), 0x3c)
+  new Token(new Fragment(text, 0, 1, new Location('', 0, 0)), 0x1a),
+  new Token(new Fragment(text, 1, 2, new Location('', 0, 1)), 0x2b),
+  new Token(new Fragment(text, 2, 3, new Location('', 0, 2)), 0x3c)
 ];
 
 test('Default source state', () => {

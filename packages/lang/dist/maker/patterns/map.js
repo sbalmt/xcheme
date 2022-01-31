@@ -41,14 +41,14 @@ const consume = (project, node, state) => {
     let member = node.right;
     const directive = state.directive;
     const routes = [];
-    while (member !== void 0) {
+    while (member) {
         const current = member.right;
         if (!(current instanceof Member.Node)) {
             project.addError(node, 4100 /* UNSUPPORTED_NODE */);
         }
         else {
             const units = resolve(current.route);
-            if (units === void 0) {
+            if (!units) {
                 project.addError(node, 4099 /* UNEXPECTED_NODE */);
             }
             else {

@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
+import * as Entries from '../../core/entries';
 import * as Context from '../context';
 
 import * as Expression from './expression';
@@ -16,7 +17,7 @@ import * as Expression from './expression';
 const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const { origin, identifier, identity } = state.entry;
   const node = parent.getChild(direction)!;
-  const entry = project.nodeEntries.add(origin, identifier, identity, state.entry);
+  const entry = project.local.create(Entries.Types.Node, origin, identifier, identity, state.entry);
   const replacement = new Directive.Node(node, Directive.Types.Node, entry);
   parent.setChild(direction, replacement);
 };
@@ -30,10 +31,9 @@ const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node
  */
 export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.getChild(direction)!;
-  const type = state.type;
-  state.type = Context.Types.Node;
-  state.entry.identifier = node.fragment.data;
+  const entry = state.entry;
+  entry.type = Entries.Types.Node;
+  entry.identifier = node.fragment.data;
   Expression.consume(project, Core.Nodes.Right, node, state);
   emit(project, direction, parent, state);
-  state.type = type;
 };

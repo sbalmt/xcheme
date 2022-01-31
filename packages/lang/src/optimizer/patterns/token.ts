@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
+import * as Entries from '../../core/entries';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 import * as Loose from '../loose';
@@ -20,7 +21,7 @@ import * as String from './string';
 const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const { origin, identifier, identity } = state.entry;
   const node = parent.getChild(direction)!;
-  const entry = project.tokenEntries.add(origin, identifier, identity, state.entry);
+  const entry = project.local.create(Entries.Types.Token, origin, identifier, identity, state.entry);
   const replacement = new Directive.Node(node, Directive.Types.Token, entry);
   parent.setChild(direction, replacement);
 };
@@ -36,26 +37,24 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
   const node = parent.getChild(direction)!;
   const expression = node.right!;
   const entry = state.entry;
-  const type = state.type;
-  state.type = Context.Types.Token;
+  entry.type = Entries.Types.Token;
   entry.identifier = node.fragment.data;
   if (expression.value === Parser.Nodes.String) {
     String.consume(project, Core.Nodes.Right, node, state);
     const word = expression.fragment.data;
     if (!Loose.collision(project, expression, word)) {
       emit(project, direction, parent, state);
-      project.tokenEntries.link(word, state.entry.identifier);
+      project.local.link(word, entry.identifier);
     }
   } else if (expression.value === Parser.Nodes.Range) {
     Range.consume(project, Core.Nodes.Right, node, state);
     const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
     if (!Loose.collision(project, expression, range)) {
       emit(project, direction, parent, state);
-      project.tokenEntries.link(range, state.entry.identifier);
+      project.local.link(range, entry.identifier);
     }
   } else {
     Expression.consume(project, Core.Nodes.Right, node, state);
     emit(project, direction, parent, state);
   }
-  state.type = type;
 };

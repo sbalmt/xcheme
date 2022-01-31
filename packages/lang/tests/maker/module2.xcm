@@ -1,0 +1,20 @@
+// Import directives.
+import './module1';
+
+// Local directives.
+alias token ALIAS_TOKEN as 'token2';
+alias node  ALIAS_NODE  as 'node2';
+
+token LOCAL_TOKEN as 'local:token2';
+node  LOCAL_NODE  as 'local:node2';
+
+// Export containing a dependency that exists in the imported module1.xcm for isolation testing.
+export alias token <1012> EXTERNAL_ISOLATED_TOKEN1 as ALIAS_TOKEN;
+export token       <1013> EXTERNAL_ISOLATED_TOKEN2 as ALIAS_TOKEN;
+
+export alias node  <2022> EXTERNAL_ISOLATED_NODE1 as ALIAS_NODE;
+export node        <2023> EXTERNAL_ISOLATED_NODE2 as ALIAS_NODE;
+
+// Export the imported directives for isolation testing.
+export EXTERNAL_TOKEN1;
+export EXTERNAL_NODE1;

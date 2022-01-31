@@ -6,6 +6,14 @@ exports.Aggregator = void 0;
  */
 class Aggregator {
     /**
+     * Aggregator name.
+     */
+    #name;
+    /**
+     * Aggregator location.
+     */
+    #location;
+    /**
      * Entry map.
      */
     #entries = {};
@@ -18,19 +26,70 @@ class Aggregator {
      */
     #events = {};
     /**
+     * Get the entry that correspond to the given name.
+     * @param name Entry name.
+     * @returns Returns the corresponding entry.
+     * @throws Throws an exception when the given entry wasn't found.
+     */
+    #get(name) {
+        if (!this.has(name)) {
+            throw `An entry named '${name}' doesn't exists.`;
+        }
+        return this.get(name);
+    }
+    /**
+     * Default constructor.
+     * @param name Aggregator name.
+     * @param location Aggregator location.
+     */
+    constructor(name, location) {
+        this.#name = name;
+        this.#location = location;
+    }
+    /**
+     * Get the aggregator name.
+     */
+    get name() {
+        return this.#name;
+    }
+    /**
+     * Get the aggregator location.
+     */
+    get location() {
+        return this.#location;
+    }
+    /**
      * Get all entries.
      */
     get all() {
         return Object.values(this.#entries);
     }
     /**
+     * Get all alias entries.
+     */
+    get aliases() {
+        return this.all.filter((entry) => entry.alias);
+    }
+    /**
+     * Get all exported entries.
+     */
+    get exports() {
+        return this.all.filter((entry) => entry.exported);
+    }
+    /**
+     * Get all imported entries.
+     */
+    get imports() {
+        return this.all.filter((entry) => entry.imported);
+    }
+    /**
      * Get all pattern entries.
      */
     get patterns() {
-        return this.all.filter((entry) => !entry.alias && entry.references === 0);
+        return this.all.filter((entry) => !entry.alias && !entry.references);
     }
     /**
-     * Get all reference pattern entries.
+     * Get all reference entries.
      */
     get references() {
         return this.all.filter((entry) => entry.references > 0);
@@ -52,29 +111,59 @@ class Aggregator {
         return this.#entries[name] ?? this.#links[name];
     }
     /**
-     * Add a new pattern entry.
-     * @param origin Entry origin.
-     * @param identifier Entry identifier.
-     * @param identity Entry identity.
-     * @throws Throws an error when the specified entry already exists.
-     * @returns Returns the new entry.
+     * Get an array containing all entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
      */
-    add(origin, identifier, identity, model) {
+    getAllByType(types) {
+        return this.all.filter((entry) => types.includes(entry.type));
+    }
+    /**
+     * Get an array containing all exported entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getExportsByType(types) {
+        return this.all.filter((entry) => entry.exported && types.includes(entry.type));
+    }
+    /**
+     * Get an array containing all imported entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getImportsByType(types) {
+        return this.all.filter((entry) => entry.exported && types.includes(entry.type));
+    }
+    /**
+     * Get an array containing all pattern entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getPatternsByType(types) {
+        return this.all.filter((entry) => !entry.alias && !entry.references && types.includes(entry.type));
+    }
+    /**
+     * Get an array containing all reference entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getReferencesByType(types) {
+        return this.all.filter((entry) => entry.references > 0 && types.includes(entry.type));
+    }
+    /**
+     * Add the specified pattern entry.
+     * @param entry Pattern entry.
+     * @throws Throws an error when the specified entry already exists.
+     * @returns Returns the added entry.
+     */
+    add(entry) {
+        const { identifier } = entry;
         if (this.has(identifier)) {
             throw `Another entry named '${identifier}' can't be added.`;
         }
         const events = this.#events[identifier];
-        const entry = (this.#entries[identifier] = {
-            origin,
-            identifier,
-            identity,
-            alias: model?.alias ?? false,
-            dynamic: model?.dynamic ?? false,
-            force: model?.force ?? false,
-            references: model?.references ?? 0,
-            pattern: model?.pattern
-        });
-        if (events !== void 0) {
+        this.#entries[identifier] = entry;
+        if (events) {
             delete this.#events[identifier];
             for (const event of events) {
                 event(entry);
@@ -83,7 +172,35 @@ class Aggregator {
         return entry;
     }
     /**
-     * Link an existing entry to another name.
+     * Create and add a new pattern entry.
+     * @param type Entry type.
+     * @param origin Entry origin.
+     * @param identifier Entry identifier.
+     * @param identity Entry identity.
+     * @param model Optional entry model.
+     * @throws Throws an error when the specified entry already exists.
+     * @returns Returns the added entry.
+     */
+    create(type, origin, identifier, identity, model) {
+        return this.add({
+            name: `${this.#name}:${identifier}`,
+            type,
+            origin,
+            identifier,
+            identity,
+            alias: model?.alias ?? false,
+            dynamic: model?.dynamic ?? false,
+            exported: model?.exported ?? false,
+            imported: model?.imported ?? false,
+            references: model?.references ?? 0,
+            dependencies: model?.dependencies ?? [],
+            dependents: model?.dependents ?? [],
+            location: model?.location ?? this.#location,
+            pattern: model?.pattern
+        });
+    }
+    /**
+     * Link an existing entry to another one.
      * @param identifier Link identifier.
      * @param alias Alias identifier.
      * @throws Throws an error when the specified name already exists or the given identifier doesn't exists.
@@ -93,10 +210,9 @@ class Aggregator {
         if (this.has(identifier)) {
             throw `An entry named '${identifier}' already exists.`;
         }
-        else if (!this.has(alias)) {
-            throw `An entry named '${alias}' doesn't exists.`;
-        }
-        return (this.#links[identifier] = this.get(alias));
+        const entry = this.#get(alias);
+        this.#links[identifier] = entry;
+        return entry;
     }
     /**
      * Add an event to be triggered once when an entry with the given identifier is added.
@@ -105,11 +221,11 @@ class Aggregator {
      */
     on(identifier, callback) {
         const events = this.#events[identifier];
-        if (events !== void 0) {
-            events.push(callback);
+        if (!events) {
+            this.#events[identifier] = [callback];
         }
         else {
-            this.#events[identifier] = [callback];
+            events.push(callback);
         }
     }
 }

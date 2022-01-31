@@ -41,5 +41,7 @@ export const enum Nodes {
   Token,
   Node,
   AliasToken,
-  AliasNode
+  AliasNode,
+  Import,
+  Export
 }

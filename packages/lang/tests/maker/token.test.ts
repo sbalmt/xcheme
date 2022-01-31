@@ -69,7 +69,25 @@ test('Token with an identity', () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token<1010> TOKEN as '@';");
 
   // Check the resulting token.
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(token.identity).toBe(1010);
+});
+
+test('Token with an exported pattern', () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "export alias token TOKEN as '@';");
+
+  // Check the resulting token.
+  const token = project.local.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.exported).toBeTruthy();
+});
+
+test('Token with an imported pattern', () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "import './module1'; token <3030> TOKEN as EXTERNAL_TOKEN1;");
+
+  // Check the resulting token.
+  const token = project.local.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.identity).toBe(3030);
 });

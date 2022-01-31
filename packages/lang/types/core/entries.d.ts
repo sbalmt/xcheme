@@ -8,6 +8,15 @@ declare type Pattern = string | Core.Pattern;
  */
 declare type EventCallback = (entry: Entry) => void;
 /**
+ * Entry types.
+ */
+export declare const enum Types {
+    Unknown = 0,
+    Skip = 1,
+    Token = 2,
+    Node = 3
+}
+/**
  * Entry origins.
  */
 export declare const enum Origins {
@@ -18,6 +27,14 @@ export declare const enum Origins {
  * Map entry.
  */
 export declare type Entry = {
+    /**
+     * Entry name.
+     */
+    name: string;
+    /**
+     * Entry type.
+     */
+    type: Types;
     /**
      * Determine whether or not an entry was created by a user directive or a loose token.
      */
@@ -39,13 +56,29 @@ export declare type Entry = {
      */
     dynamic: boolean;
     /**
-     * Determines whether or not the entry output is forced due to have dependents.
+     * Determines whether or not the entry can be exported.
      */
-    force: boolean;
+    exported: boolean;
+    /**
+     * Determines whether or not the entry is imported.
+     */
+    imported: boolean;
     /**
      * Number of references to the entry.
      */
     references: number;
+    /**
+     * Entry dependencies.
+     */
+    dependencies: Entry[];
+    /**
+     * Entry dependents.
+     */
+    dependents: Entry[];
+    /**
+     * Entry location.
+     */
+    location: string;
     /**
      * Entry pattern.
      */
@@ -57,15 +90,41 @@ export declare type Entry = {
 export declare class Aggregator {
     #private;
     /**
+     * Default constructor.
+     * @param name Aggregator name.
+     * @param location Aggregator location.
+     */
+    constructor(name: string, location: string);
+    /**
+     * Get the aggregator name.
+     */
+    get name(): string;
+    /**
+     * Get the aggregator location.
+     */
+    get location(): string;
+    /**
      * Get all entries.
      */
     get all(): Entry[];
+    /**
+     * Get all alias entries.
+     */
+    get aliases(): Entry[];
+    /**
+     * Get all exported entries.
+     */
+    get exports(): Entry[];
+    /**
+     * Get all imported entries.
+     */
+    get imports(): Entry[];
     /**
      * Get all pattern entries.
      */
     get patterns(): Entry[];
     /**
-     * Get all reference pattern entries.
+     * Get all reference entries.
      */
     get references(): Entry[];
     /**
@@ -81,16 +140,55 @@ export declare class Aggregator {
      */
     get(name: string): Entry | undefined;
     /**
-     * Add a new pattern entry.
+     * Get an array containing all entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getAllByType(types: Types[]): Entry[];
+    /**
+     * Get an array containing all exported entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getExportsByType(types: Types[]): Entry[];
+    /**
+     * Get an array containing all imported entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getImportsByType(types: Types[]): Entry[];
+    /**
+     * Get an array containing all pattern entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getPatternsByType(types: Types[]): Entry[];
+    /**
+     * Get an array containing all reference entries that corresponds to one or more specified types.
+     * @param types Entry types.
+     * @returns Returns an array containing all entries found.
+     */
+    getReferencesByType(types: Types[]): Entry[];
+    /**
+     * Add the specified pattern entry.
+     * @param entry Pattern entry.
+     * @throws Throws an error when the specified entry already exists.
+     * @returns Returns the added entry.
+     */
+    add(entry: Entry): Entry;
+    /**
+     * Create and add a new pattern entry.
+     * @param type Entry type.
      * @param origin Entry origin.
      * @param identifier Entry identifier.
      * @param identity Entry identity.
+     * @param model Optional entry model.
      * @throws Throws an error when the specified entry already exists.
-     * @returns Returns the new entry.
+     * @returns Returns the added entry.
      */
-    add(origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry;
+    create(type: Types, origin: Origins, identifier: string, identity: number, model?: Partial<Entry>): Entry;
     /**
-     * Link an existing entry to another name.
+     * Link an existing entry to another one.
      * @param identifier Link identifier.
      * @param alias Alias identifier.
      * @throws Throws an error when the specified name already exists or the given identifier doesn't exists.

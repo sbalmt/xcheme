@@ -20,8 +20,8 @@ import { Errors } from '../../core/errors';
 const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record): Coder.Pattern | undefined => {
   if (symbol.value === Parser.Symbols.AliasToken) {
     const identifier = node.fragment.data;
-    const entry = project.tokenEntries.get(identifier);
-    if (entry !== void 0) {
+    const entry = project.local.get(identifier);
+    if (entry) {
       return project.coder.emitReferencePattern(entry);
     }
     project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
@@ -40,8 +40,8 @@ const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Rec
 const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Record): Coder.Pattern | undefined => {
   if (symbol.value === Parser.Symbols.Token || symbol.value === Parser.Symbols.AliasToken) {
     const identifier = node.fragment.data;
-    const entry = project.tokenEntries.get(identifier);
-    if (entry !== void 0) {
+    const entry = project.local.get(identifier);
+    if (entry) {
       return project.coder.emitReferencePattern(entry);
     }
     project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
@@ -60,8 +60,8 @@ const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Re
 const resolveNode = (project: Project.Context, node: Core.Node, symbol: Core.Record): Coder.Pattern | undefined => {
   if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
     const identifier = node.fragment.data;
-    const entry = project.nodeEntries.get(identifier);
-    if (entry !== void 0) {
+    const entry = project.local.get(identifier);
+    if (entry) {
       return project.coder.emitReferencePattern(entry);
     }
     project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
@@ -82,7 +82,7 @@ const resolveNode = (project: Project.Context, node: Core.Node, symbol: Core.Rec
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const identifier = node.fragment.data;
   const symbol = node.table.find(identifier);
-  if (symbol !== void 0) {
+  if (symbol) {
     const directive = state.directive;
     switch (directive.type) {
       case Directive.Types.Skip:

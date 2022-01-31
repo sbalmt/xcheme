@@ -19,7 +19,7 @@ const printTable = (table: Core.Table, deep: number): void => {
     const location = Fragment.getLocation(record.fragment);
     const connector = deep > 0 ? (index === table.length ? ' └─ ' : ' ├─ ') : ' ';
     Console.printLine(` ${location} ${scope} ${level} ${value} ${padding}${connector}${identifier}`);
-    if (record.link !== void 0) {
+    if (record.link) {
       printTable(record.link, deep + 1);
     }
     index++;

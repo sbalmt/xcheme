@@ -26,7 +26,11 @@ const errorMessages = {
   [Lang.Errors.INVALID_MAP_REFERENCE]: "Map cannot be referenced here. '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: "Map entries cannot be referenced here. '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with a string '{0}' at line {1}, column {2}.",
-  [Lang.Errors.TOKEN_COLLISION]: "Multiple tokens with the same expression, '{0}' at line {1}, column {2}."
+  [Lang.Errors.INVALID_EXPORT]: "Exportation of '{0}' is invalid at line {1}, column {2}.",
+  [Lang.Errors.TOKEN_COLLISION]: "Multiple tokens with the same expression, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.IMPORT_DISABLED]: "Importation of {0} isn't possible (feature disabled) at line {1}, column {2}.",
+  [Lang.Errors.IMPORT_NOT_FOUND]: "Importation of {0} isn't possible (file not found) at line {1}, column {2}.",
+  [Lang.Errors.IMPORT_FAILURE]: "Importation of {0} isn't possible (compilation failed) at line {1}, column {2}."
 };
 
 /**
@@ -42,7 +46,7 @@ export const getMessage = (error: Core.Error): string => {
   }
   const fragment = error.fragment;
   const location = fragment.location;
-  return template.replace(/(\{[0-2]\})/g, (match: string) => {
+  return template.replace(/(\{[0-2]\})/g, (match: string): string => {
     switch (match) {
       case '{0}':
         return fragment.data.replace(/\n/g, '\\n');
@@ -62,7 +66,7 @@ export const getMessage = (error: Core.Error): string => {
 export const print = (errors: Core.Error[]): void => {
   Console.printLine('Errors:');
   for (const error of errors) {
-    Console.printLine(`  ${getMessage(error)}`);
+    Console.printLine(`  ${error.fragment.location.name}: ${getMessage(error)}`);
   }
   Console.printLine('');
 };

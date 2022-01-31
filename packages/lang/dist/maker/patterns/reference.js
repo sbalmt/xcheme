@@ -14,8 +14,8 @@ const Parser = require("../../parser");
 const resolveSkip = (project, node, symbol) => {
     if (symbol.value === 303 /* AliasToken */) {
         const identifier = node.fragment.data;
-        const entry = project.tokenEntries.get(identifier);
-        if (entry !== void 0) {
+        const entry = project.local.get(identifier);
+        if (entry) {
             return project.coder.emitReferencePattern(entry);
         }
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
@@ -33,8 +33,8 @@ const resolveSkip = (project, node, symbol) => {
 const resolveToken = (project, node, symbol) => {
     if (symbol.value === 300 /* Token */ || symbol.value === 303 /* AliasToken */) {
         const identifier = node.fragment.data;
-        const entry = project.tokenEntries.get(identifier);
-        if (entry !== void 0) {
+        const entry = project.local.get(identifier);
+        if (entry) {
             return project.coder.emitReferencePattern(entry);
         }
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
@@ -52,8 +52,8 @@ const resolveToken = (project, node, symbol) => {
 const resolveNode = (project, node, symbol) => {
     if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
         const identifier = node.fragment.data;
-        const entry = project.nodeEntries.get(identifier);
-        if (entry !== void 0) {
+        const entry = project.local.get(identifier);
+        if (entry) {
             return project.coder.emitReferencePattern(entry);
         }
         project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
@@ -73,7 +73,7 @@ const resolveNode = (project, node, symbol) => {
 const consume = (project, node, state) => {
     const identifier = node.fragment.data;
     const symbol = node.table.find(identifier);
-    if (symbol !== void 0) {
+    if (symbol) {
         const directive = state.directive;
         switch (directive.type) {
             case 0 /* Skip */:

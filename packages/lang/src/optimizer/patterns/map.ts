@@ -22,7 +22,7 @@ import * as Expression from './expression';
 const getCandidate = (node: Core.Node, parent?: Core.Node): Core.Node | undefined => {
   if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
     if (node.value === Parser.Nodes.String || node instanceof Identity.Node || node instanceof Mergeable.Node) {
-      if (parent !== void 0) {
+      if (parent) {
         const right = parent.right!;
         parent.setChild(Core.Nodes.Left, void 0);
         parent.setChild(Core.Nodes.Right, void 0);
@@ -30,7 +30,7 @@ const getCandidate = (node: Core.Node, parent?: Core.Node): Core.Node | undefine
       }
       return node;
     }
-    if (node.left !== void 0) {
+    if (node.left) {
       return getCandidate(node.left, node);
     }
   }
@@ -47,49 +47,49 @@ const getCandidate = (node: Core.Node, parent?: Core.Node): Core.Node | undefine
 export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   let member = parent.getChild(direction)!.right;
   state.entry.dynamic = true;
-  while (member !== void 0) {
+  while (member) {
     const expression = member.right!;
     if (expression.value === Parser.Nodes.Identifier) {
-      if (state.type === Context.Types.Skip) {
+      if (state.entry.type === Entries.Types.Skip) {
         project.addError(expression, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
       const entry = state.entry;
       state.entry = {
+        type: entry.type,
         origin: Entries.Origins.User,
-        identity: expression.left !== void 0 ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
+        identity: expression.left ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
         identifier: `${state.entry.identifier}@${expression.fragment.data}`,
         alias: false,
-        dynamic: false
+        dynamic: false,
+        exported: false,
+        dependencies: []
       };
       Expression.consume(project, Core.Nodes.Right, expression, state);
       const candidate = getCandidate(expression.right!);
-      if (candidate !== void 0) {
+      if (!candidate) {
+        project.addError(member, Errors.INVALID_MAP_ENTRY);
+      } else {
         if (candidate.value === Parser.Nodes.String) {
           Loose.collision(project, candidate, candidate.fragment.data);
         }
-        const { origin, identifier, identity } = state.entry;
+        const { type, origin, identifier, identity } = state.entry;
         const replacement = new Member.Node(expression.right!, state.entry, candidate);
-        if (state.type === Context.Types.Token) {
-          project.tokenEntries.add(origin, identifier, identity, state.entry);
-        } else {
-          project.nodeEntries.add(origin, identifier, identity, state.entry);
-        }
+        project.local.create(type, origin, identifier, identity, state.entry);
         member.setChild(Core.Nodes.Right, replacement);
-      } else {
-        project.addError(member, Errors.INVALID_MAP_ENTRY);
       }
       state.entry = entry;
     } else {
       Expression.consume(project, Core.Nodes.Right, member, state);
       const candidate = getCandidate(member.right!);
-      if (candidate !== void 0) {
+      if (!candidate) {
+        project.addError(member, Errors.INVALID_MAP_ENTRY);
+      } else {
         if (candidate.value === Parser.Nodes.String) {
           Loose.collision(project, candidate, candidate.fragment.data);
         }
-        member.setChild(Core.Nodes.Right, new Member.Node(member.right!, { ...state.entry }, candidate));
-      } else {
-        project.addError(member, Errors.INVALID_MAP_ENTRY);
+        const replacement = new Member.Node(member.right!, state.entry, candidate);
+        member.setChild(Core.Nodes.Right, replacement);
       }
     }
     member = member.next!;

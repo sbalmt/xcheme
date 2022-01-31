@@ -12,7 +12,7 @@ const And = require("./and");
 const consume = (project, node, state) => {
     const param = node.right;
     const patterns = And.resolve(project, param.right, state);
-    if (patterns !== void 0) {
+    if (patterns) {
         const value = parseInt(param.fragment.data);
         return project.coder.emitSetPattern(value, ...patterns);
     }

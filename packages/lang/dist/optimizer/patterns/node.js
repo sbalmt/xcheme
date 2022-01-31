@@ -14,7 +14,7 @@ const Expression = require("./expression");
 const emit = (project, direction, parent, state) => {
     const { origin, identifier, identity } = state.entry;
     const node = parent.getChild(direction);
-    const entry = project.nodeEntries.add(origin, identifier, identity, state.entry);
+    const entry = project.local.create(3 /* Node */, origin, identifier, identity, state.entry);
     const replacement = new Directive.Node(node, 2 /* Node */, entry);
     parent.setChild(direction, replacement);
 };
@@ -27,12 +27,11 @@ const emit = (project, direction, parent, state) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const type = state.type;
-    state.type = 3 /* Node */;
-    state.entry.identifier = node.fragment.data;
+    const entry = state.entry;
+    entry.type = 3 /* Node */;
+    entry.identifier = node.fragment.data;
     Expression.consume(project, 1 /* Right */, node, state);
     emit(project, direction, parent, state);
-    state.type = type;
 };
 exports.consume = consume;
 //# sourceMappingURL=node.js.map

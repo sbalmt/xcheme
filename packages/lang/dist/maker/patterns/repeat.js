@@ -11,7 +11,7 @@ const And = require("./and");
  */
 const consume = (project, node, state) => {
     const patterns = And.resolve(project, node.right, state);
-    if (patterns !== void 0) {
+    if (patterns) {
         return project.coder.emitRepeatPattern(...patterns);
     }
     return void 0;

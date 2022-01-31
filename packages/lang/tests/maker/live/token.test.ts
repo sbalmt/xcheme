@@ -18,7 +18,7 @@ test("Parse a 'TOKEN' rule", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 });
@@ -30,7 +30,7 @@ test("Parse a 'TOKEN' rule with an alias token reference", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 });
@@ -42,7 +42,7 @@ test("Parse a 'TOKEN' rule with a reference to itself", () => {
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(3);
 });
@@ -54,7 +54,7 @@ test("Parse a 'TOKEN' rule with an alias token that has a reference to itself", 
   // Check the resulting tokens.
   Helper.testLexer(project, context, '@@@');
 
-  const token = project.tokenEntries.get('TOKEN')!;
+  const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
   expect(checkTokens(context, [token.identity])).toBe(1);
 });
@@ -70,4 +70,17 @@ test("Parse a 'TOKEN' rule with a whole token map reference", () => {
   Helper.testLexer(project, context, 'a!b!');
 
   expect(checkTokens(context, [100, 101])).toBe(2);
+});
+
+test("Parse a 'TOKEN' rule with an imported alias pattern", () => {
+  const project = Helper.makeParser(new Lang.LiveCoder(), "import './module2'; token TOKEN as EXTERNAL_TOKEN1;");
+  const context = new Core.Context('test');
+
+  // Check the resulting tokens.
+  Helper.testLexer(project, context, 'token1token1');
+
+  const token = project.local.get('TOKEN')!;
+  expect(token).toBeDefined();
+
+  expect(checkTokens(context, [token.identity])).toBe(2);
 });

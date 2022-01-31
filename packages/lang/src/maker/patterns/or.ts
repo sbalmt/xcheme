@@ -20,13 +20,13 @@ import * as Expression from './expression';
 export const resolve = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern[] | undefined => {
   if (node.value !== Parser.Nodes.Or) {
     const pattern = Expression.consume(project, node, state);
-    if (pattern !== void 0) {
+    if (pattern) {
       return [pattern];
     }
   } else if (node instanceof Mergeable.Node) {
     if (node.type === Parser.Nodes.String) {
       const fragments = node.sequence.map((node) => String.extract(node.fragment.data));
-      if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1) !== void 0) {
+      if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1)) {
         const routes = fragments.map((fragment) => project.coder.getRoute(fragment.split('')));
         return [project.coder.emitMapPattern(...routes)];
       }
@@ -41,9 +41,9 @@ export const resolve = (project: Project.Context, node: Core.Node, state: Contex
     }
   } else {
     const left = resolve(project, node.left!, state);
-    if (left !== void 0) {
+    if (left) {
       const right = resolve(project, node.right!, state);
-      if (right !== void 0) {
+      if (right) {
         return [...left, ...right];
       }
     }
@@ -60,7 +60,7 @@ export const resolve = (project: Project.Context, node: Core.Node, state: Contex
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const patterns = resolve(project, node, state);
-  if (patterns !== void 0) {
+  if (patterns) {
     if (patterns.length > 1) {
       return project.coder.emitChoosePattern(...patterns);
     }

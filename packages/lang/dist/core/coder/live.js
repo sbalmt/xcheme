@@ -26,13 +26,13 @@ class Live extends base_1.Base {
      */
     getRoute(path, value, pattern) {
         const [test, ...remaining] = path;
-        if (value !== void 0) {
-            if (pattern !== void 0) {
+        if (value) {
+            if (pattern) {
                 return new Core.SetValueRoute(value, pattern, ...path);
             }
             return new Core.SetValueRoute(value, test, ...remaining);
         }
-        if (pattern !== void 0) {
+        if (pattern) {
             return new Core.FlowRoute(pattern, test, ...remaining);
         }
         return new Core.UnitRoute(test, ...remaining);

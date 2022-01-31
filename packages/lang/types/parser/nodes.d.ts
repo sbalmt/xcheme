@@ -41,5 +41,7 @@ export declare const enum Nodes {
     Token = 236,
     Node = 237,
     AliasToken = 238,
-    AliasNode = 239
+    AliasNode = 239,
+    Import = 240,
+    Export = 241
 }

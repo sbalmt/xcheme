@@ -21,7 +21,7 @@ export const consume = (
   direction: Core.Nodes
 ): Coder.Pattern | undefined => {
   const patterns = And.resolve(project, node.right!, state);
-  if (patterns !== void 0) {
+  if (patterns) {
     return project.coder.emitPlacePattern(direction, ...patterns);
   }
   return void 0;

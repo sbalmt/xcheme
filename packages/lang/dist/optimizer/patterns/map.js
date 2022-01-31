@@ -17,7 +17,7 @@ const Expression = require("./expression");
 const getCandidate = (node, parent) => {
     if (node.value !== 209 /* Then */ && node.value !== 211 /* Or */) {
         if (node.value === 204 /* String */ || node instanceof Identity.Node || node instanceof Mergeable.Node) {
-            if (parent !== void 0) {
+            if (parent) {
                 const right = parent.right;
                 parent.setChild(0 /* Left */, void 0);
                 parent.setChild(1 /* Right */, void 0);
@@ -25,7 +25,7 @@ const getCandidate = (node, parent) => {
             }
             return node;
         }
-        if (node.left !== void 0) {
+        if (node.left) {
             return getCandidate(node.left, node);
         }
     }
@@ -41,53 +41,52 @@ const getCandidate = (node, parent) => {
 const consume = (project, direction, parent, state) => {
     let member = parent.getChild(direction).right;
     state.entry.dynamic = true;
-    while (member !== void 0) {
+    while (member) {
         const expression = member.right;
         if (expression.value === 200 /* Identifier */) {
-            if (state.type === 1 /* Skip */) {
+            if (state.entry.type === 1 /* Skip */) {
                 project.addError(expression, 4101 /* UNSUPPORTED_IDENTITY */);
                 break;
             }
             const entry = state.entry;
             state.entry = {
+                type: entry.type,
                 origin: 0 /* User */,
-                identity: expression.left !== void 0 ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
+                identity: expression.left ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
                 identifier: `${state.entry.identifier}@${expression.fragment.data}`,
                 alias: false,
-                dynamic: false
+                dynamic: false,
+                exported: false,
+                dependencies: []
             };
             Expression.consume(project, 1 /* Right */, expression, state);
             const candidate = getCandidate(expression.right);
-            if (candidate !== void 0) {
+            if (!candidate) {
+                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
+            }
+            else {
                 if (candidate.value === 204 /* String */) {
                     Loose.collision(project, candidate, candidate.fragment.data);
                 }
-                const { origin, identifier, identity } = state.entry;
+                const { type, origin, identifier, identity } = state.entry;
                 const replacement = new Member.Node(expression.right, state.entry, candidate);
-                if (state.type === 2 /* Token */) {
-                    project.tokenEntries.add(origin, identifier, identity, state.entry);
-                }
-                else {
-                    project.nodeEntries.add(origin, identifier, identity, state.entry);
-                }
+                project.local.create(type, origin, identifier, identity, state.entry);
                 member.setChild(1 /* Right */, replacement);
-            }
-            else {
-                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
             }
             state.entry = entry;
         }
         else {
             Expression.consume(project, 1 /* Right */, member, state);
             const candidate = getCandidate(member.right);
-            if (candidate !== void 0) {
+            if (!candidate) {
+                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
+            }
+            else {
                 if (candidate.value === 204 /* String */) {
                     Loose.collision(project, candidate, candidate.fragment.data);
                 }
-                member.setChild(1 /* Right */, new Member.Node(member.right, { ...state.entry }, candidate));
-            }
-            else {
-                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
+                const replacement = new Member.Node(member.right, state.entry, candidate);
+                member.setChild(1 /* Right */, replacement);
             }
         }
         member = member.next;

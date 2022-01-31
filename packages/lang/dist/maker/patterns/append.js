@@ -12,7 +12,7 @@ const Splitter = require("../resolvers/splitter");
  */
 const consume = (project, node, state, direction) => {
     const patterns = Splitter.resolve(project, node.right, state);
-    if (patterns !== void 0) {
+    if (patterns) {
         const identity = state.directive.identity;
         const [test, ...remaining] = patterns;
         return project.coder.emitAppendPattern(identity, direction, test, ...remaining);

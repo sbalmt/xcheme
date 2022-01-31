@@ -5,7 +5,7 @@ test("Output an 'OR' rule", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip '-' | '+' | '@';");
 
   // Check the output code.
-  const rule = project.skipEntries.get('@SKIP0')!;
+  const rule = project.local.get('@SKIP0')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(`new Core.ChooseUnitPattern('-', '+', '@')`);
@@ -15,7 +15,7 @@ test("Output an 'OR' rule optimized with a map", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip '-' | '+' | '123' | 'abc';");
 
   // Check the output code.
-  const rule = project.skipEntries.get('@SKIP0')!;
+  const rule = project.local.get('@SKIP0')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(
@@ -32,7 +32,7 @@ test("Output an 'OR' rule with a complex sequence", () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "skip repeat '-' | '+' | '@' & ('1' | '2') | 'A' | 'B';");
 
   // Check the output code.
-  const rule = project.skipEntries.get('@SKIP0')!;
+  const rule = project.local.get('@SKIP0')!;
   expect(rule).toBeDefined();
   expect(rule.identity).toBe(0);
   expect(rule.pattern).toBe(

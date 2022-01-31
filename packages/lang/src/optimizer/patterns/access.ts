@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Identity from '../../core/nodes/identity';
+import * as Entries from '../../core/entries';
 import * as Project from '../../core/project';
 import * as Context from '../context';
 
@@ -12,11 +13,11 @@ import { Errors } from '../../core/errors';
  * @returns Returns all the extracted path.
  */
 const getPath = (node: Core.Node): string[] => {
-  if (node.left !== void 0 && node.right !== void 0) {
+  if (node.left && node.right) {
     return [...getPath(node.left), ...getPath(node.right!)];
-  } else if (node.left !== void 0) {
+  } else if (node.left) {
     return getPath(node.left);
-  } else if (node.right !== void 0) {
+  } else if (node.right) {
     return getPath(node.right!);
   }
   return [node.fragment.data];
@@ -33,11 +34,11 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
   const node = parent.getChild(direction)!;
   const path = getPath(node);
   const identifier = path.join('@');
-  if (state.type !== Context.Types.Node || project.nodeEntries.has(identifier)) {
+  if (state.entry.type !== Entries.Types.Node || project.local.get(identifier)?.type === Entries.Types.Node) {
     project.addError(node, Errors.INVALID_MAP_ENTRY_REFERENCE);
   } else {
-    const directive = project.tokenEntries.get(path[0]);
-    const member = project.tokenEntries.get(identifier);
+    const directive = project.local.get(path[0]);
+    const member = project.local.get(identifier);
     if (!directive || !member) {
       project.addError(node, Errors.UNDEFINED_IDENTIFIER);
     } else if (member.dynamic) {

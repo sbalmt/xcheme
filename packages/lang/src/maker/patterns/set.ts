@@ -16,7 +16,7 @@ import * as And from './and';
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const param = node.right!;
   const patterns = And.resolve(project, param.right!, state);
-  if (patterns !== void 0) {
+  if (patterns) {
     const value = parseInt(param.fragment.data);
     return project.coder.emitSetPattern(value, ...patterns);
   }

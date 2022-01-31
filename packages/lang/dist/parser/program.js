@@ -67,7 +67,19 @@ const aliasToken = new Core.SetValueRoute(238 /* AliasToken */, new directive_1.
  */
 const aliasNode = new Core.SetValueRoute(239 /* AliasNode */, new directive_1.default(302 /* AliasNode */, identity, expression), 129 /* Alias */, 128 /* Node */);
 /**
+ * Export identifier route.
+ */
+const exportIdentifier = new Core.SetValueRoute(200 /* Identifier */, 100 /* Identifier */);
+/**
+ * Export aliases route.
+ */
+const exportAliases = new Core.SetValueRoute(241 /* Export */, new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */, new Core.MapFlowPattern(token, node, aliasToken, aliasNode, exportIdentifier)), 133 /* Export */);
+/**
+ * Import module route.
+ */
+const importModule = new Core.SetValueRoute(240 /* Import */, new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */, new Core.ExpectUnitPattern(102 /* String */)), 132 /* Import */);
+/**
  * Main parser pattern.
  */
-exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(skip, token, node, aliasToken, aliasNode), new Core.ExpectUnitPattern(139 /* Semicolon */))))), new Core.EndFlowPattern());
+exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.EmitNodePattern(Core.BaseSource.Output, 1 /* Right */, new Core.MapFlowPattern(importModule, skip, token, node, aliasToken, aliasNode, exportAliases), new Core.ExpectUnitPattern(139 /* Semicolon */)))), new Core.EndFlowPattern());
 //# sourceMappingURL=program.js.map

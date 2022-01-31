@@ -69,7 +69,7 @@ const printTree = (direction: Core.Nodes, parent: Core.Node, prefix: string, ind
  * @param node Input node.
  */
 export const print = (node: Core.Node): void => {
-  if (node.next !== void 0) {
+  if (node.next) {
     Console.printLine('Nodes:\n');
     printTree(Core.Nodes.Next, node, '', '');
     Console.printLine('');

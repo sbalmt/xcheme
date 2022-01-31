@@ -131,7 +131,7 @@ export default class Map extends Pattern {
    */
   #findNode(source: Base, current: Node | undefined): Node | undefined {
     source.saveState();
-    while (source.length > 0 && current !== void 0) {
+    while (current && source.length > 0) {
       const diff = this.#compare(current.value, source.value);
       if (diff < 0) {
         current = current.left;
@@ -159,7 +159,7 @@ export default class Map extends Pattern {
   #getLongestConsumptionNode(source: Base): Node | undefined {
     let current = this.#root;
     let longest;
-    while ((current = this.#findNode(source, current)) !== void 0) {
+    while ((current = this.#findNode(source, current))) {
       longest = current;
       current = current.next;
       source.nextState();
@@ -188,7 +188,7 @@ export default class Map extends Pattern {
    */
   consume(source: Base): boolean {
     const node = this.#getLongestConsumptionNode(source);
-    if (node !== void 0) {
+    if (node) {
       if (node.pattern) {
         return node.pattern.consume(source);
       }

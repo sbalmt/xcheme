@@ -18,16 +18,15 @@ import * as Nodes from './nodes';
  * @returns Returns the generated pattern entry.
  */
 const emit = (project: Project.Context, node: Core.Node, state: Context.State, name: string): Entries.Entry => {
-  const temp = Context.getNewState(state.anchor, state.counter);
+  const temp = Context.getNewState(state.anchor, Context.getCount(project));
   const token = Nodes.getToken(`@REF${temp.entry.identity}`, node.table, node.fragment.location, node);
   temp.entry.origin = Entries.Origins.Loose;
-  temp.counter++;
   Token.consume(project, Core.Nodes.Right, token, temp);
+  const entry = project.local.get(name)!;
   token.setChild(Core.Nodes.Next, state.anchor.next);
-  state.counter = temp.counter;
   state.anchor.setChild(Core.Nodes.Next, token);
   state.anchor = token;
-  return project.tokenEntries.get(name)!;
+  return entry;
 };
 
 /**
@@ -38,7 +37,7 @@ const emit = (project: Project.Context, node: Core.Node, state: Context.State, n
  * @returns Returns true when the specified name already exists, false otherwise.
  */
 export const collision = (project: Project.Context, node: Core.Node, name: string): boolean => {
-  if (project.tokenEntries.has(name)) {
+  if (project.local.has(name)) {
     project.addError(node, Errors.TOKEN_COLLISION);
     return true;
   }
@@ -54,8 +53,8 @@ export const collision = (project: Project.Context, node: Core.Node, name: strin
  * @returns Returns the loose pattern entry.
  */
 export const resolve = (project: Project.Context, node: Core.Node, state: Context.State, name: string): Entries.Entry => {
-  const entry = project.tokenEntries.get(name);
-  if (entry !== void 0) {
+  const entry = project.local.get(name);
+  if (entry) {
     if (entry.origin === Entries.Origins.User) {
       project.addError(node, Errors.TOKEN_COLLISION);
     }

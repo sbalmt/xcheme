@@ -14,7 +14,14 @@ import * as Errors from '../core/errors';
  * Global language options.
  */
 const globalOptions: Lang.Project.Options = {
-  initialIdentity: 0
+  rootPath: process.cwd(),
+  initialIdentity: 0,
+  loadFileHook: (file: string): string | undefined => {
+    if (FS.existsSync(file)) {
+      return FS.readFileSync(file, { encoding: 'utf-8' });
+    }
+    return void 0;
+  }
 };
 
 /**
@@ -94,15 +101,16 @@ export const perform = (source: string | number, target: string | number, run: b
   const context = new Core.Context('maker');
   if (Lexer.tokenize(Lang.Lexer, text, context, !run && state.tokens!)) {
     if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
+      const path = source.toString();
       if (run) {
-        const project = new Lang.Project.Context(new Lang.LiveCoder(), globalOptions);
+        const project = new Lang.Project.Context(path, new Lang.LiveCoder(), globalOptions);
         if (optimize(project, context.node) && make(project, context.node)) {
           const content = FS.readFileSync(target).toString();
           test(project, content, state);
           return true;
         }
       } else {
-        const project = new Lang.Project.Context(new Lang.TextCoder(), globalOptions);
+        const project = new Lang.Project.Context(path, new Lang.TextCoder(), globalOptions);
         if (optimize(project, context.node) && make(project, context.node)) {
           save(project, target);
           return true;
