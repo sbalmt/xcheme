@@ -65,13 +65,55 @@ test('Token map entry already defined (token collision)', () => {
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as '@'; token TOKEN2 as map { '@' };", [Lang.Errors.TOKEN_COLLISION]);
 });
 
+test('Token with a dependency (alias token reference)', () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "alias token ALIAS as '@'; token<1010> TOKEN as ALIAS;");
+
+  // Check the resulting token.
+  const token = project.local.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.type).toBe(Lang.Entries.Types.Token);
+  expect(token.origin).toBe(Lang.Entries.Origins.User);
+  expect(token.alias).toBeFalsy();
+  expect(token.exported).toBeFalsy();
+  expect(token.imported).toBeFalsy();
+  expect(token.dynamic).toBeFalsy();
+  expect(token.identity).toBe(1010);
+  expect(token.references).toBe(0);
+  expect(token.dependencies).toHaveLength(1);
+  expect(token.primary).toBeUndefined();
+
+  // Check the resulting dependency.
+  const [alias] = token.dependencies;
+  expect(alias).toBeDefined();
+  expect(alias.type).toBe(Lang.Entries.Types.Token);
+  expect(alias.origin).toBe(Lang.Entries.Origins.User);
+  expect(alias.alias).toBeTruthy();
+  expect(alias.exported).toBeFalsy();
+  expect(alias.imported).toBeFalsy();
+  expect(alias.dynamic).toBeFalsy();
+  expect(alias.identifier).toBe('ALIAS');
+  expect(alias.identity).toBe(0);
+  expect(alias.references).toBe(1);
+  expect(alias.dependencies).toHaveLength(0);
+  expect(alias.primary).toBeUndefined();
+});
+
 test('Token with an identity', () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "token<1010> TOKEN as '@';");
 
   // Check the resulting token.
   const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
+  expect(token.type).toBe(Lang.Entries.Types.Token);
+  expect(token.origin).toBe(Lang.Entries.Origins.User);
+  expect(token.alias).toBeFalsy();
+  expect(token.exported).toBeFalsy();
+  expect(token.imported).toBeFalsy();
+  expect(token.dynamic).toBeFalsy();
   expect(token.identity).toBe(1010);
+  expect(token.references).toBe(0);
+  expect(token.dependencies).toHaveLength(0);
+  expect(token.primary).toBeUndefined();
 });
 
 test('Token with an exported pattern', () => {
@@ -80,7 +122,16 @@ test('Token with an exported pattern', () => {
   // Check the resulting token.
   const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
+  expect(token.type).toBe(Lang.Entries.Types.Token);
+  expect(token.origin).toBe(Lang.Entries.Origins.User);
+  expect(token.alias).toBeTruthy();
   expect(token.exported).toBeTruthy();
+  expect(token.imported).toBeFalsy();
+  expect(token.dynamic).toBeFalsy();
+  expect(token.identity).toBe(0);
+  expect(token.references).toBe(0);
+  expect(token.dependencies).toHaveLength(0);
+  expect(token.primary).toBeUndefined();
 });
 
 test('Token with an imported pattern', () => {
@@ -89,5 +140,29 @@ test('Token with an imported pattern', () => {
   // Check the resulting token.
   const token = project.local.get('TOKEN')!;
   expect(token).toBeDefined();
+  expect(token.type).toBe(Lang.Entries.Types.Token);
+  expect(token.origin).toBe(Lang.Entries.Origins.User);
+  expect(token.alias).toBeFalsy();
+  expect(token.exported).toBeFalsy();
+  expect(token.imported).toBeFalsy();
+  expect(token.dynamic).toBeFalsy();
   expect(token.identity).toBe(3030);
+  expect(token.references).toBe(0);
+  expect(token.dependencies).toHaveLength(1);
+  expect(token.primary).toBeUndefined();
+
+  // Check the imported dependency.
+  const [imported] = token.dependencies;
+  expect(imported).toBeDefined();
+  expect(imported.type).toBe(Lang.Entries.Types.Token);
+  expect(imported.origin).toBe(Lang.Entries.Origins.User);
+  expect(imported.alias).toBeTruthy();
+  expect(imported.exported).toBeFalsy();
+  expect(imported.imported).toBeTruthy();
+  expect(imported.dynamic).toBeFalsy();
+  expect(imported.identifier).toBe('EXTERNAL_TOKEN1');
+  expect(imported.identity).toBe(1010);
+  expect(imported.references).toBe(1);
+  expect(imported.dependencies).toHaveLength(1);
+  expect(imported.primary).toBeUndefined();
 });

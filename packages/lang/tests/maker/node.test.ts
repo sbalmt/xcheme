@@ -55,13 +55,73 @@ test('Node referring a loose token map already defined (token collision)', () =>
   Helper.makeError(new Lang.LiveCoder(), "token TOKEN as 'a'; node NODE as map { 'a' };", [Lang.Errors.TOKEN_COLLISION]);
 });
 
+test('Node with a dependency (loose token reference)', () => {
+  const project = Helper.makeParser(new Lang.TextCoder(), "node NODE as '@';");
+
+  // Check the resulting node.
+  const node = project.local.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.type).toBe(Lang.Entries.Types.Node);
+  expect(node.origin).toBe(Lang.Entries.Origins.User);
+  expect(node.alias).toBeFalsy();
+  expect(node.exported).toBeFalsy();
+  expect(node.imported).toBeFalsy();
+  expect(node.dynamic).toBeFalsy();
+  expect(node.identity).toBe(0);
+  expect(node.references).toBe(0);
+  expect(node.dependencies).toHaveLength(1);
+  expect(node.primary).toBeUndefined();
+
+  // Check the resulting loose reference.
+  const [loose] = node.dependencies;
+  expect(loose).toBeDefined();
+  expect(loose.type).toBe(Lang.Entries.Types.Token);
+  expect(loose.origin).toBe(Lang.Entries.Origins.Loose);
+  expect(loose.alias).toBeFalsy();
+  expect(loose.exported).toBeFalsy();
+  expect(loose.imported).toBeFalsy();
+  expect(loose.dynamic).toBeFalsy();
+  expect(loose.identifier).toBe('@REF1');
+  expect(loose.identity).toBe(1);
+  expect(loose.references).toBe(2);
+  expect(loose.dependencies).toHaveLength(0);
+  expect(loose.primary).toBeDefined();
+
+  // Check the primary entry.
+  const primary = loose.primary!;
+  expect(primary.type).toBe(Lang.Entries.Types.Token);
+  expect(primary.origin).toBe(Lang.Entries.Origins.Loose);
+  expect(primary.alias).toBeFalsy();
+  expect(primary.exported).toBeFalsy();
+  expect(primary.imported).toBeFalsy();
+  expect(primary.dynamic).toBeFalsy();
+  expect(primary.identifier).toBe('@@REF1');
+  expect(primary.identity).toBe(1);
+  expect(primary.references).toBe(0);
+  expect(primary.dependencies).toHaveLength(1);
+  expect(primary.primary).toBeUndefined();
+
+  // Check the circular dependency.
+  const [circular] = primary.dependencies;
+  expect(circular.identifier).toBe(loose.identifier);
+});
+
 test('Node with an identity', () => {
   const project = Helper.makeParser(new Lang.TextCoder(), "node <2020> NODE as '@';");
 
   // Check the resulting node.
   const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.type).toBe(Lang.Entries.Types.Node);
+  expect(node.origin).toBe(Lang.Entries.Origins.User);
+  expect(node.alias).toBeFalsy();
+  expect(node.exported).toBeFalsy();
+  expect(node.imported).toBeFalsy();
+  expect(node.dynamic).toBeFalsy();
   expect(node.identity).toBe(2020);
+  expect(node.references).toBe(0);
+  expect(node.dependencies).toHaveLength(1);
+  expect(node.primary).toBeUndefined();
 });
 
 test('Node with an exported pattern', () => {
@@ -70,7 +130,16 @@ test('Node with an exported pattern', () => {
   // Check the resulting node.
   const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.type).toBe(Lang.Entries.Types.Node);
+  expect(node.origin).toBe(Lang.Entries.Origins.User);
+  expect(node.alias).toBeTruthy();
   expect(node.exported).toBeTruthy();
+  expect(node.imported).toBeFalsy();
+  expect(node.dynamic).toBeFalsy();
+  expect(node.identity).toBe(0);
+  expect(node.references).toBe(0);
+  expect(node.dependencies).toHaveLength(1);
+  expect(node.primary).toBeUndefined();
 });
 
 test('Node with an imported pattern', () => {
@@ -79,5 +148,29 @@ test('Node with an imported pattern', () => {
   // Check the resulting node.
   const node = project.local.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.type).toBe(Lang.Entries.Types.Node);
+  expect(node.origin).toBe(Lang.Entries.Origins.User);
+  expect(node.alias).toBeFalsy();
+  expect(node.exported).toBeFalsy();
+  expect(node.imported).toBeFalsy();
+  expect(node.dynamic).toBeFalsy();
   expect(node.identity).toBe(4040);
+  expect(node.references).toBe(0);
+  expect(node.dependencies).toHaveLength(1);
+  expect(node.primary).toBeUndefined();
+
+  // Check the imported dependency.
+  const [imported] = node.dependencies;
+  expect(imported).toBeDefined();
+  expect(imported.type).toBe(Lang.Entries.Types.Node);
+  expect(imported.origin).toBe(Lang.Entries.Origins.User);
+  expect(imported.alias).toBeTruthy();
+  expect(imported.exported).toBeFalsy();
+  expect(imported.imported).toBeTruthy();
+  expect(imported.dynamic).toBeFalsy();
+  expect(imported.identifier).toBe('EXTERNAL_NODE1');
+  expect(imported.identity).toBe(2020);
+  expect(imported.references).toBe(1);
+  expect(imported.dependencies).toHaveLength(1);
+  expect(imported.primary).toBeUndefined();
 });
