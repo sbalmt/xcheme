@@ -3153,7 +3153,7 @@ exports["default"] = Scope;
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.Maker = exports.Optimizer = exports.Parser = exports.Lexer = exports.Project = exports.TextCoder = exports.LiveCoder = exports.BaseCoder = void 0;
+exports.Maker = exports.Optimizer = exports.Parser = exports.Lexer = exports.Entries = exports.Project = exports.TextCoder = exports.LiveCoder = exports.BaseCoder = void 0;
 var base_1 = __webpack_require__(59);
 Object.defineProperty(exports, "BaseCoder", ({ enumerable: true, get: function () { return base_1.Base; } }));
 var live_1 = __webpack_require__(60);
@@ -3161,6 +3161,7 @@ Object.defineProperty(exports, "LiveCoder", ({ enumerable: true, get: function (
 var text_1 = __webpack_require__(61);
 Object.defineProperty(exports, "TextCoder", ({ enumerable: true, get: function () { return text_1.Text; } }));
 exports.Project = __webpack_require__(63);
+exports.Entries = __webpack_require__(64);
 exports.Lexer = __webpack_require__(65);
 exports.Parser = __webpack_require__(67);
 exports.Optimizer = __webpack_require__(72);
@@ -4181,7 +4182,9 @@ class Context {
         for (const entry of entries) {
             if (!cache.has(entry)) {
                 cache.add(entry);
-                dependents.push(...entry.dependents.filter((dependent) => dependent.type === type));
+                if (entry.primary?.type === type) {
+                    dependents.push(entry.primary);
+                }
                 dependents.push(...this.#getDependents(type, entry.dependencies, cache));
             }
         }
@@ -4471,8 +4474,8 @@ class Aggregator {
             imported: model?.imported ?? false,
             references: model?.references ?? 0,
             dependencies: model?.dependencies ?? [],
-            dependents: model?.dependents ?? [],
             location: model?.location ?? this.#location,
+            primary: model?.primary,
             pattern: model?.pattern
         });
     }
@@ -5337,10 +5340,10 @@ const consume = (project, state) => {
             if (entry.references > 0) {
                 entry.references++;
                 const identifier = `@${entry.identifier}`;
-                const link = project.local.create(entry.type, entry.origin, identifier, entry.identity);
-                link.pattern = project.coder.emitReferencePattern(entry);
-                link.dependencies.push(entry);
-                entry.dependents.push(link);
+                const primary = project.local.create(entry.type, entry.origin, identifier, entry.identity);
+                primary.pattern = project.coder.emitReferencePattern(entry);
+                primary.dependencies.push(entry);
+                entry.primary = primary;
             }
         }
     }
@@ -6428,10 +6431,10 @@ const consume = (project, state) => {
             if (entry.references > 0) {
                 entry.references++;
                 const identifier = `@${entry.identifier}`;
-                const link = project.local.create(entry.type, entry.origin, identifier, entry.identity);
-                link.pattern = project.coder.emitReferencePattern(entry);
-                link.dependencies.push(entry);
-                entry.dependents.push(link);
+                const primary = project.local.create(entry.type, entry.origin, identifier, entry.identity);
+                primary.pattern = project.coder.emitReferencePattern(entry);
+                primary.dependencies.push(entry);
+                entry.primary = primary;
             }
         }
     }

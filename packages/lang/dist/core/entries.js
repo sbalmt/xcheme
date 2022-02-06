@@ -194,8 +194,8 @@ class Aggregator {
             imported: model?.imported ?? false,
             references: model?.references ?? 0,
             dependencies: model?.dependencies ?? [],
-            dependents: model?.dependents ?? [],
             location: model?.location ?? this.#location,
+            primary: model?.primary,
             pattern: model?.pattern
         });
     }

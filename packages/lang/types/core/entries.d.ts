@@ -72,13 +72,13 @@ export declare type Entry = {
      */
     dependencies: Entry[];
     /**
-     * Entry dependents.
-     */
-    dependents: Entry[];
-    /**
      * Entry location.
      */
     location: string;
+    /**
+     * Primary entry.
+     */
+    primary: Entry | undefined;
     /**
      * Entry pattern.
      */

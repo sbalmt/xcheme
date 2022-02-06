@@ -91,13 +91,13 @@ export type Entry = {
    */
   dependencies: Entry[];
   /**
-   * Entry dependents.
-   */
-  dependents: Entry[];
-  /**
    * Entry location.
    */
   location: string;
+  /**
+   * Primary entry.
+   */
+  primary: Entry | undefined;
   /**
    * Entry pattern.
    */
@@ -320,8 +320,8 @@ export class Aggregator {
       imported: model?.imported ?? false,
       references: model?.references ?? 0,
       dependencies: model?.dependencies ?? [],
-      dependents: model?.dependents ?? [],
       location: model?.location ?? this.#location,
+      primary: model?.primary,
       pattern: model?.pattern
     });
   }

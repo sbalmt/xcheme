@@ -21,10 +21,10 @@ export const consume = (project: Project.Context, state: Context.State): void =>
       if (entry.references > 0) {
         entry.references++;
         const identifier = `@${entry.identifier}`;
-        const link = project.local.create(entry.type, entry.origin, identifier, entry.identity);
-        link.pattern = project.coder.emitReferencePattern(entry);
-        link.dependencies.push(entry);
-        entry.dependents.push(link);
+        const primary = project.local.create(entry.type, entry.origin, identifier, entry.identity);
+        primary.pattern = project.coder.emitReferencePattern(entry);
+        primary.dependencies.push(entry);
+        entry.primary = primary;
       }
     }
   }

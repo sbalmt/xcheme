@@ -136,7 +136,9 @@ export class Context {
     for (const entry of entries) {
       if (!cache.has(entry)) {
         cache.add(entry);
-        dependents.push(...entry.dependents.filter((dependent) => dependent.type === type));
+        if (entry.primary?.type === type) {
+          dependents.push(entry.primary);
+        }
         dependents.push(...this.#getDependents(type, entry.dependencies, cache));
       }
     }
