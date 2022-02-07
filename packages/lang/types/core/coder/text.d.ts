@@ -182,6 +182,12 @@ export declare class Text extends Base {
      */
     emitSetPattern(state: number, ...patterns: string[]): string;
     /**
+     * Get a new uncase pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitUncasePattern(...patterns: string[]): string;
+    /**
      * Get a new reference pattern.
      * @param entry Referenced entry.
      * @returns Returns the pattern.

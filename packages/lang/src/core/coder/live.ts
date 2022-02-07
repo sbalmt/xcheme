@@ -267,6 +267,15 @@ export class Live extends Base {
   }
 
   /**
+   * Get a new uncase pattern.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitUncasePattern(...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.UncaseTransformPattern(...patterns);
+  }
+
+  /**
    * Get a new reference pattern.
    * @param entry Referenced entry.
    * @returns Returns the pattern.

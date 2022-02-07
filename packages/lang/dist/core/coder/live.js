@@ -226,6 +226,14 @@ class Live extends base_1.Base {
         return new Core.SetStatePattern(state, ...patterns);
     }
     /**
+     * Get a new uncase pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitUncasePattern(...patterns) {
+        return new Core.UncaseTransformPattern(...patterns);
+    }
+    /**
      * Get a new reference pattern.
      * @param entry Referenced entry.
      * @returns Returns the pattern.

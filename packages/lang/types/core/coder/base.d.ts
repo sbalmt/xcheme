@@ -187,6 +187,12 @@ export declare class Base {
      */
     emitSetPattern(state: number, ...patterns: Pattern[]): Pattern;
     /**
+     * Should be implemented to return an uncase pattern.
+     * @param patterns Expected patterns.
+     * @returns Should return the pattern.
+     */
+    emitUncasePattern(...patterns: Pattern[]): Pattern;
+    /**
      * Should be implemented to return a reference pattern.
      * @param entry Referenced entry.
      * @returns Should return the pattern.

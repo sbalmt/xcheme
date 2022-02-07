@@ -181,6 +181,12 @@ export declare class Live extends Base {
      */
     emitSetPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern;
     /**
+     * Get a new uncase pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitUncasePattern(...patterns: Core.Pattern[]): Core.Pattern;
+    /**
      * Get a new reference pattern.
      * @param entry Referenced entry.
      * @returns Returns the pattern.

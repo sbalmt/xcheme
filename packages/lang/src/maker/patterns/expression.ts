@@ -27,6 +27,7 @@ import * as Scope from './scope';
 import * as Error from './error';
 import * as Has from './has';
 import * as Set from './set';
+import * as Uncase from './uncase';
 
 /**
  * Consume the given node resolving the expression patterns.
@@ -94,6 +95,8 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
       return Has.consume(project, node, state);
     case Parser.Nodes.Set:
       return Set.consume(project, node, state);
+    case Parser.Nodes.Uncase:
+      return Uncase.consume(project, node, state);
     default:
       project.addError(node, Errors.UNEXPECTED_NODE);
   }

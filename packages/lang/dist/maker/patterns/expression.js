@@ -23,6 +23,7 @@ const Scope = require("./scope");
 const Error = require("./error");
 const Has = require("./has");
 const Set = require("./set");
+const Uncase = require("./uncase");
 /**
  * Consume the given node resolving the expression patterns.
  * @param project Project context.
@@ -89,6 +90,8 @@ const consume = (project, node, state) => {
             return Has.consume(project, node, state);
         case 233 /* Set */:
             return Set.consume(project, node, state);
+        case 234 /* Uncase */:
+            return Uncase.consume(project, node, state);
         default:
             project.addError(node, 4099 /* UNEXPECTED_NODE */);
     }

@@ -325,6 +325,15 @@ export class Text extends Base {
   }
 
   /**
+   * Get a new uncase pattern.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitUncasePattern(...patterns: string[]): string {
+    return this.#getPattern('UncaseTransformPattern', ...patterns);
+  }
+
+  /**
    * Get a new reference pattern.
    * @param entry Referenced entry.
    * @returns Returns the pattern.

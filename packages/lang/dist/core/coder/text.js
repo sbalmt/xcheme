@@ -270,6 +270,14 @@ class Text extends base_1.Base {
         return this.#getPattern('SetStatePattern', state, ...patterns);
     }
     /**
+     * Get a new uncase pattern.
+     * @param patterns Expected patterns.
+     * @returns Returns the pattern.
+     */
+    emitUncasePattern(...patterns) {
+        return this.#getPattern('UncaseTransformPattern', ...patterns);
+    }
+    /**
      * Get a new reference pattern.
      * @param entry Referenced entry.
      * @returns Returns the pattern.
