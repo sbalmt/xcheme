@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
+const uncase_1 = require("../transform/uncase");
 /**
  * Consume the first route that match in the list of routes given for this pattern.
  */
@@ -34,7 +35,8 @@ class Map extends pattern_1.default {
             if (!current) {
                 return void 0;
             }
-            const diff = this.#compare(current.value, units[index]);
+            const unit = uncase_1.default.transform(units[index]);
+            const diff = this.#compare(current.value, unit);
             if (diff < 0) {
                 current = current.left;
             }
@@ -61,7 +63,8 @@ class Map extends pattern_1.default {
         let diff = 0;
         for (let index = 0; index < units.length;) {
             if (current) {
-                diff = this.#compare(current.value, units[index]);
+                const unit = uncase_1.default.transform(units[index]);
+                diff = this.#compare(current.value, unit);
                 if (diff < 0) {
                     previous = current;
                     current = current.left;
@@ -107,7 +110,8 @@ class Map extends pattern_1.default {
     #findNode(source, current) {
         source.saveState();
         while (current && source.length > 0) {
-            const diff = this.#compare(current.value, source.value);
+            const unit = uncase_1.default.transform(source.value);
+            const diff = this.#compare(current.value, unit);
             if (diff < 0) {
                 current = current.left;
             }
@@ -150,9 +154,7 @@ class Map extends pattern_1.default {
         super();
         for (const route of routes) {
             const node = this.#getNode(route.units) ?? this.#setNode(route.units);
-            if (node) {
-                node.pattern = route.pattern;
-            }
+            node.pattern = route.pattern;
         }
     }
     /**

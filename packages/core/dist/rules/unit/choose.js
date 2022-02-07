@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
+const uncase_1 = require("../transform/uncase");
 /**
  * Consume one unit that is between all the acceptable units in the pattern.
  */
@@ -24,7 +25,8 @@ class Choose extends pattern_1.default {
      */
     consume(source) {
         if (source.length > 0) {
-            if (this.#units.has(source.value)) {
+            const unit = uncase_1.default.transform(source.value);
+            if (this.#units.has(unit)) {
                 source.nextState();
                 return true;
             }

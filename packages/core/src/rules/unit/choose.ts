@@ -1,6 +1,7 @@
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
+import Uncase from '../transform/uncase';
 
 /**
  * Consume one unit that is between all the acceptable units in the pattern.
@@ -27,7 +28,8 @@ export default class Choose extends Pattern {
    */
   consume(source: Base): boolean {
     if (source.length > 0) {
-      if (this.#units.has(source.value)) {
+      const unit = Uncase.transform(source.value);
+      if (this.#units.has(unit)) {
         source.nextState();
         return true;
       }

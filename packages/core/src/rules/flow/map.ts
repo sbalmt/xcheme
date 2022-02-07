@@ -2,6 +2,7 @@ import type Base from '../../source/base';
 import type Route from '../route';
 
 import Pattern from '../pattern';
+import Uncase from '../transform/uncase';
 
 /**
  * Internal map node.
@@ -64,7 +65,8 @@ export default class Map extends Pattern {
       if (!current) {
         return void 0;
       }
-      const diff = this.#compare(current.value, units[index]);
+      const unit = Uncase.transform(units[index]);
+      const diff = this.#compare(current.value, unit);
       if (diff < 0) {
         current = current.left;
       } else if (diff > 0) {
@@ -83,14 +85,15 @@ export default class Map extends Pattern {
    * @param units Input units.
    * @returns Returns the terminal node or undefined when the given units are empty.
    */
-  #setNode(units: (string | number)[]): Node | undefined {
+  #setNode(units: (string | number)[]): Node {
     let current = this.#root;
     let previous = current;
     let selected = current;
     let diff = 0;
     for (let index = 0; index < units.length; ) {
       if (current) {
-        diff = this.#compare(current.value, units[index]);
+        const unit = Uncase.transform(units[index]);
+        diff = this.#compare(current.value, unit);
         if (diff < 0) {
           previous = current;
           current = current.left;
@@ -120,7 +123,7 @@ export default class Map extends Pattern {
       current = current.next;
       index++;
     }
-    return selected;
+    return selected!;
   }
 
   /**
@@ -132,7 +135,8 @@ export default class Map extends Pattern {
   #findNode(source: Base, current: Node | undefined): Node | undefined {
     source.saveState();
     while (current && source.length > 0) {
-      const diff = this.#compare(current.value, source.value);
+      const unit = Uncase.transform(source.value);
+      const diff = this.#compare(current.value, unit);
       if (diff < 0) {
         current = current.left;
       } else if (diff > 0) {
@@ -175,9 +179,7 @@ export default class Map extends Pattern {
     super();
     for (const route of routes) {
       const node = this.#getNode(route.units) ?? this.#setNode(route.units);
-      if (node) {
-        node.pattern = route.pattern;
-      }
+      node.pattern = route.pattern;
     }
   }
 

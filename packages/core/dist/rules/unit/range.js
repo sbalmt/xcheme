@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const pattern_1 = require("../pattern");
+const uncase_1 = require("../transform/uncase");
 /**
  * Consume one unit that is in the range accepted by the pattern.
  */
@@ -30,8 +31,8 @@ class Range extends pattern_1.default {
      */
     consume(source) {
         if (source.length > 0) {
-            const value = source.value;
-            if (value >= this.#begin && value <= this.#end) {
+            const unit = uncase_1.default.transform(source.value);
+            if (unit >= this.#begin && unit <= this.#end) {
                 source.nextState();
                 return true;
             }

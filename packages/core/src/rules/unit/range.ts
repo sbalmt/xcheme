@@ -1,6 +1,7 @@
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
+import Uncase from '../transform/uncase';
 
 /**
  * Consume one unit that is in the range accepted by the pattern.
@@ -34,8 +35,8 @@ export default class Range extends Pattern {
    */
   consume(source: Base): boolean {
     if (source.length > 0) {
-      const value = source.value;
-      if (value >= this.#begin && value <= this.#end) {
+      const unit = Uncase.transform(source.value);
+      if (unit >= this.#begin && unit <= this.#end) {
         source.nextState();
         return true;
       }
