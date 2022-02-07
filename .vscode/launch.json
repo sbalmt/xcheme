@@ -45,7 +45,7 @@
       "name": "Test Core",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "runtimeArgs": ["--inspect-brk", "node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
+      "runtimeArgs": ["--inspect-brk", "${workspaceFolder}/node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
       "skipFiles": ["<node_internals>/**"],
       "cwd": "${workspaceFolder}/packages/core"
     },
@@ -55,7 +55,7 @@
       "name": "Test Lang",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
-      "runtimeArgs": ["--inspect-brk", "node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
+      "runtimeArgs": ["--inspect-brk", "${workspaceFolder}/node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
       "skipFiles": ["<node_internals>/**"],
       "cwd": "${workspaceFolder}/packages/lang"
     }
