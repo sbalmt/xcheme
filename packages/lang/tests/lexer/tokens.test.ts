@@ -48,7 +48,9 @@ const tokens = [
     { name: 'error', value: Lexer.Tokens.Error },
     // State
     { name: 'has', value: Lexer.Tokens.Has },
-    { name: 'set', value: Lexer.Tokens.Set }
+    { name: 'set', value: Lexer.Tokens.Set },
+    // Transformation
+    { name: 'uncase', value: Lexer.Tokens.Uncase }
   ],
   // Directives
   ...[

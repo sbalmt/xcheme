@@ -60,7 +60,8 @@ const unaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
   new Core.SetValueRoute(Nodes.Error, state, Lexer.Tokens.Error),
   new Core.SetValueRoute(Nodes.Has, state, Lexer.Tokens.Has),
-  new Core.SetValueRoute(Nodes.Set, state, Lexer.Tokens.Set)
+  new Core.SetValueRoute(Nodes.Set, state, Lexer.Tokens.Set),
+  new Core.SetValueRoute(Nodes.Uncase, Lexer.Tokens.Uncase)
 );
 
 /**

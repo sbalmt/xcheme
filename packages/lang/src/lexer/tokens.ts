@@ -28,6 +28,7 @@ export const enum Tokens {
   Error,
   Has,
   Set,
+  Uncase,
   Skip,
   Token,
   Node,

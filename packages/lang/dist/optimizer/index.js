@@ -33,17 +33,17 @@ const resolveIdentity = (node) => {
 const resolveTokenOrNode = (project, node, state) => {
     state.entry.identity = resolveIdentity(node.right) || Context.getCount(project);
     switch (node.value) {
-        case 236 /* Token */:
+        case 237 /* Token */:
             Token.consume(project, 1 /* Right */, node, state);
             break;
-        case 237 /* Node */:
+        case 238 /* Node */:
             Node.consume(project, 1 /* Right */, node, state);
             break;
-        case 238 /* AliasToken */:
+        case 239 /* AliasToken */:
             state.entry.alias = true;
             Token.consume(project, 1 /* Right */, node, state);
             break;
-        case 239 /* AliasNode */:
+        case 240 /* AliasNode */:
             state.entry.alias = true;
             Node.consume(project, 1 /* Right */, node, state);
             break;
@@ -62,16 +62,16 @@ const consumeNodes = (node, project) => {
     while ((current = node.next)) {
         const state = Context.getNewState(node, -1);
         switch (current.value) {
-            case 240 /* Import */:
+            case 241 /* Import */:
                 Import.resolve(project, current);
                 break;
-            case 241 /* Export */:
+            case 242 /* Export */:
                 if (!Export.resolve(project, current)) {
                     state.entry.exported = true;
                     resolveTokenOrNode(project, current.right, state);
                 }
                 break;
-            case 235 /* Skip */:
+            case 236 /* Skip */:
                 state.entry.identity = Context.getCount(project);
                 Skip.consume(project, 2 /* Next */, node, state);
                 break;

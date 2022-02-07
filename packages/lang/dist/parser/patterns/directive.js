@@ -18,7 +18,7 @@ class Directive extends Core.Pattern {
      */
     constructor(symbol, identity, expression) {
         super();
-        this.#pattern = new Core.ExpectFlowPattern(new Core.OptFlowPattern(identity), new Core.EmitSymbolPattern(symbol, new Core.PivotNodePattern(200 /* Identifier */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(100 /* Identifier */)), new Core.ExpectUnitPattern(131 /* As */), new Core.PlaceNodePattern(1 /* Right */, expression)));
+        this.#pattern = new Core.ExpectFlowPattern(new Core.OptFlowPattern(identity), new Core.EmitSymbolPattern(symbol, new Core.PivotNodePattern(200 /* Identifier */, 1 /* Right */, 0 /* Left */, new Core.ExpectUnitPattern(100 /* Identifier */)), new Core.ExpectUnitPattern(132 /* As */), new Core.PlaceNodePattern(1 /* Right */, expression)));
     }
     /**
      * Consume the given source.

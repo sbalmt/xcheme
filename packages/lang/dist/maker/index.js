@@ -18,16 +18,16 @@ const resolveTokenOrNode = (project, node) => {
     }
     const state = { directive };
     switch (node.value) {
-        case 236 /* Token */:
+        case 237 /* Token */:
             Token.consume(project, state);
             break;
-        case 237 /* Node */:
+        case 238 /* Node */:
             Node.consume(project, state);
             break;
-        case 238 /* AliasToken */:
+        case 239 /* AliasToken */:
             Token.consume(project, state);
             break;
-        case 239 /* AliasNode */:
+        case 240 /* AliasNode */:
             Node.consume(project, state);
             break;
         default:
@@ -56,16 +56,16 @@ const resolveSkip = (project, node) => {
  */
 const consumeNodes = (node, project) => {
     while ((node = node.next)) {
-        if (node.value === 240 /* Import */) {
+        if (node.value === 241 /* Import */) {
             // Just ignore for now...
         }
-        else if (node.value === 241 /* Export */) {
+        else if (node.value === 242 /* Export */) {
             const current = node.right;
             if (current.value !== 200 /* Identifier */) {
                 resolveTokenOrNode(project, current);
             }
         }
-        else if (node.value === 235 /* Skip */) {
+        else if (node.value === 236 /* Skip */) {
             resolveSkip(project, node);
         }
         else {

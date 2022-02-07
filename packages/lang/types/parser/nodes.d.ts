@@ -36,12 +36,13 @@ export declare const enum Nodes {
     Error = 231,
     Has = 232,
     Set = 233,
-    Access = 234,
-    Skip = 235,
-    Token = 236,
-    Node = 237,
-    AliasToken = 238,
-    AliasNode = 239,
-    Import = 240,
-    Export = 241
+    Uncase = 234,
+    Access = 235,
+    Skip = 236,
+    Token = 237,
+    Node = 238,
+    AliasToken = 239,
+    AliasNode = 240,
+    Import = 241,
+    Export = 242
 }

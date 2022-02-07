@@ -36,6 +36,7 @@ export const enum Nodes {
   Error,
   Has,
   Set,
+  Uncase,
   Access,
   Skip,
   Token,

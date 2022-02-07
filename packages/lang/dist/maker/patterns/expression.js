@@ -42,7 +42,7 @@ const consume = (project, node, state) => {
             return Range.consume(project, node, state);
         case 207 /* Map */:
             return Map.consume(project, node, state);
-        case 234 /* Access */:
+        case 235 /* Access */:
             return Access.consume(project, node);
         case 209 /* Then */:
             return Condition.consume(project, node, state);

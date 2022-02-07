@@ -84,6 +84,7 @@ const keywordsAndSymbols = new Core.MapFlowPattern(
   new Core.SetValueRoute(Tokens.Error, end, 'e', 'r', 'r', 'o', 'r'),
   new Core.SetValueRoute(Tokens.Has, end, 'h', 'a', 's'),
   new Core.SetValueRoute(Tokens.Set, end, 's', 'e', 't'),
+  new Core.SetValueRoute(Tokens.Uncase, end, 'u', 'n', 'c', 'a', 's', 'e'),
   new Core.SetValueRoute(Tokens.Skip, end, 's', 'k', 'i', 'p'),
   new Core.SetValueRoute(Tokens.Token, end, 't', 'o', 'k', 'e', 'n'),
   new Core.SetValueRoute(Tokens.Node, end, 'n', 'o', 'd', 'e'),

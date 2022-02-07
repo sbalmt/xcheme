@@ -32,7 +32,7 @@ const consume = (project, direction, parent, state) => {
         case 207 /* Map */:
             Map.consume(project, direction, parent, state);
             break;
-        case 234 /* Access */:
+        case 235 /* Access */:
             Access.consume(project, direction, parent, state);
             break;
         case 211 /* Or */:
