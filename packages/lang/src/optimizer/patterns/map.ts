@@ -55,16 +55,11 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
         break;
       }
       const entry = state.entry;
-      state.entry = {
+      state.entry = Context.getNewStateEntry({
         type: entry.type,
-        origin: Entries.Origins.User,
         identity: expression.left ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
-        identifier: `${state.entry.identifier}@${expression.fragment.data}`,
-        alias: false,
-        dynamic: false,
-        exported: false,
-        dependencies: []
-      };
+        identifier: `${state.entry.identifier}@${expression.fragment.data}`
+      });
       Expression.consume(project, Core.Nodes.Right, expression, state);
       const candidate = getCandidate(expression.right!);
       if (!candidate) {

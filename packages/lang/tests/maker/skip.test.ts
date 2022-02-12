@@ -58,9 +58,8 @@ test('Skip with a dependency (alias token reference)', () => {
   expect(skip.imported).toBeFalsy();
   expect(skip.dynamic).toBeFalsy();
   expect(skip.identity).toBe(0);
-  expect(skip.references).toBe(0);
   expect(skip.dependencies).toHaveLength(1);
-  expect(skip.primary).toBeUndefined();
+  expect(skip.dependents).toHaveLength(0);
 
   // Check the resulting dependency.
   const [alias] = skip.dependencies;
@@ -73,9 +72,8 @@ test('Skip with a dependency (alias token reference)', () => {
   expect(alias.dynamic).toBeFalsy();
   expect(alias.identifier).toBe('ALIAS');
   expect(alias.identity).toBe(1);
-  expect(alias.references).toBe(1);
   expect(alias.dependencies).toHaveLength(0);
-  expect(alias.primary).toBeUndefined();
+  expect(alias.dependents).toHaveLength(1);
 });
 
 test('Skip with an imported pattern', () => {
@@ -91,9 +89,8 @@ test('Skip with an imported pattern', () => {
   expect(skip.imported).toBeFalsy();
   expect(skip.dynamic).toBeFalsy();
   expect(skip.identity).toBe(6);
-  expect(skip.references).toBe(0);
   expect(skip.dependencies).toHaveLength(1);
-  expect(skip.primary).toBeUndefined();
+  expect(skip.dependents).toHaveLength(0);
 
   // Check the imported dependency.
   const [imported] = skip.dependencies;
@@ -106,7 +103,6 @@ test('Skip with an imported pattern', () => {
   expect(imported.dynamic).toBeFalsy();
   expect(imported.identifier).toBe('EXTERNAL_TOKEN1');
   expect(imported.identity).toBe(1010);
-  expect(imported.references).toBe(1);
   expect(imported.dependencies).toHaveLength(1);
-  expect(imported.primary).toBeUndefined();
+  expect(imported.dependents).toHaveLength(1);
 });

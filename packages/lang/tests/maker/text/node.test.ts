@@ -110,11 +110,6 @@ test("Output a 'NODE' rule with a reference to itself", () => {
       /**/ `)` +
       `)`
   );
-
-  const link = project.local.get(`@${node.identifier}`)!;
-  expect(link).toBeDefined();
-  expect(link.identity).toBe(node.identity);
-  expect(link.pattern).toBe('L0_NODE');
 });
 
 test("Output a 'NODE' rule with an alias node that has a reference to itself", () => {

@@ -85,11 +85,17 @@ export class Context {
 
   /**
    * Get an array of patterns from the the specified entries.
-   * @param entries Patterns entry.
+   * @param type Entry type.
+   * @param entries Input entries.
    * @returns Returns an array containing all the patterns.
    */
-  #getPatterns(entries: Entries.Entry[]): Coder.Pattern[] {
-    return entries.filter((entry) => entry.pattern).map((entry) => entry.pattern!);
+  #getPatterns(type: Entries.Types, entries: Entries.Entry[]): Coder.Pattern[] {
+    return entries.map((entry) => {
+      if (entry.dependents.includes(entry) || entry.dependents.filter((entry) => entry.type === type).length > 1) {
+        return this.#coder.emitReferencePattern(entry);
+      }
+      return entry.pattern!;
+    });
   }
 
   /**
@@ -98,51 +104,28 @@ export class Context {
    * @returns Returns an array containing all the references.
    */
   #getReferences(entries: Entries.Entry[]): Coder.Reference[] {
-    return entries
-      .filter((entry) => entry.pattern && entry.references > 1)
-      .map((entry) => ({ name: entry.name, pattern: entry.pattern! }));
+    return entries.map((entry) => ({ name: entry.name, pattern: entry.pattern! }));
   }
 
   /**
-   * Get an array of dependencies from the specified type and entries.
+   * Get an array of entries (including all sub entries) that corresponds to the specified entry type.
    * @param type Entry type.
    * @param entries Input entries.
-   * @param cache Optional cache for patterns already processed.
-   * @returns Returns an array containing all the dependencies.
+   * @param cache Optional cache for entries already processed.
+   * @returns Returns an array containing all the corresponding entries.
    */
-  #getDependencies(type: Entries.Types, entries: Entries.Entry[], cache = new WeakSet<Entries.Entry>()): Entries.Entry[] {
-    const dependencies = [];
+  #getAllEntries(type: Entries.Types, entries: Entries.Entry[], cache = new WeakSet<Entries.Entry>()): Entries.Entry[] {
+    const list = [];
     for (const entry of entries) {
       if (!cache.has(entry)) {
         cache.add(entry);
-        if (entry.type === type && entry.references > 1) {
-          dependencies.push(entry);
+        if (entry.pattern && entry.type === type) {
+          list.push(entry);
         }
-        dependencies.push(...this.#getDependencies(type, entry.dependencies, cache));
+        list.push(...this.#getAllEntries(type, entry.dependencies, cache));
       }
     }
-    return dependencies;
-  }
-
-  /**
-   * Get an array of dependents from the specified type and patterns.
-   * @param type Entry type.
-   * @param entries Input entries.
-   * @param cache Optional cache for patterns already processed.
-   * @returns Returns an array containing all the dependencies.
-   */
-  #getDependents(type: Entries.Types, entries: Entries.Entry[], cache = new WeakSet<Entries.Entry>()): Entries.Entry[] {
-    const dependents = [];
-    for (const entry of entries) {
-      if (!cache.has(entry)) {
-        cache.add(entry);
-        if (entry.primary?.type === type) {
-          dependents.push(entry.primary);
-        }
-        dependents.push(...this.#getDependents(type, entry.dependencies, cache));
-      }
-    }
-    return dependents;
+    return list;
   }
 
   /**
@@ -196,16 +179,13 @@ export class Context {
    * Get the resulting lexer.
    */
   get lexer(): string | Core.Pattern {
-    const dependencies = this.#getDependencies(Entries.Types.Token, [
-      ...Object.values(this.#externalEntries)
-        .map((aggregator) => aggregator.getPatternsByType([Entries.Types.Token, Entries.Types.Node]))
-        .flat(),
-      ...this.#localEntries.getPatternsByType([Entries.Types.Skip, Entries.Types.Token, Entries.Types.Node])
-    ]);
+    const patterns = this.#localEntries.getPatternsByType([Entries.Types.Skip, Entries.Types.Token, Entries.Types.Node]);
+    const entries = this.#getAllEntries(Entries.Types.Token, patterns);
+    const dependencies = entries.filter((entry) => Entries.isReferencedBy(entry, Entries.Types.Token));
+    const tokens = entries.filter((entry) => !entry.alias);
     return this.#coder.getEntry('Lexer', this.#getReferences(dependencies), [
-      ...this.#getPatterns(this.#localEntries.getPatternsByType([Entries.Types.Skip])),
-      ...this.#getPatterns(this.#getDependents(Entries.Types.Token, dependencies)),
-      ...this.#getPatterns(this.#localEntries.getPatternsByType([Entries.Types.Token]))
+      ...this.#getPatterns(Entries.Types.Token, this.#localEntries.getPatternsByType([Entries.Types.Skip])),
+      ...this.#getPatterns(Entries.Types.Token, tokens)
     ]);
   }
 
@@ -213,16 +193,11 @@ export class Context {
    * Get the resulting parser.
    */
   get parser(): string | Core.Pattern {
-    const dependencies = this.#getDependencies(Entries.Types.Node, [
-      ...Object.values(this.#externalEntries)
-        .map((aggregator) => aggregator.getPatternsByType([Entries.Types.Node]))
-        .flat(),
-      ...this.#localEntries.getPatternsByType([Entries.Types.Node])
-    ]);
-    return this.#coder.getEntry('Parser', this.#getReferences(dependencies), [
-      ...this.#getPatterns(this.#getDependents(Entries.Types.Node, dependencies)),
-      ...this.#getPatterns(this.#localEntries.getPatternsByType([Entries.Types.Node]))
-    ]);
+    const patterns = this.#localEntries.getPatternsByType([Entries.Types.Node]);
+    const entries = this.#getAllEntries(Entries.Types.Node, patterns);
+    const dependencies = entries.filter((entry) => Entries.isReferencedBy(entry, Entries.Types.Node));
+    const nodes = entries.filter((entry) => !entry.alias);
+    return this.#coder.getEntry('Parser', this.#getReferences(dependencies), this.#getPatterns(Entries.Types.Node, nodes));
   }
 
   /**

@@ -207,12 +207,27 @@ test("Parse a 'NODE' rule with a whole node map reference", () => {
   expect(checkNodes(context, [200, 201])).toBe(2);
 });
 
-test("Parse a 'NODE' rule with an imported alias pattern", () => {
+test("Parse a 'NODE' rule with an imported alias node pattern", () => {
   const project = Helper.makeParser(new Lang.LiveCoder(), "import './module2'; node NODE as EXTERNAL_NODE1;");
   const context = new Core.Context('test');
 
   // Check the resulting tokens.
   Helper.testLexer(project, context, 'node1node1');
+
+  // Check the resulting nodes.
+  Helper.testParser(project, context, context.tokens);
+
+  const node = project.local.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(checkNodes(context, [node.identity])).toBe(2);
+});
+
+test("Parse a 'NODE' rule with an imported token pattern", () => {
+  const project = Helper.makeParser(new Lang.LiveCoder(), "import './module2'; node NODE as EXTERNAL_ISOLATED_TOKEN2;");
+  const context = new Core.Context('test');
+
+  // Check the resulting tokens.
+  Helper.testLexer(project, context, 'token2token2');
 
   // Check the resulting nodes.
   Helper.testParser(project, context, context.tokens);

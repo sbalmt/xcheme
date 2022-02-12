@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Aggregator = void 0;
+exports.isReferencedBy = exports.Aggregator = void 0;
 /**
  * Aggregate pattern entries during the making process.
  */
@@ -65,36 +65,6 @@ class Aggregator {
         return Object.values(this.#entries);
     }
     /**
-     * Get all alias entries.
-     */
-    get aliases() {
-        return this.all.filter((entry) => entry.alias);
-    }
-    /**
-     * Get all exported entries.
-     */
-    get exports() {
-        return this.all.filter((entry) => entry.exported);
-    }
-    /**
-     * Get all imported entries.
-     */
-    get imports() {
-        return this.all.filter((entry) => entry.imported);
-    }
-    /**
-     * Get all pattern entries.
-     */
-    get patterns() {
-        return this.all.filter((entry) => !entry.alias && !entry.references);
-    }
-    /**
-     * Get all reference entries.
-     */
-    get references() {
-        return this.all.filter((entry) => entry.references > 0);
-    }
-    /**
      * Determines whether or not the aggregator contains an entry with the given name.
      * @param name Entry name.
      * @returns Returns true when the specified entry exists, false otherwise.
@@ -111,44 +81,12 @@ class Aggregator {
         return this.#entries[name] ?? this.#links[name];
     }
     /**
-     * Get an array containing all entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getAllByType(types) {
-        return this.all.filter((entry) => types.includes(entry.type));
-    }
-    /**
-     * Get an array containing all exported entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getExportsByType(types) {
-        return this.all.filter((entry) => entry.exported && types.includes(entry.type));
-    }
-    /**
-     * Get an array containing all imported entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getImportsByType(types) {
-        return this.all.filter((entry) => entry.exported && types.includes(entry.type));
-    }
-    /**
      * Get an array containing all pattern entries that corresponds to one or more specified types.
      * @param types Entry types.
      * @returns Returns an array containing all entries found.
      */
     getPatternsByType(types) {
-        return this.all.filter((entry) => !entry.alias && !entry.references && types.includes(entry.type));
-    }
-    /**
-     * Get an array containing all reference entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getReferencesByType(types) {
-        return this.all.filter((entry) => entry.references > 0 && types.includes(entry.type));
+        return this.all.filter((entry) => entry.pattern && !entry.alias && types.includes(entry.type));
     }
     /**
      * Add the specified pattern entry.
@@ -192,10 +130,9 @@ class Aggregator {
             dynamic: model?.dynamic ?? false,
             exported: model?.exported ?? false,
             imported: model?.imported ?? false,
-            references: model?.references ?? 0,
             dependencies: model?.dependencies ?? [],
+            dependents: model?.dependents ?? [],
             location: model?.location ?? this.#location,
-            primary: model?.primary,
             pattern: model?.pattern
         });
     }
@@ -230,4 +167,17 @@ class Aggregator {
     }
 }
 exports.Aggregator = Aggregator;
+/**
+ * Determines whether or not the given entry is referenced.
+ * @param entry Input entry.
+ * @param type Reference type.
+ * @returns Returns true when the given entry is referenced, false otherwise.
+ */
+const isReferencedBy = (entry, type) => {
+    if (!entry.dependents.includes(entry)) {
+        return entry.dependents.reduce((previous, current) => (current.type === type ? previous + 1 : previous), 0) > 1;
+    }
+    return true;
+};
+exports.isReferencedBy = isReferencedBy;
 //# sourceMappingURL=entries.js.map

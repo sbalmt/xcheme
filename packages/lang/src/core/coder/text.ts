@@ -341,7 +341,7 @@ export class Text extends Base {
   emitReferencePattern(entry: Entries.Entry): string {
     if (!entry.pattern) {
       return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(entry.name)}`);
-    } else if (entry.references > 1) {
+    } else if (Entries.isReferencedBy(entry, entry.type)) {
       return this.#getIdentifier(entry.name);
     } else {
       return entry.pattern as string;

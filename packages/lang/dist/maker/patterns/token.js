@@ -12,20 +12,11 @@ const consume = (project, state) => {
     const expression = Expression.consume(project, directive.right, state);
     if (expression) {
         const entry = project.local.get(directive.identifier);
-        if (directive.alias) {
-            entry.pattern = expression;
+        if (!directive.alias) {
+            entry.pattern = project.coder.emitTokenPattern(directive.identity, expression);
         }
         else {
-            const identity = directive.identity;
-            entry.pattern = project.coder.emitTokenPattern(identity, expression);
-            if (entry.references > 0) {
-                entry.references++;
-                const identifier = `@${entry.identifier}`;
-                const primary = project.local.create(entry.type, entry.origin, identifier, entry.identity);
-                primary.pattern = project.coder.emitReferencePattern(entry);
-                primary.dependencies.push(entry);
-                entry.primary = primary;
-            }
+            entry.pattern = expression;
         }
     }
 };

@@ -36,10 +36,6 @@ type Entry = {
    * Determines whether or not the entry can be exported.
    */
   exported: boolean;
-  /**
-   * Entry dependencies.
-   */
-  dependencies: Entries.Entry[];
 };
 
 /**
@@ -57,6 +53,23 @@ export type State = {
 };
 
 /**
+ * Get a new state entry based on the given entry model.
+ * @param model Entry model.
+ * @returns Returns the generated entry.
+ */
+export const getNewStateEntry = (model: Partial<Entry>): Entry => {
+  return {
+    type: model.type ?? Entries.Types.Unknown,
+    origin: model.origin ?? Entries.Origins.User,
+    identifier: model.identifier ?? '?',
+    identity: model.identity ?? -1,
+    alias: model.alias ?? false,
+    dynamic: model.dynamic ?? false,
+    exported: model.exported ?? false
+  };
+};
+
+/**
  * Get a new state based on the given parameters.
  * @param anchor Anchor node.
  * @param identity Entry identity.
@@ -65,16 +78,10 @@ export type State = {
 export const getNewState = (anchor: Core.Node, identity: number): State => {
   return {
     anchor,
-    entry: {
-      type: Entries.Types.Unknown,
+    entry: getNewStateEntry({
       origin: Entries.Origins.User,
-      identifier: '?',
-      identity,
-      alias: false,
-      dynamic: false,
-      exported: false,
-      dependencies: []
-    }
+      identity
+    })
   };
 };
 

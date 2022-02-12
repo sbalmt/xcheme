@@ -33,10 +33,6 @@ declare type Entry = {
      * Determines whether or not the entry can be exported.
      */
     exported: boolean;
-    /**
-     * Entry dependencies.
-     */
-    dependencies: Entries.Entry[];
 };
 /**
  * Context consumption state.
@@ -51,6 +47,12 @@ export declare type State = {
      */
     entry: Entry;
 };
+/**
+ * Get a new state entry based on the given entry model.
+ * @param model Entry model.
+ * @returns Returns the generated entry.
+ */
+export declare const getNewStateEntry: (model: Partial<Entry>) => Entry;
 /**
  * Get a new state based on the given parameters.
  * @param anchor Anchor node.

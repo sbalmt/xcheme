@@ -68,9 +68,8 @@ test('Node with a dependency (loose token reference)', () => {
   expect(node.imported).toBeFalsy();
   expect(node.dynamic).toBeFalsy();
   expect(node.identity).toBe(0);
-  expect(node.references).toBe(0);
   expect(node.dependencies).toHaveLength(1);
-  expect(node.primary).toBeUndefined();
+  expect(node.dependents).toHaveLength(0);
 
   // Check the resulting loose reference.
   const [loose] = node.dependencies;
@@ -83,27 +82,8 @@ test('Node with a dependency (loose token reference)', () => {
   expect(loose.dynamic).toBeFalsy();
   expect(loose.identifier).toBe('@REF1');
   expect(loose.identity).toBe(1);
-  expect(loose.references).toBe(2);
   expect(loose.dependencies).toHaveLength(0);
-  expect(loose.primary).toBeDefined();
-
-  // Check the primary entry.
-  const primary = loose.primary!;
-  expect(primary.type).toBe(Lang.Entries.Types.Token);
-  expect(primary.origin).toBe(Lang.Entries.Origins.Loose);
-  expect(primary.alias).toBeFalsy();
-  expect(primary.exported).toBeFalsy();
-  expect(primary.imported).toBeFalsy();
-  expect(primary.dynamic).toBeFalsy();
-  expect(primary.identifier).toBe('@@REF1');
-  expect(primary.identity).toBe(1);
-  expect(primary.references).toBe(0);
-  expect(primary.dependencies).toHaveLength(1);
-  expect(primary.primary).toBeUndefined();
-
-  // Check the circular dependency.
-  const [circular] = primary.dependencies;
-  expect(circular.identifier).toBe(loose.identifier);
+  expect(loose.dependents).toHaveLength(1);
 });
 
 test('Node with an identity', () => {
@@ -119,13 +99,12 @@ test('Node with an identity', () => {
   expect(node.imported).toBeFalsy();
   expect(node.dynamic).toBeFalsy();
   expect(node.identity).toBe(2020);
-  expect(node.references).toBe(0);
   expect(node.dependencies).toHaveLength(1);
-  expect(node.primary).toBeUndefined();
+  expect(node.dependents).toHaveLength(0);
 });
 
 test('Node with an exported pattern', () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "export alias node NODE as '@';");
+  const project = Helper.makeParser(new Lang.TextCoder(), "export alias node <2020> NODE as '@';");
 
   // Check the resulting node.
   const node = project.local.get('NODE')!;
@@ -136,10 +115,9 @@ test('Node with an exported pattern', () => {
   expect(node.exported).toBeTruthy();
   expect(node.imported).toBeFalsy();
   expect(node.dynamic).toBeFalsy();
-  expect(node.identity).toBe(0);
-  expect(node.references).toBe(0);
+  expect(node.identity).toBe(2020);
   expect(node.dependencies).toHaveLength(1);
-  expect(node.primary).toBeUndefined();
+  expect(node.dependents).toHaveLength(0);
 });
 
 test('Node with an imported pattern', () => {
@@ -155,9 +133,8 @@ test('Node with an imported pattern', () => {
   expect(node.imported).toBeFalsy();
   expect(node.dynamic).toBeFalsy();
   expect(node.identity).toBe(4040);
-  expect(node.references).toBe(0);
   expect(node.dependencies).toHaveLength(1);
-  expect(node.primary).toBeUndefined();
+  expect(node.dependents).toHaveLength(0);
 
   // Check the imported dependency.
   const [imported] = node.dependencies;
@@ -170,7 +147,6 @@ test('Node with an imported pattern', () => {
   expect(imported.dynamic).toBeFalsy();
   expect(imported.identifier).toBe('EXTERNAL_NODE1');
   expect(imported.identity).toBe(2020);
-  expect(imported.references).toBe(1);
   expect(imported.dependencies).toHaveLength(1);
-  expect(imported.primary).toBeUndefined();
+  expect(imported.dependents).toHaveLength(1);
 });

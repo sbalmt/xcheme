@@ -66,7 +66,7 @@ test('Token map entry already defined (token collision)', () => {
 });
 
 test('Token with a dependency (alias token reference)', () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "alias token ALIAS as '@'; token<1010> TOKEN as ALIAS;");
+  const project = Helper.makeParser(new Lang.TextCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
 
   // Check the resulting token.
   const token = project.local.get('TOKEN')!;
@@ -77,10 +77,9 @@ test('Token with a dependency (alias token reference)', () => {
   expect(token.exported).toBeFalsy();
   expect(token.imported).toBeFalsy();
   expect(token.dynamic).toBeFalsy();
-  expect(token.identity).toBe(1010);
-  expect(token.references).toBe(0);
+  expect(token.identity).toBe(1);
   expect(token.dependencies).toHaveLength(1);
-  expect(token.primary).toBeUndefined();
+  expect(token.dependents).toHaveLength(0);
 
   // Check the resulting dependency.
   const [alias] = token.dependencies;
@@ -93,9 +92,8 @@ test('Token with a dependency (alias token reference)', () => {
   expect(alias.dynamic).toBeFalsy();
   expect(alias.identifier).toBe('ALIAS');
   expect(alias.identity).toBe(0);
-  expect(alias.references).toBe(1);
   expect(alias.dependencies).toHaveLength(0);
-  expect(alias.primary).toBeUndefined();
+  expect(alias.dependents).toHaveLength(1);
 });
 
 test('Token with an identity', () => {
@@ -111,13 +109,12 @@ test('Token with an identity', () => {
   expect(token.imported).toBeFalsy();
   expect(token.dynamic).toBeFalsy();
   expect(token.identity).toBe(1010);
-  expect(token.references).toBe(0);
   expect(token.dependencies).toHaveLength(0);
-  expect(token.primary).toBeUndefined();
+  expect(token.dependents).toHaveLength(0);
 });
 
 test('Token with an exported pattern', () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "export alias token TOKEN as '@';");
+  const project = Helper.makeParser(new Lang.TextCoder(), "export alias token <1010> TOKEN as '@';");
 
   // Check the resulting token.
   const token = project.local.get('TOKEN')!;
@@ -128,10 +125,9 @@ test('Token with an exported pattern', () => {
   expect(token.exported).toBeTruthy();
   expect(token.imported).toBeFalsy();
   expect(token.dynamic).toBeFalsy();
-  expect(token.identity).toBe(0);
-  expect(token.references).toBe(0);
+  expect(token.identity).toBe(1010);
   expect(token.dependencies).toHaveLength(0);
-  expect(token.primary).toBeUndefined();
+  expect(token.dependents).toHaveLength(0);
 });
 
 test('Token with an imported pattern', () => {
@@ -147,9 +143,8 @@ test('Token with an imported pattern', () => {
   expect(token.imported).toBeFalsy();
   expect(token.dynamic).toBeFalsy();
   expect(token.identity).toBe(3030);
-  expect(token.references).toBe(0);
   expect(token.dependencies).toHaveLength(1);
-  expect(token.primary).toBeUndefined();
+  expect(token.dependents).toHaveLength(0);
 
   // Check the imported dependency.
   const [imported] = token.dependencies;
@@ -162,7 +157,6 @@ test('Token with an imported pattern', () => {
   expect(imported.dynamic).toBeFalsy();
   expect(imported.identifier).toBe('EXTERNAL_TOKEN1');
   expect(imported.identity).toBe(1010);
-  expect(imported.references).toBe(1);
   expect(imported.dependencies).toHaveLength(1);
-  expect(imported.primary).toBeUndefined();
+  expect(imported.dependents).toHaveLength(1);
 });

@@ -6,6 +6,7 @@ const Member = require("../../core/nodes/member");
 const Mergeable = require("../../core/nodes/mergeable");
 const Identity = require("../../core/nodes/identity");
 const Parser = require("../../parser");
+const Context = require("../context");
 const Loose = require("../loose");
 const Expression = require("./expression");
 /**
@@ -49,16 +50,11 @@ const consume = (project, direction, parent, state) => {
                 break;
             }
             const entry = state.entry;
-            state.entry = {
+            state.entry = Context.getNewStateEntry({
                 type: entry.type,
-                origin: 0 /* User */,
                 identity: expression.left ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
-                identifier: `${state.entry.identifier}@${expression.fragment.data}`,
-                alias: false,
-                dynamic: false,
-                exported: false,
-                dependencies: []
-            };
+                identifier: `${state.entry.identifier}@${expression.fragment.data}`
+            });
             Expression.consume(project, 1 /* Right */, expression, state);
             const candidate = getCandidate(expression.right);
             if (!candidate) {

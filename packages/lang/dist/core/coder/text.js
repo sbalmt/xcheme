@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Text = void 0;
 const Core = require("@xcheme/core");
+const Entries = require("../../core/entries");
 const String = require("../../core/string");
 const base_1 = require("./base");
 /**
@@ -286,7 +287,7 @@ class Text extends base_1.Base {
         if (!entry.pattern) {
             return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(entry.name)}`);
         }
-        else if (entry.references > 1) {
+        else if (Entries.isReferencedBy(entry, entry.type)) {
             return this.#getIdentifier(entry.name);
         }
         else {

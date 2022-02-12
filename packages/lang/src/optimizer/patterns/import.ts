@@ -54,19 +54,26 @@ const assignDependencies = (target: Project.AggregatorMap, source: Entries.Entry
  * @param target Target aggregator.
  * @param source Source aggregator.
  */
-const importDirectives = (project: Project.Context, node: Core.Node, target: Entries.Aggregator, source: Entries.Aggregator): void => {
-  for (const entry of source.exports) {
-    const identifier = entry.identifier;
-    const record = node.table.find(identifier);
-    if (record) {
-      project.addError(record.node!, Errors.DUPLICATE_IDENTIFIER);
-    } else {
-      const { type, origin, identity } = entry;
-      const location = node.fragment.location;
-      const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
-      node.table.add(new Core.Record(fragment, getSymbolType(entry), node));
-      target.create(type, origin, identifier, identity, { ...entry, imported: true, exported: false });
-      assignDependencies(project.external, entry.dependencies);
+const importDirectives = (
+  project: Project.Context,
+  node: Core.Node,
+  target: Entries.Aggregator,
+  source: Entries.Aggregator
+): void => {
+  for (const entry of source.all) {
+    if (entry.exported) {
+      const identifier = entry.identifier;
+      const record = node.table.find(identifier);
+      if (record) {
+        project.addError(record.node!, Errors.DUPLICATE_IDENTIFIER);
+      } else {
+        const { type, origin, identity } = entry;
+        const location = node.fragment.location;
+        const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
+        node.table.add(new Core.Record(fragment, getSymbolType(entry), node));
+        target.create(type, origin, identifier, identity, { ...entry, imported: true, exported: false });
+        assignDependencies(project.external, entry.dependencies);
+      }
     }
   }
 };

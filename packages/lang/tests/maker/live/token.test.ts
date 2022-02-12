@@ -72,7 +72,7 @@ test("Parse a 'TOKEN' rule with a whole token map reference", () => {
   expect(checkTokens(context, [100, 101])).toBe(2);
 });
 
-test("Parse a 'TOKEN' rule with an imported alias pattern", () => {
+test("Parse a 'TOKEN' rule with an imported alias token pattern", () => {
   const project = Helper.makeParser(new Lang.LiveCoder(), "import './module2'; token TOKEN as EXTERNAL_TOKEN1;");
   const context = new Core.Context('test');
 

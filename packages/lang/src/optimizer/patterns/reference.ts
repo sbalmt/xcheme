@@ -9,35 +9,71 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 
 /**
- * Validate the corresponding reference for the specified symbol and node in a 'SKIP' directive.
+ * Update the specified node for an optimized one after resolving its reference.
+ * @param project Project context.
+ * @param entry Referenced entry.
+ * @param parent Parent node.
+ * @param node Reference node.
+ * @param direction Node direction.
+ */
+const updateNode = (
+  project: Project.Context,
+  entry: Entries.Entry,
+  parent: Core.Node,
+  node: Core.Node,
+  direction: Core.Nodes
+): void => {
+  if (!entry.dynamic) {
+    parent.setChild(direction, new Identity.Node(node, entry.identity));
+  } else {
+    project.addError(node, Errors.INVALID_MAP_REFERENCE);
+  }
+};
+
+/**
+ * Find and link the corresponding reference for the specified node.
+ * @param project Project context.
+ * @param node Input node.
+ * @param state Consumption state.
+ * @returns Returns the dependency entry or undefined the dependency isn't ready yet.
+ */
+const linkReference = (project: Project.Context, node: Core.Node, state: Context.State): Entries.Entry | undefined => {
+  const identifier = node.fragment.data;
+  const dependency = project.local.get(identifier);
+  if (dependency) {
+    project.local.on(state.entry.identifier, (entry) => {
+      entry.dependencies.push(dependency);
+      dependency.dependents.push(entry);
+    });
+  } else {
+    project.local.on(identifier, (dependency) => {
+      const entry = project.local.get(state.entry.identifier)!;
+      entry.dependencies.push(dependency);
+      dependency.dependents.push(entry);
+    });
+  }
+  return dependency;
+};
+
+/**
+ * Resolve and validate the corresponding reference for the specified symbol and node in a 'SKIP' directive.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
  * @param node Input node.
  * @param symbol Referenced symbol.
+ * @param state Consumption state.
  */
 const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record, state: Context.State): void => {
-  if (symbol.value !== Parser.Symbols.AliasToken) {
-    if (symbol.value === Parser.Symbols.Token) {
-      project.addError(node, Errors.INVALID_TOKEN_REFERENCE);
-    } else if (symbol.value === Parser.Symbols.Node) {
-      project.addError(node, Errors.INVALID_NODE_REFERENCE);
-    } else if (symbol.value === Parser.Symbols.AliasNode) {
-      project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
-    } else {
-      project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
-    }
+  if (symbol.value === Parser.Symbols.AliasToken) {
+    linkReference(project, node, state);
+  } else if (symbol.value === Parser.Symbols.Token) {
+    project.addError(node, Errors.INVALID_TOKEN_REFERENCE);
+  } else if (symbol.value === Parser.Symbols.AliasNode) {
+    project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
+  } else if (symbol.value === Parser.Symbols.Node) {
+    project.addError(node, Errors.INVALID_NODE_REFERENCE);
   } else {
-    const identifier = node.fragment.data;
-    const entry = project.local.get(identifier);
-    if (entry) {
-      state.entry.dependencies.push(entry);
-      entry.references++;
-    } else {
-      project.local.on(identifier, (entry: Entries.Entry) => {
-        state.entry.dependencies.push(entry);
-        entry.references++;
-      });
-    }
+    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -47,28 +83,17 @@ const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Rec
  * @param project Project context.
  * @param node Input node.
  * @param symbol Referenced symbol.
+ * @param state Consumption state.
  */
 const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Record, state: Context.State): void => {
-  if (symbol.value !== Parser.Symbols.Token && symbol.value !== Parser.Symbols.AliasToken) {
-    if (symbol.value === Parser.Symbols.Node) {
-      project.addError(node, Errors.INVALID_NODE_REFERENCE);
-    } else if (symbol.value === Parser.Symbols.AliasNode) {
-      project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
-    } else {
-      project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
-    }
+  if (symbol.value === Parser.Symbols.Token || symbol.value === Parser.Symbols.AliasToken) {
+    linkReference(project, node, state);
+  } else if (symbol.value === Parser.Symbols.Node) {
+    project.addError(node, Errors.INVALID_NODE_REFERENCE);
+  } else if (symbol.value === Parser.Symbols.AliasNode) {
+    project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
   } else {
-    const identifier = node.fragment.data;
-    const entry = project.local.get(identifier);
-    if (entry) {
-      state.entry.dependencies.push(entry);
-      entry.references++;
-    } else {
-      project.local.on(identifier, (entry: Entries.Entry) => {
-        state.entry.dependencies.push(entry);
-        entry.references++;
-      });
-    }
+    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -79,6 +104,7 @@ const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Re
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param symbol Referenced symbol.
+ * @param state Consumption state.
  */
 const resolveNode = (
   project: Project.Context,
@@ -88,39 +114,15 @@ const resolveNode = (
   state: Context.State
 ): void => {
   const node = parent.getChild(direction)!;
-  const identifier = node.fragment.data;
   if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
-    const entry = project.local.get(identifier);
-    if (entry) {
-      state.entry.dependencies.push(entry);
-      entry.references++;
-    } else {
-      project.local.on(identifier, (entry: Entries.Entry) => {
-        state.entry.dependencies.push(entry);
-        entry.references++;
-      });
-    }
+    linkReference(project, node, state);
   } else if (symbol.value === Parser.Symbols.Token) {
-    const entry = project.local.get(identifier);
-    if (entry) {
-      state.entry.dependencies.push(entry);
-      entry.references++;
-      // TODO: Check these lines below.
-      if (!entry.dynamic) {
-        parent.setChild(direction, new Identity.Node(node, entry.identity));
-      } else {
-        project.addError(node, Errors.INVALID_MAP_REFERENCE);
-      }
+    const dependency = linkReference(project, node, state);
+    if (dependency) {
+      updateNode(project, dependency, parent, node, direction);
     } else {
-      project.local.on(identifier, (entry: Entries.Entry) => {
-        state.entry.dependencies.push(entry);
-        entry.references++;
-        // TODO: Check these lines below.
-        if (!entry.dynamic) {
-          parent.setChild(direction, new Identity.Node(node, entry.identity));
-        } else {
-          project.addError(node, Errors.INVALID_MAP_REFERENCE);
-        }
+      project.local.on(node.fragment.data, (entry: Entries.Entry) => {
+        updateNode(project, entry, parent, node, direction);
       });
     }
   } else if (symbol.value === Parser.Symbols.AliasToken) {

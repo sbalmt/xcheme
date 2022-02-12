@@ -1,6 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCount = exports.getNewState = void 0;
+exports.getCount = exports.getNewState = exports.getNewStateEntry = void 0;
+/**
+ * Get a new state entry based on the given entry model.
+ * @param model Entry model.
+ * @returns Returns the generated entry.
+ */
+const getNewStateEntry = (model) => {
+    return {
+        type: model.type ?? 0 /* Unknown */,
+        origin: model.origin ?? 0 /* User */,
+        identifier: model.identifier ?? '?',
+        identity: model.identity ?? -1,
+        alias: model.alias ?? false,
+        dynamic: model.dynamic ?? false,
+        exported: model.exported ?? false
+    };
+};
+exports.getNewStateEntry = getNewStateEntry;
 /**
  * Get a new state based on the given parameters.
  * @param anchor Anchor node.
@@ -10,16 +27,10 @@ exports.getCount = exports.getNewState = void 0;
 const getNewState = (anchor, identity) => {
     return {
         anchor,
-        entry: {
-            type: 0 /* Unknown */,
+        entry: (0, exports.getNewStateEntry)({
             origin: 0 /* User */,
-            identifier: '?',
-            identity,
-            alias: false,
-            dynamic: false,
-            exported: false,
-            dependencies: []
-        }
+            identity
+        })
     };
 };
 exports.getNewState = getNewState;

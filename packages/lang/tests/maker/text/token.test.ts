@@ -44,11 +44,6 @@ test("Output a 'TOKEN' rule with a reference to itself", () => {
       /**/ `)` +
       `)`
   );
-
-  const link = project.local.get(`@${token.identifier}`)!;
-  expect(link).toBeDefined();
-  expect(link.identity).toBe(token.identity);
-  expect(link.pattern).toBe('L0_TOKEN');
 });
 
 test("Output a 'TOKEN' rule with an alias token that has a reference to itself", () => {

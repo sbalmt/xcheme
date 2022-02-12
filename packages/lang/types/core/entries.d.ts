@@ -64,21 +64,17 @@ export declare type Entry = {
      */
     imported: boolean;
     /**
-     * Number of references to the entry.
-     */
-    references: number;
-    /**
      * Entry dependencies.
      */
     dependencies: Entry[];
     /**
+     * Entry dependents.
+     */
+    dependents: Entry[];
+    /**
      * Entry location.
      */
     location: string;
-    /**
-     * Primary entry.
-     */
-    primary: Entry | undefined;
     /**
      * Entry pattern.
      */
@@ -108,26 +104,6 @@ export declare class Aggregator {
      */
     get all(): Entry[];
     /**
-     * Get all alias entries.
-     */
-    get aliases(): Entry[];
-    /**
-     * Get all exported entries.
-     */
-    get exports(): Entry[];
-    /**
-     * Get all imported entries.
-     */
-    get imports(): Entry[];
-    /**
-     * Get all pattern entries.
-     */
-    get patterns(): Entry[];
-    /**
-     * Get all reference entries.
-     */
-    get references(): Entry[];
-    /**
      * Determines whether or not the aggregator contains an entry with the given name.
      * @param name Entry name.
      * @returns Returns true when the specified entry exists, false otherwise.
@@ -140,35 +116,11 @@ export declare class Aggregator {
      */
     get(name: string): Entry | undefined;
     /**
-     * Get an array containing all entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getAllByType(types: Types[]): Entry[];
-    /**
-     * Get an array containing all exported entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getExportsByType(types: Types[]): Entry[];
-    /**
-     * Get an array containing all imported entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getImportsByType(types: Types[]): Entry[];
-    /**
      * Get an array containing all pattern entries that corresponds to one or more specified types.
      * @param types Entry types.
      * @returns Returns an array containing all entries found.
      */
     getPatternsByType(types: Types[]): Entry[];
-    /**
-     * Get an array containing all reference entries that corresponds to one or more specified types.
-     * @param types Entry types.
-     * @returns Returns an array containing all entries found.
-     */
-    getReferencesByType(types: Types[]): Entry[];
     /**
      * Add the specified pattern entry.
      * @param entry Pattern entry.
@@ -202,4 +154,11 @@ export declare class Aggregator {
      */
     on(identifier: string, callback: EventCallback): void;
 }
+/**
+ * Determines whether or not the given entry is referenced.
+ * @param entry Input entry.
+ * @param type Reference type.
+ * @returns Returns true when the given entry is referenced, false otherwise.
+ */
+export declare const isReferencedBy: (entry: Entry, type: Types) => boolean;
 export {};

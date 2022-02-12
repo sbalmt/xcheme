@@ -83,21 +83,17 @@ export type Entry = {
    */
   imported: boolean;
   /**
-   * Number of references to the entry.
-   */
-  references: number;
-  /**
    * Entry dependencies.
    */
   dependencies: Entry[];
   /**
+   * Entry dependents.
+   */
+  dependents: Entry[];
+  /**
    * Entry location.
    */
   location: string;
-  /**
-   * Primary entry.
-   */
-  primary: Entry | undefined;
   /**
    * Entry pattern.
    */
@@ -178,41 +174,6 @@ export class Aggregator {
   }
 
   /**
-   * Get all alias entries.
-   */
-  get aliases(): Entry[] {
-    return this.all.filter((entry) => entry.alias);
-  }
-
-  /**
-   * Get all exported entries.
-   */
-  get exports(): Entry[] {
-    return this.all.filter((entry) => entry.exported);
-  }
-
-  /**
-   * Get all imported entries.
-   */
-  get imports(): Entry[] {
-    return this.all.filter((entry) => entry.imported);
-  }
-
-  /**
-   * Get all pattern entries.
-   */
-  get patterns(): Entry[] {
-    return this.all.filter((entry) => !entry.alias && !entry.references);
-  }
-
-  /**
-   * Get all reference entries.
-   */
-  get references(): Entry[] {
-    return this.all.filter((entry) => entry.references > 0);
-  }
-
-  /**
    * Determines whether or not the aggregator contains an entry with the given name.
    * @param name Entry name.
    * @returns Returns true when the specified entry exists, false otherwise.
@@ -231,48 +192,12 @@ export class Aggregator {
   }
 
   /**
-   * Get an array containing all entries that corresponds to one or more specified types.
-   * @param types Entry types.
-   * @returns Returns an array containing all entries found.
-   */
-  getAllByType(types: Types[]): Entry[] {
-    return this.all.filter((entry) => types.includes(entry.type));
-  }
-
-  /**
-   * Get an array containing all exported entries that corresponds to one or more specified types.
-   * @param types Entry types.
-   * @returns Returns an array containing all entries found.
-   */
-  getExportsByType(types: Types[]): Entry[] {
-    return this.all.filter((entry) => entry.exported && types.includes(entry.type));
-  }
-
-  /**
-   * Get an array containing all imported entries that corresponds to one or more specified types.
-   * @param types Entry types.
-   * @returns Returns an array containing all entries found.
-   */
-  getImportsByType(types: Types[]): Entry[] {
-    return this.all.filter((entry) => entry.exported && types.includes(entry.type));
-  }
-
-  /**
    * Get an array containing all pattern entries that corresponds to one or more specified types.
    * @param types Entry types.
    * @returns Returns an array containing all entries found.
    */
   getPatternsByType(types: Types[]): Entry[] {
-    return this.all.filter((entry) => !entry.alias && !entry.references && types.includes(entry.type));
-  }
-
-  /**
-   * Get an array containing all reference entries that corresponds to one or more specified types.
-   * @param types Entry types.
-   * @returns Returns an array containing all entries found.
-   */
-  getReferencesByType(types: Types[]): Entry[] {
-    return this.all.filter((entry) => entry.references > 0 && types.includes(entry.type));
+    return this.all.filter((entry) => entry.pattern && !entry.alias && types.includes(entry.type));
   }
 
   /**
@@ -318,10 +243,9 @@ export class Aggregator {
       dynamic: model?.dynamic ?? false,
       exported: model?.exported ?? false,
       imported: model?.imported ?? false,
-      references: model?.references ?? 0,
       dependencies: model?.dependencies ?? [],
+      dependents: model?.dependents ?? [],
       location: model?.location ?? this.#location,
-      primary: model?.primary,
       pattern: model?.pattern
     });
   }
@@ -356,3 +280,16 @@ export class Aggregator {
     }
   }
 }
+
+/**
+ * Determines whether or not the given entry is referenced.
+ * @param entry Input entry.
+ * @param type Reference type.
+ * @returns Returns true when the given entry is referenced, false otherwise.
+ */
+export const isReferencedBy = (entry: Entry, type: Types): boolean => {
+  if (!entry.dependents.includes(entry)) {
+    return entry.dependents.reduce((previous, current) => (current.type === type ? previous + 1 : previous), 0) > 1;
+  }
+  return true;
+};
