@@ -36,12 +36,15 @@ token<auto> T_KEYWORDS as map {
   <123> ERROR     as 'error',
   <124> HAS       as 'has',
   <125> SET       as 'set',
-  <126> SKIP      as 'skip',
-  <127> TOKEN     as 'token',
-  <128> NODE      as 'node',
-  <129> ALIAS     as 'alias',
-  <130> AUTO      as 'auto',
-  <131> AS        as 'as'
+  <126> UNCASE    as 'uncase',
+  <127> SKIP      as 'skip',
+  <128> TOKEN     as 'token',
+  <129> NODE      as 'node',
+  <130> ALIAS     as 'alias',
+  <131> AUTO      as 'auto',
+  <132> AS        as 'as',
+  <133> IMPORT    as 'import',
+  <134> EXPORT    as 'export'
 } & T_END;
 
 token<auto> T_SYMBOLS as map {
@@ -100,19 +103,27 @@ alias node<auto> UNARY as opt repeat append map {
   <230> SCOPE     as T_KEYWORDS.SCOPE,
   <231> ERROR     as T_KEYWORDS.ERROR & STATE,
   <232> HAS       as T_KEYWORDS.HAS & STATE,
-  <233> SET       as T_KEYWORDS.SET & STATE
+  <233> SET       as T_KEYWORDS.SET & STATE,
+  <234> UNCASE    as T_KEYWORDS.UNCASE
 } & place ACCESS;
 
-alias node<234> ACCESS  as OPERAND & opt repeat pivot (T_SYMBOLS.PERIOD & OPERAND);
+alias node<235> ACCESS  as OPERAND & opt repeat pivot (T_SYMBOLS.PERIOD & OPERAND);
 alias node<212> AND     as UNARY & opt repeat pivot ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
 alias node<211> OR      as AND & opt repeat pivot ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
 alias node<210> ELSE    as pivot (T_KEYWORDS.ELSE & EXPRESSION);
 alias node<209> THEN    as pivot (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
 
-node<auto> STATEMENTS as map {
-  <235> SKIP        as T_KEYWORDS.SKIP & place EXPRESSION,
-  <236> TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
-  <237> NODE        as T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER,
-  <238> ALIAS_TOKEN as T_KEYWORDS.ALIAS & T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
-  <239> ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER
-} & T_SYMBOLS.SEMICOLON;
+alias node<auto> DIRECTIVES as map {
+  <236> SKIP        as T_KEYWORDS.SKIP & place EXPRESSION,
+  <237> TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
+  <238> NODE        as T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER,
+  <239> ALIAS_TOKEN as T_KEYWORDS.ALIAS & T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
+  <240> ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER
+};
+
+alias node<auto> MODULES as map {
+  <241> IMPORT as T_KEYWORDS.IMPORT & STRING,
+  <242> EXPORT as T_KEYWORDS.EXPORT & append (DIRECTIVES | IDENTIFIER)
+};
+
+node<auto> STATEMENTS as (DIRECTIVES | MODULES) & T_SYMBOLS.SEMICOLON;
