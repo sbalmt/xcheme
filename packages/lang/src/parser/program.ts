@@ -193,7 +193,11 @@ const skip = new Core.SetValueRoute(Nodes.Skip, expression, Lexer.Tokens.Skip);
 /**
  * Token directive route.
  */
-const token = new Core.SetValueRoute(Nodes.Token, new DirectiveExpression(Symbols.Token, identity, expression), Lexer.Tokens.Token);
+const token = new Core.SetValueRoute(
+  Nodes.Token,
+  new DirectiveExpression(Symbols.Token, identity, expression),
+  Lexer.Tokens.Token
+);
 
 /**
  * Node directive route.
@@ -244,12 +248,7 @@ const exportAliases = new Core.SetValueRoute(
  */
 const importModule = new Core.SetValueRoute(
   Nodes.Import,
-  new Core.AppendNodePattern(
-    Core.BaseSource.Output,
-    Core.Nodes.Right,
-    Core.Nodes.Right,
-    new Core.ExpectUnitPattern(Lexer.Tokens.String)
-  ),
+  new Core.AppendNodePattern(Nodes.String, Core.Nodes.Right, Core.Nodes.Right, new Core.ExpectUnitPattern(Lexer.Tokens.String)),
   Lexer.Tokens.Import
 );
 

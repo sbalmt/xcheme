@@ -77,7 +77,7 @@ const exportAliases = new Core.SetValueRoute(242 /* Export */, new Core.AppendNo
 /**
  * Import module route.
  */
-const importModule = new Core.SetValueRoute(241 /* Import */, new Core.AppendNodePattern(Core.BaseSource.Output, 1 /* Right */, 1 /* Right */, new Core.ExpectUnitPattern(102 /* String */)), 133 /* Import */);
+const importModule = new Core.SetValueRoute(241 /* Import */, new Core.AppendNodePattern(204 /* String */, 1 /* Right */, 1 /* Right */, new Core.ExpectUnitPattern(102 /* String */)), 133 /* Import */);
 /**
  * Main parser pattern.
  */
