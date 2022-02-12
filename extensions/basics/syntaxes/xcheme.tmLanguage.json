@@ -19,7 +19,7 @@
 					"include": "#identity-expression"
 				},
 				{
-					"name": "keyword.control.xcheme",
+					"name": "keyword.control.as.xcheme",
 					"match": "\\b(as)\\b"
 				},
 				{
@@ -46,7 +46,7 @@
 			"end": "(?=\\;)",
 			"beginCaptures": {
 				"1": {
-					"name": "storage.modifier.xcheme"
+					"name": "storage.modifier.alias.xcheme"
 				}
 			},
 			"patterns": [
@@ -72,17 +72,57 @@
 				}
 			]
 		},
+		"import-directives": {
+			"begin": "\\b(import)\\b",
+			"end": "(?=\\;)",
+			"beginCaptures": {
+				"1": {
+					"name": "storage.modifier.import.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#string-expression"
+				}
+			]
+		},
+		"export-directives": {
+			"begin": "\\b(export)\\b",
+			"end": "(?=\\;)",
+			"beginCaptures": {
+				"1": {
+					"name": "keyword.control.export.xcheme"
+				}
+			},
+			"patterns": [
+				{
+					"include": "#comments"
+				},
+				{
+					"include": "#named-directives"
+				},
+				{
+					"include": "#aliased-directives"
+				},
+				{
+					"include": "#reference-expression"
+				}
+			]
+		},
 		"condition-expression": {
 			"begin": "\\b(then)\\b",
 			"end": "(?<=\\b(else)\\b)|(?=\\)|\\;)",
 			"beginCaptures": {
 				"1": {
-					"name": "keyword.control.xcheme"
+					"name": "keyword.control.conditional.xcheme"
 				}
 			},
 			"patterns": [
 				{
-					"name": "keyword.control.xcheme",
+					"name": "keyword.control.conditional.xcheme",
 					"match": "\\b(else)\\b"
 				},
 				{
@@ -90,15 +130,15 @@
 				}
 			]
 		},
-		"operator-expression": {
+		"operator-expressions": {
 			"name": "keyword.operator.xcheme",
 			"match": "\\||\\&|\\*|\\."
 		},
-		"control-expression": {
+		"control-expressions": {
 			"name": "keyword.control.xcheme",
 			"match": "\\b(or|and|not|opt|repeat|has)\\b"
 		},
-		"new-node-expression": {
+		"new-node-expressions": {
 			"match": "\\b(place|append|prepend)\\b(\\s*\\b(next|left|right)\\b)?",
 			"captures": {
 				"1": {
@@ -109,9 +149,13 @@
 				}
 			}
 		},
-		"new-expression": {
+		"new-other-expressions": {
 			"name": "keyword.operator.new.xcheme",
 			"match": "\\b(pivot|symbol|scope|error|set)\\b"
+		},
+		"transform-expressions": {
+			"name": "keyword.control.transform.xcheme",
+			"match": "\\b(uncase)\\b"
 		},
 		"constant-expression": {
 			"name": "constant.language.xcheme",
@@ -141,7 +185,7 @@
 			]
 		},
 		"map-expression": {
-			"name": "keyword.control.xcheme",
+			"name": "keyword.control.map.xcheme",
 			"match": "\\b(map)\\b",
 			"patterns": [
 				{
@@ -154,12 +198,12 @@
 			"end": "(?<=\\b(to)\\b)",
 			"beginCaptures": {
 				"1": {
-					"name": "constant.language.xcheme"
+					"name": "constant.language.range.xcheme"
 				}
 			},
 			"patterns": [
 				{
-					"name": "constant.language.xcheme",
+					"name": "constant.language.range.xcheme",
 					"match": "\\b(to)\\b"
 				},
 				{
@@ -200,7 +244,7 @@
 					"include": "#comments"
 				},
 				{
-					"name": "constant.language.xcheme",
+					"name": "constant.language.auto.xcheme",
 					"match": "\\b(auto)\\b"
 				},
 				{
@@ -238,6 +282,12 @@
 				},
 				{
 					"include": "#unnamed-directives"
+				},
+				{
+					"include": "#import-directives"
+				},
+				{
+					"include": "#export-directives"
 				}
 			]
 		},
@@ -250,19 +300,22 @@
 					"include": "#condition-expression"
 				},
 				{
-					"include": "#operator-expression"
+					"include": "#operator-expressions"
 				},
 				{
-					"include": "#control-expression"
+					"include": "#control-expressions"
 				},
 				{
 					"include": "#map-expression"
 				},
 				{
-					"include": "#new-node-expression"
+					"include": "#new-node-expressions"
 				},
 				{
-					"include": "#new-expression"
+					"include": "#new-other-expressions"
+				},
+				{
+					"include": "#transform-expressions"
 				},
 				{
 					"include": "#constant-expression"
