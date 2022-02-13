@@ -5,7 +5,7 @@ import Pattern from '../pattern';
 /**
  * Consume all the given patterns when the specified state value is defined.
  */
-export default class Emit extends Pattern {
+export default class Has extends Pattern {
   /**
    * Target pattern.
    */

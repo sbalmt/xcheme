@@ -5,7 +5,7 @@ import Pattern from '../pattern';
 /**
  * Consumes all the given patterns and, in case of success, it will set a new state value.
  */
-export default class Emit extends Pattern {
+export default class Set extends Pattern {
   /**
    * Target pattern.
    */

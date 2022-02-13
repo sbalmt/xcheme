@@ -6,7 +6,7 @@ import Try from './try';
 /**
  * Consume all the given patterns in this pattern as an optional behavior.
  */
-export default class Option extends Pattern {
+export default class Opt extends Pattern {
   /**
    * Target pattern.
    */

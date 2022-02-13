@@ -3,7 +3,7 @@ import Pattern from '../pattern';
 /**
  * Consume all the given patterns in this pattern as an optional behavior.
  */
-export default class Option extends Pattern {
+export default class Opt extends Pattern {
     #private;
     /**
      * Default constructor.

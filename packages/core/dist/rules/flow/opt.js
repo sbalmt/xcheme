@@ -5,7 +5,7 @@ const try_1 = require("./try");
 /**
  * Consume all the given patterns in this pattern as an optional behavior.
  */
-class Option extends pattern_1.default {
+class Opt extends pattern_1.default {
     /**
      * Target pattern.
      */
@@ -28,5 +28,5 @@ class Option extends pattern_1.default {
         return true;
     }
 }
-exports.default = Option;
+exports.default = Opt;
 //# sourceMappingURL=opt.js.map

@@ -5,7 +5,7 @@ const pattern_1 = require("../pattern");
 /**
  * Consumes all the given patterns and, in case of success, it will set a new state value.
  */
-class Emit extends pattern_1.default {
+class Set extends pattern_1.default {
     /**
      * Target pattern.
      */
@@ -37,5 +37,5 @@ class Emit extends pattern_1.default {
         return false;
     }
 }
-exports.default = Emit;
+exports.default = Set;
 //# sourceMappingURL=set.js.map
