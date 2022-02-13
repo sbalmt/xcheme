@@ -6,6 +6,7 @@ export { default as Table } from './core/table';
 export { default as Record } from './core/record';
 export { default as Fragment } from './core/fragment';
 export { default as Location } from './core/location';
+export { default as Range } from './core/range';
 export { default as Pattern } from './rules/pattern';
 export { default as Route } from './rules/route';
 
