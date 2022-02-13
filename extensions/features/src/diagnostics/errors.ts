@@ -25,8 +25,11 @@ const errorMessages = {
   [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: 'References for an alias node cannot be in use here.',
   [Lang.Errors.INVALID_MAP_REFERENCE]: 'Map cannot be referenced here.',
   [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: 'Map entries cannot be referenced here.',
-  [Lang.Errors.INVALID_MAP_ENTRY]: 'Map entries must start with a string.',
-  [Lang.Errors.TOKEN_COLLISION]: 'Multiple tokens with the same expression.'
+  [Lang.Errors.INVALID_MAP_ENTRY]: 'Map entries must start with token or string.',
+  [Lang.Errors.TOKEN_COLLISION]: 'Multiple tokens with the same expression.',
+  [Lang.Errors.IMPORT_DISABLED]: 'Import feature disabled.',
+  [Lang.Errors.IMPORT_NOT_FOUND]: "File doesn't found.",
+  [Lang.Errors.IMPORT_FAILURE]: 'Failed to compile.'
 };
 
 /**
@@ -54,8 +57,8 @@ export const getDiagnostics = (errors: Core.Error[]): VSCode.Diagnostic[] => {
     const location = error.fragment.location;
     const severity = VSCode.DiagnosticSeverity.Error;
     const range = new VSCode.Range(
-      new VSCode.Position(location.line, location.column),
-      new VSCode.Position(location.line, location.column)
+      new VSCode.Position(location.line.begin, location.column.begin),
+      new VSCode.Position(location.line.end, location.column.end)
     );
     list.push(new VSCode.Diagnostic(range, getMessage(error), severity));
   }

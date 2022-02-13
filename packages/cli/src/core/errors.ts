@@ -23,14 +23,14 @@ const errorMessages = {
   [Lang.Errors.INVALID_NODE_REFERENCE]: "Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE]: "Alias Token reference cannot be in use here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: "Alias Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_MAP_REFERENCE]: "Map cannot be referenced here. '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: "Map entries cannot be referenced here. '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with a string '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_MAP_REFERENCE]: "Map cannot be referenced here, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: "Map entries cannot be referenced here, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with token or string, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_EXPORT]: "Exportation of '{0}' is invalid at line {1}, column {2}.",
   [Lang.Errors.TOKEN_COLLISION]: "Multiple tokens with the same expression, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.IMPORT_DISABLED]: "Importation of {0} isn't possible (feature disabled) at line {1}, column {2}.",
-  [Lang.Errors.IMPORT_NOT_FOUND]: "Importation of {0} isn't possible (file not found) at line {1}, column {2}.",
-  [Lang.Errors.IMPORT_FAILURE]: "Importation of {0} isn't possible (compilation failed) at line {1}, column {2}."
+  [Lang.Errors.IMPORT_DISABLED]: 'Import feature disabled, {0} at line {1}, column {2}.',
+  [Lang.Errors.IMPORT_NOT_FOUND]: "File doesn't found, {0} at line {1}, column {2}.",
+  [Lang.Errors.IMPORT_FAILURE]: 'Failed to compile, {0} at line {1}, column {2}.'
 };
 
 /**
@@ -51,9 +51,9 @@ export const getMessage = (error: Core.Error): string => {
       case '{0}':
         return fragment.data.replace(/\n/g, '\\n');
       case '{1}':
-        return (location.line + 1).toString();
+        return (location.line.begin + 1).toString();
       case '{2}':
-        return (location.column + 1).toString();
+        return (location.column.begin + 1).toString();
     }
     return match;
   });
