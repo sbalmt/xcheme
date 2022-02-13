@@ -18,7 +18,7 @@ export const update = (document: VSCode.TextDocument, collection: VSCode.Diagnos
       const errors = Errors.getDiagnostics(context.errors);
       collection.set(document.uri, errors);
     } else {
-      const project = new Lang.Project.Context(new Lang.TextCoder());
+      const project = new Lang.Project.Context('editor', new Lang.TextCoder());
       Lang.Optimizer.consumeNodes(context.node, project) && Lang.Maker.consumeNodes(context.node, project);
       if (project.errors.length > 0) {
         const errors = Errors.getDiagnostics(project.errors);

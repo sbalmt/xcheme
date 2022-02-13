@@ -219,7 +219,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
     if (tokens.length > 0) {
       const offset = range.tokens.length - 1;
       const items = this.#basicItems(tokens, offset) || this.#complexItems(document, offset);
-      if (items !== void 0) {
+      if (items) {
         return items;
       }
     }
