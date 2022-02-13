@@ -3,6 +3,7 @@ import type Token from './token';
 import Error from './error';
 import Fragment from './fragment';
 import Location from './location';
+import Range from './range';
 import Table from './table';
 import Node from './node';
 
@@ -41,7 +42,10 @@ export default class Context {
    * @param name Context name.
    */
   constructor(name: string) {
-    this.#node = new Node(new Fragment('', 0, 0, new Location(name, 0, 0)), 0x00, this.#table);
+    const range = new Range(0, 0);
+    const location = new Location(name, range, range);
+    const fragment = new Fragment('', 0, 0, location);
+    this.#node = new Node(fragment, 0x00, this.#table);
     this.#name = name;
   }
 

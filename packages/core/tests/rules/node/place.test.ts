@@ -44,8 +44,10 @@ test('Consume success', () => {
   expect(fragment.data).toBe('abc');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(3);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+  expect(fragment.location.line.begin).toBe(0);
+  expect(fragment.location.line.end).toBe(0);
+  expect(fragment.location.column.begin).toBe(0);
+  expect(fragment.location.column.end).toBe(3);
 });
 
 test('Consume failure', () => {

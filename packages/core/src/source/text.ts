@@ -2,6 +2,7 @@ import type Context from '../core/context';
 
 import Fragment from '../core/fragment';
 import Location from '../core/location';
+import Range from '../core/range';
 import Base from './base';
 
 /**
@@ -92,12 +93,16 @@ export default class Text extends Base {
     if (this.#states.length > 0) {
       const state = this.#states[this.#states.length - 1];
       if (this.offset > state.offset) {
-        const location = new Location(this.name, state.line, state.column);
+        const line = new Range(state.line, this.#current.line);
+        const column = new Range(state.column, this.#current.column);
+        const location = new Location(this.name, line, column);
         return new Fragment(this.#data, state.offset, this.offset, location);
       }
     }
+    const line = new Range(this.#current.line, this.#current.line);
+    const column = new Range(this.#current.column, this.#current.column);
+    const location = new Location(this.name, line, column);
     const length = this.offset + (this.length > 0 ? 1 : 0);
-    const location = new Location(this.name, this.#current.line, this.#current.column);
     return new Fragment(this.#data, this.offset, length, location);
   }
 

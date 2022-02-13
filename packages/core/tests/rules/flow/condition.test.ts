@@ -4,7 +4,11 @@ import { Context, TextSource, ConditionFlowPattern, ExpectUnitPattern, RangeUnit
  * When the character '@' is found, it can consume a character between 'a' and 'z' in any order,
  * otherwise it can consume a number between '0' and '9' in any order.
  */
-const pattern = new ConditionFlowPattern(new ExpectUnitPattern('@'), new RangeUnitPattern('a', 'z'), new RangeUnitPattern('0', '9'));
+const pattern = new ConditionFlowPattern(
+  new ExpectUnitPattern('@'),
+  new RangeUnitPattern('a', 'z'),
+  new RangeUnitPattern('0', '9')
+);
 
 test('Consume success', () => {
   const context = new Context('test');

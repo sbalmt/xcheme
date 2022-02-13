@@ -15,8 +15,12 @@ test('Default source state', () => {
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  const location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 
   // Test the default output state.
   const output = source.output;
@@ -29,7 +33,7 @@ test('Default source state', () => {
 test('Next source state', () => {
   const context = new Context('test');
   const source = new TextSource('a\nb', context);
-  let fragment;
+  let fragment, location;
 
   // Test the initial state.
   expect(source.offset).toBe(0);
@@ -40,8 +44,12 @@ test('Next source state', () => {
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 
   // Test the next state.
   source.nextState();
@@ -54,8 +62,12 @@ test('Next source state', () => {
   expect(fragment.data).toBe('\n');
   expect(fragment.begin).toBe(1);
   expect(fragment.end).toBe(2);
-  expect(fragment.location.column).toBe(1);
-  expect(fragment.location.line).toBe(0);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(1);
+  expect(location.column.end).toBe(1);
 
   // Test the next state.
   source.nextState();
@@ -68,8 +80,12 @@ test('Next source state', () => {
   expect(fragment.data).toBe('b');
   expect(fragment.begin).toBe(2);
   expect(fragment.end).toBe(3);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(1);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(1);
+  expect(location.line.end).toBe(1);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 
   // Test the last state.
   source.nextState();
@@ -82,22 +98,30 @@ test('Next source state', () => {
   expect(fragment.data).toBe('');
   expect(fragment.begin).toBe(3);
   expect(fragment.end).toBe(3);
-  expect(fragment.location.column).toBe(1);
-  expect(fragment.location.line).toBe(1);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(1);
+  expect(location.line.end).toBe(1);
+  expect(location.column.begin).toBe(1);
+  expect(location.column.end).toBe(1);
 });
 
 test('Save/Discard source state', () => {
   const context = new Context('test');
   const source = new TextSource('a\nb', context);
-  let fragment;
+  let fragment, location;
 
   // Test the initial state.
   fragment = source.fragment;
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 
   // Save state.
   source.saveState();
@@ -111,8 +135,12 @@ test('Save/Discard source state', () => {
   expect(fragment.data).toBe('a\nb');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(3);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(1);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(1);
 
   // Discard state.
   source.discardState();
@@ -121,15 +149,19 @@ test('Save/Discard source state', () => {
 test('Save/Restore/Discard source state', () => {
   const context = new Context('test');
   const source = new TextSource('abc', context);
-  let fragment;
+  let fragment, location;
 
   // Test the initial state.
   fragment = source.fragment;
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 
   // Save state.
   source.saveState();
@@ -145,8 +177,12 @@ test('Save/Restore/Discard source state', () => {
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 
   // Discard state.
   source.discardState();
@@ -206,8 +242,12 @@ test('Emit token', () => {
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  const location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 });
 
 test('Emit node', () => {
@@ -232,8 +272,12 @@ test('Emit node', () => {
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  const location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 });
 
 test('Emit record', () => {
@@ -259,8 +303,12 @@ test('Emit record', () => {
   expect(fragment.data).toBe('a');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+
+  const location = fragment.location;
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(0);
 
   // Test duplicate record.
   expect(() => source.emit(new Record(source.fragment, 123, context.node))).toThrow(

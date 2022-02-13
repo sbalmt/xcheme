@@ -6,7 +6,7 @@ import { Context, TextSource, RunFlowPattern, RangeUnitPattern } from '../../../
 const original = new RangeUnitPattern('0', '9');
 
 /**
- * It can consume the 'original' pattern by using a callback.
+ * It can consume the 'original' pattern by using callback.
  */
 const pattern = new RunFlowPattern(() => original);
 

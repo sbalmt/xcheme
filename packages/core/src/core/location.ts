@@ -1,5 +1,7 @@
+import Range from './range';
+
 /**
- * A fragment location in terms of lines and columns.
+ * A location class.
  */
 export default class Location {
   /**
@@ -8,22 +10,22 @@ export default class Location {
   #name: string;
 
   /**
-   * Location line.
+   * Line range.
    */
-  #line: number;
+  #line: Range;
 
   /**
-   * Location column.
+   * Column range.
    */
-  #column: number;
+  #column: Range;
 
   /**
    * Default constructor.
    * @param name Location name.
-   * @param line Location line.
-   * @param column Location column.
+   * @param line Line range.
+   * @param column Column range.
    */
-  constructor(name: string, line: number, column: number) {
+  constructor(name: string, line: Range, column: Range) {
     this.#name = name;
     this.#line = line;
     this.#column = column;
@@ -37,16 +39,16 @@ export default class Location {
   }
 
   /**
-   * Get the location line.
+   * Get the line range.
    */
-  get line(): number {
+  get line(): Range {
     return this.#line;
   }
 
   /**
-   * Get the location column.
+   * Get the column range.
    */
-  get column(): number {
+  get column(): Range {
     return this.#column;
   }
 }

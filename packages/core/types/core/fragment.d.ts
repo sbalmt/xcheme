@@ -29,6 +29,10 @@ export default class Fragment {
      */
     get end(): number;
     /**
+     * Get the fragment length.
+     */
+    get length(): number;
+    /**
      * Get the fragment location in terms of lines and columns.
      */
     get location(): Location;

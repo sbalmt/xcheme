@@ -2,6 +2,8 @@ import type Context from '../core/context';
 
 import Token from '../core/token';
 import Fragment from '../core/fragment';
+import Location from '../core/location';
+import Range from '../core/range';
 import Base from './base';
 
 /**
@@ -83,7 +85,10 @@ export default class TokenSource extends Base {
       if (this.offset > state.offset) {
         const first = this.#data[state.offset].fragment;
         const last = this.#data[Math.max(0, this.offset - 1)].fragment;
-        return new Fragment(first.source, first.begin, last.end, first.location);
+        const line = new Range(first.location.line.begin, last.location.line.end);
+        const column = new Range(first.location.column.begin, last.location.column.end);
+        const location = new Location(first.location.name, line, column);
+        return new Fragment(first.source, first.begin, last.end, location);
       }
     }
     const offset = Math.min(this.offset, this.#data.length - 1);

@@ -1,6 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const fragment_1 = require("../core/fragment");
+const location_1 = require("../core/location");
+const range_1 = require("../core/range");
 const base_1 = require("./base");
 /**
  * Data source for processing tokens during the analysis.
@@ -63,7 +65,10 @@ class TokenSource extends base_1.default {
             if (this.offset > state.offset) {
                 const first = this.#data[state.offset].fragment;
                 const last = this.#data[Math.max(0, this.offset - 1)].fragment;
-                return new fragment_1.default(first.source, first.begin, last.end, first.location);
+                const line = new range_1.default(first.location.line.begin, last.location.line.end);
+                const column = new range_1.default(first.location.column.begin, last.location.column.end);
+                const location = new location_1.default(first.location.name, line, column);
+                return new fragment_1.default(first.source, first.begin, last.end, location);
             }
         }
         const offset = Math.min(this.offset, this.#data.length - 1);

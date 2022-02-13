@@ -41,8 +41,10 @@ test('Consume success', () => {
   expect(fragment.data).toBe('@');
   expect(fragment.begin).toBe(0);
   expect(fragment.end).toBe(1);
-  expect(fragment.location.column).toBe(0);
-  expect(fragment.location.line).toBe(0);
+  expect(fragment.location.line.begin).toBe(0);
+  expect(fragment.location.line.end).toBe(0);
+  expect(fragment.location.column.begin).toBe(0);
+  expect(fragment.location.column.end).toBe(1);
 });
 
 test('Consume failure', () => {

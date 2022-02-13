@@ -1,25 +1,26 @@
+import Range from './range';
 /**
- * A fragment location in terms of lines and columns.
+ * A location class.
  */
 export default class Location {
     #private;
     /**
      * Default constructor.
      * @param name Location name.
-     * @param line Location line.
-     * @param column Location column.
+     * @param line Line range.
+     * @param column Column range.
      */
-    constructor(name: string, line: number, column: number);
+    constructor(name: string, line: Range, column: Range);
     /**
      * Get the location name.
      */
     get name(): string;
     /**
-     * Get the location line.
+     * Get the line range.
      */
-    get line(): number;
+    get line(): Range;
     /**
-     * Get the location column.
+     * Get the column range.
      */
-    get column(): number;
+    get column(): Range;
 }

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * A fragment location in terms of lines and columns.
+ * A location class.
  */
 class Location {
     /**
@@ -9,18 +9,18 @@ class Location {
      */
     #name;
     /**
-     * Location line.
+     * Line range.
      */
     #line;
     /**
-     * Location column.
+     * Column range.
      */
     #column;
     /**
      * Default constructor.
      * @param name Location name.
-     * @param line Location line.
-     * @param column Location column.
+     * @param line Line range.
+     * @param column Column range.
      */
     constructor(name, line, column) {
         this.#name = name;
@@ -34,13 +34,13 @@ class Location {
         return this.#name;
     }
     /**
-     * Get the location line.
+     * Get the line range.
      */
     get line() {
         return this.#line;
     }
     /**
-     * Get the location column.
+     * Get the column range.
      */
     get column() {
         return this.#column;

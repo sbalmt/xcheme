@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const fragment_1 = require("../core/fragment");
 const location_1 = require("../core/location");
+const range_1 = require("../core/range");
 const base_1 = require("./base");
 /**
  * Data source for processing texts during the analysis process.
@@ -63,12 +64,16 @@ class Text extends base_1.default {
         if (this.#states.length > 0) {
             const state = this.#states[this.#states.length - 1];
             if (this.offset > state.offset) {
-                const location = new location_1.default(this.name, state.line, state.column);
+                const line = new range_1.default(state.line, this.#current.line);
+                const column = new range_1.default(state.column, this.#current.column);
+                const location = new location_1.default(this.name, line, column);
                 return new fragment_1.default(this.#data, state.offset, this.offset, location);
             }
         }
+        const line = new range_1.default(this.#current.line, this.#current.line);
+        const column = new range_1.default(this.#current.column, this.#current.column);
+        const location = new location_1.default(this.name, line, column);
         const length = this.offset + (this.length > 0 ? 1 : 0);
-        const location = new location_1.default(this.name, this.#current.line, this.#current.column);
         return new fragment_1.default(this.#data, this.offset, length, location);
     }
     /**

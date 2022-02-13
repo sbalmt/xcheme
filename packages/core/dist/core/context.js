@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const error_1 = require("./error");
 const fragment_1 = require("./fragment");
 const location_1 = require("./location");
+const range_1 = require("./range");
 const table_1 = require("./table");
 const node_1 = require("./node");
 /**
@@ -35,7 +36,10 @@ class Context {
      * @param name Context name.
      */
     constructor(name) {
-        this.#node = new node_1.default(new fragment_1.default('', 0, 0, new location_1.default(name, 0, 0)), 0x00, this.#table);
+        const range = new range_1.default(0, 0);
+        const location = new location_1.default(name, range, range);
+        const fragment = new fragment_1.default('', 0, 0, location);
+        this.#node = new node_1.default(fragment, 0x00, this.#table);
         this.#name = name;
     }
     /**

@@ -67,6 +67,13 @@ export default class Fragment {
   }
 
   /**
+   * Get the fragment length.
+   */
+  get length(): number {
+    return this.#end - this.#begin;
+  }
+
+  /**
    * Get the fragment location in terms of lines and columns.
    */
   get location(): Location {
