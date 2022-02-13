@@ -1,14 +1,11 @@
-import { Context, TokenSource, Token, Node, Record } from '../../src/index';
-import Fragment from '../../src/core/fragment';
-import Location from '../../src/core/location';
-import Range from '../../src/core/range';
+import { Context, Fragment, Location, Range, TokenSource, Token, Node, Record } from '../../src/index';
 
 const text = 'abc';
 
 const tokens = [
   new Token(new Fragment(text, 0, 1, new Location('', new Range(0, 0), new Range(0, 1))), 0x1a),
-  new Token(new Fragment(text, 1, 2, new Location('', new Range(0, 0), new Range(1, 2))), 0x2b),
-  new Token(new Fragment(text, 2, 3, new Location('', new Range(0, 0), new Range(2, 3))), 0x3c)
+  new Token(new Fragment(text, 1, 2, new Location('', new Range(0, 1), new Range(0, 1))), 0x2b),
+  new Token(new Fragment(text, 2, 3, new Location('', new Range(1, 1), new Range(1, 2))), 0x3c)
 ];
 
 test('Default source state', () => {
@@ -76,9 +73,9 @@ test('Next source state', () => {
 
   location = fragment.location;
   expect(location.line.begin).toBe(0);
-  expect(location.line.end).toBe(0);
-  expect(location.column.begin).toBe(1);
-  expect(location.column.end).toBe(2);
+  expect(location.line.end).toBe(1);
+  expect(location.column.begin).toBe(0);
+  expect(location.column.end).toBe(1);
 
   // Test the next state.
   source.nextState();
@@ -93,10 +90,10 @@ test('Next source state', () => {
   expect(fragment.end).toBe(3);
 
   location = fragment.location;
-  expect(location.line.begin).toBe(0);
-  expect(location.line.end).toBe(0);
-  expect(location.column.begin).toBe(2);
-  expect(location.column.end).toBe(3);
+  expect(location.line.begin).toBe(1);
+  expect(location.line.end).toBe(1);
+  expect(location.column.begin).toBe(1);
+  expect(location.column.end).toBe(2);
 
   // Test the last state.
   source.nextState();
@@ -111,10 +108,10 @@ test('Next source state', () => {
   expect(fragment.end).toBe(3);
 
   location = fragment.location;
-  expect(location.line.begin).toBe(0);
-  expect(location.line.end).toBe(0);
-  expect(location.column.begin).toBe(2);
-  expect(location.column.end).toBe(3);
+  expect(location.line.begin).toBe(1);
+  expect(location.line.end).toBe(1);
+  expect(location.column.begin).toBe(1);
+  expect(location.column.end).toBe(2);
 });
 
 test('Save/Discard source state', () => {
@@ -149,9 +146,9 @@ test('Save/Discard source state', () => {
 
   location = fragment.location;
   expect(location.line.begin).toBe(0);
-  expect(location.line.end).toBe(0);
+  expect(location.line.end).toBe(1);
   expect(location.column.begin).toBe(0);
-  expect(location.column.end).toBe(3);
+  expect(location.column.end).toBe(2);
 
   // Discard state.
   source.discardState();
