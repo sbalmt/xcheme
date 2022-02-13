@@ -46,4 +46,5 @@ export { default as PlaceNodePattern } from './rules/node/place';
 export { default as EmitSymbolRoute } from './rules/symbol/route';
 export { default as EmitSymbolPattern } from './rules/symbol/emit';
 export { default as ScopeSymbolPattern } from './rules/symbol/scope';
+export { default as UncaseTransformRoute } from './rules/transform/route';
 export { default as UncaseTransformPattern } from './rules/transform/uncase';

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const expect_1 = require("../flow/expect");
 const pattern_1 = require("../pattern");
 /**
- * Consumes all the given patterns with the uncase transformation active.
+ * Consumes all the given patterns with the uncase transformation.
  */
 class Uncase extends pattern_1.default {
     /**

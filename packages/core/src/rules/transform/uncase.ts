@@ -3,7 +3,7 @@ import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
 /**
- * Consumes all the given patterns with the uncase transformation active.
+ * Consumes all the given patterns with the uncase transformation.
  */
 export default class Uncase extends Pattern {
   /**

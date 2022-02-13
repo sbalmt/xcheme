@@ -1,31 +1,36 @@
-import { Context, TextSource, UncaseTransformPattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, TextSource, MapFlowPattern, UncaseTransformRoute, ExpectUnitPattern } from '../../../src/index';
 
 /**
- * It can consume a sequence of characters 'a', 'b' and 'c', disregarding the character case.
+ * Routes map.
  */
-const pattern = new UncaseTransformPattern(new ExpectUnitPattern('a', 'b', 'c'));
+const pattern = new MapFlowPattern(
+  new UncaseTransformRoute(new ExpectUnitPattern('b'), 'a'),
+  new UncaseTransformRoute(new ExpectUnitPattern('d', 'e'), 'c')
+);
 
 test('Consume success', () => {
   const context = new Context('test');
-  const source = new TextSource('aBc', context);
+  const source = new TextSource('aBcDE', context);
 
-  // Test the consumption.
+  // Test the first consumption.
   expect(pattern.consume(source)).toBeTruthy();
-  expect(source.offset).toBe(3);
+  expect(source.offset).toBe(2);
+  expect(source.length).toBe(3);
+
+  // Test the final consumption.
+  expect(pattern.consume(source)).toBeTruthy();
+  expect(source.offset).toBe(5);
   expect(source.length).toBe(0);
 });
 
 test('Consume failure', () => {
   const context = new Context('test');
-  const source = new TextSource('AzC', context);
+  const source = new TextSource('aDE', context);
 
   // Test the consumption.
   expect(pattern.consume(source)).toBeFalsy();
   expect(source.offset).toBe(1);
   expect(source.length).toBe(2);
-
-  // Check the output state.
-  expect(source.output.state).toBe(0);
 });
 
 test('Consume eof', () => {
@@ -36,7 +41,4 @@ test('Consume eof', () => {
   expect(pattern.consume(source)).toBeFalsy();
   expect(source.offset).toBe(0);
   expect(source.length).toBe(0);
-
-  // Check the output state.
-  expect(source.output.state).toBe(0);
 });
