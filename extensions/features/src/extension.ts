@@ -43,8 +43,9 @@ export function activate(context: VSCode.ExtensionContext) {
   const collection = VSCode.languages.createDiagnosticCollection('xcheme');
   context.subscriptions.push(registerAutoCompletion());
   context.subscriptions.push(detectTextChanges(collection), detectEditorChanges(collection));
-  if (VSCode.window.activeTextEditor) {
-    Diagnostics.update(VSCode.window.activeTextEditor.document, collection);
+  const editor = VSCode.window.activeTextEditor;
+  if (editor) {
+    Diagnostics.update(editor.document, collection);
   }
 }
 

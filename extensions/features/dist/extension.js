@@ -14,9 +14,22 @@ module.exports = require("vscode");
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.update = void 0;
-const Lang = __webpack_require__(3);
-const Analysis = __webpack_require__(118);
-const Errors = __webpack_require__(119);
+const VSCode = __webpack_require__(1);
+const FS = __webpack_require__(3);
+const Lang = __webpack_require__(4);
+const Analysis = __webpack_require__(119);
+const Errors = __webpack_require__(120);
+/**
+ * Load the specified file contents.
+ * @param file File path.
+ * @returns Returns the file contents or undefined when the file wasn't found.
+ */
+const loadFile = (file) => {
+    if (FS.existsSync(file)) {
+        return FS.readFileSync(file, { encoding: 'utf-8' });
+    }
+    return void 0;
+};
 /**
  * Update the specified diagnostics collection based on the given document.
  * @param document Input document.
@@ -31,7 +44,12 @@ const update = (document, collection) => {
             collection.set(document.uri, errors);
         }
         else {
-            const project = new Lang.Project.Context('editor', new Lang.TextCoder());
+            const workspaces = VSCode.workspace.workspaceFolders;
+            const folder = workspaces ? workspaces[0].uri.path.substring(1) : void 0;
+            const project = new Lang.Project.Context('editor', new Lang.TextCoder(), {
+                loadFileHook: folder ? loadFile : void 0,
+                rootPath: folder
+            });
             Lang.Optimizer.consumeNodes(context.node, project) && Lang.Maker.consumeNodes(context.node, project);
             if (project.errors.length > 0) {
                 const errors = Errors.getDiagnostics(project.errors);
@@ -45,27 +63,33 @@ exports.update = update;
 
 /***/ }),
 /* 3 */
+/***/ ((module) => {
+
+module.exports = require("fs");
+
+/***/ }),
+/* 4 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Maker = exports.Optimizer = exports.Parser = exports.Lexer = exports.Entries = exports.Project = exports.TextCoder = exports.LiveCoder = exports.BaseCoder = void 0;
-var base_1 = __webpack_require__(4);
+var base_1 = __webpack_require__(5);
 Object.defineProperty(exports, "BaseCoder", ({ enumerable: true, get: function () { return base_1.Base; } }));
-var live_1 = __webpack_require__(5);
+var live_1 = __webpack_require__(6);
 Object.defineProperty(exports, "LiveCoder", ({ enumerable: true, get: function () { return live_1.Live; } }));
-var text_1 = __webpack_require__(58);
+var text_1 = __webpack_require__(59);
 Object.defineProperty(exports, "TextCoder", ({ enumerable: true, get: function () { return text_1.Text; } }));
-exports.Project = __webpack_require__(61);
-exports.Entries = __webpack_require__(59);
-exports.Lexer = __webpack_require__(62);
-exports.Parser = __webpack_require__(64);
-exports.Optimizer = __webpack_require__(69);
-exports.Maker = __webpack_require__(73);
+exports.Project = __webpack_require__(62);
+exports.Entries = __webpack_require__(60);
+exports.Lexer = __webpack_require__(63);
+exports.Parser = __webpack_require__(65);
+exports.Optimizer = __webpack_require__(70);
+exports.Maker = __webpack_require__(74);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -319,14 +343,14 @@ exports.Base = Base;
 //# sourceMappingURL=base.js.map
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Live = void 0;
-const Core = __webpack_require__(6);
-const base_1 = __webpack_require__(4);
+const Core = __webpack_require__(7);
+const base_1 = __webpack_require__(5);
 /**
  * Generate a project output for running in memory.
  */
@@ -589,126 +613,126 @@ exports.Live = Live;
 //# sourceMappingURL=live.js.map
 
 /***/ }),
-/* 6 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.UncaseTransformPattern = exports.UncaseTransformRoute = exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.PlaceNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetStatePattern = exports.HasStatePattern = exports.SetStateRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptFlowPattern = exports.NotFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.FlowRoute = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.UnitRoute = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Range = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Token = exports.Node = exports.Error = exports.Context = void 0;
-var context_1 = __webpack_require__(7);
-Object.defineProperty(exports, "Context", ({ enumerable: true, get: function () { return context_1.default; } }));
-var error_1 = __webpack_require__(8);
-Object.defineProperty(exports, "Error", ({ enumerable: true, get: function () { return error_1.default; } }));
-var node_1 = __webpack_require__(13);
-Object.defineProperty(exports, "Node", ({ enumerable: true, get: function () { return node_1.default; } }));
-var token_1 = __webpack_require__(14);
-Object.defineProperty(exports, "Token", ({ enumerable: true, get: function () { return token_1.default; } }));
-var table_1 = __webpack_require__(12);
-Object.defineProperty(exports, "Table", ({ enumerable: true, get: function () { return table_1.default; } }));
-var record_1 = __webpack_require__(15);
-Object.defineProperty(exports, "Record", ({ enumerable: true, get: function () { return record_1.default; } }));
-var fragment_1 = __webpack_require__(9);
-Object.defineProperty(exports, "Fragment", ({ enumerable: true, get: function () { return fragment_1.default; } }));
-var location_1 = __webpack_require__(10);
-Object.defineProperty(exports, "Location", ({ enumerable: true, get: function () { return location_1.default; } }));
-var range_1 = __webpack_require__(11);
-Object.defineProperty(exports, "Range", ({ enumerable: true, get: function () { return range_1.default; } }));
-var pattern_1 = __webpack_require__(16);
-Object.defineProperty(exports, "Pattern", ({ enumerable: true, get: function () { return pattern_1.default; } }));
-var route_1 = __webpack_require__(17);
-Object.defineProperty(exports, "Route", ({ enumerable: true, get: function () { return route_1.default; } }));
-var base_1 = __webpack_require__(18);
-Object.defineProperty(exports, "BaseSource", ({ enumerable: true, get: function () { return base_1.default; } }));
-var text_1 = __webpack_require__(19);
-Object.defineProperty(exports, "TextSource", ({ enumerable: true, get: function () { return text_1.default; } }));
-var token_2 = __webpack_require__(20);
-Object.defineProperty(exports, "TokenSource", ({ enumerable: true, get: function () { return token_2.default; } }));
-var route_2 = __webpack_require__(21);
-Object.defineProperty(exports, "UnitRoute", ({ enumerable: true, get: function () { return route_2.default; } }));
-var any_1 = __webpack_require__(22);
-Object.defineProperty(exports, "AnyUnitPattern", ({ enumerable: true, get: function () { return any_1.default; } }));
-var choose_1 = __webpack_require__(23);
-Object.defineProperty(exports, "ChooseUnitPattern", ({ enumerable: true, get: function () { return choose_1.default; } }));
-var expect_1 = __webpack_require__(26);
-Object.defineProperty(exports, "ExpectUnitPattern", ({ enumerable: true, get: function () { return expect_1.default; } }));
-var range_2 = __webpack_require__(27);
-Object.defineProperty(exports, "RangeUnitPattern", ({ enumerable: true, get: function () { return range_2.default; } }));
-var route_3 = __webpack_require__(28);
-Object.defineProperty(exports, "FlowRoute", ({ enumerable: true, get: function () { return route_3.default; } }));
-var choose_2 = __webpack_require__(29);
-Object.defineProperty(exports, "ChooseFlowPattern", ({ enumerable: true, get: function () { return choose_2.default; } }));
-var condition_1 = __webpack_require__(31);
-Object.defineProperty(exports, "ConditionFlowPattern", ({ enumerable: true, get: function () { return condition_1.default; } }));
-var run_1 = __webpack_require__(32);
-Object.defineProperty(exports, "RunFlowPattern", ({ enumerable: true, get: function () { return run_1.default; } }));
-var expect_2 = __webpack_require__(25);
-Object.defineProperty(exports, "ExpectFlowPattern", ({ enumerable: true, get: function () { return expect_2.default; } }));
-var end_1 = __webpack_require__(33);
-Object.defineProperty(exports, "EndFlowPattern", ({ enumerable: true, get: function () { return end_1.default; } }));
-var not_1 = __webpack_require__(34);
-Object.defineProperty(exports, "NotFlowPattern", ({ enumerable: true, get: function () { return not_1.default; } }));
-var opt_1 = __webpack_require__(35);
-Object.defineProperty(exports, "OptFlowPattern", ({ enumerable: true, get: function () { return opt_1.default; } }));
-var repeat_1 = __webpack_require__(36);
-Object.defineProperty(exports, "RepeatFlowPattern", ({ enumerable: true, get: function () { return repeat_1.default; } }));
-var static_1 = __webpack_require__(37);
-Object.defineProperty(exports, "StaticFlowPattern", ({ enumerable: true, get: function () { return static_1.default; } }));
-var map_1 = __webpack_require__(38);
-Object.defineProperty(exports, "MapFlowPattern", ({ enumerable: true, get: function () { return map_1.default; } }));
-var route_4 = __webpack_require__(39);
-Object.defineProperty(exports, "SetValueRoute", ({ enumerable: true, get: function () { return route_4.default; } }));
-var set_1 = __webpack_require__(40);
-Object.defineProperty(exports, "SetValuePattern", ({ enumerable: true, get: function () { return set_1.default; } }));
-var route_5 = __webpack_require__(41);
-Object.defineProperty(exports, "SetStateRoute", ({ enumerable: true, get: function () { return route_5.default; } }));
-var has_1 = __webpack_require__(43);
-Object.defineProperty(exports, "HasStatePattern", ({ enumerable: true, get: function () { return has_1.default; } }));
-var set_2 = __webpack_require__(42);
-Object.defineProperty(exports, "SetStatePattern", ({ enumerable: true, get: function () { return set_2.default; } }));
-var route_6 = __webpack_require__(44);
-Object.defineProperty(exports, "EmitErrorRoute", ({ enumerable: true, get: function () { return route_6.default; } }));
-var emit_1 = __webpack_require__(45);
-Object.defineProperty(exports, "EmitErrorPattern", ({ enumerable: true, get: function () { return emit_1.default; } }));
-var route_7 = __webpack_require__(46);
-Object.defineProperty(exports, "EmitTokenRoute", ({ enumerable: true, get: function () { return route_7.default; } }));
-var emit_2 = __webpack_require__(47);
-Object.defineProperty(exports, "EmitTokenPattern", ({ enumerable: true, get: function () { return emit_2.default; } }));
-var route_8 = __webpack_require__(48);
-Object.defineProperty(exports, "EmitNodeRoute", ({ enumerable: true, get: function () { return route_8.default; } }));
-var emit_3 = __webpack_require__(49);
-Object.defineProperty(exports, "EmitNodePattern", ({ enumerable: true, get: function () { return emit_3.default; } }));
-var append_1 = __webpack_require__(50);
-Object.defineProperty(exports, "AppendNodePattern", ({ enumerable: true, get: function () { return append_1.default; } }));
-var prepend_1 = __webpack_require__(51);
-Object.defineProperty(exports, "PrependNodePattern", ({ enumerable: true, get: function () { return prepend_1.default; } }));
-var pivot_1 = __webpack_require__(52);
-Object.defineProperty(exports, "PivotNodePattern", ({ enumerable: true, get: function () { return pivot_1.default; } }));
-var place_1 = __webpack_require__(53);
-Object.defineProperty(exports, "PlaceNodePattern", ({ enumerable: true, get: function () { return place_1.default; } }));
-var route_9 = __webpack_require__(54);
-Object.defineProperty(exports, "EmitSymbolRoute", ({ enumerable: true, get: function () { return route_9.default; } }));
-var emit_4 = __webpack_require__(55);
-Object.defineProperty(exports, "EmitSymbolPattern", ({ enumerable: true, get: function () { return emit_4.default; } }));
-var scope_1 = __webpack_require__(56);
-Object.defineProperty(exports, "ScopeSymbolPattern", ({ enumerable: true, get: function () { return scope_1.default; } }));
-var route_10 = __webpack_require__(57);
-Object.defineProperty(exports, "UncaseTransformRoute", ({ enumerable: true, get: function () { return route_10.default; } }));
-var uncase_1 = __webpack_require__(24);
-Object.defineProperty(exports, "UncaseTransformPattern", ({ enumerable: true, get: function () { return uncase_1.default; } }));
-//# sourceMappingURL=index.js.map
-
-/***/ }),
 /* 7 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const error_1 = __webpack_require__(8);
-const fragment_1 = __webpack_require__(9);
-const location_1 = __webpack_require__(10);
-const range_1 = __webpack_require__(11);
-const table_1 = __webpack_require__(12);
-const node_1 = __webpack_require__(13);
+exports.UncaseTransformPattern = exports.UncaseTransformRoute = exports.ScopeSymbolPattern = exports.EmitSymbolPattern = exports.EmitSymbolRoute = exports.PlaceNodePattern = exports.PivotNodePattern = exports.PrependNodePattern = exports.AppendNodePattern = exports.EmitNodePattern = exports.EmitNodeRoute = exports.EmitTokenPattern = exports.EmitTokenRoute = exports.EmitErrorPattern = exports.EmitErrorRoute = exports.SetStatePattern = exports.HasStatePattern = exports.SetStateRoute = exports.SetValuePattern = exports.SetValueRoute = exports.MapFlowPattern = exports.StaticFlowPattern = exports.RepeatFlowPattern = exports.OptFlowPattern = exports.NotFlowPattern = exports.EndFlowPattern = exports.ExpectFlowPattern = exports.RunFlowPattern = exports.ConditionFlowPattern = exports.ChooseFlowPattern = exports.FlowRoute = exports.RangeUnitPattern = exports.ExpectUnitPattern = exports.ChooseUnitPattern = exports.AnyUnitPattern = exports.UnitRoute = exports.TokenSource = exports.TextSource = exports.BaseSource = exports.Route = exports.Pattern = exports.Range = exports.Location = exports.Fragment = exports.Record = exports.Table = exports.Token = exports.Node = exports.Error = exports.Context = void 0;
+var context_1 = __webpack_require__(8);
+Object.defineProperty(exports, "Context", ({ enumerable: true, get: function () { return context_1.default; } }));
+var error_1 = __webpack_require__(9);
+Object.defineProperty(exports, "Error", ({ enumerable: true, get: function () { return error_1.default; } }));
+var node_1 = __webpack_require__(14);
+Object.defineProperty(exports, "Node", ({ enumerable: true, get: function () { return node_1.default; } }));
+var token_1 = __webpack_require__(15);
+Object.defineProperty(exports, "Token", ({ enumerable: true, get: function () { return token_1.default; } }));
+var table_1 = __webpack_require__(13);
+Object.defineProperty(exports, "Table", ({ enumerable: true, get: function () { return table_1.default; } }));
+var record_1 = __webpack_require__(16);
+Object.defineProperty(exports, "Record", ({ enumerable: true, get: function () { return record_1.default; } }));
+var fragment_1 = __webpack_require__(10);
+Object.defineProperty(exports, "Fragment", ({ enumerable: true, get: function () { return fragment_1.default; } }));
+var location_1 = __webpack_require__(11);
+Object.defineProperty(exports, "Location", ({ enumerable: true, get: function () { return location_1.default; } }));
+var range_1 = __webpack_require__(12);
+Object.defineProperty(exports, "Range", ({ enumerable: true, get: function () { return range_1.default; } }));
+var pattern_1 = __webpack_require__(17);
+Object.defineProperty(exports, "Pattern", ({ enumerable: true, get: function () { return pattern_1.default; } }));
+var route_1 = __webpack_require__(18);
+Object.defineProperty(exports, "Route", ({ enumerable: true, get: function () { return route_1.default; } }));
+var base_1 = __webpack_require__(19);
+Object.defineProperty(exports, "BaseSource", ({ enumerable: true, get: function () { return base_1.default; } }));
+var text_1 = __webpack_require__(20);
+Object.defineProperty(exports, "TextSource", ({ enumerable: true, get: function () { return text_1.default; } }));
+var token_2 = __webpack_require__(21);
+Object.defineProperty(exports, "TokenSource", ({ enumerable: true, get: function () { return token_2.default; } }));
+var route_2 = __webpack_require__(22);
+Object.defineProperty(exports, "UnitRoute", ({ enumerable: true, get: function () { return route_2.default; } }));
+var any_1 = __webpack_require__(23);
+Object.defineProperty(exports, "AnyUnitPattern", ({ enumerable: true, get: function () { return any_1.default; } }));
+var choose_1 = __webpack_require__(24);
+Object.defineProperty(exports, "ChooseUnitPattern", ({ enumerable: true, get: function () { return choose_1.default; } }));
+var expect_1 = __webpack_require__(27);
+Object.defineProperty(exports, "ExpectUnitPattern", ({ enumerable: true, get: function () { return expect_1.default; } }));
+var range_2 = __webpack_require__(28);
+Object.defineProperty(exports, "RangeUnitPattern", ({ enumerable: true, get: function () { return range_2.default; } }));
+var route_3 = __webpack_require__(29);
+Object.defineProperty(exports, "FlowRoute", ({ enumerable: true, get: function () { return route_3.default; } }));
+var choose_2 = __webpack_require__(30);
+Object.defineProperty(exports, "ChooseFlowPattern", ({ enumerable: true, get: function () { return choose_2.default; } }));
+var condition_1 = __webpack_require__(32);
+Object.defineProperty(exports, "ConditionFlowPattern", ({ enumerable: true, get: function () { return condition_1.default; } }));
+var run_1 = __webpack_require__(33);
+Object.defineProperty(exports, "RunFlowPattern", ({ enumerable: true, get: function () { return run_1.default; } }));
+var expect_2 = __webpack_require__(26);
+Object.defineProperty(exports, "ExpectFlowPattern", ({ enumerable: true, get: function () { return expect_2.default; } }));
+var end_1 = __webpack_require__(34);
+Object.defineProperty(exports, "EndFlowPattern", ({ enumerable: true, get: function () { return end_1.default; } }));
+var not_1 = __webpack_require__(35);
+Object.defineProperty(exports, "NotFlowPattern", ({ enumerable: true, get: function () { return not_1.default; } }));
+var opt_1 = __webpack_require__(36);
+Object.defineProperty(exports, "OptFlowPattern", ({ enumerable: true, get: function () { return opt_1.default; } }));
+var repeat_1 = __webpack_require__(37);
+Object.defineProperty(exports, "RepeatFlowPattern", ({ enumerable: true, get: function () { return repeat_1.default; } }));
+var static_1 = __webpack_require__(38);
+Object.defineProperty(exports, "StaticFlowPattern", ({ enumerable: true, get: function () { return static_1.default; } }));
+var map_1 = __webpack_require__(39);
+Object.defineProperty(exports, "MapFlowPattern", ({ enumerable: true, get: function () { return map_1.default; } }));
+var route_4 = __webpack_require__(40);
+Object.defineProperty(exports, "SetValueRoute", ({ enumerable: true, get: function () { return route_4.default; } }));
+var set_1 = __webpack_require__(41);
+Object.defineProperty(exports, "SetValuePattern", ({ enumerable: true, get: function () { return set_1.default; } }));
+var route_5 = __webpack_require__(42);
+Object.defineProperty(exports, "SetStateRoute", ({ enumerable: true, get: function () { return route_5.default; } }));
+var has_1 = __webpack_require__(44);
+Object.defineProperty(exports, "HasStatePattern", ({ enumerable: true, get: function () { return has_1.default; } }));
+var set_2 = __webpack_require__(43);
+Object.defineProperty(exports, "SetStatePattern", ({ enumerable: true, get: function () { return set_2.default; } }));
+var route_6 = __webpack_require__(45);
+Object.defineProperty(exports, "EmitErrorRoute", ({ enumerable: true, get: function () { return route_6.default; } }));
+var emit_1 = __webpack_require__(46);
+Object.defineProperty(exports, "EmitErrorPattern", ({ enumerable: true, get: function () { return emit_1.default; } }));
+var route_7 = __webpack_require__(47);
+Object.defineProperty(exports, "EmitTokenRoute", ({ enumerable: true, get: function () { return route_7.default; } }));
+var emit_2 = __webpack_require__(48);
+Object.defineProperty(exports, "EmitTokenPattern", ({ enumerable: true, get: function () { return emit_2.default; } }));
+var route_8 = __webpack_require__(49);
+Object.defineProperty(exports, "EmitNodeRoute", ({ enumerable: true, get: function () { return route_8.default; } }));
+var emit_3 = __webpack_require__(50);
+Object.defineProperty(exports, "EmitNodePattern", ({ enumerable: true, get: function () { return emit_3.default; } }));
+var append_1 = __webpack_require__(51);
+Object.defineProperty(exports, "AppendNodePattern", ({ enumerable: true, get: function () { return append_1.default; } }));
+var prepend_1 = __webpack_require__(52);
+Object.defineProperty(exports, "PrependNodePattern", ({ enumerable: true, get: function () { return prepend_1.default; } }));
+var pivot_1 = __webpack_require__(53);
+Object.defineProperty(exports, "PivotNodePattern", ({ enumerable: true, get: function () { return pivot_1.default; } }));
+var place_1 = __webpack_require__(54);
+Object.defineProperty(exports, "PlaceNodePattern", ({ enumerable: true, get: function () { return place_1.default; } }));
+var route_9 = __webpack_require__(55);
+Object.defineProperty(exports, "EmitSymbolRoute", ({ enumerable: true, get: function () { return route_9.default; } }));
+var emit_4 = __webpack_require__(56);
+Object.defineProperty(exports, "EmitSymbolPattern", ({ enumerable: true, get: function () { return emit_4.default; } }));
+var scope_1 = __webpack_require__(57);
+Object.defineProperty(exports, "ScopeSymbolPattern", ({ enumerable: true, get: function () { return scope_1.default; } }));
+var route_10 = __webpack_require__(58);
+Object.defineProperty(exports, "UncaseTransformRoute", ({ enumerable: true, get: function () { return route_10.default; } }));
+var uncase_1 = __webpack_require__(25);
+Object.defineProperty(exports, "UncaseTransformPattern", ({ enumerable: true, get: function () { return uncase_1.default; } }));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+/* 8 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+const error_1 = __webpack_require__(9);
+const fragment_1 = __webpack_require__(10);
+const location_1 = __webpack_require__(11);
+const range_1 = __webpack_require__(12);
+const table_1 = __webpack_require__(13);
+const node_1 = __webpack_require__(14);
 /**
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
  * nodes from the current consumption.
@@ -788,7 +812,7 @@ exports["default"] = Context;
 //# sourceMappingURL=context.js.map
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -831,7 +855,7 @@ exports["default"] = Error;
 //# sourceMappingURL=error.js.map
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -910,7 +934,7 @@ exports["default"] = Fragment;
 //# sourceMappingURL=fragment.js.map
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -965,7 +989,7 @@ exports["default"] = Location;
 //# sourceMappingURL=location.js.map
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1014,12 +1038,12 @@ exports["default"] = Range;
 //# sourceMappingURL=range.js.map
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fragment_1 = __webpack_require__(9);
+const fragment_1 = __webpack_require__(10);
 /**
  * A symbol table for storing symbol records generated during the analysis process.
  */
@@ -1115,7 +1139,7 @@ exports["default"] = Table;
 //# sourceMappingURL=table.js.map
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1231,7 +1255,7 @@ exports["default"] = Node;
 //# sourceMappingURL=node.js.map
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1274,7 +1298,7 @@ exports["default"] = Token;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1341,7 +1365,7 @@ exports["default"] = Record;
 //# sourceMappingURL=record.js.map
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1363,7 +1387,7 @@ exports["default"] = Pattern;
 //# sourceMappingURL=pattern.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -1407,16 +1431,16 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const error_1 = __webpack_require__(8);
-const token_1 = __webpack_require__(14);
-const node_1 = __webpack_require__(13);
-const record_1 = __webpack_require__(15);
-const table_1 = __webpack_require__(12);
+const error_1 = __webpack_require__(9);
+const token_1 = __webpack_require__(15);
+const node_1 = __webpack_require__(14);
+const record_1 = __webpack_require__(16);
+const table_1 = __webpack_require__(13);
 /**
  * Base of any data source for the analysis process.
  */
@@ -1560,15 +1584,15 @@ exports["default"] = Base;
 //# sourceMappingURL=base.js.map
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fragment_1 = __webpack_require__(9);
-const location_1 = __webpack_require__(10);
-const range_1 = __webpack_require__(11);
-const base_1 = __webpack_require__(18);
+const fragment_1 = __webpack_require__(10);
+const location_1 = __webpack_require__(11);
+const range_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(19);
 /**
  * Data source for processing texts during the analysis process.
  */
@@ -1695,15 +1719,15 @@ exports["default"] = Text;
 //# sourceMappingURL=text.js.map
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const fragment_1 = __webpack_require__(9);
-const location_1 = __webpack_require__(10);
-const range_1 = __webpack_require__(11);
-const base_1 = __webpack_require__(18);
+const fragment_1 = __webpack_require__(10);
+const location_1 = __webpack_require__(11);
+const range_1 = __webpack_require__(12);
+const base_1 = __webpack_require__(19);
 /**
  * Data source for processing tokens during the analysis.
  */
@@ -1821,12 +1845,12 @@ exports["default"] = TokenSource;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
+const route_1 = __webpack_require__(18);
 /**
  * Produce a route to consume units.
  */
@@ -1844,12 +1868,12 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume one unit.
  */
@@ -1871,13 +1895,13 @@ exports["default"] = Any;
 //# sourceMappingURL=any.js.map
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const uncase_1 = __webpack_require__(24);
+const pattern_1 = __webpack_require__(17);
+const uncase_1 = __webpack_require__(25);
 /**
  * Consume one unit that is between all the acceptable units in the pattern.
  */
@@ -1914,13 +1938,13 @@ exports["default"] = Choose;
 //# sourceMappingURL=choose.js.map
 
 /***/ }),
-/* 24 */
+/* 25 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consumes all the given patterns with the uncase transformation.
  */
@@ -1972,12 +1996,12 @@ exports["default"] = Uncase;
 //# sourceMappingURL=uncase.js.map
 
 /***/ }),
-/* 25 */
+/* 26 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all patterns that are expected by this pattern.
  */
@@ -2012,13 +2036,13 @@ exports["default"] = Expect;
 //# sourceMappingURL=expect.js.map
 
 /***/ }),
-/* 26 */
+/* 27 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const uncase_1 = __webpack_require__(24);
+const pattern_1 = __webpack_require__(17);
+const uncase_1 = __webpack_require__(25);
 /**
  * Consume all the units that are expected by the pattern.
  */
@@ -2054,13 +2078,13 @@ exports["default"] = Expect;
 //# sourceMappingURL=expect.js.map
 
 /***/ }),
-/* 27 */
+/* 28 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const uncase_1 = __webpack_require__(24);
+const pattern_1 = __webpack_require__(17);
+const uncase_1 = __webpack_require__(25);
 /**
  * Consume one unit that is in the range accepted by the pattern.
  */
@@ -2103,12 +2127,12 @@ exports["default"] = Range;
 //# sourceMappingURL=range.js.map
 
 /***/ }),
-/* 28 */
+/* 29 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
+const route_1 = __webpack_require__(18);
 /**
  * Produce a route to consume units and, in case of success, it consumes the specified pattern.
  */
@@ -2127,13 +2151,13 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 29 */
+/* 30 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const try_1 = __webpack_require__(30);
+const pattern_1 = __webpack_require__(17);
+const try_1 = __webpack_require__(31);
 /**
  * Consume the first matching pattern in the list of patterns.
  */
@@ -2168,13 +2192,13 @@ exports["default"] = Choose;
 //# sourceMappingURL=choose.js.map
 
 /***/ }),
-/* 30 */
+/* 31 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(17);
+const expect_1 = __webpack_require__(26);
 /**
  * Consume all the given patterns and, in case of failure, it preserves the current source state.
  */
@@ -2210,13 +2234,13 @@ exports["default"] = Try;
 //# sourceMappingURL=try.js.map
 
 /***/ }),
-/* 31 */
+/* 32 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const try_1 = __webpack_require__(30);
+const pattern_1 = __webpack_require__(17);
+const try_1 = __webpack_require__(31);
 /**
  * Consume the test pattern and, in case of success, it also consumes the success pattern.
  * Otherwise, it will consume the failure pattern (when specified).
@@ -2265,12 +2289,12 @@ exports["default"] = Condition;
 //# sourceMappingURL=condition.js.map
 
 /***/ }),
-/* 32 */
+/* 33 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume the pattern object returned by the callback given for this pattern.
  */
@@ -2300,12 +2324,12 @@ exports["default"] = Run;
 //# sourceMappingURL=run.js.map
 
 /***/ }),
-/* 33 */
+/* 34 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
+const pattern_1 = __webpack_require__(17);
 /**
  * Doesn't consume anything, but it expects the end of the given data source.
  */
@@ -2323,13 +2347,13 @@ exports["default"] = End;
 //# sourceMappingURL=end.js.map
 
 /***/ }),
-/* 34 */
+/* 35 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const try_1 = __webpack_require__(30);
+const pattern_1 = __webpack_require__(17);
+const try_1 = __webpack_require__(31);
 /**
  * Consume all the given patterns and invert the consumption state.
  */
@@ -2362,13 +2386,13 @@ exports["default"] = Not;
 //# sourceMappingURL=not.js.map
 
 /***/ }),
-/* 35 */
+/* 36 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const try_1 = __webpack_require__(30);
+const pattern_1 = __webpack_require__(17);
+const try_1 = __webpack_require__(31);
 /**
  * Consume all the given patterns in this pattern as an optional behavior.
  */
@@ -2399,14 +2423,14 @@ exports["default"] = Opt;
 //# sourceMappingURL=opt.js.map
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const expect_1 = __webpack_require__(25);
-const try_1 = __webpack_require__(30);
+const pattern_1 = __webpack_require__(17);
+const expect_1 = __webpack_require__(26);
+const try_1 = __webpack_require__(31);
 /**
  * Consume all the given patterns in this pattern and, in case of success, retry the consumption.
  */
@@ -2446,12 +2470,12 @@ exports["default"] = Repeat;
 //# sourceMappingURL=repeat.js.map
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
+const pattern_1 = __webpack_require__(17);
 /**
  * Doesn't consume anything and returns the static state given for this pattern.
  */
@@ -2481,13 +2505,13 @@ exports["default"] = Static;
 //# sourceMappingURL=static.js.map
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const uncase_1 = __webpack_require__(24);
+const pattern_1 = __webpack_require__(17);
+const uncase_1 = __webpack_require__(25);
 /**
  * Consume the first route that match in the list of routes given for this pattern.
  */
@@ -2663,14 +2687,14 @@ exports["default"] = Map;
 //# sourceMappingURL=map.js.map
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
-const pattern_1 = __webpack_require__(16);
-const set_1 = __webpack_require__(40);
+const route_1 = __webpack_require__(18);
+const pattern_1 = __webpack_require__(17);
+const set_1 = __webpack_require__(41);
 /**
  * Produce a route to consume units and, in case of success, it emits a new token.
  */
@@ -2695,13 +2719,13 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns and, in case of success, it will change the current output value.
  */
@@ -2741,14 +2765,14 @@ exports["default"] = Set;
 //# sourceMappingURL=set.js.map
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
-const pattern_1 = __webpack_require__(16);
-const set_1 = __webpack_require__(42);
+const route_1 = __webpack_require__(18);
+const pattern_1 = __webpack_require__(17);
+const set_1 = __webpack_require__(43);
 /**
  * Produce a route to consume units and, in case of success, it set a new state value.
  */
@@ -2772,13 +2796,13 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consumes all the given patterns and, in case of success, it will set a new state value.
  */
@@ -2818,13 +2842,13 @@ exports["default"] = Set;
 //# sourceMappingURL=set.js.map
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns when the specified state value is defined.
  */
@@ -2863,14 +2887,14 @@ exports["default"] = Has;
 //# sourceMappingURL=has.js.map
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
-const pattern_1 = __webpack_require__(16);
-const emit_1 = __webpack_require__(45);
+const route_1 = __webpack_require__(18);
+const pattern_1 = __webpack_require__(17);
+const emit_1 = __webpack_require__(46);
 /**
  * Produce a route to consume units and, in case of success, it emits a new error.
  */
@@ -2894,15 +2918,15 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(18);
-const error_1 = __webpack_require__(8);
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const base_1 = __webpack_require__(19);
+const error_1 = __webpack_require__(9);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns and, in case of success, it will emit a new error into the current error list.
  */
@@ -2947,14 +2971,14 @@ exports["default"] = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
-const pattern_1 = __webpack_require__(16);
-const emit_1 = __webpack_require__(47);
+const route_1 = __webpack_require__(18);
+const pattern_1 = __webpack_require__(17);
+const emit_1 = __webpack_require__(48);
 /**
  * Produce a route to consume units and, in case of success, it emits a new token.
  */
@@ -2979,15 +3003,15 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(18);
-const token_1 = __webpack_require__(14);
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const base_1 = __webpack_require__(19);
+const token_1 = __webpack_require__(15);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns and, in case of success, it will emit a new token into the current token list.
  */
@@ -3032,14 +3056,14 @@ exports["default"] = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
-const pattern_1 = __webpack_require__(16);
-const emit_1 = __webpack_require__(49);
+const route_1 = __webpack_require__(18);
+const pattern_1 = __webpack_require__(17);
+const emit_1 = __webpack_require__(50);
 /**
  * Produce a route to consume units and, in case of success, it emits a new node.
  * Any working node in the source output will be attached as the left child from the new node.
@@ -3065,15 +3089,15 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(18);
-const node_1 = __webpack_require__(13);
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const base_1 = __webpack_require__(19);
+const node_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns and, in case of success, it will emit a new node as the next child of the current one.
  * Any working node in the source output will be attached as the left child from the new node.
@@ -3128,15 +3152,15 @@ exports["default"] = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(18);
-const node_1 = __webpack_require__(13);
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const base_1 = __webpack_require__(19);
+const node_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns in this pattern and, in case of success,
  * it appends a new node in the source output node.
@@ -3214,15 +3238,15 @@ exports["default"] = Append;
 //# sourceMappingURL=append.js.map
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(18);
-const node_1 = __webpack_require__(13);
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const base_1 = __webpack_require__(19);
+const node_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns in this pattern and, in case of success,
  * it prepends a new node in the source output node.
@@ -3298,15 +3322,15 @@ exports["default"] = Prepend;
 //# sourceMappingURL=prepend.js.map
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(18);
-const node_1 = __webpack_require__(13);
-const expect_1 = __webpack_require__(25);
-const pattern_1 = __webpack_require__(16);
+const base_1 = __webpack_require__(19);
+const node_1 = __webpack_require__(14);
+const expect_1 = __webpack_require__(26);
+const pattern_1 = __webpack_require__(17);
 /**
  * Consume all the given patterns in this pattern and, in case of success,
  * it creates a new node in the source output and pivot current ones.
@@ -3384,13 +3408,13 @@ exports["default"] = Pivot;
 //# sourceMappingURL=pivot.js.map
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(17);
+const expect_1 = __webpack_require__(26);
 /**
  * Consume all the given patterns and, in case of success,
  * it places the resulting node into the source output node.
@@ -3442,14 +3466,14 @@ exports["default"] = Place;
 //# sourceMappingURL=place.js.map
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
-const pattern_1 = __webpack_require__(16);
-const emit_1 = __webpack_require__(55);
+const route_1 = __webpack_require__(18);
+const pattern_1 = __webpack_require__(17);
+const emit_1 = __webpack_require__(56);
 /**
  * Produce a route to consume units and, in case of success, it emits a new symbol record.
  */
@@ -3474,16 +3498,16 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const base_1 = __webpack_require__(18);
-const record_1 = __webpack_require__(15);
-const pattern_1 = __webpack_require__(16);
-const expect_1 = __webpack_require__(25);
-const error_1 = __webpack_require__(8);
+const base_1 = __webpack_require__(19);
+const record_1 = __webpack_require__(16);
+const pattern_1 = __webpack_require__(17);
+const expect_1 = __webpack_require__(26);
+const error_1 = __webpack_require__(9);
 /**
  * Consume all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
  */
@@ -3544,13 +3568,13 @@ exports["default"] = Emit;
 //# sourceMappingURL=emit.js.map
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const pattern_1 = __webpack_require__(16);
-const expect_1 = __webpack_require__(25);
+const pattern_1 = __webpack_require__(17);
+const expect_1 = __webpack_require__(26);
 /**
  * Consume all the given patterns behind a new symbol table.
  */
@@ -3583,13 +3607,13 @@ exports["default"] = Scope;
 //# sourceMappingURL=scope.js.map
 
 /***/ }),
-/* 57 */
+/* 58 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const route_1 = __webpack_require__(17);
-const uncase_1 = __webpack_require__(24);
+const route_1 = __webpack_require__(18);
+const uncase_1 = __webpack_require__(25);
 /**
  * Produce a route to consume all the given patterns with the uncase transformation.
  */
@@ -3608,16 +3632,16 @@ exports["default"] = Route;
 //# sourceMappingURL=route.js.map
 
 /***/ }),
-/* 58 */
+/* 59 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Text = void 0;
-const Core = __webpack_require__(6);
-const Entries = __webpack_require__(59);
-const String = __webpack_require__(60);
-const base_1 = __webpack_require__(4);
+const Core = __webpack_require__(7);
+const Entries = __webpack_require__(60);
+const String = __webpack_require__(61);
+const base_1 = __webpack_require__(5);
 /**
  * Can generate a project output to be saved as a JavaScript source.
  */
@@ -3928,7 +3952,7 @@ exports.Text = Text;
 //# sourceMappingURL=text.js.map
 
 /***/ }),
-/* 59 */
+/* 60 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4116,7 +4140,7 @@ exports.isReferencedBy = isReferencedBy;
 //# sourceMappingURL=entries.js.map
 
 /***/ }),
-/* 60 */
+/* 61 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4207,14 +4231,14 @@ exports.compose = compose;
 //# sourceMappingURL=string.js.map
 
 /***/ }),
-/* 61 */
+/* 62 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Context = void 0;
-const Core = __webpack_require__(6);
-const Entries = __webpack_require__(59);
+const Core = __webpack_require__(7);
+const Entries = __webpack_require__(60);
 /**
  * Project context.
  */
@@ -4379,14 +4403,14 @@ exports.Context = Context;
 //# sourceMappingURL=project.js.map
 
 /***/ }),
-/* 62 */
+/* 63 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.consumeText = void 0;
-const Core = __webpack_require__(6);
-const program_1 = __webpack_require__(63);
+const Core = __webpack_require__(7);
+const program_1 = __webpack_require__(64);
 /**
  * Consume the specified text and produce a list of tokens for updating the given context.
  * @param text Input text.
@@ -4414,13 +4438,13 @@ exports.consume = consume;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 63 */
+/* 64 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Program = void 0;
-const Core = __webpack_require__(6);
+const Core = __webpack_require__(7);
 /**
  * White-spaces pattern.
  */
@@ -4476,14 +4500,14 @@ exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.Re
 //# sourceMappingURL=program.js.map
 
 /***/ }),
-/* 64 */
+/* 65 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.consumeTokens = void 0;
-const Core = __webpack_require__(6);
-const program_1 = __webpack_require__(65);
+const Core = __webpack_require__(7);
+const program_1 = __webpack_require__(66);
 /**
  * Consume the specified tokens and produce an AST for updating the given context.
  * @param tokens Input tokens.
@@ -4512,17 +4536,17 @@ exports.consume = consume;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 65 */
+/* 66 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Program = void 0;
-const Core = __webpack_require__(6);
-const Lexer = __webpack_require__(62);
-const directive_1 = __webpack_require__(66);
-const binary_1 = __webpack_require__(67);
-const unary_1 = __webpack_require__(68);
+const Core = __webpack_require__(7);
+const Lexer = __webpack_require__(63);
+const directive_1 = __webpack_require__(67);
+const binary_1 = __webpack_require__(68);
+const unary_1 = __webpack_require__(69);
 /**
  * Identity pattern.
  */
@@ -4602,13 +4626,13 @@ exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.Re
 //# sourceMappingURL=program.js.map
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const Core = __webpack_require__(6);
-const Lexer = __webpack_require__(62);
+const Core = __webpack_require__(7);
+const Lexer = __webpack_require__(63);
 /**
  * Directive pattern
  */
@@ -4640,12 +4664,12 @@ exports["default"] = Directive;
 //# sourceMappingURL=directive.js.map
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const Core = __webpack_require__(6);
+const Core = __webpack_require__(7);
 /**
  * Binary expression pattern.
  */
@@ -4676,12 +4700,12 @@ exports["default"] = Binary;
 //# sourceMappingURL=binary.js.map
 
 /***/ }),
-/* 68 */
+/* 69 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-const Core = __webpack_require__(6);
+const Core = __webpack_require__(7);
 /**
  * Prefixed unary expression pattern.
  */
@@ -4712,20 +4736,20 @@ exports["default"] = Unary;
 //# sourceMappingURL=unary.js.map
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consumeNodes = void 0;
-const Core = __webpack_require__(6);
-const Parser = __webpack_require__(64);
-const Context = __webpack_require__(70);
-const Import = __webpack_require__(71);
-const Export = __webpack_require__(105);
-const Node = __webpack_require__(106);
-const Token = __webpack_require__(112);
-const Skip = __webpack_require__(117);
+const Core = __webpack_require__(7);
+const Parser = __webpack_require__(65);
+const Context = __webpack_require__(71);
+const Import = __webpack_require__(72);
+const Export = __webpack_require__(106);
+const Node = __webpack_require__(107);
+const Token = __webpack_require__(113);
+const Skip = __webpack_require__(118);
 /**
  * Resolve the identity from the given node.
  * @param node Input node.
@@ -4803,7 +4827,7 @@ exports.consumeNodes = consumeNodes;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4852,21 +4876,21 @@ exports.getCount = getCount;
 //# sourceMappingURL=context.js.map
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.resolve = void 0;
-const Path = __webpack_require__(72);
-const Core = __webpack_require__(6);
-const String = __webpack_require__(60);
-const Project = __webpack_require__(61);
-const Entries = __webpack_require__(59);
-const Lexer = __webpack_require__(62);
-const Parser = __webpack_require__(64);
-const Maker = __webpack_require__(73);
-const Optimizer = __webpack_require__(69);
+const Path = __webpack_require__(73);
+const Core = __webpack_require__(7);
+const String = __webpack_require__(61);
+const Project = __webpack_require__(62);
+const Entries = __webpack_require__(60);
+const Lexer = __webpack_require__(63);
+const Parser = __webpack_require__(65);
+const Maker = __webpack_require__(74);
+const Optimizer = __webpack_require__(70);
 /**
  * Get the corresponding symbol type for the given input entry.
  * @param entry Input entry.
@@ -4977,23 +5001,23 @@ exports.resolve = resolve;
 //# sourceMappingURL=import.js.map
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ ((module) => {
 
 module.exports = require("path");
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consumeNodes = void 0;
-const Directive = __webpack_require__(74);
-const Parser = __webpack_require__(64);
-const Node = __webpack_require__(77);
-const Token = __webpack_require__(103);
-const Skip = __webpack_require__(104);
+const Directive = __webpack_require__(75);
+const Parser = __webpack_require__(65);
+const Node = __webpack_require__(78);
+const Token = __webpack_require__(104);
+const Skip = __webpack_require__(105);
 /**
  * Resolve the token or node directive for the given node and update the specified project.
  * @param project Project context.
@@ -5066,13 +5090,13 @@ exports.consumeNodes = consumeNodes;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Identity = __webpack_require__(75);
+const Identity = __webpack_require__(76);
 /**
  * Directive node.
  */
@@ -5125,13 +5149,13 @@ exports.Node = Node;
 //# sourceMappingURL=directive.js.map
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Basic = __webpack_require__(76);
+const Basic = __webpack_require__(77);
 /**
  * Identity node.
  */
@@ -5160,13 +5184,13 @@ exports.Node = Node;
 //# sourceMappingURL=identity.js.map
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Core = __webpack_require__(6);
+const Core = __webpack_require__(7);
 /**
  * Basic node.
  */
@@ -5192,14 +5216,14 @@ exports.Node = Node;
 //# sourceMappingURL=basic.js.map
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Expression = __webpack_require__(78);
+const Core = __webpack_require__(7);
+const Expression = __webpack_require__(79);
 /**
  * Consume the specified state resolving the 'NODE' directive.
  * @param project Project context.
@@ -5222,35 +5246,35 @@ exports.consume = consume;
 //# sourceMappingURL=node.js.map
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Parser = __webpack_require__(64);
-const Reference = __webpack_require__(79);
-const String = __webpack_require__(80);
-const Range = __webpack_require__(81);
-const Map = __webpack_require__(82);
-const Access = __webpack_require__(85);
-const Or = __webpack_require__(86);
-const And = __webpack_require__(87);
-const Condition = __webpack_require__(88);
-const Not = __webpack_require__(89);
-const Option = __webpack_require__(90);
-const Repeat = __webpack_require__(91);
-const Place = __webpack_require__(92);
-const Pivot = __webpack_require__(93);
-const Append = __webpack_require__(95);
-const Prepend = __webpack_require__(96);
-const Symbol = __webpack_require__(97);
-const Scope = __webpack_require__(98);
-const Error = __webpack_require__(99);
-const Has = __webpack_require__(100);
-const Set = __webpack_require__(101);
-const Uncase = __webpack_require__(102);
+const Core = __webpack_require__(7);
+const Parser = __webpack_require__(65);
+const Reference = __webpack_require__(80);
+const String = __webpack_require__(81);
+const Range = __webpack_require__(82);
+const Map = __webpack_require__(83);
+const Access = __webpack_require__(86);
+const Or = __webpack_require__(87);
+const And = __webpack_require__(88);
+const Condition = __webpack_require__(89);
+const Not = __webpack_require__(90);
+const Option = __webpack_require__(91);
+const Repeat = __webpack_require__(92);
+const Place = __webpack_require__(93);
+const Pivot = __webpack_require__(94);
+const Append = __webpack_require__(96);
+const Prepend = __webpack_require__(97);
+const Symbol = __webpack_require__(98);
+const Scope = __webpack_require__(99);
+const Error = __webpack_require__(100);
+const Has = __webpack_require__(101);
+const Set = __webpack_require__(102);
+const Uncase = __webpack_require__(103);
 /**
  * Consume the given node resolving the expression patterns.
  * @param project Project context.
@@ -5328,14 +5352,14 @@ exports.consume = consume;
 //# sourceMappingURL=expression.js.map
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Identity = __webpack_require__(75);
-const Parser = __webpack_require__(64);
+const Identity = __webpack_require__(76);
+const Parser = __webpack_require__(65);
 /**
  * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
  * REMARKS: Skips can only accept alias tokens references.
@@ -5424,13 +5448,13 @@ exports.consume = consume;
 //# sourceMappingURL=reference.js.map
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const String = __webpack_require__(60);
+const String = __webpack_require__(61);
 /**
  * Consume the given node resolving the string patterns.
  * @param project Project context.
@@ -5451,13 +5475,13 @@ exports.consume = consume;
 //# sourceMappingURL=string.js.map
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const String = __webpack_require__(60);
+const String = __webpack_require__(61);
 /**
  * Consume the given node resolving the range pattern.
  * @param project Project context.
@@ -5479,18 +5503,18 @@ exports.consume = consume;
 //# sourceMappingURL=range.js.map
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Mergeable = __webpack_require__(83);
-const Identity = __webpack_require__(75);
-const Member = __webpack_require__(84);
-const String = __webpack_require__(60);
-const Parser = __webpack_require__(64);
-const Expression = __webpack_require__(78);
+const Mergeable = __webpack_require__(84);
+const Identity = __webpack_require__(76);
+const Member = __webpack_require__(85);
+const String = __webpack_require__(61);
+const Parser = __webpack_require__(65);
+const Expression = __webpack_require__(79);
 /**
  * Resolve all units for the given entry node.
  * @param node Entry node.
@@ -5566,14 +5590,14 @@ exports.consume = consume;
 //# sourceMappingURL=map.js.map
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Core = __webpack_require__(6);
-const Basic = __webpack_require__(76);
+const Core = __webpack_require__(7);
+const Basic = __webpack_require__(77);
 /**
  * Mergeable node.
  */
@@ -5627,13 +5651,13 @@ exports.Node = Node;
 //# sourceMappingURL=mergeable.js.map
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Identity = __webpack_require__(75);
+const Identity = __webpack_require__(76);
 /**
  * Member node.
  */
@@ -5680,13 +5704,13 @@ exports.Node = Node;
 //# sourceMappingURL=member.js.map
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Identity = __webpack_require__(75);
+const Identity = __webpack_require__(76);
 /**
  * Consume the given node resolving the access pattern.
  * @param project Project context.
@@ -5704,16 +5728,16 @@ exports.consume = consume;
 //# sourceMappingURL=access.js.map
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.resolve = void 0;
-const Mergeable = __webpack_require__(83);
-const String = __webpack_require__(60);
-const Parser = __webpack_require__(64);
-const Expression = __webpack_require__(78);
+const Mergeable = __webpack_require__(84);
+const String = __webpack_require__(61);
+const Parser = __webpack_require__(65);
+const Expression = __webpack_require__(79);
 /**
  * Resolve the given node as an 'OR' pattern.
  * @param project Project context.
@@ -5779,16 +5803,16 @@ exports.consume = consume;
 //# sourceMappingURL=or.js.map
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.resolve = void 0;
-const Mergeable = __webpack_require__(83);
-const String = __webpack_require__(60);
-const Parser = __webpack_require__(64);
-const Expression = __webpack_require__(78);
+const Mergeable = __webpack_require__(84);
+const String = __webpack_require__(61);
+const Parser = __webpack_require__(65);
+const Expression = __webpack_require__(79);
 /**
  * Resolve the given input node as an 'AND' pattern.
  * @param project Project context.
@@ -5847,14 +5871,14 @@ exports.consume = consume;
 //# sourceMappingURL=and.js.map
 
 /***/ }),
-/* 88 */
+/* 89 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Parser = __webpack_require__(64);
-const Expression = __webpack_require__(78);
+const Parser = __webpack_require__(65);
+const Expression = __webpack_require__(79);
 /**
  * Consume the given node resolving the condition pattern.
  * @param project Project context.
@@ -5888,13 +5912,13 @@ exports.consume = consume;
 //# sourceMappingURL=condition.js.map
 
 /***/ }),
-/* 89 */
+/* 90 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'NOT' pattern.
  * @param project Project context.
@@ -5913,13 +5937,13 @@ exports.consume = consume;
 //# sourceMappingURL=not.js.map
 
 /***/ }),
-/* 90 */
+/* 91 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'OPTION' pattern.
  * @param project Project context.
@@ -5938,13 +5962,13 @@ exports.consume = consume;
 //# sourceMappingURL=option.js.map
 
 /***/ }),
-/* 91 */
+/* 92 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'REPEAT' pattern.
  * @param project Project context.
@@ -5963,13 +5987,13 @@ exports.consume = consume;
 //# sourceMappingURL=repeat.js.map
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'PLACE' pattern.
  * @param project Project context.
@@ -5989,13 +6013,13 @@ exports.consume = consume;
 //# sourceMappingURL=place.js.map
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(94);
+const Splitter = __webpack_require__(95);
 /**
  * Consume the given node resolving the 'PIVOT' pattern.
  * @param project Project context.
@@ -6016,16 +6040,16 @@ exports.consume = consume;
 //# sourceMappingURL=pivot.js.map
 
 /***/ }),
-/* 94 */
+/* 95 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.resolve = void 0;
-const Mergeable = __webpack_require__(83);
-const String = __webpack_require__(60);
-const Parser = __webpack_require__(64);
-const And = __webpack_require__(87);
+const Mergeable = __webpack_require__(84);
+const String = __webpack_require__(61);
+const Parser = __webpack_require__(65);
+const And = __webpack_require__(88);
 /**
  * Split the first part of the specified mergeable node and resolve all the patterns.
  * @param project Project context.
@@ -6089,13 +6113,13 @@ exports.resolve = resolve;
 //# sourceMappingURL=splitter.js.map
 
 /***/ }),
-/* 95 */
+/* 96 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(94);
+const Splitter = __webpack_require__(95);
 /**
  * Consume the given node resolving the 'APPEND' pattern.
  * @param project Project context.
@@ -6117,13 +6141,13 @@ exports.consume = consume;
 //# sourceMappingURL=append.js.map
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(94);
+const Splitter = __webpack_require__(95);
 /**
  * Consume the given node resolving the 'PREPEND' pattern.
  * @param project Project context.
@@ -6145,13 +6169,13 @@ exports.consume = consume;
 //# sourceMappingURL=prepend.js.map
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(94);
+const Splitter = __webpack_require__(95);
 /**
  * Consume the given node resolving the 'SYMBOL' pattern.
  * @param project Project context.
@@ -6172,13 +6196,13 @@ exports.consume = consume;
 //# sourceMappingURL=symbol.js.map
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'SCOPE' pattern.
  * @param project Project context.
@@ -6197,13 +6221,13 @@ exports.consume = consume;
 //# sourceMappingURL=scope.js.map
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'ERROR' pattern.
  * @param project Context project.
@@ -6224,13 +6248,13 @@ exports.consume = consume;
 //# sourceMappingURL=error.js.map
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'HAS' pattern.
  * @param project Project context.
@@ -6251,13 +6275,13 @@ exports.consume = consume;
 //# sourceMappingURL=has.js.map
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'SET' pattern.
  * @param project Project context.
@@ -6278,13 +6302,13 @@ exports.consume = consume;
 //# sourceMappingURL=set.js.map
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(87);
+const And = __webpack_require__(88);
 /**
  * Consume the given node resolving the 'UNCASE' pattern.
  * @param project Project context.
@@ -6303,13 +6327,13 @@ exports.consume = consume;
 //# sourceMappingURL=uncase.js.map
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Expression = __webpack_require__(78);
+const Expression = __webpack_require__(79);
 /**
  * Consume the specified state resolving the 'TOKEN' directive.
  * @param project Project context.
@@ -6332,13 +6356,13 @@ exports.consume = consume;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Expression = __webpack_require__(78);
+const Expression = __webpack_require__(79);
 /**
  * Consume the specified state resolving the 'SKIP' directive.
  * @param project Project context.
@@ -6356,13 +6380,13 @@ exports.consume = consume;
 //# sourceMappingURL=skip.js.map
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.resolve = void 0;
-const Parser = __webpack_require__(64);
+const Parser = __webpack_require__(65);
 /**
  * Get an entry that corresponds to the specified symbol
  * @param project Project context.
@@ -6411,15 +6435,15 @@ exports.resolve = resolve;
 //# sourceMappingURL=export.js.map
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Directive = __webpack_require__(74);
-const Expression = __webpack_require__(107);
+const Core = __webpack_require__(7);
+const Directive = __webpack_require__(75);
+const Expression = __webpack_require__(108);
 /**
  * Emit a new node entry and replace the current node by an optimized one.
  * @param project Project context.
@@ -6453,20 +6477,20 @@ exports.consume = consume;
 //# sourceMappingURL=node.js.map
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Parser = __webpack_require__(64);
-const Reference = __webpack_require__(108);
-const Mergeable = __webpack_require__(109);
-const String = __webpack_require__(110);
-const Range = __webpack_require__(113);
-const Map = __webpack_require__(115);
-const Access = __webpack_require__(116);
+const Core = __webpack_require__(7);
+const Parser = __webpack_require__(65);
+const Reference = __webpack_require__(109);
+const Mergeable = __webpack_require__(110);
+const String = __webpack_require__(111);
+const Range = __webpack_require__(114);
+const Map = __webpack_require__(116);
+const Access = __webpack_require__(117);
 /**
  * Consume a child node from the AST on the given parent and optimize the expression pattern.
  * @param project Project context.
@@ -6507,14 +6531,14 @@ exports.consume = consume;
 //# sourceMappingURL=expression.js.map
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Identity = __webpack_require__(75);
-const Parser = __webpack_require__(64);
+const Identity = __webpack_require__(76);
+const Parser = __webpack_require__(65);
 /**
  * Update the specified node for an optimized one after resolving its reference.
  * @param project Project context.
@@ -6667,17 +6691,17 @@ exports.consume = consume;
 //# sourceMappingURL=reference.js.map
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Identity = __webpack_require__(75);
-const Mergeable = __webpack_require__(83);
-const Parser = __webpack_require__(64);
-const Expression = __webpack_require__(107);
+const Core = __webpack_require__(7);
+const Identity = __webpack_require__(76);
+const Mergeable = __webpack_require__(84);
+const Parser = __webpack_require__(65);
+const Expression = __webpack_require__(108);
 /**
  * Determines whether or not the given node contains mergeable units.
  * @param node Input node.
@@ -6742,15 +6766,15 @@ exports.consume = consume;
 //# sourceMappingURL=mergeable.js.map
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Loose = __webpack_require__(111);
-const Nodes = __webpack_require__(114);
-const Expression = __webpack_require__(107);
+const Loose = __webpack_require__(112);
+const Nodes = __webpack_require__(115);
+const Expression = __webpack_require__(108);
 /**
  * Consume a child node from the AST on the given parent and optimize the string pattern.
  * @param project Project context.
@@ -6772,16 +6796,16 @@ exports.consume = consume;
 //# sourceMappingURL=string.js.map
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.resolve = exports.collision = void 0;
-const Core = __webpack_require__(6);
-const Token = __webpack_require__(112);
-const Context = __webpack_require__(70);
-const Nodes = __webpack_require__(114);
+const Core = __webpack_require__(7);
+const Token = __webpack_require__(113);
+const Context = __webpack_require__(71);
+const Nodes = __webpack_require__(115);
 /**
  * Emit a new loose token and returns the corresponding pattern entry.
  * @param project Project context.
@@ -6838,19 +6862,19 @@ exports.resolve = resolve;
 //# sourceMappingURL=loose.js.map
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Directive = __webpack_require__(74);
-const Parser = __webpack_require__(64);
-const Loose = __webpack_require__(111);
-const Expression = __webpack_require__(107);
-const Range = __webpack_require__(113);
-const String = __webpack_require__(110);
+const Core = __webpack_require__(7);
+const Directive = __webpack_require__(75);
+const Parser = __webpack_require__(65);
+const Loose = __webpack_require__(112);
+const Expression = __webpack_require__(108);
+const Range = __webpack_require__(114);
+const String = __webpack_require__(111);
 /**
  * Emit a new token entry and replace the current token node by an optimized one.
  * @param project Project context.
@@ -6903,15 +6927,15 @@ exports.consume = consume;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Loose = __webpack_require__(111);
-const Nodes = __webpack_require__(114);
-const Expression = __webpack_require__(107);
+const Loose = __webpack_require__(112);
+const Nodes = __webpack_require__(115);
+const Expression = __webpack_require__(108);
 /**
  * Consume a child node from the AST on the given parent and optimize the range pattern.
  * @param project Project context.
@@ -6933,14 +6957,14 @@ exports.consume = consume;
 //# sourceMappingURL=range.js.map
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReference = exports.getToken = exports.getIdentifier = exports.getIdentity = void 0;
-const Core = __webpack_require__(6);
-const Parser = __webpack_require__(64);
+const Core = __webpack_require__(7);
+const Parser = __webpack_require__(65);
 /**
  * Get a new identity node.
  * @param identity Node identity.
@@ -7004,20 +7028,20 @@ exports.getReference = getReference;
 //# sourceMappingURL=nodes.js.map
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Member = __webpack_require__(84);
-const Mergeable = __webpack_require__(83);
-const Identity = __webpack_require__(75);
-const Parser = __webpack_require__(64);
-const Context = __webpack_require__(70);
-const Loose = __webpack_require__(111);
-const Expression = __webpack_require__(107);
+const Core = __webpack_require__(7);
+const Member = __webpack_require__(85);
+const Mergeable = __webpack_require__(84);
+const Identity = __webpack_require__(76);
+const Parser = __webpack_require__(65);
+const Context = __webpack_require__(71);
+const Loose = __webpack_require__(112);
+const Expression = __webpack_require__(108);
 /**
  * Get the candidate node based on the given input node.
  * @param node Input node.
@@ -7101,13 +7125,13 @@ exports.consume = consume;
 //# sourceMappingURL=map.js.map
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Identity = __webpack_require__(75);
+const Identity = __webpack_require__(76);
 /**
  * Get all fragments from the given access node.
  * @param node Access node.
@@ -7160,15 +7184,15 @@ exports.consume = consume;
 //# sourceMappingURL=access.js.map
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Core = __webpack_require__(6);
-const Directive = __webpack_require__(74);
-const Expression = __webpack_require__(107);
+const Core = __webpack_require__(7);
+const Directive = __webpack_require__(75);
+const Expression = __webpack_require__(108);
 /**
  * Emit a new skip entry and replace the current skip node by an optimized one.
  * @param project Project context.
@@ -7202,22 +7226,24 @@ exports.consume = consume;
 //# sourceMappingURL=skip.js.map
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.tokenizeDocumentRange = exports.consumeDocument = void 0;
 const VSCode = __webpack_require__(1);
-const Core = __webpack_require__(6);
-const Lang = __webpack_require__(3);
+const Core = __webpack_require__(7);
+const Lang = __webpack_require__(4);
 /**
  * Consume the specified document.
  * @param document Input document.
  * @returns Returns the consumption context.
  */
 const consumeDocument = (document) => {
-    const text = document.getText(new VSCode.Range(document.lineAt(0).range.start, document.lineAt(document.lineCount - 1).range.end));
+    const begin = document.lineAt(0).range.start;
+    const end = document.lineAt(document.lineCount - 1).range.end;
+    const text = document.getText(new VSCode.Range(begin, end));
     const context = new Core.Context(document.uri.path);
     Lang.Lexer.consumeText(text, context);
     Lang.Parser.consumeTokens(context.tokens, context);
@@ -7241,14 +7267,14 @@ exports.tokenizeDocumentRange = tokenizeDocumentRange;
 
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getDiagnostics = void 0;
 const VSCode = __webpack_require__(1);
-const Lang = __webpack_require__(3);
+const Lang = __webpack_require__(4);
 /**
  * All error messages.
  */
@@ -7309,16 +7335,16 @@ exports.getDiagnostics = getDiagnostics;
 
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Provider = void 0;
 const VSCode = __webpack_require__(1);
-const Lang = __webpack_require__(3);
-const Items = __webpack_require__(121);
-const Analysis = __webpack_require__(118);
+const Lang = __webpack_require__(4);
+const Items = __webpack_require__(122);
+const Analysis = __webpack_require__(119);
 /**
  * Auto completion provider.
  */
@@ -7528,7 +7554,7 @@ exports.Provider = Provider;
 
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7857,7 +7883,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.deactivate = exports.activate = void 0;
 const VSCode = __webpack_require__(1);
 const Diagnostics = __webpack_require__(2);
-const Completion = __webpack_require__(120);
+const Completion = __webpack_require__(121);
 /**
  * Returns a new disposable with an auto completion provider.
  * @returns Returns the disposable.
@@ -7895,8 +7921,9 @@ function activate(context) {
     const collection = VSCode.languages.createDiagnosticCollection('xcheme');
     context.subscriptions.push(registerAutoCompletion());
     context.subscriptions.push(detectTextChanges(collection), detectEditorChanges(collection));
-    if (VSCode.window.activeTextEditor) {
-        Diagnostics.update(VSCode.window.activeTextEditor.document, collection);
+    const editor = VSCode.window.activeTextEditor;
+    if (editor) {
+        Diagnostics.update(editor.document, collection);
     }
 }
 exports.activate = activate;
