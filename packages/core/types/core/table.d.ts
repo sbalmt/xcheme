@@ -37,11 +37,11 @@ export default class Table {
     /**
      * Add a new symbol record into the symbol table.
      * @param record Symbol record.
-     * @throw Throws an error when a symbol record with the same fragment data already exists.
+     * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
      */
     add(record: Record): void;
     /**
-     * Find in all tables the symbol record that corresponds to the specified name.
+     * Find for a symbol record that corresponds to the specified name in all symbol tables.
      * @param name Symbol record name.
      * @returns Returns the corresponding record or undefined when the record wasn't found.
      */

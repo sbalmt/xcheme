@@ -1,9 +1,13 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
- * A symbol record generated during the analysis process to be stored in the symbol table.
+ * A symbol record generated during the analysis process to be stored into the symbol table.
  */
 class Record {
+    /**
+     * Record data map.
+     */
+    #data = {};
     /**
      * Record fragment.
      */
@@ -32,6 +36,12 @@ class Record {
         this.#value = value;
         this.#node = node;
         this.#link = link;
+    }
+    /**
+     * Get the record data map.
+     */
+    get data() {
+        return this.#data;
     }
     /**
      * Get the record fragment.

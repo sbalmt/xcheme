@@ -3,9 +3,21 @@ import type Table from './table';
 import type Node from './node';
 
 /**
- * A symbol record generated during the analysis process to be stored in the symbol table.
+ * Internal data map.
+ */
+type DataMap = {
+  [key: string]: any;
+};
+
+/**
+ * A symbol record generated during the analysis process to be stored into the symbol table.
  */
 export default class Record {
+  /**
+   * Record data map.
+   */
+  #data: DataMap = {};
+
   /**
    * Record fragment.
    */
@@ -38,6 +50,13 @@ export default class Record {
     this.#value = value;
     this.#node = node;
     this.#link = link;
+  }
+
+  /**
+   * Get the record data map.
+   */
+  get data(): DataMap {
+    return this.#data;
   }
 
   /**

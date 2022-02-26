@@ -77,19 +77,19 @@ export default class Table {
   /**
    * Add a new symbol record into the symbol table.
    * @param record Symbol record.
-   * @throw Throws an error when a symbol record with the same fragment data already exists.
+   * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
    */
   add(record: Record): void {
     const name = record.fragment.data;
     if (this.#records[name]) {
-      throw 'Unable to add records with duplicate fragment data.';
+      throw 'Unable to add records with duplicate name.';
     }
     this.#records[name] = record;
     this.#length++;
   }
 
   /**
-   * Find in all tables the symbol record that corresponds to the specified name.
+   * Find for a symbol record that corresponds to the specified name in all symbol tables.
    * @param name Symbol record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */

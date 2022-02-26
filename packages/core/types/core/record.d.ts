@@ -2,7 +2,13 @@ import type Fragment from './fragment';
 import type Table from './table';
 import type Node from './node';
 /**
- * A symbol record generated during the analysis process to be stored in the symbol table.
+ * Internal data map.
+ */
+declare type DataMap = {
+    [key: string]: any;
+};
+/**
+ * A symbol record generated during the analysis process to be stored into the symbol table.
  */
 export default class Record {
     #private;
@@ -14,6 +20,10 @@ export default class Record {
      * @param link Record table link.
      */
     constructor(fragment: Fragment, value: string | number, node?: Node, link?: Table);
+    /**
+     * Get the record data map.
+     */
+    get data(): DataMap;
     /**
      * Get the record fragment.
      */
@@ -31,3 +41,4 @@ export default class Record {
      */
     get link(): Table | undefined;
 }
+export {};
