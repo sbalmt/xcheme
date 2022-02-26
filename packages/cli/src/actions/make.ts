@@ -1,3 +1,4 @@
+import * as Path from 'path';
 import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
@@ -14,7 +15,6 @@ import * as Errors from '../core/errors';
  * Global language options.
  */
 const globalOptions: Lang.Project.Options = {
-  rootPath: process.cwd(),
   initialIdentity: 0,
   loadFileHook: (file: string): string | undefined => {
     if (FS.existsSync(file)) {
@@ -89,6 +89,18 @@ const save = (project: Lang.Project.Context, path: string | number): void => {
 };
 
 /**
+ * Initializes all the options for the given source.
+ * @param source Input source.
+ */
+const initialize = (source: string | number): void => {
+  if (typeof source === 'string' && FS.existsSync(source)) {
+    globalOptions.rootPath = Path.dirname(source);
+  } else {
+    globalOptions.rootPath = process.cwd();
+  }
+};
+
+/**
  * Make a new output for the given input file.
  * @param source Source file.
  * @param target Target file.
@@ -99,6 +111,7 @@ const save = (project: Lang.Project.Context, path: string | number): void => {
 export const perform = (source: string | number, target: string | number, run: boolean, state: Options.Debug): boolean => {
   const text = FS.readFileSync(source).toString();
   const context = new Core.Context('maker');
+  initialize(source);
   if (Lexer.tokenize(Lang.Lexer, text, context, !run && state.tokens!)) {
     if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
       const path = source.toString();
