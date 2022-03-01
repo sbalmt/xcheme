@@ -19,7 +19,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "npm run clean && npm run build && npm run test",
     "test": "jest --runInBand --config=./jest.config.js",
     "build": "tsc --build ./tsconfig.json",
     "clean": "tsc --build --clean ./tsconfig.json"
