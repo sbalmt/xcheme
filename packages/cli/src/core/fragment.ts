@@ -16,7 +16,7 @@ export const getMessage = (fragment: Core.Fragment): string => {
  */
 export const getLocation = (fragment: Core.Fragment): string => {
   const location = fragment.location;
-  const line = location.line.toString();
-  const column = location.column.toString();
+  const line = location.line.begin.toString();
+  const column = location.column.begin.toString();
   return `${line.padStart(4, ' ')}:${column.padEnd(4, ' ')}`;
 };
