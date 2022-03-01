@@ -1,12 +1,8 @@
 # XCHEME
 
-## New features
+## Coming soon
 
-- Add map patterns output for loose tokens.
-- Add infinite loop/recursion detection.
-- Add errors/warnings for ambiguous syntax.
-- Add support for getting all the next possible tokens.
-
-## Improvements
-
-- Token collision detection.
+- Use map patterns for loose tokens (output optimization).
+- Add infinite loop/recursion detection (runtime optimization).
+- Add errors/warnings for ambiguous syntax (coding optimization).
+- Add support for getting all the next possible tokens (new feature).
