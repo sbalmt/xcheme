@@ -320,6 +320,6 @@ test('Emit record', () => {
 
   // Test duplicate record.
   expect(() => source.emit(new Record(source.fragment, 123, context.node))).toThrow(
-    'Unable to add records with duplicate fragment data.'
+    'Unable to add records with duplicate name.'
   );
 });
