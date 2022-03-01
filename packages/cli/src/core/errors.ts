@@ -25,7 +25,7 @@ const errorMessages = {
   [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: "Alias Node reference cannot be in use here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_MAP_REFERENCE]: "Map cannot be referenced here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: "Map entries cannot be referenced here, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with token or string, '{0}' at line {1}, column {2}.",
+  [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with a token or string, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_EXPORT]: "Exportation of '{0}' is invalid at line {1}, column {2}.",
   [Lang.Errors.TOKEN_COLLISION]: "Multiple tokens with the same expression, '{0}' at line {1}, column {2}.",
   [Lang.Errors.IMPORT_DISABLED]: 'Import feature disabled, {0} at line {1}, column {2}.',
