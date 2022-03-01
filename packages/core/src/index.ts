@@ -31,6 +31,8 @@ export { default as OptFlowPattern } from './rules/flow/opt';
 export { default as RepeatFlowPattern } from './rules/flow/repeat';
 export { default as StaticFlowPattern } from './rules/flow/static';
 export { default as MapFlowPattern } from './rules/flow/map';
+export { default as PeekFlowPattern } from './rules/flow/peek';
+export { default as TryFlowPattern } from './rules/flow/try';
 
 export { default as SetValueRoute } from './rules/value/route';
 export { default as SetValuePattern } from './rules/value/set';
