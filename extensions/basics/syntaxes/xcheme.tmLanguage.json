@@ -157,6 +157,10 @@
 			"name": "keyword.control.transform.xcheme",
 			"match": "\\b(uncase)\\b"
 		},
+		"test-expressions": {
+			"name": "keyword.control.peek.xcheme",
+			"match": "\\b(peek)\\b"
+		},
 		"constant-expression": {
 			"name": "constant.language.xcheme",
 			"match": "\\b(any)\\b"
@@ -316,6 +320,9 @@
 				},
 				{
 					"include": "#transform-expressions"
+				},
+				{
+					"include": "#test-expressions"
 				},
 				{
 					"include": "#constant-expression"
