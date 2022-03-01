@@ -78,14 +78,16 @@ export default class Table {
    * Add a new symbol record into the symbol table.
    * @param record Symbol record.
    * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
+   * @returns Returns the given symbol record.
    */
-  add(record: Record): void {
+  add(record: Record): Record {
     const name = record.fragment.data;
     if (this.#records[name]) {
       throw 'Unable to add records with duplicate name.';
     }
     this.#records[name] = record;
     this.#length++;
+    return record;
   }
 
   /**

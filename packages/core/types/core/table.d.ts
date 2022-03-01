@@ -38,8 +38,9 @@ export default class Table {
      * Add a new symbol record into the symbol table.
      * @param record Symbol record.
      * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
+     * @returns Returns the given symbol record.
      */
-    add(record: Record): void;
+    add(record: Record): Record;
     /**
      * Find for a symbol record that corresponds to the specified name in all symbol tables.
      * @param name Symbol record name.

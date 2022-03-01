@@ -62,6 +62,7 @@ class Table {
      * Add a new symbol record into the symbol table.
      * @param record Symbol record.
      * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
+     * @returns Returns the given symbol record.
      */
     add(record) {
         const name = record.fragment.data;
@@ -70,6 +71,7 @@ class Table {
         }
         this.#records[name] = record;
         this.#length++;
+        return record;
     }
     /**
      * Find for a symbol record that corresponds to the specified name in all symbol tables.
