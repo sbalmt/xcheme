@@ -12,8 +12,8 @@ try {
   } else if (flags.version) {
     Version.print();
   } else {
-    const source = flags.source ? flags.source : 0;
-    const target = flags.target ? flags.target : 1;
+    const source = flags.source ?? 0;
+    const target = flags.target ?? 1;
     Make.perform(source, target, !!flags.run, flags.debug);
   }
 } catch (ex: any) {
