@@ -3,7 +3,7 @@ import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Context from '../context';
 /**
- * Resolve the given node splitting the first part from the mergeable node in an 'AND' pattern.
+ * Resolve the given node splitting the first part from the sequential node in an 'AND' pattern.
  * @param project Project context.
  * @param node Input node.
  * @param state Consumption state.

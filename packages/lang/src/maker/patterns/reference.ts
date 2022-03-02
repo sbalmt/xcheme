@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identity from '../../core/nodes/identity';
+import * as Identified from '../../core/nodes/identified';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
@@ -53,7 +53,7 @@ const resolveNode = (project: Project.Context, node: Core.Node, record: Core.Rec
   if (record.value === Parser.Symbols.Node || record.value === Parser.Symbols.AliasNode) {
     return project.coder.emitReferencePattern(record);
   }
-  if (node instanceof Identity.Node) {
+  if (node instanceof Identified.Node) {
     return project.coder.emitExpectUnitsPattern([node.identity]);
   }
   project.addError(node.fragment, Errors.UNSUPPORTED_NODE);

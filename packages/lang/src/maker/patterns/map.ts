@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import * as Mergeable from '../../core/nodes/mergeable';
-import * as Identity from '../../core/nodes/identity';
+import * as Sequential from '../../core/nodes/sequential';
+import * as Identified from '../../core/nodes/identified';
 import * as Member from '../../core/nodes/member';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
@@ -22,11 +22,11 @@ import * as Expression from './expression';
 const resolve = (node: Core.Node): (string | number)[] | undefined => {
   if (node.value === Parser.Nodes.String) {
     return String.extract(node.fragment.data).split('');
-  } else if (node instanceof Identity.Node) {
+  } else if (node instanceof Identified.Node) {
     return [node.identity];
-  } else if (node instanceof Mergeable.Node) {
+  } else if (node instanceof Sequential.Node) {
     if (node.type !== Parser.Nodes.String) {
-      return node.sequence.map((node) => (node as Identity.Node).identity);
+      return node.sequence.map((node) => (node as Identified.Node).identity);
     }
     return node.sequence
       .map((node) => String.extract(node.fragment.data))

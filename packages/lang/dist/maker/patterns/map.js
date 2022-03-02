@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Mergeable = require("../../core/nodes/mergeable");
-const Identity = require("../../core/nodes/identity");
+const Sequential = require("../../core/nodes/sequential");
+const Identified = require("../../core/nodes/identified");
 const Member = require("../../core/nodes/member");
 const String = require("../../core/string");
 const Parser = require("../../parser");
@@ -16,10 +16,10 @@ const resolve = (node) => {
     if (node.value === 204 /* String */) {
         return String.extract(node.fragment.data).split('');
     }
-    else if (node instanceof Identity.Node) {
+    else if (node instanceof Identified.Node) {
         return [node.identity];
     }
-    else if (node instanceof Mergeable.Node) {
+    else if (node instanceof Sequential.Node) {
         if (node.type !== 204 /* String */) {
             return node.sequence.map((node) => node.identity);
         }

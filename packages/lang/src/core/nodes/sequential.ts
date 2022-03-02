@@ -5,7 +5,7 @@ import * as Parser from '../../parser';
 import * as Basic from './basic';
 
 /**
- * Mergeable node.
+ * Sequential node.
  */
 export class Node extends Basic.Node {
   /**
@@ -19,7 +19,7 @@ export class Node extends Basic.Node {
   #sequence: Core.Node[];
 
   /**
-   * Get all the mergeable nodes from the specified node in a sequence.
+   * Get all the sequential nodes from the specified node in a sequence.
    * @param node Input node.
    * @returns Returns an array containing the sequence.
    */

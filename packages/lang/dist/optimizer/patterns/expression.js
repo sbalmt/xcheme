@@ -4,7 +4,7 @@ exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Parser = require("../../parser");
 const Reference = require("./reference");
-const Mergeable = require("./mergeable");
+const Sequential = require("./sequential");
 const String = require("./string");
 const Range = require("./range");
 const Map = require("./map");
@@ -36,10 +36,10 @@ const consume = (project, direction, parent, state) => {
             Access.consume(project, direction, parent, state);
             break;
         case 211 /* Or */:
-            Mergeable.consume(project, direction, parent, 211 /* Or */, state);
+            Sequential.consume(project, direction, parent, 211 /* Or */, state);
             break;
         case 212 /* And */:
-            Mergeable.consume(project, direction, parent, 212 /* And */, state);
+            Sequential.consume(project, direction, parent, 212 /* And */, state);
             break;
         default:
             (0, exports.consume)(project, 1 /* Right */, node, state);

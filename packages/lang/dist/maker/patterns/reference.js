@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Identity = require("../../core/nodes/identity");
+const Identified = require("../../core/nodes/identified");
 const Parser = require("../../parser");
 /**
  * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
@@ -45,7 +45,7 @@ const resolveNode = (project, node, record) => {
     if (record.value === 303 /* Node */ || record.value === 304 /* AliasNode */) {
         return project.coder.emitReferencePattern(record);
     }
-    if (node instanceof Identity.Node) {
+    if (node instanceof Identified.Node) {
         return project.coder.emitExpectUnitsPattern([node.identity]);
     }
     project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);

@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Node = void 0;
 const Basic = require("./basic");
 /**
- * Identity node.
+ * Identified node.
  */
 class Node extends Basic.Node {
     /**
@@ -27,4 +27,4 @@ class Node extends Basic.Node {
     }
 }
 exports.Node = Node;
-//# sourceMappingURL=identity.js.map
+//# sourceMappingURL=identified.js.map

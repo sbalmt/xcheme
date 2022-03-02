@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Identity = require("../../core/nodes/identity");
+const Identified = require("../../core/nodes/identified");
 const Parser = require("../../parser");
 /**
  * Get all nodes from the given access node.
@@ -65,7 +65,7 @@ const consume = (project, direction, parent, state) => {
                 project.addError(first.node.fragment, 4113 /* INVALID_MAP_ENTRY_REFERENCE */);
             }
             else {
-                parent.setChild(direction, new Identity.Node(node, member.data.identity));
+                parent.setChild(direction, new Identified.Node(node, member.data.identity));
             }
         }
     }

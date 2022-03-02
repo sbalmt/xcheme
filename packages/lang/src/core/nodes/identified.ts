@@ -3,7 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Basic from './basic';
 
 /**
- * Identity node.
+ * Identified node.
  */
 export class Node extends Basic.Node {
   /**

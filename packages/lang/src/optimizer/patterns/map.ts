@@ -1,8 +1,8 @@
 import * as Core from '@xcheme/core';
 
 import * as Member from '../../core/nodes/member';
-import * as Mergeable from '../../core/nodes/mergeable';
-import * as Identified from '../../core/nodes/identity';
+import * as Sequential from '../../core/nodes/sequential';
+import * as Identified from '../../core/nodes/identified';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
@@ -22,7 +22,7 @@ import * as Expression from './expression';
  */
 const getCandidate = (node: Core.Node, parent?: Core.Node): Core.Node | undefined => {
   if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
-    if (node.value === Parser.Nodes.String || node instanceof Identified.Node || node instanceof Mergeable.Node) {
+    if (node.value === Parser.Nodes.String || node instanceof Identified.Node || node instanceof Sequential.Node) {
       if (parent) {
         const right = parent.right!;
         parent.setChild(Core.Nodes.Left, void 0);

@@ -3,8 +3,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Member = require("../../core/nodes/member");
-const Mergeable = require("../../core/nodes/mergeable");
-const Identified = require("../../core/nodes/identity");
+const Sequential = require("../../core/nodes/sequential");
+const Identified = require("../../core/nodes/identified");
 const Parser = require("../../parser");
 const Identity = require("../identity");
 const Context = require("../context");
@@ -18,7 +18,7 @@ const Expression = require("./expression");
  */
 const getCandidate = (node, parent) => {
     if (node.value !== 209 /* Then */ && node.value !== 211 /* Or */) {
-        if (node.value === 204 /* String */ || node instanceof Identified.Node || node instanceof Mergeable.Node) {
+        if (node.value === 204 /* String */ || node instanceof Identified.Node || node instanceof Sequential.Node) {
             if (parent) {
                 const right = parent.right;
                 parent.setChild(0 /* Left */, void 0);

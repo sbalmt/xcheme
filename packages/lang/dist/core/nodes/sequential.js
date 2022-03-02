@@ -4,7 +4,7 @@ exports.Node = void 0;
 const Core = require("@xcheme/core");
 const Basic = require("./basic");
 /**
- * Mergeable node.
+ * Sequential node.
  */
 class Node extends Basic.Node {
     /**
@@ -16,7 +16,7 @@ class Node extends Basic.Node {
      */
     #sequence;
     /**
-     * Get all the mergeable nodes from the specified node in a sequence.
+     * Get all the sequential nodes from the specified node in a sequence.
      * @param node Input node.
      * @returns Returns an array containing the sequence.
      */
@@ -53,4 +53,4 @@ class Node extends Basic.Node {
     }
 }
 exports.Node = Node;
-//# sourceMappingURL=mergeable.js.map
+//# sourceMappingURL=sequential.js.map

@@ -2,12 +2,12 @@ import * as Core from '@xcheme/core';
 
 import * as Parser from '../../parser';
 import * as Symbols from '../symbols';
-import * as Identity from './identity';
+import * as Identified from './identified';
 
 /**
  * Directive node.
  */
-export class Node extends Identity.Node {
+export class Node extends Identified.Node {
   /**
    * Directive record.
    */

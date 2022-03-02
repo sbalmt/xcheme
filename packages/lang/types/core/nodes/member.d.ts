@@ -1,9 +1,9 @@
 import * as Core from '@xcheme/core';
-import * as Identity from './identity';
+import * as Identified from './identified';
 /**
  * Member node.
  */
-export declare class Node extends Identity.Node {
+export declare class Node extends Identified.Node {
     #private;
     /**
      * Default constructor.

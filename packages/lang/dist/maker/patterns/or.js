@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = exports.resolve = void 0;
-const Mergeable = require("../../core/nodes/mergeable");
+const Sequential = require("../../core/nodes/sequential");
 const String = require("../../core/string");
 const Parser = require("../../parser");
 const Expression = require("./expression");
@@ -19,7 +19,7 @@ const resolve = (project, node, state) => {
             return [pattern];
         }
     }
-    else if (node instanceof Mergeable.Node) {
+    else if (node instanceof Sequential.Node) {
         if (node.type === 204 /* String */) {
             const fragments = node.sequence.map((node) => String.extract(node.fragment.data));
             if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1)) {

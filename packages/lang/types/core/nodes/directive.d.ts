@@ -1,10 +1,10 @@
 import * as Core from '@xcheme/core';
 import * as Symbols from '../symbols';
-import * as Identity from './identity';
+import * as Identified from './identified';
 /**
  * Directive node.
  */
-export declare class Node extends Identity.Node {
+export declare class Node extends Identified.Node {
     #private;
     /**
      * Default constructor.

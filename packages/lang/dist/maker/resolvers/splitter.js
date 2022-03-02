@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolve = void 0;
-const Mergeable = require("../../core/nodes/mergeable");
+const Sequential = require("../../core/nodes/sequential");
 const String = require("../../core/string");
 const Parser = require("../../parser");
 const And = require("../patterns/and");
 /**
- * Split the first part of the specified mergeable node and resolve all the patterns.
+ * Split the first part of the specified sequential node and resolve all the patterns.
  * @param project Project context.
- * @param node Mergeable node.
+ * @param node Sequential node.
  * @param state Consumption state.
  * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
@@ -28,9 +28,9 @@ const split = (project, node, state) => {
     return void 0;
 };
 /**
- * Traverse the specified node trying to split the first part of the mergeable node and resolve all the patterns.
+ * Traverse the specified node trying to split the first part of the sequential node and resolve all the patterns.
  * @param project Project context.
- * @param node Mergeable node.
+ * @param node Sequential node.
  * @param state Consumption state.
  * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
@@ -45,7 +45,7 @@ const traverse = (project, node, state) => {
     return void 0;
 };
 /**
- * Resolve the given node splitting the first part from the mergeable node in an 'AND' pattern.
+ * Resolve the given node splitting the first part from the sequential node in an 'AND' pattern.
  * @param project Project context.
  * @param node Input node.
  * @param state Consumption state.
@@ -53,7 +53,7 @@ const traverse = (project, node, state) => {
  */
 const resolve = (project, node, state) => {
     if (node.value === 212 /* And */) {
-        if (node instanceof Mergeable.Node) {
+        if (node instanceof Sequential.Node) {
             if (node.sequence.length > 1) {
                 return split(project, node, state);
             }

@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Identity = require("../../core/nodes/identity");
+const Identified = require("../../core/nodes/identified");
 /**
  * Consume the given node resolving the access pattern.
  * @param project Project context.
@@ -9,7 +9,7 @@ const Identity = require("../../core/nodes/identity");
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 const consume = (project, node) => {
-    if (node instanceof Identity.Node) {
+    if (node instanceof Identified.Node) {
         return project.coder.emitExpectUnitsPattern([node.identity]);
     }
     project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);

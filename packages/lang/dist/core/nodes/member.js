@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Node = void 0;
-const Identity = require("./identity");
+const Identified = require("./identified");
 /**
  * Member node.
  */
-class Node extends Identity.Node {
+class Node extends Identified.Node {
     /**
      * Symbol record.
      */

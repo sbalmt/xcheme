@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Identity = require("../../core/nodes/identity");
+const Identified = require("../../core/nodes/identified");
 const Parser = require("../../parser");
 /**
  * Update the specified node for an optimized one after resolving its reference.
@@ -13,7 +13,7 @@ const Parser = require("../../parser");
 const upgrade = (project, record, parent, direction) => {
     const node = parent.getChild(direction);
     if (!record.data.dynamic) {
-        parent.setChild(direction, new Identity.Node(node, record.data.identity));
+        parent.setChild(direction, new Identified.Node(node, record.data.identity));
     }
     else {
         project.addError(node.fragment, 4112 /* INVALID_MAP_REFERENCE */);

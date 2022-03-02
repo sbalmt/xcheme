@@ -5,7 +5,7 @@ import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import * as Reference from './reference';
-import * as Mergeable from './mergeable';
+import * as Sequential from './sequential';
 import * as String from './string';
 import * as Range from './range';
 import * as Map from './map';
@@ -18,7 +18,12 @@ import * as Access from './access';
  * @param parent Parent node.
  * @param state Context state.
  */
-export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+export const consume = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Core.Node,
+  state: Context.State
+): void => {
   const node = parent.getChild(direction)!;
   switch (node.value) {
     case Parser.Nodes.Any:
@@ -38,10 +43,10 @@ export const consume = (project: Project.Context, direction: Core.Nodes, parent:
       Access.consume(project, direction, parent, state);
       break;
     case Parser.Nodes.Or:
-      Mergeable.consume(project, direction, parent, Parser.Nodes.Or, state);
+      Sequential.consume(project, direction, parent, Parser.Nodes.Or, state);
       break;
     case Parser.Nodes.And:
-      Mergeable.consume(project, direction, parent, Parser.Nodes.And, state);
+      Sequential.consume(project, direction, parent, Parser.Nodes.And, state);
       break;
     default:
       consume(project, Core.Nodes.Right, node, state);

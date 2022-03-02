@@ -2,11 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Node = void 0;
 const Parser = require("../../parser");
-const Identity = require("./identity");
+const Identified = require("./identified");
 /**
  * Directive node.
  */
-class Node extends Identity.Node {
+class Node extends Identified.Node {
     /**
      * Directive record.
      */

@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identity from '../../core/nodes/identity';
+import * as Identified from '../../core/nodes/identified';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
@@ -71,7 +71,7 @@ export const consume = (
       } else if (first.value === Parser.Symbols.AliasToken) {
         project.addError(first.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
       } else {
-        parent.setChild(direction, new Identity.Node(node, member.data.identity));
+        parent.setChild(direction, new Identified.Node(node, member.data.identity));
       }
     }
   }
