@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'ANY' rule", () => {
+test("Consume an expected 'ANY' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip any;';
 

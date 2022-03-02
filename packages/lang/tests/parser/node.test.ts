@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'NODE' rule", () => {
+test("Consume an expected 'NODE' pattern", () => {
   const context = new Core.Context('test');
   const text = 'node NODE as REF;';
 
@@ -35,7 +35,7 @@ test("Consume expected 'NODE' rule", () => {
   expect(expression.next).toBeUndefined();
 });
 
-test("Consume expected 'NODE' rule with an identity", () => {
+test("Consume an expected 'NODE' pattern with an identity", () => {
   const context = new Core.Context('test');
   const text = 'node <2020> NODE as REF;';
 
@@ -76,7 +76,7 @@ test("Consume expected 'NODE' rule with an identity", () => {
   expect(expression.next).toBeUndefined();
 });
 
-test("Consume expected 'ALIAS NODE' rule", () => {
+test("Consume an expected 'ALIAS NODE' pattern", () => {
   const context = new Core.Context('test');
   const text = 'alias node ALIAS as REF;';
 
@@ -109,7 +109,7 @@ test("Consume expected 'ALIAS NODE' rule", () => {
   expect(expression.next).toBeUndefined();
 });
 
-test("Consume expected 'ALIAS NODE' rule with an identity", () => {
+test("Consume an expected 'ALIAS NODE' pattern with an identity", () => {
   const context = new Core.Context('test');
   const text = 'alias node <2020> ALIAS as REF;';
 

@@ -2,9 +2,9 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume an expected 'SKIP' pattern", () => {
+test("Consume an expected 'PEEK' pattern", () => {
   const context = new Core.Context('test');
-  const text = 'skip REF;';
+  const text = 'skip peek REF;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();
@@ -20,9 +20,16 @@ test("Consume an expected 'SKIP' pattern", () => {
 
   const expression = directive.right!;
   expect(expression).toBeDefined();
-  expect(expression.value).toBe(Parser.Nodes.Reference);
-  expect(expression.fragment.data).toBe('REF');
+  expect(expression.value).toBe(Parser.Nodes.Peek);
   expect(expression.left).toBeUndefined();
-  expect(expression.right).toBeUndefined();
+  expect(expression.right).toBeDefined();
   expect(expression.next).toBeUndefined();
+
+  const reference = expression.right!;
+  expect(reference).toBeDefined();
+  expect(reference.value).toBe(Parser.Nodes.Reference);
+  expect(reference.fragment.data).toBe('REF');
+  expect(reference.left).toBeUndefined();
+  expect(reference.right).toBeUndefined();
+  expect(reference.next).toBeUndefined();
 });

@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'SCOPE' rule", () => {
+test("Consume an expected 'SCOPE' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip scope REF;';
 

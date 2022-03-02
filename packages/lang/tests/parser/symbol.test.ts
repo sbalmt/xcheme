@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'SYMBOL' rule", () => {
+test("Consume an expected 'SYMBOL' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip symbol REF;';
 

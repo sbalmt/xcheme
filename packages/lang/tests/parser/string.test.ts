@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test('Consume expected string', () => {
+test('Consume an expected string pattern', () => {
   const context = new Core.Context('test');
   const text = "skip 'test';";
 

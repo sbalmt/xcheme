@@ -2,9 +2,9 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'AND' rule", () => {
+test("Consume an expected 'AND' pattern", () => {
   const context = new Core.Context('test');
-  const text = 'skip REF1 and REF2 and REF3;';
+  const text = 'skip REF1 and REF2 & REF3;';
 
   // Test the consumption.
   expect(Lexer.consumeText(text, context)).toBeTruthy();

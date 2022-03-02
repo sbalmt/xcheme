@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'REPEAT' rule", () => {
+test("Consume an expected 'REPEAT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip repeat REF;';
 

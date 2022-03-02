@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'UNCASE' rule", () => {
+test("Consume an expected 'UNCASE' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip uncase REF;';
 

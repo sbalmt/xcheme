@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'FROM'...'TO' rule", () => {
+test("Consume an expected 'FROM/TO' pattern", () => {
   const context = new Core.Context('test');
   const text = "skip from '0' to '9';";
 

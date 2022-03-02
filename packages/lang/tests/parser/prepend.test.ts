@@ -3,7 +3,7 @@ import * as Helper from './common/helper';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'PREPEND' rule", () => {
+test("Consume an expected 'PREPEND' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip prepend REF;';
 
@@ -15,7 +15,7 @@ test("Consume expected 'PREPEND' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.Prepend, 'REF');
 });
 
-test("Consume expected 'PREPEND NEXT' rule", () => {
+test("Consume an expected 'PREPEND NEXT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip prepend next REF_NEXT;';
 
@@ -27,7 +27,7 @@ test("Consume expected 'PREPEND NEXT' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.PrependNext, 'REF_NEXT');
 });
 
-test("Consume expected 'PREPEND LEFT' rule", () => {
+test("Consume an expected 'PREPEND LEFT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip prepend left REF_LEFT;';
 
@@ -39,7 +39,7 @@ test("Consume expected 'PREPEND LEFT' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.PrependLeft, 'REF_LEFT');
 });
 
-test("Consume expected 'PREPEND RIGHT' rule", () => {
+test("Consume an expected 'PREPEND RIGHT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip prepend right REF_RIGHT;';
 

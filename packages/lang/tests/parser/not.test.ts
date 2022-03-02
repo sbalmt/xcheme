@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'NOT' rule", () => {
+test("Consume an expected 'NOT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip not REF;';
 

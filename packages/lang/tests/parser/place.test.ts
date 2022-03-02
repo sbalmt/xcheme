@@ -3,7 +3,7 @@ import * as Helper from './common/helper';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'PLACE' rule", () => {
+test("Consume an expected 'PLACE' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip place REF;';
 
@@ -15,7 +15,7 @@ test("Consume expected 'PLACE' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.Place, 'REF');
 });
 
-test("Consume expected 'PLACE NEXT' rule", () => {
+test("Consume an expected 'PLACE NEXT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip place next REF_NEXT;';
 
@@ -27,7 +27,7 @@ test("Consume expected 'PLACE NEXT' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.PlaceNext, 'REF_NEXT');
 });
 
-test("Consume expected 'PLACE LEFT' rule", () => {
+test("Consume an expected 'PLACE LEFT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip place left REF_LEFT;';
 
@@ -39,7 +39,7 @@ test("Consume expected 'PLACE LEFT' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.PlaceLeft, 'REF_LEFT');
 });
 
-test("Consume expected 'PLACE RIGHT' rule", () => {
+test("Consume an expected 'PLACE RIGHT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip place right REF_RIGHT;';
 

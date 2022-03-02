@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'OPT' rule", () => {
+test("Consume an expected 'OPT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip opt REF;';
 

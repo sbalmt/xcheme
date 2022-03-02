@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'IMPORT' rule", () => {
+test("Consume an expected 'IMPORT' pattern", () => {
   const context = new Core.Context('test');
   const text = "import 'module';";
 

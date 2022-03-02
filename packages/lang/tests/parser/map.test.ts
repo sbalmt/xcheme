@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'MAP' rule", () => {
+test("Consume an expected 'MAP' pattern", () => {
   const context = new Core.Context('test');
   const text = "skip map { <1> A as 'a', B as 'b', 'c' };";
 
@@ -27,21 +27,21 @@ test("Consume expected 'MAP' rule", () => {
 
   const first = expression.right!;
   expect(first).toBeDefined();
-  expect(first.value).toBe(Parser.Nodes.Member);
+  expect(first.value).toBe(Parser.Nodes.MapMember);
   expect(first.left).toBeUndefined();
   expect(first.right).toBeDefined();
   expect(first.next).toBeDefined();
 
   const second = first.next!;
   expect(second).toBeDefined();
-  expect(second.value).toBe(Parser.Nodes.Member);
+  expect(second.value).toBe(Parser.Nodes.MapMember);
   expect(second.left).toBeUndefined();
   expect(second.right).toBeDefined();
   expect(second.next).toBeDefined();
 
   const last = second.next!;
   expect(last).toBeDefined();
-  expect(last.value).toBe(Parser.Nodes.Member);
+  expect(last.value).toBe(Parser.Nodes.MapMember);
   expect(last.left).toBeUndefined();
   expect(last.right).toBeDefined();
   expect(last.next).toBeUndefined();

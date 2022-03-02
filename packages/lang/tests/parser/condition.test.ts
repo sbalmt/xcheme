@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'THEN' rule (half condition)", () => {
+test("Consume an expected 'THEN' pattern (half condition)", () => {
   const context = new Core.Context('test');
   const text = 'skip REF then TRUE;';
 
@@ -42,7 +42,7 @@ test("Consume expected 'THEN' rule (half condition)", () => {
   expect(reference.next).toBeUndefined();
 });
 
-test("Consume expected 'THEN' rule with 'ELSE' rule (full condition)", () => {
+test("Consume an expected 'THEN/ELSE' pattern (full condition)", () => {
   const context = new Core.Context('test');
   const text = 'skip REF then TRUE else FALSE;';
 

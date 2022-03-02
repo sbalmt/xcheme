@@ -3,7 +3,7 @@ import * as Helper from './common/helper';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'APPEND' rule", () => {
+test("Consume an expected 'APPEND' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip append REF;';
 
@@ -15,7 +15,7 @@ test("Consume expected 'APPEND' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.Append, 'REF');
 });
 
-test("Consume expected 'APPEND NEXT' rule", () => {
+test("Consume an expected 'APPEND NEXT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip append next REF_NEXT;';
 
@@ -27,7 +27,7 @@ test("Consume expected 'APPEND NEXT' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.AppendNext, 'REF_NEXT');
 });
 
-test("Consume expected 'APPEND LEFT' rule", () => {
+test("Consume an expected 'APPEND LEFT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip append left REF_LEFT;';
 
@@ -39,7 +39,7 @@ test("Consume expected 'APPEND LEFT' rule", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.AppendLeft, 'REF_LEFT');
 });
 
-test("Consume expected 'APPEND RIGHT' rule", () => {
+test("Consume an expected 'APPEND RIGHT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip append right REF_RIGHT;';
 

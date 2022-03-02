@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'SET' rule", () => {
+test("Consume an expected 'SET' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip set <1> REF;';
 

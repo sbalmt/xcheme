@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import { Lexer, Parser } from '../../src/index';
 
-test("Consume expected 'ACCESS' rule", () => {
+test("Consume an expected 'ACCESS' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip MAP.MEMBER;';
 
