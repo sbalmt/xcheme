@@ -1,9 +1,9 @@
 import * as Core from '@xcheme/core';
 import * as Lexer from '../lexer';
 
-import DirectiveExpression from './patterns/directive';
-import BinaryExpression from './patterns/binary';
 import UnaryExpression from './patterns/unary';
+import BinaryExpression from './patterns/binary';
+import DirectiveExpression from './patterns/directive';
 
 import { Symbols } from './symbols';
 import { Nodes } from './nodes';
@@ -61,7 +61,8 @@ const unaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.Error, state, Lexer.Tokens.Error),
   new Core.SetValueRoute(Nodes.Has, state, Lexer.Tokens.Has),
   new Core.SetValueRoute(Nodes.Set, state, Lexer.Tokens.Set),
-  new Core.SetValueRoute(Nodes.Uncase, Lexer.Tokens.Uncase)
+  new Core.SetValueRoute(Nodes.Uncase, Lexer.Tokens.Uncase),
+  new Core.SetValueRoute(Nodes.Peek, Lexer.Tokens.Peek)
 );
 
 /**
@@ -69,11 +70,11 @@ const unaryOperators = new Core.MapFlowPattern(
  */
 const mapMembers: Core.Pattern = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
-    Nodes.Member,
+    Nodes.MapMember,
     Core.Nodes.Right,
     Core.Nodes.Next,
     new Core.ChooseFlowPattern(
-      new DirectiveExpression(Symbols.Member, identity, new Core.RunFlowPattern(() => expression)),
+      new DirectiveExpression(Symbols.MapMember, identity, new Core.RunFlowPattern(() => expression)),
       new Core.RunFlowPattern(() => expression)
     )
   ),
@@ -103,13 +104,23 @@ const mapOperand = new Core.ScopeSymbolPattern(
 const rangeOperand = new Core.PlaceNodePattern(
   Core.Nodes.Right,
   new Core.ExpectUnitPattern(Lexer.Tokens.From),
-  new Core.AppendNodePattern(Nodes.String, Core.Nodes.Right, Core.Nodes.Right, new Core.ExpectUnitPattern(Lexer.Tokens.String)),
+  new Core.AppendNodePattern(
+    Nodes.String,
+    Core.Nodes.Right,
+    Core.Nodes.Right,
+    new Core.ExpectUnitPattern(Lexer.Tokens.String)
+  ),
   new Core.PivotNodePattern(
     Nodes.Range,
     Core.Nodes.Right,
     Core.Nodes.Left,
     new Core.ExpectUnitPattern(Lexer.Tokens.To),
-    new Core.AppendNodePattern(Nodes.String, Core.Nodes.Right, Core.Nodes.Right, new Core.ExpectUnitPattern(Lexer.Tokens.String))
+    new Core.AppendNodePattern(
+      Nodes.String,
+      Core.Nodes.Right,
+      Core.Nodes.Right,
+      new Core.ExpectUnitPattern(Lexer.Tokens.String)
+    )
   )
 );
 
@@ -202,7 +213,11 @@ const token = new Core.SetValueRoute(
 /**
  * Node directive route.
  */
-const node = new Core.SetValueRoute(Nodes.Node, new DirectiveExpression(Symbols.Node, identity, expression), Lexer.Tokens.Node);
+const node = new Core.SetValueRoute(
+  Nodes.Node,
+  new DirectiveExpression(Symbols.Node, identity, expression),
+  Lexer.Tokens.Node
+);
 
 /**
  * Alias token directive route.
@@ -248,7 +263,12 @@ const exportAliases = new Core.SetValueRoute(
  */
 const importModule = new Core.SetValueRoute(
   Nodes.Import,
-  new Core.AppendNodePattern(Nodes.String, Core.Nodes.Right, Core.Nodes.Right, new Core.ExpectUnitPattern(Lexer.Tokens.String)),
+  new Core.AppendNodePattern(
+    Nodes.String,
+    Core.Nodes.Right,
+    Core.Nodes.Right,
+    new Core.ExpectUnitPattern(Lexer.Tokens.String)
+  ),
   Lexer.Tokens.Import
 );
 

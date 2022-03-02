@@ -50,7 +50,9 @@ const tokens = [
     { name: 'has', value: Lexer.Tokens.Has },
     { name: 'set', value: Lexer.Tokens.Set },
     // Transformation
-    { name: 'uncase', value: Lexer.Tokens.Uncase }
+    { name: 'uncase', value: Lexer.Tokens.Uncase },
+    // Test
+    { name: 'peek', value: Lexer.Tokens.Peek }
   ],
   // Directives
   ...[
@@ -123,8 +125,12 @@ test('Consume unexpected token', () => {
   expect(fragment.data).toBe('@');
   expect(fragment.begin).toBe(4);
   expect(fragment.end).toBe(5);
-  expect(fragment.location.column).toBe(4);
-  expect(fragment.location.line).toBe(0);
+
+  const location = fragment.location;
+  expect(location.column.begin).toBe(4);
+  expect(location.column.end).toBe(4);
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
 });
 
 test('Consume unexpected token (empty string)', () => {
@@ -149,6 +155,10 @@ test('Consume unexpected token (empty string)', () => {
   expect(fragment.data).toBe("'");
   expect(fragment.begin).toBe(6);
   expect(fragment.end).toBe(7);
-  expect(fragment.location.column).toBe(6);
-  expect(fragment.location.line).toBe(0);
+
+  const location = fragment.location;
+  expect(location.column.begin).toBe(6);
+  expect(location.column.end).toBe(6);
+  expect(location.line.begin).toBe(0);
+  expect(location.line.end).toBe(0);
 });

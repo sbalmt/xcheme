@@ -2,9 +2,10 @@
  * All symbols for the parser.
  */
 export declare const enum Symbols {
-    Token = 300,
-    Node = 301,
-    AliasNode = 302,
-    AliasToken = 303,
-    Member = 304
+    Skip = 300,
+    Token = 301,
+    AliasToken = 302,
+    Node = 303,
+    AliasNode = 304,
+    MapMember = 305
 }

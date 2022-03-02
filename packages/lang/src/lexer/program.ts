@@ -14,7 +14,10 @@ const commentLine = new Core.ExpectFlowPattern(
   new Core.ExpectUnitPattern('/', '/'),
   new Core.OptFlowPattern(
     new Core.RepeatFlowPattern(
-      new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern('\n')), new Core.AnyUnitPattern())
+      new Core.ConditionFlowPattern(
+        new Core.NotFlowPattern(new Core.ExpectUnitPattern('\n')),
+        new Core.AnyUnitPattern()
+      )
     )
   )
 );
@@ -26,7 +29,10 @@ const commentBlock = new Core.ExpectFlowPattern(
   new Core.ExpectUnitPattern('/', '*'),
   new Core.OptFlowPattern(
     new Core.RepeatFlowPattern(
-      new Core.ConditionFlowPattern(new Core.NotFlowPattern(new Core.ExpectUnitPattern('*', '/')), new Core.AnyUnitPattern())
+      new Core.ConditionFlowPattern(
+        new Core.NotFlowPattern(new Core.ExpectUnitPattern('*', '/')),
+        new Core.AnyUnitPattern()
+      )
     )
   ),
   new Core.ExpectUnitPattern('*', '/')
@@ -85,6 +91,7 @@ const keywordsAndSymbols = new Core.MapFlowPattern(
   new Core.SetValueRoute(Tokens.Has, end, 'h', 'a', 's'),
   new Core.SetValueRoute(Tokens.Set, end, 's', 'e', 't'),
   new Core.SetValueRoute(Tokens.Uncase, end, 'u', 'n', 'c', 'a', 's', 'e'),
+  new Core.SetValueRoute(Tokens.Peek, end, 'p', 'e', 'e', 'k'),
   new Core.SetValueRoute(Tokens.Skip, end, 's', 'k', 'i', 'p'),
   new Core.SetValueRoute(Tokens.Token, end, 't', 'o', 'k', 'e', 'n'),
   new Core.SetValueRoute(Tokens.Node, end, 'n', 'o', 'd', 'e'),
@@ -114,7 +121,10 @@ const literalInteger = new Core.SetValuePattern(
   Tokens.Number,
   new Core.ChooseFlowPattern(
     new Core.ExpectUnitPattern('0'),
-    new Core.ExpectFlowPattern(new Core.RangeUnitPattern('1', '9'), new Core.OptFlowPattern(new Core.RepeatFlowPattern(digit)))
+    new Core.ExpectFlowPattern(
+      new Core.RangeUnitPattern('1', '9'),
+      new Core.OptFlowPattern(new Core.RepeatFlowPattern(digit))
+    )
   )
 );
 

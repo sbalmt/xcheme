@@ -24,6 +24,7 @@ const Error = require("./error");
 const Has = require("./has");
 const Set = require("./set");
 const Uncase = require("./uncase");
+const Peek = require("./peek");
 /**
  * Consume the given node resolving the expression patterns.
  * @param project Project context.
@@ -43,7 +44,7 @@ const consume = (project, node, state) => {
             return Range.consume(project, node, state);
         case 207 /* Map */:
             return Map.consume(project, node, state);
-        case 235 /* Access */:
+        case 236 /* Access */:
             return Access.consume(project, node);
         case 209 /* Then */:
             return Condition.consume(project, node, state);
@@ -92,6 +93,8 @@ const consume = (project, node, state) => {
             return Set.consume(project, node, state);
         case 234 /* Uncase */:
             return Uncase.consume(project, node, state);
+        case 235 /* Peek */:
+            return Peek.consume(project, node, state);
         default:
             project.addError(node, 4099 /* UNEXPECTED_NODE */);
     }
