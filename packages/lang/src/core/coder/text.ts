@@ -103,7 +103,7 @@ export class Text extends Base {
    * @returns Returns the route.
    */
   getRoute(path: (string | number)[], value?: number, pattern?: string): string {
-    if (value) {
+    if (value !== void 0) {
       if (pattern) {
         return this.#getPattern('SetValueRoute', value, pattern, ...this.#getUnits(path));
       }

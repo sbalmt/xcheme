@@ -71,7 +71,7 @@ class Text extends base_1.Base {
      * @returns Returns the route.
      */
     getRoute(path, value, pattern) {
-        if (value) {
+        if (value !== void 0) {
             if (pattern) {
                 return this.#getPattern('SetValueRoute', value, pattern, ...this.#getUnits(path));
             }
