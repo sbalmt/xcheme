@@ -15,7 +15,7 @@ import * as Errors from '../core/errors';
  * Global language options.
  */
 const globalOptions: Lang.Project.Options = {
-  initialIdentity: 0,
+  identity: 0,
   loadFileHook: (file: string): string | undefined => {
     if (FS.existsSync(file)) {
       return FS.readFileSync(file, { encoding: 'utf-8' });
@@ -94,9 +94,9 @@ const save = (project: Lang.Project.Context, path: string | number): void => {
  */
 const initialize = (source: string | number): void => {
   if (typeof source === 'string' && FS.existsSync(source)) {
-    globalOptions.rootPath = Path.dirname(source);
+    globalOptions.directory = Path.dirname(source);
   } else {
-    globalOptions.rootPath = process.cwd();
+    globalOptions.directory = process.cwd();
   }
 };
 
@@ -108,7 +108,12 @@ const initialize = (source: string | number): void => {
  * @param state Debug state options.
  * @returns Returns true in case of success, false otherwise.
  */
-export const perform = (source: string | number, target: string | number, run: boolean, state: Options.Debug): boolean => {
+export const perform = (
+  source: string | number,
+  target: string | number,
+  run: boolean,
+  state: Options.Debug
+): boolean => {
   const text = FS.readFileSync(source).toString();
   const context = new Core.Context('maker');
   initialize(source);
