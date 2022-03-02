@@ -1,69 +1,74 @@
 import * as Core from '@xcheme/core';
-import * as Helper from '../helper';
-import * as Lang from '../../../src/index';
 
-test("Output an 'ACCESS' rule with a token map", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "token <auto> TOKEN as map { <100> A as 'a' }; node NODE as TOKEN.A;");
+import * as Lang from '../../../src/index';
+import * as Helper from '../helper';
+
+test("Output an 'ACCESS' pattern with a token map", () => {
+  const input = "token <auto> TOKEN as map { <100> A as 'a' }; node NODE as TOKEN.A;";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const route = project.local.get('TOKEN@A')!;
+  const route = project.symbols.get('TOKEN@A')!;
   expect(route).toBeDefined();
-  expect(route.identity).toBe(100);
+  expect(route.data.identity).toBe(100);
 
-  const token = project.local.get('TOKEN')!;
+  const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.identity).toBe(Core.BaseSource.Output);
-  expect(token.pattern).toBe(
+  expect(token.data.identity).toBe(Core.BaseSource.Output);
+  expect(token.data.pattern).toBe(
     `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
       /**/ `new Core.MapFlowPattern(` +
-      /******/ `new Core.SetValueRoute(${route.identity}, 'a')` +
+      /******/ `new Core.SetValueRoute(${route.data.identity}, 'a')` +
       /**/ `)` +
       `)`
   );
 
-  const node = project.local.get('NODE')!;
+  const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.identity).toBe(0);
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, new Core.ExpectUnitPattern(${route.identity}))`);
+  expect(node.data.identity).toBe(0);
+  expect(node.data.pattern).toBe(
+    `new Core.EmitNodePattern(${node.data.identity}, 1, new Core.ExpectUnitPattern(${route.data.identity}))`
+  );
 });
 
-test("Output an 'ACCESS' rule with a nested token map", () => {
-  const project = Helper.makeParser(
-    new Lang.TextCoder(),
-    "token <auto> TOKEN as map { <100> A as 'a' & map { <200> B as 'b', C as 'c' } }; node NODE as TOKEN.A.B;"
-  );
+test("Output an 'ACCESS' pattern with a nested token map", () => {
+  const input =
+    "token <auto> TOKEN as map { <100> A as 'a' & map { <200> B as 'b', C as 'c' } }; node NODE as TOKEN.A.B;";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const routeA = project.local.get('TOKEN@A')!;
+  const routeA = project.symbols.get('TOKEN@A')!;
   expect(routeA).toBeDefined();
-  expect(routeA.identity).toBe(100);
+  expect(routeA.data.identity).toBe(100);
 
-  const routeAB = project.local.get('TOKEN@A@B')!;
+  const routeAB = project.symbols.get('TOKEN@A@B')!;
   expect(routeAB).toBeDefined();
-  expect(routeAB.identity).toBe(200);
+  expect(routeAB.data.identity).toBe(200);
 
-  const routeAC = project.local.get('TOKEN@A@C')!;
+  const routeAC = project.symbols.get('TOKEN@A@C')!;
   expect(routeAC).toBeDefined();
-  expect(routeAC.identity).toBe(100);
+  expect(routeAC.data.identity).toBe(100);
 
-  const token = project.local.get('TOKEN')!;
+  const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.identity).toBe(Core.BaseSource.Output);
-  expect(token.pattern).toBe(
+  expect(token.data.identity).toBe(Core.BaseSource.Output);
+  expect(token.data.pattern).toBe(
     `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
       /**/ `new Core.MapFlowPattern(` +
       /******/ `new Core.FlowRoute(` +
       /********/ `new Core.MapFlowPattern(` +
-      /**********/ `new Core.SetValueRoute(${routeAB.identity}, 'b'), ` +
-      /**********/ `new Core.SetValueRoute(${routeAC.identity}, 'c')` +
+      /**********/ `new Core.SetValueRoute(${routeAB.data.identity}, 'b'), ` +
+      /**********/ `new Core.SetValueRoute(${routeAC.data.identity}, 'c')` +
       /********/ `), ` +
       /******/ `'a')` +
       /**/ `)` +
       `)`
   );
 
-  const node = project.local.get('NODE')!;
+  const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
-  expect(node.identity).toBe(0);
-  expect(node.pattern).toBe(`new Core.EmitNodePattern(${node.identity}, 1, new Core.ExpectUnitPattern(${routeAB.identity}))`);
+  expect(node.data.identity).toBe(0);
+  expect(node.data.pattern).toBe(
+    `new Core.EmitNodePattern(${node.data.identity}, 1, new Core.ExpectUnitPattern(${routeAB.data.identity}))`
+  );
 });

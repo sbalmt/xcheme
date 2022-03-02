@@ -1,22 +1,27 @@
-import * as Helper from '../helper';
 import * as Lang from '../../../src/index';
+import * as Helper from '../helper';
 
-test("Output a 'SKIP' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip '@';");
+const assertRaw = (project: Lang.Project.Context, output: string): void => {
+  const record = project.symbols.get('@SKIP0')!;
+  expect(record).toBeDefined();
+  expect(record.data.identity).toBe(0);
+  expect(record.data.pattern).toBe(output);
+};
 
-  // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
-  expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe("new Core.ExpectUnitPattern('@')");
+const assetBasic = (project: Lang.Project.Context): void => {
+  assertRaw(project, `new Core.ExpectUnitPattern('@')`);
+};
+
+const assetReference = (project: Lang.Project.Context): void => {
+  assertRaw(project, `new Core.RunFlowPattern(() => L0_ALIAS)`);
+};
+
+test("Output a 'SKIP' pattern", () => {
+  const input = "skip '@';";
+  assetBasic(Helper.makeParser(new Lang.TextCoder(), input));
 });
 
-test("Output a 'SKIP' rule with an alias token reference", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip ALIAS; alias token ALIAS as '@';");
-
-  // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
-  expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe('new Core.RunFlowPattern(() => L0_ALIAS)');
+test("Output a 'SKIP' pattern with an alias token reference", () => {
+  const input = "skip ALIAS; alias token ALIAS as '@';";
+  assetReference(Helper.makeParser(new Lang.TextCoder(), input));
 });

@@ -1,15 +1,17 @@
 import * as Core from '@xcheme/core';
-import * as Helper from '../helper';
-import * as Lang from '../../../src/index';
 
-test("Output a 'MAP' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a', 'b', 'c' };");
+import * as Lang from '../../../src/index';
+import * as Helper from '../helper';
+
+test("Output a 'MAP' pattern", () => {
+  const input = "skip map { 'a', 'b', 'c' };";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(
     `new Core.MapFlowPattern(` +
       /**/ `new Core.UnitRoute('a'), ` +
       /**/ `new Core.UnitRoute('b'), ` +
@@ -18,14 +20,15 @@ test("Output a 'MAP' rule", () => {
   );
 });
 
-test("Output a 'MAP' rule with a nested map pattern", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & map { '1', '2' }, 'b', 'c' };");
+test("Output a 'MAP' pattern with a nested map pattern", () => {
+  const input = "skip map { 'a' & map { '1', '2' }, 'b', 'c' };";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(
     `new Core.MapFlowPattern(` +
       /**/ `new Core.FlowRoute(` +
       /******/ `new Core.MapFlowPattern(` +
@@ -39,14 +42,15 @@ test("Output a 'MAP' rule with a nested map pattern", () => {
   );
 });
 
-test("Output a 'MAP' rule with compound patterns", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip map { 'a' & opt 'b' & repeat 'c' };");
+test("Output a 'MAP' pattern with compound patterns", () => {
+  const input = "skip map { 'a' & opt 'b' & repeat 'c' };";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(
     `new Core.MapFlowPattern(` +
       /**/ `new Core.FlowRoute(` +
       /******/ `new Core.ExpectFlowPattern(` +
@@ -58,57 +62,59 @@ test("Output a 'MAP' rule with compound patterns", () => {
   );
 });
 
-test("Output a 'MAP' rule with a token pattern", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "token <auto> TOKEN as map { <100> A as 'a', 'b', 'c' };");
+test("Output a 'MAP' pattern with a token pattern", () => {
+  const input = "token <auto> TOKEN as map { <100> A as 'a', 'b', 'c' };";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const routeA = project.local.get('TOKEN@A')!;
+  const routeA = project.symbols.get('TOKEN@A')!;
   expect(routeA).toBeDefined();
-  expect(routeA.identity).toBe(100);
+  expect(routeA.data.identity).toBe(100);
 
-  const rule = project.local.get('TOKEN')!;
+  const rule = project.symbols.get('TOKEN')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(Core.BaseSource.Output);
-  expect(rule.pattern).toBe(
+  expect(rule.data.identity).toBe(Core.BaseSource.Output);
+  expect(rule.data.pattern).toBe(
     `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
       /**/ `new Core.MapFlowPattern(` +
-      /******/ `new Core.SetValueRoute(${routeA.identity}, 'a'), ` +
-      /******/ `new Core.SetValueRoute(${rule.identity}, 'b'), ` +
-      /******/ `new Core.SetValueRoute(${rule.identity}, 'c')` +
+      /******/ `new Core.SetValueRoute(${routeA.data.identity}, 'a'), ` +
+      /******/ `new Core.SetValueRoute(${rule.data.identity}, 'b'), ` +
+      /******/ `new Core.SetValueRoute(${rule.data.identity}, 'c')` +
       /**/ `)` +
       `)`
   );
 });
 
-test("Output a 'MAP' rule with a node pattern", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "node <auto> NODE as map { <100> A as 'a', 'b', 'c' };");
+test("Output a 'MAP' pattern with a node pattern", () => {
+  const input = "node <auto> NODE as map { <100> A as 'a', 'b', 'c' };";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const token1 = project.local.get('@REF0')!; // 'a'
-  expect(token1.identity).toBe(0);
+  const token1 = project.symbols.get('@REF0')!; // 'a'
   expect(token1).toBeDefined();
+  expect(token1.data.identity).toBe(0);
 
-  const token2 = project.local.get('@REF1')!; // 'b'
-  expect(token2.identity).toBe(1);
+  const token2 = project.symbols.get('@REF1')!; // 'b'
   expect(token2).toBeDefined();
+  expect(token2.data.identity).toBe(1);
 
-  const token3 = project.local.get('@REF2')!; // 'c'
-  expect(token3.identity).toBe(2);
+  const token3 = project.symbols.get('@REF2')!; // 'c'
   expect(token3).toBeDefined();
+  expect(token3.data.identity).toBe(2);
 
-  const routeA = project.local.get('NODE@A')!;
+  const routeA = project.symbols.get('NODE@A')!;
   expect(routeA).toBeDefined();
-  expect(routeA.identity).toBe(100);
+  expect(routeA.data.identity).toBe(100);
 
-  const rule = project.local.get('NODE')!;
+  const rule = project.symbols.get('NODE')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(Core.BaseSource.Output);
-  expect(rule.pattern).toBe(
+  expect(rule.data.identity).toBe(Core.BaseSource.Output);
+  expect(rule.data.pattern).toBe(
     `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
       /**/ `new Core.MapFlowPattern(` +
-      /******/ `new Core.SetValueRoute(${routeA.identity}, ${token1.identity}), ` +
-      /******/ `new Core.SetValueRoute(${rule.identity}, ${token2.identity}), ` +
-      /******/ `new Core.SetValueRoute(${rule.identity}, ${token3.identity})` +
+      /******/ `new Core.SetValueRoute(${routeA.data.identity}, ${token1.data.identity}), ` +
+      /******/ `new Core.SetValueRoute(${rule.data.identity}, ${token2.data.identity}), ` +
+      /******/ `new Core.SetValueRoute(${rule.data.identity}, ${token3.data.identity})` +
       /**/ `)` +
       `)`
   );

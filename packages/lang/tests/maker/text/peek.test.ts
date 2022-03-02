@@ -1,8 +1,9 @@
 import * as Lang from '../../../src/index';
 import * as Helper from '../helper';
 
-test("Output a 'PEEK' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip peek 'A';");
+test("Output a 'PEEK' pattern", () => {
+  const input = "skip peek 'A';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
   const rule = project.symbols.get('@SKIP0')!;

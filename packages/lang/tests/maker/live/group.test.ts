@@ -1,9 +1,11 @@
 import * as Core from '@xcheme/core';
-import * as Helper from '../helper';
-import * as Lang from '../../../src/index';
 
-test('Parse a group rule', () => {
-  const project = Helper.makeParser(new Lang.LiveCoder(), "skip ('1' | '2') & 'x';");
+import * as Lang from '../../../src/index';
+import * as Helper from '../helper';
+
+test('Parse a group pattern', () => {
+  const input = "skip ('1' | '2') & 'x';";
+  const project = Helper.makeParser(new Lang.LiveCoder(), input);
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '1x2x');

@@ -3,10 +3,10 @@ import * as Core from '@xcheme/core';
 import * as Lang from '../../../src/index';
 import * as Helper from '../helper';
 
-test("Parse an 'ANY' pattern", () => {
-  const input = 'skip *;';
+test("Parse a 'PEEK' pattern", () => {
+  const input = "skip ('a' & peek 'b') & 'b';";
   const project = Helper.makeParser(new Lang.LiveCoder(), input);
   const context = new Core.Context('test');
 
-  Helper.testLexer(project, context, '.a0@');
+  Helper.testLexer(project, context, 'ab');
 });

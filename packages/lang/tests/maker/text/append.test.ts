@@ -1,64 +1,70 @@
-import * as Helper from '../helper';
 import * as Lang from '../../../src/index';
+import * as Helper from '../helper';
 
-test("Output an 'APPEND NEXT' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip append next '@';");
+test("Output an 'APPEND NEXT' pattern", () => {
+  const input = "skip append next '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(`new Core.AppendNodePattern(0, 1, 2, new Core.ExpectUnitPattern('@'))`);
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(`new Core.AppendNodePattern(0, 1, 2, new Core.ExpectUnitPattern('@'))`);
 });
 
-test("Output an 'APPEND LEFT' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip append left '@';");
+test("Output an 'APPEND LEFT' pattern", () => {
+  const input = "skip append left '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(`new Core.AppendNodePattern(0, 1, 0, new Core.ExpectUnitPattern('@'))`);
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(`new Core.AppendNodePattern(0, 1, 0, new Core.ExpectUnitPattern('@'))`);
 });
 
-test("Output an 'APPEND RIGHT' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip append right '@';");
+test("Output an 'APPEND RIGHT' pattern", () => {
+  const input = "skip append right '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(`new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`);
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(`new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`);
 });
 
-test("Output an 'APPEND' rule", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip append '@';");
+test("Output an 'APPEND' pattern", () => {
+  const input = "skip append '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(`new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`);
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(`new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`);
 });
 
-test("Output an 'APPEND' rule with multiple patterns", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip append ('@' | '*');");
+test("Output an 'APPEND' pattern with multiple patterns", () => {
+  const input = "skip append ('@' | '*');";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(`new Core.AppendNodePattern(0, 1, 1, new Core.ChooseUnitPattern('@', '*'))`);
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(`new Core.AppendNodePattern(0, 1, 1, new Core.ChooseUnitPattern('@', '*'))`);
 });
 
-test("Output an 'APPEND' rule with chained patterns", () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "skip append ('@' & '*' & '*' & opt '!');");
+test("Output an 'APPEND' pattern with chained patterns", () => {
+  const input = "skip append ('@' & '*' & '*' & opt '!');";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the output code.
-  const rule = project.local.get('@SKIP0')!;
+  const rule = project.symbols.get('@SKIP0')!;
   expect(rule).toBeDefined();
-  expect(rule.identity).toBe(0);
-  expect(rule.pattern).toBe(
+  expect(rule.data.identity).toBe(0);
+  expect(rule.data.pattern).toBe(
     `new Core.AppendNodePattern(0, 1, 1, ` +
       /**/ `new Core.ExpectUnitPattern('@'), ` +
       /**/ `new Core.ExpectUnitPattern('*', '*'), ` +

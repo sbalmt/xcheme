@@ -1,28 +1,29 @@
-import * as Helper from './helper';
 import * as Lang from '../../src/index';
+import * as Helper from './helper';
 
 test('Token referring an undefined identifier', () => {
-  Helper.makeError(new Lang.LiveCoder(), 'token TOKEN as ALIAS;', [Lang.Errors.UNDEFINED_IDENTIFIER]);
+  const input = 'token TOKEN as ALIAS;';
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.UNDEFINED_IDENTIFIER]);
 });
 
 test('Token referring a node (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_NODE_REFERENCE]);
+  const input = "node NODE as '@'; token TOKEN as NODE;";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.INVALID_NODE_REFERENCE]);
 });
 
 test('Token referring an alias node (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "alias node NODE as '@'; token TOKEN as NODE;", [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]);
+  const input = "alias node NODE as '@'; token TOKEN as NODE;";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]);
 });
 
 test('Token referring a token map entry (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as map { <100> A as 'a' }; token TOKEN2 as TOKEN1.A;", [
-    Lang.Errors.INVALID_MAP_ENTRY_REFERENCE
-  ]);
+  const input = "token TOKEN1 as map { <100> A as 'a' }; token TOKEN2 as TOKEN1.A;";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]);
 });
 
 test('Token referring an alias token map entry (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "alias token TOKEN1 as map { <100> A as 'a' }; token TOKEN2 as TOKEN1.A;", [
-    Lang.Errors.INVALID_MAP_ENTRY_REFERENCE
-  ]);
+  const input = "alias token TOKEN1 as map { <100> A as 'a' }; token TOKEN2 as TOKEN1.A;";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]);
 });
 
 test('Token referring a node map entry (reference error)', () => {
@@ -32,131 +33,130 @@ test('Token referring a node map entry (reference error)', () => {
 });
 
 test('Token referring an alias node map entry (reference error)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "alias node NODE as map { <100> A as 'a' }; token TOKEN as NODE.A;", [
-    Lang.Errors.INVALID_MAP_ENTRY_REFERENCE
-  ]);
+  const input = "alias node NODE as map { <100> A as 'a' }; token TOKEN as NODE.A;";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]);
 });
 
 test('Loose token already defined (token collision)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "node NODE as '@'; token TOKEN as '@';", [Lang.Errors.TOKEN_COLLISION]);
+  const input = "node NODE as '@'; token TOKEN as '@';";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Loose token range already defined (token collision)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "node NODE as from '0' to '9'; token TOKEN as from '0' to '9';", [
-    Lang.Errors.TOKEN_COLLISION
-  ]);
+  const input = "node NODE as from '0' to '9'; token TOKEN as from '0' to '9';";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Loose token map entry already defined (token collision)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "node NODE as map { '@' }; token TOKEN as '@';", [Lang.Errors.TOKEN_COLLISION]);
+  const input = "node NODE as map { '@' }; token TOKEN as '@';";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Token already defined (token collision)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as '@'; token TOKEN2 as '@';", [Lang.Errors.TOKEN_COLLISION]);
+  const input = "token TOKEN1 as '@'; token TOKEN2 as '@';";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Token range already defined (token collision)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as from '0' to '9'; token TOKEN2 as from '0' to '9';", [
-    Lang.Errors.TOKEN_COLLISION
-  ]);
+  const input = "token TOKEN1 as from '0' to '9'; token TOKEN2 as from '0' to '9';";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Token map entry already defined (token collision)', () => {
-  Helper.makeError(new Lang.LiveCoder(), "token TOKEN1 as '@'; token TOKEN2 as map { '@' };", [Lang.Errors.TOKEN_COLLISION]);
+  const input = "token TOKEN1 as '@'; token TOKEN2 as map { '@' };";
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.TOKEN_COLLISION]);
 });
 
 test('Token with a dependency (alias token reference)', () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "alias token ALIAS as '@'; token TOKEN as ALIAS;");
+  const input = "alias token ALIAS as '@'; token TOKEN as ALIAS;";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the resulting token.
-  const token = project.local.get('TOKEN')!;
+  const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.type).toBe(Lang.Entries.Types.Token);
-  expect(token.origin).toBe(Lang.Entries.Origins.User);
-  expect(token.alias).toBeFalsy();
-  expect(token.exported).toBeFalsy();
-  expect(token.imported).toBeFalsy();
-  expect(token.dynamic).toBeFalsy();
-  expect(token.identity).toBe(1);
-  expect(token.dependencies).toHaveLength(1);
-  expect(token.dependents).toHaveLength(0);
+  expect(token.value).toBe(Lang.Parser.Symbols.Token);
+  expect(token.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(token.data.exported).toBeFalsy();
+  expect(token.data.imported).toBeFalsy();
+  expect(token.data.dynamic).toBeFalsy();
+  expect(token.data.identity).toBe(1);
+  expect(token.data.dependencies).toHaveLength(1);
+  expect(token.data.dependents).toHaveLength(0);
 
   // Check the resulting dependency.
-  const [alias] = token.dependencies;
+  const [alias] = token.data.dependencies;
   expect(alias).toBeDefined();
-  expect(alias.type).toBe(Lang.Entries.Types.Token);
-  expect(alias.origin).toBe(Lang.Entries.Origins.User);
-  expect(alias.alias).toBeTruthy();
-  expect(alias.exported).toBeFalsy();
-  expect(alias.imported).toBeFalsy();
-  expect(alias.dynamic).toBeFalsy();
-  expect(alias.identifier).toBe('ALIAS');
-  expect(alias.identity).toBe(0);
-  expect(alias.dependencies).toHaveLength(0);
-  expect(alias.dependents).toHaveLength(1);
+  expect(alias.value).toBe(Lang.Parser.Symbols.AliasToken);
+  expect(alias.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(alias.data.exported).toBeFalsy();
+  expect(alias.data.imported).toBeFalsy();
+  expect(alias.data.dynamic).toBeFalsy();
+  expect(alias.data.identifier).toBe('ALIAS');
+  expect(alias.data.identity).toBe(0);
+  expect(alias.data.dependencies).toHaveLength(0);
+  expect(alias.data.dependents).toHaveLength(1);
 });
 
 test('Token with an identity', () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "token<1010> TOKEN as '@';");
+  const input = "token<1010> TOKEN as '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the resulting token.
-  const token = project.local.get('TOKEN')!;
+  const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.type).toBe(Lang.Entries.Types.Token);
-  expect(token.origin).toBe(Lang.Entries.Origins.User);
-  expect(token.alias).toBeFalsy();
-  expect(token.exported).toBeFalsy();
-  expect(token.imported).toBeFalsy();
-  expect(token.dynamic).toBeFalsy();
-  expect(token.identity).toBe(1010);
-  expect(token.dependencies).toHaveLength(0);
-  expect(token.dependents).toHaveLength(0);
+  expect(token.value).toBe(Lang.Parser.Symbols.Token);
+  expect(token.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(token.data.exported).toBeFalsy();
+  expect(token.data.imported).toBeFalsy();
+  expect(token.data.dynamic).toBeFalsy();
+  expect(token.data.identity).toBe(1010);
+  expect(token.data.dependencies).toHaveLength(0);
+  expect(token.data.dependents).toHaveLength(0);
 });
 
 test('Token with an exported pattern', () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "export alias token <1010> TOKEN as '@';");
+  const input = "export alias token <1010> TOKEN as '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the resulting token.
-  const token = project.local.get('TOKEN')!;
+  const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.type).toBe(Lang.Entries.Types.Token);
-  expect(token.origin).toBe(Lang.Entries.Origins.User);
-  expect(token.alias).toBeTruthy();
-  expect(token.exported).toBeTruthy();
-  expect(token.imported).toBeFalsy();
-  expect(token.dynamic).toBeFalsy();
-  expect(token.identity).toBe(1010);
-  expect(token.dependencies).toHaveLength(0);
-  expect(token.dependents).toHaveLength(0);
+  expect(token.value).toBe(Lang.Parser.Symbols.AliasToken);
+  expect(token.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(token.data.exported).toBeTruthy();
+  expect(token.data.imported).toBeFalsy();
+  expect(token.data.dynamic).toBeFalsy();
+  expect(token.data.identity).toBe(1010);
+  expect(token.data.dependencies).toHaveLength(0);
+  expect(token.data.dependents).toHaveLength(0);
 });
 
 test('Token with an imported pattern', () => {
-  const project = Helper.makeParser(new Lang.TextCoder(), "import './module1'; token <3030> TOKEN as EXTERNAL_TOKEN1;");
+  const input = "import './module1'; token <3030> TOKEN as EXTERNAL_TOKEN1;";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
 
   // Check the resulting token.
-  const token = project.local.get('TOKEN')!;
+  const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.type).toBe(Lang.Entries.Types.Token);
-  expect(token.origin).toBe(Lang.Entries.Origins.User);
-  expect(token.alias).toBeFalsy();
-  expect(token.exported).toBeFalsy();
-  expect(token.imported).toBeFalsy();
-  expect(token.dynamic).toBeFalsy();
-  expect(token.identity).toBe(3030);
-  expect(token.dependencies).toHaveLength(1);
-  expect(token.dependents).toHaveLength(0);
+  expect(token.value).toBe(Lang.Parser.Symbols.Token);
+  expect(token.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(token.data.exported).toBeFalsy();
+  expect(token.data.imported).toBeFalsy();
+  expect(token.data.dynamic).toBeFalsy();
+  expect(token.data.identity).toBe(3030);
+  expect(token.data.dependencies).toHaveLength(1);
+  expect(token.data.dependents).toHaveLength(0);
 
   // Check the imported dependency.
-  const [imported] = token.dependencies;
+  const [imported] = token.data.dependencies;
   expect(imported).toBeDefined();
-  expect(imported.type).toBe(Lang.Entries.Types.Token);
-  expect(imported.origin).toBe(Lang.Entries.Origins.User);
-  expect(imported.alias).toBeTruthy();
-  expect(imported.exported).toBeFalsy();
-  expect(imported.imported).toBeTruthy();
-  expect(imported.dynamic).toBeFalsy();
-  expect(imported.identifier).toBe('EXTERNAL_TOKEN1');
-  expect(imported.identity).toBe(1010);
-  expect(imported.dependencies).toHaveLength(1);
-  expect(imported.dependents).toHaveLength(1);
+  expect(imported.value).toBe(Lang.Parser.Symbols.AliasToken);
+  expect(imported.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(imported.data.exported).toBeFalsy();
+  expect(imported.data.imported).toBeTruthy();
+  expect(imported.data.dynamic).toBeFalsy();
+  expect(imported.data.identifier).toBe('EXTERNAL_TOKEN1');
+  expect(imported.data.identity).toBe(1010);
+  expect(imported.data.dependencies).toHaveLength(1);
+  expect(imported.data.dependents).toHaveLength(1);
 });

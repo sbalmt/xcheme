@@ -1,16 +1,19 @@
 import * as Core from '@xcheme/core';
-import * as Helper from '../helper';
-import * as Lang from '../../../src/index';
 
-test("Parse a 'PLACE' rule", () => {
-  const project = Helper.makeParser(new Lang.LiveCoder(), "skip place '@';");
+import * as Lang from '../../../src/index';
+import * as Helper from '../helper';
+
+test("Parse a 'PLACE' pattern", () => {
+  const input = "skip place '@';";
+  const project = Helper.makeParser(new Lang.LiveCoder(), input);
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '@@@');
 });
 
-test("Parse a 'PLACE NEXT' rule", () => {
-  const project = Helper.makeParser(new Lang.LiveCoder(), "skip place next '@';");
+test("Parse a 'PLACE NEXT' pattern", () => {
+  const input = "skip place next '@';";
+  const project = Helper.makeParser(new Lang.LiveCoder(), input);
   const context = new Core.Context('test');
 
   Helper.testLexer(project, context, '@@@');
