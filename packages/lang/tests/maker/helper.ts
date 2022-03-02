@@ -3,7 +3,7 @@ import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
 
-import { Lexer, Parser, Optimizer, Maker, Errors, Project, BaseCoder } from '../../src/index';
+import { Lexer, Parser, Optimizer, Maker, Errors, Project, Coder } from '../../src/index';
 
 /**
  * Import hook for loading the imported file contents.
@@ -26,7 +26,9 @@ const printErrors = (errors: Core.Error[]): void => {
   for (const error of errors) {
     const fragment = error.fragment;
     const location = fragment.location;
-    console.log(`${location.name}: '${fragment.data}' (${error.value}) at line ${location.line + 1}, column ${location.column + 1}`);
+    const line = location.line.begin + 1;
+    const column = location.column.begin + 1;
+    console.log(`${location.name}: '${fragment.data}' (${error.value}) at line ${line}, column ${column}`);
   }
 };
 
@@ -36,7 +38,7 @@ const printErrors = (errors: Core.Error[]): void => {
  * @param text Input text.
  * @returns Returns the generated project.
  */
-export const makeParser = (coder: BaseCoder, text: string): Project.Context => {
+export const makeParser = (coder: Coder, text: string): Project.Context => {
   const project = new Project.Context('make', coder, { loadFileHook });
   const context = new Core.Context('make');
   let status: boolean;
@@ -75,7 +77,7 @@ export const makeParser = (coder: BaseCoder, text: string): Project.Context => {
  * @param errors Expected errors.
  * @returns Returns the generated project.
  */
-export const makeError = (coder: BaseCoder, text: string, errors: Errors[]): Project.Context => {
+export const makeError = (coder: Coder, text: string, errors: Errors[]): Project.Context => {
   const project = new Project.Context('make', coder, { loadFileHook });
   const context = new Core.Context('make');
   let status: boolean;
