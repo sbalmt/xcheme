@@ -2,8 +2,8 @@ import * as Core from '@xcheme/core';
 
 import * as Identity from '../../core/nodes/identity';
 import * as Mergeable from '../../core/nodes/mergeable';
-import * as Entries from '../../core/entries';
 import * as Project from '../../core/project';
+import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -59,7 +59,7 @@ export const consume = (
   const node = parent.getChild(direction)!;
   if (node.value !== type) {
     Expression.consume(project, direction, parent, state);
-  } else if (state.entry.type === Entries.Types.Node) {
+  } else if (state.type === Symbols.Types.Node) {
     Expression.consume(project, Core.Nodes.Left, node, state);
     Expression.consume(project, Core.Nodes.Right, node, state);
     if (isMergeableRefs(node, type)) {

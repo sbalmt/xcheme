@@ -18,7 +18,7 @@ class Node extends Basic.Node {
     /**
      * Get all the mergeable nodes from the specified node in a sequence.
      * @param node Input node.
-     * @returns Returns an array containing the mergeable sequence.
+     * @returns Returns an array containing the sequence.
      */
     #getNodes(node) {
         if (this.value === node.value) {
@@ -29,7 +29,7 @@ class Node extends Basic.Node {
     /**
      * Default constructor.
      * @param node Original node.
-     * @param type Sequence type.
+     * @param type Node sequence type.
      */
     constructor(node, type) {
         super(node);
@@ -40,13 +40,13 @@ class Node extends Basic.Node {
         this.setChild(2 /* Next */, void 0);
     }
     /**
-     * Get the sequence type.
+     * Get the node sequence type.
      */
     get type() {
         return this.#type;
     }
     /**
-     * Get the node sequence.
+     * Get the nodes sequence.
      */
     get sequence() {
         return this.#sequence;

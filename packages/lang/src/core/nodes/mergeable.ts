@@ -21,7 +21,7 @@ export class Node extends Basic.Node {
   /**
    * Get all the mergeable nodes from the specified node in a sequence.
    * @param node Input node.
-   * @returns Returns an array containing the mergeable sequence.
+   * @returns Returns an array containing the sequence.
    */
   #getNodes(node: Core.Node): Core.Node[] {
     if (this.value === node.value) {
@@ -33,7 +33,7 @@ export class Node extends Basic.Node {
   /**
    * Default constructor.
    * @param node Original node.
-   * @param type Sequence type.
+   * @param type Node sequence type.
    */
   constructor(node: Core.Node, type: Parser.Nodes) {
     super(node);
@@ -45,14 +45,14 @@ export class Node extends Basic.Node {
   }
 
   /**
-   * Get the sequence type.
+   * Get the node sequence type.
    */
   get type(): Parser.Nodes {
     return this.#type;
   }
 
   /**
-   * Get the node sequence.
+   * Get the nodes sequence.
    */
   get sequence(): Core.Node[] {
     return this.#sequence;

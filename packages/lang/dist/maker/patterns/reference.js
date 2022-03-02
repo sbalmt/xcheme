@@ -8,59 +8,47 @@ const Parser = require("../../parser");
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param symbol Referenced symbol.
+ * @param record Referenced record symbol.
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
-const resolveSkip = (project, node, symbol) => {
-    if (symbol.value === 303 /* AliasToken */) {
-        const identifier = node.fragment.data;
-        const entry = project.local.get(identifier);
-        if (entry) {
-            return project.coder.emitReferencePattern(entry);
-        }
-        project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+const resolveSkip = (project, node, record) => {
+    if (record.value === 302 /* AliasToken */) {
+        return project.coder.emitReferencePattern(record);
     }
+    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
     return void 0;
 };
 /**
- * Resolve the corresponding reference for the specified symbol in a 'TOKEN' directive.
+ * Resolve the corresponding reference for the specified record in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param symbol Referenced symbol.
+ * @param record Referenced record.
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
-const resolveToken = (project, node, symbol) => {
-    if (symbol.value === 300 /* Token */ || symbol.value === 303 /* AliasToken */) {
-        const identifier = node.fragment.data;
-        const entry = project.local.get(identifier);
-        if (entry) {
-            return project.coder.emitReferencePattern(entry);
-        }
-        project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+const resolveToken = (project, node, record) => {
+    if (record.value === 301 /* Token */ || record.value === 302 /* AliasToken */) {
+        return project.coder.emitReferencePattern(record);
     }
+    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
     return void 0;
 };
 /**
- * Resolve the corresponding reference for the specified symbol in a 'NODE' directive.
+ * Resolve the corresponding reference for the specified record in a 'NODE' directive.
  * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Project context.
  * @param node Input node.
- * @param symbol Referenced symbol.
+ * @param record Referenced record.
  * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
  */
-const resolveNode = (project, node, symbol) => {
-    if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
-        const identifier = node.fragment.data;
-        const entry = project.local.get(identifier);
-        if (entry) {
-            return project.coder.emitReferencePattern(entry);
-        }
-        project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+const resolveNode = (project, node, record) => {
+    if (record.value === 303 /* Node */ || record.value === 304 /* AliasNode */) {
+        return project.coder.emitReferencePattern(record);
     }
     if (node instanceof Identity.Node) {
         return project.coder.emitExpectUnitsPattern([node.identity]);
     }
+    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
     return void 0;
 };
 /**
@@ -72,19 +60,19 @@ const resolveNode = (project, node, symbol) => {
  */
 const consume = (project, node, state) => {
     const identifier = node.fragment.data;
-    const symbol = node.table.find(identifier);
-    if (symbol) {
+    const record = node.table.find(identifier);
+    if (record) {
         const directive = state.directive;
         switch (directive.type) {
-            case 0 /* Skip */:
-                return resolveSkip(project, node, symbol);
-            case 1 /* Token */:
-                return resolveToken(project, node, symbol);
-            case 2 /* Node */:
-                return resolveNode(project, node, symbol);
+            case 1 /* Skip */:
+                return resolveSkip(project, node, record);
+            case 2 /* Token */:
+                return resolveToken(project, node, record);
+            case 3 /* Node */:
+                return resolveNode(project, node, record);
         }
     }
-    project.addError(node, 4102 /* UNDEFINED_IDENTIFIER */);
+    project.addError(node.fragment, 4102 /* UNDEFINED_IDENTIFIER */);
     return void 0;
 };
 exports.consume = consume;

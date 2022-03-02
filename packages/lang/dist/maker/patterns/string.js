@@ -11,11 +11,11 @@ const String = require("../../core/string");
  */
 const consume = (project, node, state) => {
     const directive = state.directive;
-    if (directive.type !== 2 /* Node */) {
+    if (directive.type !== 3 /* Node */) {
         const units = String.extract(node.fragment.data).split('');
         return project.coder.emitExpectUnitsPattern(units);
     }
-    project.addError(node, 4100 /* UNSUPPORTED_NODE */);
+    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
     return void 0;
 };
 exports.consume = consume;

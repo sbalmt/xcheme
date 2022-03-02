@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../../core/project';
-import * as Entries from '../../core/entries';
+import * as Symbols from '../../core/symbols';
 import * as Identity from '../../core/nodes/identity';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -11,124 +11,114 @@ import { Errors } from '../../core/errors';
 /**
  * Update the specified node for an optimized one after resolving its reference.
  * @param project Project context.
- * @param entry Referenced entry.
+ * @param record Reference record.
  * @param parent Parent node.
- * @param node Reference node.
  * @param direction Node direction.
  */
-const updateNode = (
-  project: Project.Context,
-  entry: Entries.Entry,
-  parent: Core.Node,
-  node: Core.Node,
-  direction: Core.Nodes
-): void => {
-  if (!entry.dynamic) {
-    parent.setChild(direction, new Identity.Node(node, entry.identity));
+const upgrade = (project: Project.Context, record: Core.Record, parent: Core.Node, direction: Core.Nodes): void => {
+  const node = parent.getChild(direction)!;
+  if (!record.data.dynamic) {
+    parent.setChild(direction, new Identity.Node(node, record.data.identity));
   } else {
-    project.addError(node, Errors.INVALID_MAP_REFERENCE);
+    project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
   }
 };
 
 /**
- * Find and link the corresponding reference for the specified node.
+ * Find and connect the corresponding reference for the specified record.
  * @param project Project context.
- * @param node Input node.
+ * @param identifier Reference identifier.
+ * @param record Reference record.
  * @param state Consumption state.
- * @returns Returns the dependency entry or undefined the dependency isn't ready yet.
  */
-const linkReference = (project: Project.Context, node: Core.Node, state: Context.State): Entries.Entry | undefined => {
-  const identifier = node.fragment.data;
-  const dependency = project.local.get(identifier);
-  if (dependency) {
-    project.local.on(state.entry.identifier, (entry) => {
-      entry.dependencies.push(dependency);
-      dependency.dependents.push(entry);
-    });
+const connect = (project: Project.Context, identifier: string, record: Core.Record, state: Context.State): void => {
+  const current = state.record!;
+  if (record.data.dependencies) {
+    current.data.dependencies.push(record);
+    record.data.dependents.push(current);
   } else {
-    project.local.on(identifier, (dependency) => {
-      const entry = project.local.get(state.entry.identifier)!;
-      entry.dependencies.push(dependency);
-      dependency.dependents.push(entry);
+    project.symbols.listen(identifier, () => {
+      current.data.dependencies.push(record);
+      record.data.dependents.push(current);
     });
   }
-  return dependency;
 };
 
 /**
- * Resolve and validate the corresponding reference for the specified symbol and node in a 'SKIP' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a 'SKIP' directive.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param symbol Referenced symbol.
+ * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveSkip = (project: Project.Context, node: Core.Node, symbol: Core.Record, state: Context.State): void => {
-  if (symbol.value === Parser.Symbols.AliasToken) {
-    linkReference(project, node, state);
-  } else if (symbol.value === Parser.Symbols.Token) {
-    project.addError(node, Errors.INVALID_TOKEN_REFERENCE);
-  } else if (symbol.value === Parser.Symbols.AliasNode) {
-    project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
-  } else if (symbol.value === Parser.Symbols.Node) {
-    project.addError(node, Errors.INVALID_NODE_REFERENCE);
+const resolveSkip = (project: Project.Context, node: Core.Node, record: Core.Record, state: Context.State): void => {
+  if (record.value === Parser.Symbols.AliasToken) {
+    connect(project, node.fragment.data, record, state);
+  } else if (record.value === Parser.Symbols.Token) {
+    project.addError(node.fragment, Errors.INVALID_TOKEN_REFERENCE);
+  } else if (record.value === Parser.Symbols.AliasNode) {
+    project.addError(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
+  } else if (record.value === Parser.Symbols.Node) {
+    project.addError(node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else {
-    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
+    project.addError(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
 /**
- * Resolve and validate the corresponding reference for the specified symbol and node in a 'TOKEN' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param symbol Referenced symbol.
+ * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveToken = (project: Project.Context, node: Core.Node, symbol: Core.Record, state: Context.State): void => {
-  if (symbol.value === Parser.Symbols.Token || symbol.value === Parser.Symbols.AliasToken) {
-    linkReference(project, node, state);
-  } else if (symbol.value === Parser.Symbols.Node) {
-    project.addError(node, Errors.INVALID_NODE_REFERENCE);
-  } else if (symbol.value === Parser.Symbols.AliasNode) {
-    project.addError(node, Errors.INVALID_ALIAS_NODE_REFERENCE);
+const resolveToken = (project: Project.Context, node: Core.Node, record: Core.Record, state: Context.State): void => {
+  if (record.value === Parser.Symbols.Token || record.value === Parser.Symbols.AliasToken) {
+    connect(project, node.fragment.data, record, state);
+  } else if (record.value === Parser.Symbols.Node) {
+    project.addError(node.fragment, Errors.INVALID_NODE_REFERENCE);
+  } else if (record.value === Parser.Symbols.AliasNode) {
+    project.addError(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
   } else {
-    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
+    project.addError(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
 /**
- * Resolve and validate the corresponding reference for the specified symbol and node in a 'NODE' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a 'NODE' directive.
  * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param symbol Referenced symbol.
+ * @param record Referenced record.
  * @param state Consumption state.
  */
 const resolveNode = (
   project: Project.Context,
   direction: Core.Nodes,
   parent: Core.Node,
-  symbol: Core.Record,
+  record: Core.Record,
   state: Context.State
 ): void => {
   const node = parent.getChild(direction)!;
-  if (symbol.value === Parser.Symbols.Node || symbol.value === Parser.Symbols.AliasNode) {
-    linkReference(project, node, state);
-  } else if (symbol.value === Parser.Symbols.Token) {
-    const dependency = linkReference(project, node, state);
-    if (dependency) {
-      updateNode(project, dependency, parent, node, direction);
+  const identifier = node.fragment.data;
+  if (record.value === Parser.Symbols.Node || record.value === Parser.Symbols.AliasNode) {
+    connect(project, identifier, record, state);
+  } else if (record.value === Parser.Symbols.Token) {
+    connect(project, identifier, record, state);
+    if (record.data.dynamic !== void 0) {
+      upgrade(project, record, parent, direction);
     } else {
-      project.local.on(node.fragment.data, (entry: Entries.Entry) => {
-        updateNode(project, entry, parent, node, direction);
+      project.symbols.listen(identifier, () => {
+        upgrade(project, record, parent, direction);
       });
     }
-  } else if (symbol.value === Parser.Symbols.AliasToken) {
-    project.addError(node, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
+  } else if (record.value === Parser.Symbols.AliasToken) {
+    project.addError(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
   } else {
-    project.addError(node, Errors.UNRESOLVED_IDENTIFIER);
+    project.addError(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -139,23 +129,29 @@ const resolveNode = (
  * @param parent Parent node.
  * @param state Consumption state.
  */
-export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+export const consume = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Core.Node,
+  state: Context.State
+): void => {
   const node = parent.getChild(direction)!;
-  const identifier = node.fragment.data;
-  const symbol = node.table.find(identifier);
-  if (!symbol) {
-    project.addError(node, Errors.UNDEFINED_IDENTIFIER);
+  const record = node.table.find(node.fragment.data);
+  if (!record) {
+    project.addError(node.fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
-    switch (state.entry.type) {
-      case Entries.Types.Skip:
-        resolveSkip(project, node, symbol, state);
+    switch (state.type) {
+      case Symbols.Types.Skip:
+        resolveSkip(project, node, record, state);
         break;
-      case Entries.Types.Token:
-        resolveToken(project, node, symbol, state);
+      case Symbols.Types.Token:
+        resolveToken(project, node, record, state);
         break;
-      case Entries.Types.Node:
-        resolveNode(project, direction, parent, symbol, state);
+      case Symbols.Types.Node:
+        resolveNode(project, direction, parent, record, state);
         break;
+      default:
+        throw `Unsupported context state type: ${state.type}`;
     }
   }
 };

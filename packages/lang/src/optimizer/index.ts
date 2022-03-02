@@ -1,7 +1,10 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../core/project';
+import * as Counter from '../core/counter';
+import * as Symbols from '../core/symbols';
 import * as Parser from '../parser';
+import * as Identity from './identity';
 import * as Context from './context';
 
 import * as Import from './patterns/import';
@@ -11,20 +14,9 @@ import * as Token from './patterns/token';
 import * as Skip from './patterns/skip';
 
 /**
- * Resolve the identity from the given node.
- * @param node Input node.
- * @returns Returns the identity.
+ * Global skip counter.
  */
-const resolveIdentity = (node: Core.Node): number => {
-  if (node.left) {
-    const identity = node.left.fragment.data;
-    if (identity === 'auto') {
-      return Core.BaseSource.Output;
-    }
-    return parseInt(identity);
-  }
-  return NaN;
-};
+const skipCounter = new Counter.Context();
 
 /**
  * Resolve the token or node directive for the given node and update the specified project.
@@ -33,20 +25,17 @@ const resolveIdentity = (node: Core.Node): number => {
  * @param state Consumption state.
  */
 const resolveTokenOrNode = (project: Project.Context, node: Core.Node, state: Context.State): void => {
-  state.entry.identity = resolveIdentity(node.right!) || Context.getCount(project);
+  const identity = Identity.resolve(node.right!);
+  state.identity = identity ?? Project.Context.identity.increment(project.coder, project.options.identity);
   switch (node.value) {
     case Parser.Nodes.Token:
+    case Parser.Nodes.AliasToken:
+      state.type = Symbols.Types.Token;
       Token.consume(project, Core.Nodes.Right, node, state);
       break;
     case Parser.Nodes.Node:
-      Node.consume(project, Core.Nodes.Right, node, state);
-      break;
-    case Parser.Nodes.AliasToken:
-      state.entry.alias = true;
-      Token.consume(project, Core.Nodes.Right, node, state);
-      break;
     case Parser.Nodes.AliasNode:
-      state.entry.alias = true;
+      state.type = Symbols.Types.Node;
       Node.consume(project, Core.Nodes.Right, node, state);
       break;
     default:
@@ -66,16 +55,17 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
     const state = Context.getNewState(node, -1);
     switch (current.value) {
       case Parser.Nodes.Import:
-        Import.resolve(project, current);
+        Import.consume(project, current);
         break;
       case Parser.Nodes.Export:
-        if (!Export.resolve(project, current)) {
-          state.entry.exported = true;
+        if (!Export.consume(project, current, state)) {
           resolveTokenOrNode(project, current.right!, state);
+          state.record!.data.exported = true;
         }
         break;
       case Parser.Nodes.Skip:
-        state.entry.identity = Context.getCount(project);
+        state.identity = skipCounter.increment(project);
+        state.type = Symbols.Types.Skip;
         Skip.consume(project, Core.Nodes.Next, node, state);
         break;
       default:

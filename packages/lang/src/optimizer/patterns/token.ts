@@ -2,7 +2,6 @@ import * as Core from '@xcheme/core';
 
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
-import * as Entries from '../../core/entries';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 import * as Loose from '../loose';
@@ -19,11 +18,10 @@ import * as String from './string';
  * @param state Consumption state.
  */
 const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
-  const { origin, identifier, identity } = state.entry;
   const node = parent.getChild(direction)!;
-  const entry = project.local.create(Entries.Types.Token, origin, identifier, identity, state.entry);
-  const replacement = new Directive.Node(node, Directive.Types.Token, entry);
+  const replacement = new Directive.Node(node, state.record!);
   parent.setChild(direction, replacement);
+  project.symbols.add(state.record!);
 };
 
 /**
@@ -33,25 +31,30 @@ const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node
  * @param parent Parent node.
  * @param state Consumption state.
  */
-export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+export const consume = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Core.Node,
+  state: Context.State
+): void => {
   const node = parent.getChild(direction)!;
   const expression = node.right!;
-  const entry = state.entry;
-  entry.type = Entries.Types.Token;
-  entry.identifier = node.fragment.data;
+  const identifier = node.fragment.data;
+  state.record = node.table.get(identifier)!;
+  Context.setMetadata(project, identifier, state.record!, state);
   if (expression.value === Parser.Nodes.String) {
     String.consume(project, Core.Nodes.Right, node, state);
     const word = expression.fragment.data;
-    if (!Loose.collision(project, expression, word)) {
+    if (!Loose.collision(project, word, expression)) {
       emit(project, direction, parent, state);
-      project.local.link(word, entry.identifier);
+      project.symbols.link(word, identifier);
     }
   } else if (expression.value === Parser.Nodes.Range) {
     Range.consume(project, Core.Nodes.Right, node, state);
     const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
-    if (!Loose.collision(project, expression, range)) {
+    if (!Loose.collision(project, range, expression)) {
       emit(project, direction, parent, state);
-      project.local.link(range, entry.identifier);
+      project.symbols.link(range, identifier);
     }
   } else {
     Expression.consume(project, Core.Nodes.Right, node, state);

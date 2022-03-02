@@ -4,6 +4,7 @@ exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Directive = require("../../core/nodes/directive");
 const Parser = require("../../parser");
+const Context = require("../context");
 const Loose = require("../loose");
 const Expression = require("./expression");
 const Range = require("./range");
@@ -16,11 +17,10 @@ const String = require("./string");
  * @param state Consumption state.
  */
 const emit = (project, direction, parent, state) => {
-    const { origin, identifier, identity } = state.entry;
     const node = parent.getChild(direction);
-    const entry = project.local.create(2 /* Token */, origin, identifier, identity, state.entry);
-    const replacement = new Directive.Node(node, 1 /* Token */, entry);
+    const replacement = new Directive.Node(node, state.record);
     parent.setChild(direction, replacement);
+    project.symbols.add(state.record);
 };
 /**
  * Consume a child node from the AST on the given parent and optimize the 'TOKEN' directive.
@@ -32,23 +32,23 @@ const emit = (project, direction, parent, state) => {
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     const expression = node.right;
-    const entry = state.entry;
-    entry.type = 2 /* Token */;
-    entry.identifier = node.fragment.data;
+    const identifier = node.fragment.data;
+    state.record = node.table.get(identifier);
+    Context.setMetadata(project, identifier, state.record, state);
     if (expression.value === 204 /* String */) {
         String.consume(project, 1 /* Right */, node, state);
         const word = expression.fragment.data;
-        if (!Loose.collision(project, expression, word)) {
+        if (!Loose.collision(project, word, expression)) {
             emit(project, direction, parent, state);
-            project.local.link(word, entry.identifier);
+            project.symbols.link(word, identifier);
         }
     }
     else if (expression.value === 206 /* Range */) {
         Range.consume(project, 1 /* Right */, node, state);
         const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
-        if (!Loose.collision(project, expression, range)) {
+        if (!Loose.collision(project, range, expression)) {
             emit(project, direction, parent, state);
-            project.local.link(range, entry.identifier);
+            project.symbols.link(range, identifier);
         }
     }
     else {

@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Text = void 0;
 const Core = require("@xcheme/core");
-const Entries = require("../../core/entries");
 const String = require("../../core/string");
+const Symbols = require("../symbols");
 const base_1 = require("./base");
 /**
  * Can generate a project output to be saved as a JavaScript source.
@@ -279,19 +279,28 @@ class Text extends base_1.Base {
         return this.#getPattern('UncaseTransformPattern', ...patterns);
     }
     /**
-     * Get a new reference pattern.
-     * @param entry Referenced entry.
+     * Get a new peek pattern.
+     * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entry) {
-        if (!entry.pattern) {
-            return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(entry.name)}`);
+    emitPeekPattern(...patterns) {
+        return this.#getPattern('PeekFlowPattern', ...patterns);
+    }
+    /**
+     * Get a new reference pattern.
+     * @param record Referenced record.
+     * @returns Returns the pattern.
+     */
+    emitReferencePattern(record) {
+        const data = record.data;
+        if (!data.pattern) {
+            return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(data.name)}`);
         }
-        else if (Entries.isReferencedBy(entry, entry.type)) {
-            return this.#getIdentifier(entry.name);
+        else if (Symbols.isReferencedBy(record, data.type)) {
+            return this.#getIdentifier(data.name);
         }
         else {
-            return entry.pattern;
+            return data.pattern;
         }
     }
     /**

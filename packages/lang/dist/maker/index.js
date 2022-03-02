@@ -41,7 +41,7 @@ const resolveTokenOrNode = (project, node) => {
  */
 const resolveSkip = (project, node) => {
     if (!(node instanceof Directive.Node)) {
-        project.addError(node, 4099 /* UNEXPECTED_NODE */);
+        project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
     }
     else {
         const state = { directive: node };

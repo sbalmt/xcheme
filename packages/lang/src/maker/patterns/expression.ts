@@ -101,7 +101,7 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
     case Parser.Nodes.Peek:
       return Peek.consume(project, node, state);
     default:
-      project.addError(node, Errors.UNEXPECTED_NODE);
+      project.addError(node.fragment, Errors.UNEXPECTED_NODE);
   }
   return void 0;
 };

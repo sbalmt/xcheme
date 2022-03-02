@@ -221,11 +221,19 @@ class Base {
         throw "Method doesn't implemented.";
     }
     /**
-     * Should be implemented to return a reference pattern.
-     * @param entry Referenced entry.
+     * Should be implemented to return a peek pattern.
+     * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    emitReferencePattern(entry) {
+    emitPeekPattern(...patterns) {
+        throw "Method doesn't implemented.";
+    }
+    /**
+     * Should be implemented to return a reference pattern.
+     * @param record Referenced record.
+     * @returns Should return the pattern.
+     */
+    emitReferencePattern(record) {
         throw "Method doesn't implemented.";
     }
     /**

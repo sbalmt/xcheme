@@ -1,94 +1,69 @@
 import * as Core from '@xcheme/core';
 
-import * as Coder from '../core/coder/base';
 import * as Project from '../core/project';
-import * as Entries from '../core/entries';
-
-/**
- * Context entry.
- */
-type Entry = {
-  /**
-   * Entry types.
-   */
-  type: Entries.Types;
-  /**
-   * Entry origin.
-   */
-  origin: Entries.Origins;
-  /**
-   * Entry identifier.
-   */
-  identifier: string;
-  /**
-   * Entry identity.
-   */
-  identity: number;
-  /**
-   * Determines whether or not the entry is an alias.
-   */
-  alias: boolean;
-  /**
-   * Determines whether or not the entry has a dynamic identity.
-   */
-  dynamic: boolean;
-  /**
-   * Determines whether or not the entry can be exported.
-   */
-  exported: boolean;
-};
+import * as Symbols from '../core/symbols';
 
 /**
  * Context consumption state.
  */
 export type State = {
   /**
-   * Anchor node from the AST.
+   * State type.
+   */
+  type: Symbols.Types;
+  /**
+   * State origin.
+   */
+  origin: Symbols.Origins;
+  /**
+   * State identity.
+   */
+  identity: number;
+  /**
+   * Anchor AST node.
    */
   anchor: Core.Node;
   /**
-   * Current entry.
+   * State record.
    */
-  entry: Entry;
-};
-
-/**
- * Get a new state entry based on the given entry model.
- * @param model Entry model.
- * @returns Returns the generated entry.
- */
-export const getNewStateEntry = (model: Partial<Entry>): Entry => {
-  return {
-    type: model.type ?? Entries.Types.Unknown,
-    origin: model.origin ?? Entries.Origins.User,
-    identifier: model.identifier ?? '?',
-    identity: model.identity ?? -1,
-    alias: model.alias ?? false,
-    dynamic: model.dynamic ?? false,
-    exported: model.exported ?? false
-  };
+  record?: Core.Record;
 };
 
 /**
  * Get a new state based on the given parameters.
  * @param anchor Anchor node.
- * @param identity Entry identity.
+ * @param identity State identity.
  * @returns Returns the new state.
  */
 export const getNewState = (anchor: Core.Node, identity: number): State => {
   return {
-    anchor,
-    entry: getNewStateEntry({
-      origin: Entries.Origins.User,
-      identity
-    })
+    type: Symbols.Types.Unknown,
+    origin: Symbols.Origins.User,
+    identity,
+    anchor
   };
 };
 
-const counters = new WeakMap<Coder.Base, number>();
-
-export const getCount = (project: Project.Context): number => {
-  const counter = counters.get(project.coder) ?? project.options.initialIdentity ?? 0;
-  counters.set(project.coder, counter + 1);
-  return counter;
+/**
+ * Set the record's metadata based on the given identifier and consumption state.
+ * @param project Project context.
+ * @param identifier Record identifier.
+ * @param record Target record.
+ * @param state Consumption state.
+ */
+export const setMetadata = (project: Project.Context, identifier: string, record: Core.Record, state: State): void => {
+  Object.assign<any, Symbols.Metadata>(record.data, {
+    type: state.type,
+    origin: state.origin,
+    name: `L${project.id}:${identifier}`,
+    identifier,
+    identity: state.identity,
+    location: project.name,
+    dynamic: false,
+    imported: false,
+    exported: false,
+    dependencies: [],
+    dependents: [],
+    pattern: void 0
+  });
 };

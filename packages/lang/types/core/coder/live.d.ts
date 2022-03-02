@@ -1,5 +1,4 @@
 import * as Core from '@xcheme/core';
-import * as Entries from '../../core/entries';
 import { Base } from './base';
 /**
  * Reference entry type.
@@ -187,11 +186,17 @@ export declare class Live extends Base {
      */
     emitUncasePattern(...patterns: Core.Pattern[]): Core.Pattern;
     /**
-     * Get a new reference pattern.
-     * @param entry Referenced entry.
+     * Get a new peek pattern.
+     * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entry: Entries.Entry): Core.Pattern;
+    emitPeekPattern(...patterns: Core.Pattern[]): Core.Pattern;
+    /**
+     * Get a new reference pattern.
+     * @param record Referenced record.
+     * @returns Returns the pattern.
+     */
+    emitReferencePattern(record: Core.Record): Core.Pattern;
     /**
      * Get a new any pattern.
      * @returns Returns the pattern.

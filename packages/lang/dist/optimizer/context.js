@@ -1,44 +1,43 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getCount = exports.getNewState = exports.getNewStateEntry = void 0;
-/**
- * Get a new state entry based on the given entry model.
- * @param model Entry model.
- * @returns Returns the generated entry.
- */
-const getNewStateEntry = (model) => {
-    return {
-        type: model.type ?? 0 /* Unknown */,
-        origin: model.origin ?? 0 /* User */,
-        identifier: model.identifier ?? '?',
-        identity: model.identity ?? -1,
-        alias: model.alias ?? false,
-        dynamic: model.dynamic ?? false,
-        exported: model.exported ?? false
-    };
-};
-exports.getNewStateEntry = getNewStateEntry;
+exports.setMetadata = exports.getNewState = void 0;
 /**
  * Get a new state based on the given parameters.
  * @param anchor Anchor node.
- * @param identity Entry identity.
+ * @param identity State identity.
  * @returns Returns the new state.
  */
 const getNewState = (anchor, identity) => {
     return {
-        anchor,
-        entry: (0, exports.getNewStateEntry)({
-            origin: 0 /* User */,
-            identity
-        })
+        type: 0 /* Unknown */,
+        origin: 0 /* User */,
+        identity,
+        anchor
     };
 };
 exports.getNewState = getNewState;
-const counters = new WeakMap();
-const getCount = (project) => {
-    const counter = counters.get(project.coder) ?? project.options.initialIdentity ?? 0;
-    counters.set(project.coder, counter + 1);
-    return counter;
+/**
+ * Set the record's metadata based on the given identifier and consumption state.
+ * @param project Project context.
+ * @param identifier Record identifier.
+ * @param record Target record.
+ * @param state Consumption state.
+ */
+const setMetadata = (project, identifier, record, state) => {
+    Object.assign(record.data, {
+        type: state.type,
+        origin: state.origin,
+        name: `L${project.id}:${identifier}`,
+        identifier,
+        identity: state.identity,
+        location: project.name,
+        dynamic: false,
+        imported: false,
+        exported: false,
+        dependencies: [],
+        dependents: [],
+        pattern: void 0
+    });
 };
-exports.getCount = getCount;
+exports.setMetadata = setMetadata;
 //# sourceMappingURL=context.js.map

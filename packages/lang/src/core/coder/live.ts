@@ -1,7 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Entries from '../../core/entries';
-
 import { Base } from './base';
 
 /**
@@ -189,7 +187,12 @@ export class Live extends Base {
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  emitAppendPattern(identity: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitAppendPattern(
+    identity: string | number,
+    current: Core.Nodes,
+    head: Core.Pattern,
+    ...patterns: Core.Pattern[]
+  ): Core.Pattern {
     return new Core.AppendNodePattern(identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
@@ -201,7 +204,12 @@ export class Live extends Base {
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  emitPrependPattern(identity: string | number, current: Core.Nodes, head: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitPrependPattern(
+    identity: string | number,
+    current: Core.Nodes,
+    head: Core.Pattern,
+    ...patterns: Core.Pattern[]
+  ): Core.Pattern {
     return new Core.PrependNodePattern(identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
@@ -276,15 +284,25 @@ export class Live extends Base {
   }
 
   /**
-   * Get a new reference pattern.
-   * @param entry Referenced entry.
+   * Get a new peek pattern.
+   * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(entry: Entries.Entry): Core.Pattern {
-    if (!entry.pattern) {
-      return new Core.RunFlowPattern(() => entry!.pattern as Core.Pattern);
+  emitPeekPattern(...patterns: Core.Pattern[]): Core.Pattern {
+    return new Core.PeekFlowPattern(...patterns);
+  }
+
+  /**
+   * Get a new reference pattern.
+   * @param record Referenced record.
+   * @returns Returns the pattern.
+   */
+  emitReferencePattern(record: Core.Record): Core.Pattern {
+    const data = record.data;
+    if (!data.pattern) {
+      return new Core.RunFlowPattern(() => data.pattern as Core.Pattern);
     }
-    return entry.pattern as Core.Pattern;
+    return data.pattern as Core.Pattern;
   }
 
   /**

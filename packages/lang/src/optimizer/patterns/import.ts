@@ -4,7 +4,7 @@ import * as Core from '@xcheme/core';
 
 import * as String from '../../core/string';
 import * as Project from '../../core/project';
-import * as Entries from '../../core/entries';
+import * as Symbols from '../../core/symbols';
 import * as Lexer from '../../lexer';
 import * as Parser from '../../parser';
 
@@ -14,68 +14,44 @@ import * as Maker from '../../maker';
 import * as Optimizer from '../index';
 
 /**
- * Get the corresponding symbol type for the given input entry.
- * @param entry Input entry.
- * @returns Returns the symbol type.
- * @throws Throws an exception when the given entry doesn't match any valid symbol type.
+ * Purge from the given record list all dependents that doesn't exists in the specified project context.
+ * @param project Project context.
+ * @param records Record list.
  */
-const getSymbolType = (entry: Entries.Entry): Parser.Symbols => {
-  if (entry.type === Entries.Types.Node) {
-    return entry.alias ? Parser.Symbols.AliasNode : Parser.Symbols.Node;
-  } else if (entry.type === Entries.Types.Token) {
-    return entry.alias ? Parser.Symbols.AliasToken : Parser.Symbols.Token;
-  } else {
-    throw `Unexpected entry type (${entry.type}).`;
+const purge = (project: Project.Context, records: Core.Record[]): void => {
+  for (const current of records) {
+    current.data.dependents = current.data.dependents.filter((dependent: Core.Record) => {
+      return project.symbols.has(dependent.data.identifier);
+    });
+    purge(project, current.data.dependencies);
   }
 };
 
 /**
- * Assign all dependencies from the given source to the target aggregator.
- * @param target Target aggregator.
- * @param source Source entries.
- */
-const assignDependencies = (target: Project.AggregatorMap, source: Entries.Entry[]): void => {
-  for (const entry of source) {
-    const { location } = entry;
-    if (!target[location]) {
-      target[location] = new Entries.Aggregator('I', location);
-    }
-    if (!target[location].has(entry.identifier)) {
-      target[location].add(entry);
-      assignDependencies(target, entry.dependencies);
-    }
-  }
-};
-
-/**
- * Import all directives from the given source to the target.
+ * Import all directives from the given source to the specified project context.
  * @param project Project context.
  * @param node Root node.
- * @param target Target aggregator.
- * @param source Source aggregator.
+ * @param source Source records.
+ * @returns Returns an array containing all imported record.
  */
-const importDirectives = (
-  project: Project.Context,
-  node: Core.Node,
-  target: Entries.Aggregator,
-  source: Entries.Aggregator
-): void => {
-  for (const entry of source.all) {
-    if (entry.exported) {
-      const identifier = entry.identifier;
+const integrate = (project: Project.Context, node: Core.Node, source: Symbols.Aggregator): Core.Record[] => {
+  const list = [];
+  for (const current of source) {
+    const { identifier, exported } = current.data;
+    if (exported) {
       const record = node.table.find(identifier);
       if (record) {
-        project.addError(record.node!, Errors.DUPLICATE_IDENTIFIER);
+        project.addError(record.node!.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
-        const { type, origin, identity } = entry;
-        const location = node.fragment.location;
-        const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
-        node.table.add(new Core.Record(fragment, getSymbolType(entry), node));
-        target.create(type, origin, identifier, identity, { ...entry, imported: true, exported: false });
-        assignDependencies(project.external, entry.dependencies);
+        list.push(current);
+        node.table.add(current);
+        project.symbols.add(current);
+        current.data.exported = false;
+        current.data.imported = true;
       }
     }
   }
+  return list;
 };
 
 /**
@@ -95,30 +71,31 @@ const compile = (project: Project.Context, context: Core.Context, content: strin
 };
 
 /**
- * Resolve the import directive for the given node and update the specified project.
+ * Consume the import directive for the given node and update the specified project.
  * @param project Project context.
  * @param node Input node.
  */
-export const resolve = (project: Project.Context, node: Core.Node): void => {
+export const consume = (project: Project.Context, node: Core.Node): void => {
   const location = node.right!;
   if (!project.options.loadFileHook) {
-    project.addError(location, Errors.IMPORT_DISABLED);
+    project.addError(location.fragment, Errors.IMPORT_DISABLED);
   } else {
     const file = `${String.extract(location.fragment.data)}.xcm`;
-    const path = Path.join(project.options.rootPath ?? './', file);
+    const path = Path.join(project.options.directory ?? './', file);
     const content = project.options.loadFileHook(path);
     if (!content) {
-      project.addError(location, Errors.IMPORT_NOT_FOUND);
+      project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
     } else {
       const extContext = new Core.Context(file);
       const extProject = new Project.Context(file, project.coder, {
         ...project.options,
-        rootPath: Path.dirname(path)
+        directory: Path.dirname(path)
       });
       if (compile(extProject, extContext, content)) {
-        importDirectives(project, node, project.local, extProject.local);
+        const records = integrate(project, node, extProject.symbols);
+        purge(project, records);
       } else {
-        project.addError(location, Errors.IMPORT_FAILURE);
+        project.addError(location.fragment, Errors.IMPORT_FAILURE);
         project.errors.push(...extProject.errors);
       }
     }

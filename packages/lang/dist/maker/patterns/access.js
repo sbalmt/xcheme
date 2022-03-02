@@ -12,7 +12,7 @@ const consume = (project, node) => {
     if (node instanceof Identity.Node) {
         return project.coder.emitExpectUnitsPattern([node.identity]);
     }
-    project.addError(node, 4100 /* UNSUPPORTED_NODE */);
+    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
     return void 0;
 };
 exports.consume = consume;

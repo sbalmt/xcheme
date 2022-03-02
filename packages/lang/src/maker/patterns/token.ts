@@ -12,11 +12,11 @@ export const consume = (project: Project.Context, state: Context.State): void =>
   const directive = state.directive;
   const expression = Expression.consume(project, directive.right!, state);
   if (expression) {
-    const entry = project.local.get(directive.identifier)!;
+    const record = project.symbols.get(directive.identifier)!;
     if (!directive.alias) {
-      entry.pattern = project.coder.emitTokenPattern(directive.identity, expression);
+      record.data.pattern = project.coder.emitTokenPattern(directive.identity, expression);
     } else {
-      entry.pattern = expression;
+      record.data.pattern = expression;
     }
   }
 };

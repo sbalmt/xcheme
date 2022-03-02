@@ -46,7 +46,7 @@ const resolveTokenOrNode = (project: Project.Context, node: Core.Node): void => 
  */
 const resolveSkip = (project: Project.Context, node: Core.Node): void => {
   if (!(node instanceof Directive.Node)) {
-    project.addError(node, Errors.UNEXPECTED_NODE);
+    project.addError(node.fragment, Errors.UNEXPECTED_NODE);
   } else {
     const state = { directive: node };
     Skip.consume(project, state);

@@ -16,6 +16,6 @@ export const consume = (project: Project.Context, node: Core.Node): Coder.Patter
   if (node instanceof Identity.Node) {
     return project.coder.emitExpectUnitsPattern([node.identity]);
   }
-  project.addError(node, Errors.UNSUPPORTED_NODE);
+  project.addError(node.fragment, Errors.UNSUPPORTED_NODE);
   return void 0;
 };

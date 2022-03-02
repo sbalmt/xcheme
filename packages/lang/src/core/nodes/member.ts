@@ -3,54 +3,29 @@ import * as Core from '@xcheme/core';
 import * as Identity from './identity';
 
 /**
- * Member entry.
- */
-export type Entry = {
-  /**
-   * Entry identifier.
-   */
-  identifier: string;
-  /**
-   * Entry identity.
-   */
-  identity: number;
-  /**
-   * Determines whether or not the entry can have a dynamic identity.
-   */
-  dynamic: boolean;
-};
-
-/**
  * Member node.
  */
 export class Node extends Identity.Node {
   /**
-   * Node entry.
+   * Symbol record.
    */
-  #entry: Entry;
+  #record: Core.Record;
 
   /**
-   * Member route node.
+   * Route node.
    */
   #route: Core.Node;
 
   /**
    * Default constructor.
    * @param node Original node.
-   * @param entry Node entry.
+   * @param record Symbol record.
    * @param route Route node.
    */
-  constructor(node: Core.Node, entry: Entry, route: Core.Node) {
-    super(node, entry.identity);
-    this.#entry = entry;
+  constructor(node: Core.Node, record: Core.Record, route: Core.Node) {
+    super(node, record.data.identity);
+    this.#record = record;
     this.#route = route;
-  }
-
-  /**
-   * Get whether or not the directive can have a dynamic identity.
-   */
-  get dynamic(): boolean {
-    return this.#entry.dynamic;
   }
 
   /**
@@ -58,6 +33,13 @@ export class Node extends Identity.Node {
    */
   get empty(): boolean {
     return this.#route.fragment === this.fragment;
+  }
+
+  /**
+   * Get whether or not the member is dynamic.
+   */
+  get dynamic(): boolean {
+    return this.#record.data.dynamic;
   }
 
   /**

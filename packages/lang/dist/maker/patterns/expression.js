@@ -96,7 +96,7 @@ const consume = (project, node, state) => {
         case 235 /* Peek */:
             return Peek.consume(project, node, state);
         default:
-            project.addError(node, 4099 /* UNEXPECTED_NODE */);
+            project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
     }
     return void 0;
 };

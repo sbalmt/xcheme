@@ -9,15 +9,15 @@ export declare class Node extends Basic.Node {
     /**
      * Default constructor.
      * @param node Original node.
-     * @param type Sequence type.
+     * @param type Node sequence type.
      */
     constructor(node: Core.Node, type: Parser.Nodes);
     /**
-     * Get the sequence type.
+     * Get the node sequence type.
      */
     get type(): Parser.Nodes;
     /**
-     * Get the node sequence.
+     * Get the nodes sequence.
      */
     get sequence(): Core.Node[];
 }

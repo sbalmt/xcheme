@@ -12,11 +12,10 @@ const Expression = require("./expression");
  * @param state Context state.
  */
 const consume = (project, direction, parent, state) => {
-    if (state.entry.type === 3 /* Node */) {
+    if (state.type === 3 /* Node */) {
         const node = parent.getChild(direction);
-        const name = node.fragment.data;
-        const entry = Loose.resolve(project, node, state, name);
-        const reference = Nodes.getReference(entry.identifier, node.table, node.fragment.location);
+        const record = Loose.resolve(project, node.fragment.data, node, state);
+        const reference = Nodes.getReference(record.data.identifier, node.table, node.fragment.location);
         parent.setChild(direction, reference);
         Expression.consume(project, direction, parent, state);
     }

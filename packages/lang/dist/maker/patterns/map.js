@@ -44,25 +44,25 @@ const consume = (project, node, state) => {
     while (member) {
         const current = member.right;
         if (!(current instanceof Member.Node)) {
-            project.addError(node, 4100 /* UNSUPPORTED_NODE */);
+            project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
         }
         else {
             const units = resolve(current.route);
             if (!units) {
-                project.addError(node, 4099 /* UNEXPECTED_NODE */);
+                project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
             }
             else {
                 let route;
                 if (!current.empty) {
                     const pattern = Expression.consume(project, current, state);
-                    if (current.dynamic || directive.type === 0 /* Skip */) {
+                    if (current.dynamic || directive.type === 1 /* Skip */) {
                         route = project.coder.getRoute(units, void 0, pattern);
                     }
                     else {
                         route = project.coder.getRoute(units, current.identity, pattern);
                     }
                 }
-                else if (directive.type === 0 /* Skip */) {
+                else if (directive.type === 1 /* Skip */) {
                     route = project.coder.getRoute(units, void 0);
                 }
                 else {

@@ -12,12 +12,12 @@ const consume = (project, state) => {
     const directive = state.directive;
     const expression = Expression.consume(project, directive.right, state);
     if (expression) {
-        const entry = project.local.get(directive.identifier);
+        const record = project.symbols.get(directive.identifier);
         if (!directive.alias) {
-            entry.pattern = project.coder.emitNodePattern(directive.identity, 1 /* Right */, expression);
+            record.data.pattern = project.coder.emitNodePattern(directive.identity, 1 /* Right */, expression);
         }
         else {
-            entry.pattern = expression;
+            record.data.pattern = expression;
         }
     }
 };

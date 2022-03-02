@@ -2,7 +2,10 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consumeNodes = void 0;
 const Core = require("@xcheme/core");
+const Project = require("../core/project");
+const Counter = require("../core/counter");
 const Parser = require("../parser");
+const Identity = require("./identity");
 const Context = require("./context");
 const Import = require("./patterns/import");
 const Export = require("./patterns/export");
@@ -10,20 +13,9 @@ const Node = require("./patterns/node");
 const Token = require("./patterns/token");
 const Skip = require("./patterns/skip");
 /**
- * Resolve the identity from the given node.
- * @param node Input node.
- * @returns Returns the identity.
+ * Global skip counter.
  */
-const resolveIdentity = (node) => {
-    if (node.left) {
-        const identity = node.left.fragment.data;
-        if (identity === 'auto') {
-            return Core.BaseSource.Output;
-        }
-        return parseInt(identity);
-    }
-    return NaN;
-};
+const skipCounter = new Counter.Context();
 /**
  * Resolve the token or node directive for the given node and update the specified project.
  * @param project Project context.
@@ -31,20 +23,17 @@ const resolveIdentity = (node) => {
  * @param state Consumption state.
  */
 const resolveTokenOrNode = (project, node, state) => {
-    state.entry.identity = resolveIdentity(node.right) || Context.getCount(project);
+    const identity = Identity.resolve(node.right);
+    state.identity = identity ?? Project.Context.identity.increment(project.coder, project.options.identity);
     switch (node.value) {
-        case 237 /* Token */:
+        case 238 /* Token */:
+        case 240 /* AliasToken */:
+            state.type = 2 /* Token */;
             Token.consume(project, 1 /* Right */, node, state);
             break;
-        case 238 /* Node */:
-            Node.consume(project, 1 /* Right */, node, state);
-            break;
-        case 239 /* AliasToken */:
-            state.entry.alias = true;
-            Token.consume(project, 1 /* Right */, node, state);
-            break;
-        case 240 /* AliasNode */:
-            state.entry.alias = true;
+        case 239 /* Node */:
+        case 241 /* AliasNode */:
+            state.type = 3 /* Node */;
             Node.consume(project, 1 /* Right */, node, state);
             break;
         default:
@@ -62,17 +51,18 @@ const consumeNodes = (node, project) => {
     while ((current = node.next)) {
         const state = Context.getNewState(node, -1);
         switch (current.value) {
-            case 241 /* Import */:
-                Import.resolve(project, current);
+            case 242 /* Import */:
+                Import.consume(project, current);
                 break;
-            case 242 /* Export */:
-                if (!Export.resolve(project, current)) {
-                    state.entry.exported = true;
+            case 243 /* Export */:
+                if (!Export.consume(project, current, state)) {
                     resolveTokenOrNode(project, current.right, state);
+                    state.record.data.exported = true;
                 }
                 break;
-            case 236 /* Skip */:
-                state.entry.identity = Context.getCount(project);
+            case 237 /* Skip */:
+                state.identity = skipCounter.increment(project);
+                state.type = 1 /* Skip */;
                 Skip.consume(project, 2 /* Next */, node, state);
                 break;
             default:

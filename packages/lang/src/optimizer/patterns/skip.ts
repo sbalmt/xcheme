@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
-import * as Entries from '../../core/entries';
+import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import * as Expression from './expression';
@@ -15,11 +15,10 @@ import * as Expression from './expression';
  * @param state Consumption state.
  */
 const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
-  const { origin, identifier, identity } = state.entry;
   const node = parent.getChild(direction)!;
-  const entry = project.local.create(Entries.Types.Skip, origin, identifier, identity, state.entry);
-  const replacement = new Directive.Node(node, Directive.Types.Skip, entry);
+  const replacement = new Directive.Node(node, state.record!);
   parent.setChild(direction, replacement);
+  project.symbols.add(state.record!);
 };
 
 /**
@@ -29,11 +28,21 @@ const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node
  * @param parent Parent node.
  * @param state Consumption state.
  */
-export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+export const consume = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Core.Node,
+  state: Context.State
+): void => {
   const node = parent.getChild(direction)!;
-  const entry = state.entry;
-  entry.type = Entries.Types.Skip;
-  entry.identifier = `@SKIP${entry.identity}`;
+  const identifier = `@SKIP${state.identity}`;
+  const line = new Core.Range(0, 0);
+  const column = new Core.Range(0, identifier.length);
+  const location = new Core.Location(project.name, line, column);
+  const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
+  const record = new Core.Record(fragment, Parser.Symbols.Skip, node);
+  state.record = node.table.add(record);
+  Context.setMetadata(project, identifier, state.record!, state);
   Expression.consume(project, Core.Nodes.Right, node, state);
   emit(project, direction, parent, state);
 };

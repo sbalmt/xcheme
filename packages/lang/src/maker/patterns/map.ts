@@ -1,11 +1,11 @@
 import * as Core from '@xcheme/core';
 
 import * as Mergeable from '../../core/nodes/mergeable';
-import * as Directive from '../../core/nodes/directive';
 import * as Identity from '../../core/nodes/identity';
 import * as Member from '../../core/nodes/member';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Symbols from '../../core/symbols';
 import * as String from '../../core/string';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -50,21 +50,21 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   while (member) {
     const current = member.right!;
     if (!(current instanceof Member.Node)) {
-      project.addError(node, Errors.UNSUPPORTED_NODE);
+      project.addError(node.fragment, Errors.UNSUPPORTED_NODE);
     } else {
       const units = resolve(current.route);
       if (!units) {
-        project.addError(node, Errors.UNEXPECTED_NODE);
+        project.addError(node.fragment, Errors.UNEXPECTED_NODE);
       } else {
         let route;
         if (!current.empty) {
           const pattern = Expression.consume(project, current!, state);
-          if (current.dynamic || directive.type === Directive.Types.Skip) {
+          if (current.dynamic || directive.type === Symbols.Types.Skip) {
             route = project.coder.getRoute(units, void 0, pattern);
           } else {
             route = project.coder.getRoute(units, current.identity, pattern);
           }
-        } else if (directive.type === Directive.Types.Skip) {
+        } else if (directive.type === Symbols.Types.Skip) {
           route = project.coder.getRoute(units, void 0);
         } else {
           route = project.coder.getRoute(units, current.identity);

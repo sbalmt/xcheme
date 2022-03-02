@@ -1,7 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Entries from '../../core/entries';
-
 /**
  * Pattern entry.
  */
@@ -270,11 +268,20 @@ export class Base {
   }
 
   /**
-   * Should be implemented to return a reference pattern.
-   * @param entry Referenced entry.
+   * Should be implemented to return a peek pattern.
+   * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitReferencePattern(entry: Entries.Entry): Pattern {
+  emitPeekPattern(...patterns: Pattern[]): Pattern {
+    throw "Method doesn't implemented.";
+  }
+
+  /**
+   * Should be implemented to return a reference pattern.
+   * @param record Referenced record.
+   * @returns Should return the pattern.
+   */
+  emitReferencePattern(record: Core.Record): Pattern {
     throw "Method doesn't implemented.";
   }
 

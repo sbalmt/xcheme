@@ -234,15 +234,24 @@ class Live extends base_1.Base {
         return new Core.UncaseTransformPattern(...patterns);
     }
     /**
-     * Get a new reference pattern.
-     * @param entry Referenced entry.
+     * Get a new peek pattern.
+     * @param patterns Expected patterns.
      * @returns Returns the pattern.
      */
-    emitReferencePattern(entry) {
-        if (!entry.pattern) {
-            return new Core.RunFlowPattern(() => entry.pattern);
+    emitPeekPattern(...patterns) {
+        return new Core.PeekFlowPattern(...patterns);
+    }
+    /**
+     * Get a new reference pattern.
+     * @param record Referenced record.
+     * @returns Returns the pattern.
+     */
+    emitReferencePattern(record) {
+        const data = record.data;
+        if (!data.pattern) {
+            return new Core.RunFlowPattern(() => data.pattern);
         }
-        return entry.pattern;
+        return data.pattern;
     }
     /**
      * Get a new any pattern.

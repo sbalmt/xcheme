@@ -6,121 +6,117 @@ const Parser = require("../../parser");
 /**
  * Update the specified node for an optimized one after resolving its reference.
  * @param project Project context.
- * @param entry Referenced entry.
+ * @param record Reference record.
  * @param parent Parent node.
- * @param node Reference node.
  * @param direction Node direction.
  */
-const updateNode = (project, entry, parent, node, direction) => {
-    if (!entry.dynamic) {
-        parent.setChild(direction, new Identity.Node(node, entry.identity));
+const upgrade = (project, record, parent, direction) => {
+    const node = parent.getChild(direction);
+    if (!record.data.dynamic) {
+        parent.setChild(direction, new Identity.Node(node, record.data.identity));
     }
     else {
-        project.addError(node, 4112 /* INVALID_MAP_REFERENCE */);
+        project.addError(node.fragment, 4112 /* INVALID_MAP_REFERENCE */);
     }
 };
 /**
- * Find and link the corresponding reference for the specified node.
+ * Find and connect the corresponding reference for the specified record.
  * @param project Project context.
- * @param node Input node.
+ * @param identifier Reference identifier.
+ * @param record Reference record.
  * @param state Consumption state.
- * @returns Returns the dependency entry or undefined the dependency isn't ready yet.
  */
-const linkReference = (project, node, state) => {
-    const identifier = node.fragment.data;
-    const dependency = project.local.get(identifier);
-    if (dependency) {
-        project.local.on(state.entry.identifier, (entry) => {
-            entry.dependencies.push(dependency);
-            dependency.dependents.push(entry);
-        });
+const connect = (project, identifier, record, state) => {
+    const current = state.record;
+    if (record.data.dependencies) {
+        current.data.dependencies.push(record);
+        record.data.dependents.push(current);
     }
     else {
-        project.local.on(identifier, (dependency) => {
-            const entry = project.local.get(state.entry.identifier);
-            entry.dependencies.push(dependency);
-            dependency.dependents.push(entry);
+        project.symbols.listen(identifier, () => {
+            current.data.dependencies.push(record);
+            record.data.dependents.push(current);
         });
     }
-    return dependency;
 };
 /**
- * Resolve and validate the corresponding reference for the specified symbol and node in a 'SKIP' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a 'SKIP' directive.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param symbol Referenced symbol.
+ * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveSkip = (project, node, symbol, state) => {
-    if (symbol.value === 303 /* AliasToken */) {
-        linkReference(project, node, state);
+const resolveSkip = (project, node, record, state) => {
+    if (record.value === 302 /* AliasToken */) {
+        connect(project, node.fragment.data, record, state);
     }
-    else if (symbol.value === 300 /* Token */) {
-        project.addError(node, 4108 /* INVALID_TOKEN_REFERENCE */);
+    else if (record.value === 301 /* Token */) {
+        project.addError(node.fragment, 4108 /* INVALID_TOKEN_REFERENCE */);
     }
-    else if (symbol.value === 302 /* AliasNode */) {
-        project.addError(node, 4111 /* INVALID_ALIAS_NODE_REFERENCE */);
+    else if (record.value === 304 /* AliasNode */) {
+        project.addError(node.fragment, 4111 /* INVALID_ALIAS_NODE_REFERENCE */);
     }
-    else if (symbol.value === 301 /* Node */) {
-        project.addError(node, 4109 /* INVALID_NODE_REFERENCE */);
+    else if (record.value === 303 /* Node */) {
+        project.addError(node.fragment, 4109 /* INVALID_NODE_REFERENCE */);
     }
     else {
-        project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+        project.addError(node.fragment, 4103 /* UNRESOLVED_IDENTIFIER */);
     }
 };
 /**
- * Resolve and validate the corresponding reference for the specified symbol and node in a 'TOKEN' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
  * @param node Input node.
- * @param symbol Referenced symbol.
+ * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveToken = (project, node, symbol, state) => {
-    if (symbol.value === 300 /* Token */ || symbol.value === 303 /* AliasToken */) {
-        linkReference(project, node, state);
+const resolveToken = (project, node, record, state) => {
+    if (record.value === 301 /* Token */ || record.value === 302 /* AliasToken */) {
+        connect(project, node.fragment.data, record, state);
     }
-    else if (symbol.value === 301 /* Node */) {
-        project.addError(node, 4109 /* INVALID_NODE_REFERENCE */);
+    else if (record.value === 303 /* Node */) {
+        project.addError(node.fragment, 4109 /* INVALID_NODE_REFERENCE */);
     }
-    else if (symbol.value === 302 /* AliasNode */) {
-        project.addError(node, 4111 /* INVALID_ALIAS_NODE_REFERENCE */);
+    else if (record.value === 304 /* AliasNode */) {
+        project.addError(node.fragment, 4111 /* INVALID_ALIAS_NODE_REFERENCE */);
     }
     else {
-        project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+        project.addError(node.fragment, 4103 /* UNRESOLVED_IDENTIFIER */);
     }
 };
 /**
- * Resolve and validate the corresponding reference for the specified symbol and node in a 'NODE' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a 'NODE' directive.
  * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param symbol Referenced symbol.
+ * @param record Referenced record.
  * @param state Consumption state.
  */
-const resolveNode = (project, direction, parent, symbol, state) => {
+const resolveNode = (project, direction, parent, record, state) => {
     const node = parent.getChild(direction);
-    if (symbol.value === 301 /* Node */ || symbol.value === 302 /* AliasNode */) {
-        linkReference(project, node, state);
+    const identifier = node.fragment.data;
+    if (record.value === 303 /* Node */ || record.value === 304 /* AliasNode */) {
+        connect(project, identifier, record, state);
     }
-    else if (symbol.value === 300 /* Token */) {
-        const dependency = linkReference(project, node, state);
-        if (dependency) {
-            updateNode(project, dependency, parent, node, direction);
+    else if (record.value === 301 /* Token */) {
+        connect(project, identifier, record, state);
+        if (record.data.dynamic !== void 0) {
+            upgrade(project, record, parent, direction);
         }
         else {
-            project.local.on(node.fragment.data, (entry) => {
-                updateNode(project, entry, parent, node, direction);
+            project.symbols.listen(identifier, () => {
+                upgrade(project, record, parent, direction);
             });
         }
     }
-    else if (symbol.value === 303 /* AliasToken */) {
-        project.addError(node, 4110 /* INVALID_ALIAS_TOKEN_REFERENCE */);
+    else if (record.value === 302 /* AliasToken */) {
+        project.addError(node.fragment, 4110 /* INVALID_ALIAS_TOKEN_REFERENCE */);
     }
     else {
-        project.addError(node, 4103 /* UNRESOLVED_IDENTIFIER */);
+        project.addError(node.fragment, 4103 /* UNRESOLVED_IDENTIFIER */);
     }
 };
 /**
@@ -132,22 +128,23 @@ const resolveNode = (project, direction, parent, symbol, state) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const identifier = node.fragment.data;
-    const symbol = node.table.find(identifier);
-    if (!symbol) {
-        project.addError(node, 4102 /* UNDEFINED_IDENTIFIER */);
+    const record = node.table.find(node.fragment.data);
+    if (!record) {
+        project.addError(node.fragment, 4102 /* UNDEFINED_IDENTIFIER */);
     }
     else {
-        switch (state.entry.type) {
+        switch (state.type) {
             case 1 /* Skip */:
-                resolveSkip(project, node, symbol, state);
+                resolveSkip(project, node, record, state);
                 break;
             case 2 /* Token */:
-                resolveToken(project, node, symbol, state);
+                resolveToken(project, node, record, state);
                 break;
             case 3 /* Node */:
-                resolveNode(project, direction, parent, symbol, state);
+                resolveNode(project, direction, parent, record, state);
                 break;
+            default:
+                throw `Unsupported context state type: ${state.type}`;
         }
     }
 };

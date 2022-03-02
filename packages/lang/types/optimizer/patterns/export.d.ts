@@ -1,8 +1,11 @@
 import * as Core from '@xcheme/core';
 import * as Project from '../../core/project';
+import * as Context from '../context';
 /**
- * Resolve the export directive for the given node and update the specified project.
+ * Consume the export directive for the given node and update the specified state.
  * @param project Project context.
  * @param node Input node.
+ * @param state Consumption state.
+ * @returns Returns true when the given node is valid for the export directive, false otherwise.
  */
-export declare const resolve: (project: Project.Context, node: Core.Node) => boolean;
+export declare const consume: (project: Project.Context, node: Core.Node, state: Context.State) => boolean;

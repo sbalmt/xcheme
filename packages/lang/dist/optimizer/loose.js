@@ -2,60 +2,60 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.resolve = exports.collision = void 0;
 const Core = require("@xcheme/core");
+const Project = require("../core/project");
 const Token = require("./patterns/token");
 const Context = require("./context");
 const Nodes = require("./nodes");
 /**
- * Emit a new loose token and returns the corresponding pattern entry.
+ * Emit a new loose token and returns the corresponding record.
  * @param project Project context.
  * @param node Input node.
  * @param state Consumption state.
- * @param name Entry name.
- * @returns Returns the generated pattern entry.
+ * @returns Returns the generated record.
  */
-const emit = (project, node, state, name) => {
-    const temp = Context.getNewState(state.anchor, Context.getCount(project));
-    const token = Nodes.getToken(`@REF${temp.entry.identity}`, node.table, node.fragment.location, node);
-    temp.entry.origin = 1 /* Loose */;
+const emit = (project, node, state) => {
+    const identity = Project.Context.identity.increment(project.coder, project.options.identity);
+    const token = Nodes.getToken(`@REF${identity}`, node.table, node.fragment.location, node);
+    const temp = Context.getNewState(state.anchor, identity);
+    temp.origin = 1 /* Loose */;
     Token.consume(project, 1 /* Right */, token, temp);
-    const entry = project.local.get(name);
     token.setChild(2 /* Next */, state.anchor.next);
     state.anchor.setChild(2 /* Next */, token);
     state.anchor = token;
-    return entry;
+    return temp.record;
 };
 /**
- * Determines whether or not there are an entry collision for the given name.
+ * Determines whether or not there are a collision for the given name.
  * @param project Project context.
+ * @param identifier Record identifier.
  * @param node Input node.
- * @param name Entry name.
  * @returns Returns true when the specified name already exists, false otherwise.
  */
-const collision = (project, node, name) => {
-    if (project.local.has(name)) {
-        project.addError(node, 4116 /* TOKEN_COLLISION */);
+const collision = (project, identifier, node) => {
+    if (project.symbols.has(identifier)) {
+        project.addError(node.fragment, 4116 /* TOKEN_COLLISION */);
         return true;
     }
     return false;
 };
 exports.collision = collision;
 /**
- * Resolve the loose pattern entry for the given node.
+ * Resolve the loose pattern record for the given node.
  * @param project Project context.
+ * @param identifier Record identifier.
  * @param node Input node.
  * @param state Consumption state.
- * @param name Entry name.
- * @returns Returns the loose pattern entry.
+ * @returns Returns the loose pattern record.
  */
-const resolve = (project, node, state, name) => {
-    const entry = project.local.get(name);
-    if (entry) {
-        if (entry.origin === 0 /* User */) {
-            project.addError(node, 4116 /* TOKEN_COLLISION */);
+const resolve = (project, identifier, node, state) => {
+    const record = project.symbols.get(identifier);
+    if (record) {
+        if (record.data.origin === 0 /* User */) {
+            project.addError(node.fragment, 4116 /* TOKEN_COLLISION */);
         }
-        return entry;
+        return record;
     }
-    return emit(project, node, state, name);
+    return emit(project, node, state);
 };
 exports.resolve = resolve;
 //# sourceMappingURL=loose.js.map

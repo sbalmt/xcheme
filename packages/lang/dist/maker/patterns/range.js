@@ -11,12 +11,12 @@ const String = require("../../core/string");
  */
 const consume = (project, node, state) => {
     const directive = state.directive;
-    if (directive.type !== 2 /* Node */) {
+    if (directive.type !== 3 /* Node */) {
         const from = String.extract(node.left.fragment.data);
         const to = String.extract(node.right.fragment.data);
         return project.coder.emitRangePattern(from, to);
     }
-    project.addError(node, 4100 /* UNSUPPORTED_NODE */);
+    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
     return void 0;
 };
 exports.consume = consume;

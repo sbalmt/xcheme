@@ -1,25 +1,20 @@
 import * as Core from '@xcheme/core';
 import * as Coder from './coder/base';
-import * as Entries from './entries';
+import * as Counter from './counter';
+import * as Symbols from './symbols';
 import { Errors } from './errors';
-/**
- * Map of aggregators.
- */
-export declare type AggregatorMap = {
-    [key: string]: Entries.Aggregator;
-};
 /**
  * Project options.
  */
 export declare type Options = {
     /**
-     * Determines the project root path.
+     * Initial number for implicit identities.
      */
-    rootPath?: string;
+    identity?: number;
     /**
-     * Initial identity for for directives with no explicit identities.
+     * Determines the project's root directory.
      */
-    initialIdentity?: number;
+    directory?: string;
     /**
      * Callback for loading the imported file contents.
      */
@@ -38,6 +33,18 @@ export declare class Context {
      */
     constructor(name: string, coder: Coder.Base, options?: Options);
     /**
+     * Get the global identity counter.
+     */
+    static get identity(): Counter.Context;
+    /**
+     * Get the project Id.
+     */
+    get id(): number;
+    /**
+     * Get the project name.
+     */
+    get name(): string;
+    /**
      * Get the project coder.
      */
     get coder(): Coder.Base;
@@ -46,13 +53,9 @@ export declare class Context {
      */
     get options(): Options;
     /**
-     * Get the local entries aggregator.
+     * Get the project symbols.
      */
-    get local(): Entries.Aggregator;
-    /**
-     * Get the external entries aggregator.
-     */
-    get external(): AggregatorMap;
+    get symbols(): Symbols.Aggregator;
     /**
      * Get the project errors.
      */
@@ -67,8 +70,8 @@ export declare class Context {
     get parser(): string | Core.Pattern;
     /**
      * Add a new error in the project.
-     * @param node Input node.
+     * @param fragment Error fragment.
      * @param value Error value.
      */
-    addError(node: Core.Node, value: Errors): void;
+    addError(fragment: Core.Fragment, value: Errors): void;
 }

@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
-import * as Entries from '../../core/entries';
 import * as String from '../../core/string';
+import * as Symbols from '../symbols';
 
 import { Base } from './base';
 
@@ -334,17 +334,27 @@ export class Text extends Base {
   }
 
   /**
-   * Get a new reference pattern.
-   * @param entry Referenced entry.
+   * Get a new peek pattern.
+   * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(entry: Entries.Entry): string {
-    if (!entry.pattern) {
-      return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(entry.name)}`);
-    } else if (Entries.isReferencedBy(entry, entry.type)) {
-      return this.#getIdentifier(entry.name);
+  emitPeekPattern(...patterns: string[]): string {
+    return this.#getPattern('PeekFlowPattern', ...patterns);
+  }
+
+  /**
+   * Get a new reference pattern.
+   * @param record Referenced record.
+   * @returns Returns the pattern.
+   */
+  emitReferencePattern(record: Core.Record): string {
+    const data = record.data;
+    if (!data.pattern) {
+      return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(data.name)}`);
+    } else if (Symbols.isReferencedBy(record, data.type)) {
+      return this.#getIdentifier(data.name);
     } else {
-      return entry.pattern as string;
+      return data.pattern as string;
     }
   }
 

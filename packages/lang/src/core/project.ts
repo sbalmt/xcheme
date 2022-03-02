@@ -1,29 +1,24 @@
 import * as Core from '@xcheme/core';
 
+import * as Parser from '../parser';
 import * as Coder from './coder/base';
-import * as Entries from './entries';
+import * as Counter from './counter';
+import * as Symbols from './symbols';
 
 import { Errors } from './errors';
-
-/**
- * Map of aggregators.
- */
-export type AggregatorMap = {
-  [key: string]: Entries.Aggregator;
-};
 
 /**
  * Project options.
  */
 export type Options = {
   /**
-   * Determines the project root path.
+   * Initial number for implicit identities.
    */
-  rootPath?: string;
+  identity?: number;
   /**
-   * Initial identity for for directives with no explicit identities.
+   * Determines the project's root directory.
    */
-  initialIdentity?: number;
+  directory?: string;
   /**
    * Callback for loading the imported file contents.
    */
@@ -35,9 +30,24 @@ export type Options = {
  */
 export class Context {
   /**
-   * Context depth for the same coder.
+   * Global project counter.
    */
-  static #depth = new WeakMap();
+  static #project = new Counter.Context();
+
+  /**
+   * Global identity counter.
+   */
+  static #identity = new Counter.Context();
+
+  /**
+   * Project Id.
+   */
+  #id: number;
+
+  /**
+   * Project name.
+   */
+  #name: string;
 
   /**
    * Project coder.
@@ -50,14 +60,9 @@ export class Context {
   #options: Options;
 
   /**
-   * Local entries aggregator.
+   * Project symbols.
    */
-  #localEntries: Entries.Aggregator;
-
-  /**
-   * External entries aggregators.
-   */
-  #externalEntries: AggregatorMap = {};
+  #symbols = new Symbols.Aggregator();
 
   /**
    * Project errors.
@@ -65,67 +70,73 @@ export class Context {
   #errors: Core.Error[] = [];
 
   /**
-   * Get the current depth for the given coder.
-   * @param coder Input coder.
-   * @returns Returns the current depth.
+   * Get an array of records that corresponds to the specified record type.
+   * @param types Record types.
+   * @returns Returns an array containing all the corresponding records.
    */
-  static #count(coder: Coder.Base): number {
-    return this.#depth.get(coder) ?? 0;
-  }
-
-  /**
-   * Increment the current depth for the given coder.
-   * @param coder Input coder.
-   */
-  static #increment(coder: Coder.Base): number {
-    const count = this.#count(coder);
-    this.#depth.set(coder, count + 1);
-    return count;
-  }
-
-  /**
-   * Get an array of patterns from the the specified entries.
-   * @param type Entry type.
-   * @param entries Input entries.
-   * @returns Returns an array containing all the patterns.
-   */
-  #getPatterns(type: Entries.Types, entries: Entries.Entry[]): Coder.Pattern[] {
-    return entries.map((entry) => {
-      if (entry.dependents.includes(entry) || entry.dependents.filter((entry) => entry.type === type).length > 1) {
-        return this.#coder.emitReferencePattern(entry);
+  #getRecordsByType(...types: Parser.Symbols[]): Core.Record[] {
+    const list = [];
+    for (const current of this.#symbols) {
+      const { pattern } = current.data;
+      if (pattern && types.includes(current.value as Parser.Symbols)) {
+        list.push(current);
       }
-      return entry.pattern!;
+    }
+    return list;
+  }
+
+  /**
+   * Get an array of records (including all sub record) that corresponds to the specified record type.
+   * @param records Record list.
+   * @param types Record types.
+   * @returns Returns an array containing all the corresponding records.
+   */
+  #getFlattenRecordsByType(records: Core.Record[], ...types: Parser.Symbols[]): Core.Record[] {
+    const list: Core.Record[] = [];
+    const cache = new WeakSet<Core.Record>();
+    const action = (records: Core.Record[]): void => {
+      for (const current of records) {
+        if (!cache.has(current)) {
+          cache.add(current);
+          const { pattern, dependencies } = current.data;
+          if (pattern && types.includes(current.value as Parser.Symbols)) {
+            list.push(current);
+          }
+          action(dependencies);
+        }
+      }
+    };
+    action(records);
+    return list;
+  }
+
+  /**
+   * Get an array of references from the specified records.
+   * @param records Record list.
+   * @returns Returns an array containing all the references.
+   */
+  #getReferences(records: Core.Record[]): Coder.Reference[] {
+    return records.map((record) => {
+      return {
+        name: record.data.name,
+        pattern: record.data.pattern!
+      };
     });
   }
 
   /**
-   * Get an array of references from the specified entries.
-   * @param entries Input entries.
-   * @returns Returns an array containing all the references.
+   * Get an array of patterns from the the specified records.
+   * @param records Record list.
+   * @param types Symbol types.
+   * @returns Returns an array containing all the patterns.
    */
-  #getReferences(entries: Entries.Entry[]): Coder.Reference[] {
-    return entries.map((entry) => ({ name: entry.name, pattern: entry.pattern! }));
-  }
-
-  /**
-   * Get an array of entries (including all sub entries) that corresponds to the specified entry type.
-   * @param type Entry type.
-   * @param entries Input entries.
-   * @param cache Optional cache for entries already processed.
-   * @returns Returns an array containing all the corresponding entries.
-   */
-  #getAllEntries(type: Entries.Types, entries: Entries.Entry[], cache = new WeakSet<Entries.Entry>()): Entries.Entry[] {
-    const list = [];
-    for (const entry of entries) {
-      if (!cache.has(entry)) {
-        cache.add(entry);
-        if (entry.pattern && entry.type === type) {
-          list.push(entry);
-        }
-        list.push(...this.#getAllEntries(type, entry.dependencies, cache));
+  #getPatterns(records: Core.Record[], ...types: Symbols.Types[]): Coder.Pattern[] {
+    return records.map((current) => {
+      if (Symbols.isReferencedBy(current, ...types)) {
+        return this.#coder.emitReferencePattern(current);
       }
-    }
-    return list;
+      return current.data.pattern!;
+    });
   }
 
   /**
@@ -135,9 +146,31 @@ export class Context {
    * @param options Project options.
    */
   constructor(name: string, coder: Coder.Base, options: Options = {}) {
+    this.#id = Context.#project.increment(coder);
+    this.#name = name;
     this.#coder = coder;
     this.#options = options;
-    this.#localEntries = new Entries.Aggregator(`L${Context.#increment(coder)}`, name);
+  }
+
+  /**
+   * Get the global identity counter.
+   */
+  static get identity(): Counter.Context {
+    return Context.#identity;
+  }
+
+  /**
+   * Get the project Id.
+   */
+  get id(): number {
+    return this.#id;
+  }
+
+  /**
+   * Get the project name.
+   */
+  get name(): string {
+    return this.#name;
   }
 
   /**
@@ -155,17 +188,10 @@ export class Context {
   }
 
   /**
-   * Get the local entries aggregator.
+   * Get the project symbols.
    */
-  get local(): Entries.Aggregator {
-    return this.#localEntries;
-  }
-
-  /**
-   * Get the external entries aggregator.
-   */
-  get external(): AggregatorMap {
-    return this.#externalEntries;
+  get symbols(): Symbols.Aggregator {
+    return this.#symbols;
   }
 
   /**
@@ -179,13 +205,13 @@ export class Context {
    * Get the resulting lexer.
    */
   get lexer(): string | Core.Pattern {
-    const patterns = this.#localEntries.getPatternsByType([Entries.Types.Skip, Entries.Types.Token, Entries.Types.Node]);
-    const entries = this.#getAllEntries(Entries.Types.Token, patterns);
-    const dependencies = entries.filter((entry) => Entries.isReferencedBy(entry, Entries.Types.Token));
-    const tokens = entries.filter((entry) => !entry.alias);
-    return this.#coder.getEntry('Lexer', this.#getReferences(dependencies), [
-      ...this.#getPatterns(Entries.Types.Token, this.#localEntries.getPatternsByType([Entries.Types.Skip])),
-      ...this.#getPatterns(Entries.Types.Token, tokens)
+    const records = this.#getRecordsByType(Parser.Symbols.Skip, Parser.Symbols.Token, Parser.Symbols.Node);
+    const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Token, Parser.Symbols.AliasToken);
+    const references = flatten.filter((current) => Symbols.isReferencedBy(current, Symbols.Types.Token));
+    const tokens = flatten.filter((current) => current.value === Parser.Symbols.Token);
+    return this.#coder.getEntry('Lexer', this.#getReferences(references), [
+      ...this.#getPatterns(this.#getRecordsByType(Parser.Symbols.Skip), Symbols.Types.Token),
+      ...this.#getPatterns(tokens, Symbols.Types.Token)
     ]);
   }
 
@@ -193,19 +219,23 @@ export class Context {
    * Get the resulting parser.
    */
   get parser(): string | Core.Pattern {
-    const patterns = this.#localEntries.getPatternsByType([Entries.Types.Node]);
-    const entries = this.#getAllEntries(Entries.Types.Node, patterns);
-    const dependencies = entries.filter((entry) => Entries.isReferencedBy(entry, Entries.Types.Node));
-    const nodes = entries.filter((entry) => !entry.alias);
-    return this.#coder.getEntry('Parser', this.#getReferences(dependencies), this.#getPatterns(Entries.Types.Node, nodes));
+    const records = this.#getRecordsByType(Parser.Symbols.Node);
+    const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Node, Parser.Symbols.AliasNode);
+    const references = flatten.filter((current) => Symbols.isReferencedBy(current, Symbols.Types.Node));
+    const nodes = flatten.filter((current) => current.value === Parser.Symbols.Node);
+    return this.#coder.getEntry(
+      'Parser',
+      this.#getReferences(references),
+      this.#getPatterns(nodes, Symbols.Types.Node)
+    );
   }
 
   /**
    * Add a new error in the project.
-   * @param node Input node.
+   * @param fragment Error fragment.
    * @param value Error value.
    */
-  addError(node: Core.Node, value: Errors): void {
-    this.#errors.push(new Core.Error(node.fragment, value));
+  addError(fragment: Core.Fragment, value: Errors): void {
+    this.#errors.push(new Core.Error(fragment, value));
   }
 }

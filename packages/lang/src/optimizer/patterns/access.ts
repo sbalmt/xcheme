@@ -1,26 +1,46 @@
 import * as Core from '@xcheme/core';
 
 import * as Identity from '../../core/nodes/identity';
-import * as Entries from '../../core/entries';
 import * as Project from '../../core/project';
+import * as Symbols from '../../core/symbols';
+import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
 
 /**
- * Get all fragments from the given access node.
+ * Get all nodes from the given access node.
  * @param node Access node.
- * @returns Returns all the extracted path.
+ * @returns Returns an array containing all nodes.
  */
-const getPath = (node: Core.Node): string[] => {
+const getNodes = (node: Core.Node): Core.Node[] => {
   if (node.left && node.right) {
-    return [...getPath(node.left), ...getPath(node.right!)];
+    return [...getNodes(node.left), ...getNodes(node.right!)];
   } else if (node.left) {
-    return getPath(node.left);
+    return getNodes(node.left);
   } else if (node.right) {
-    return getPath(node.right!);
+    return getNodes(node.right!);
   }
-  return [node.fragment.data];
+  return [node];
+};
+
+/**
+ * Get the member record that corresponds to the specified nodes containing a member path.
+ * @param project Project context.
+ * @param base Base record.
+ * @param nodes Node list containing the member path.
+ * @returns Returns the corresponding member record or undefined when the member wasn't found.
+ */
+const getMember = (project: Project.Context, base: Core.Record, nodes: Core.Node[]): Core.Record | undefined => {
+  let member: Core.Record | undefined = base;
+  for (let index = 1; index < nodes.length; index++) {
+    const node = nodes[index];
+    if (!(member = member.link?.get(node.fragment.data))) {
+      project.addError(node.fragment, Errors.UNDEFINED_IDENTIFIER);
+      break;
+    }
+  }
+  return member;
 };
 
 /**
@@ -30,23 +50,29 @@ const getPath = (node: Core.Node): string[] => {
  * @param parent Parent node.
  * @param state Consumption state.
  */
-export const consume = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+export const consume = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Core.Node,
+  state: Context.State
+): void => {
   const node = parent.getChild(direction)!;
-  const path = getPath(node);
-  const identifier = path.join('@');
-  if (state.entry.type !== Entries.Types.Node || project.local.get(identifier)?.type === Entries.Types.Node) {
-    project.addError(node, Errors.INVALID_MAP_ENTRY_REFERENCE);
+  const nodes = getNodes(node);
+  const first = node.table.find(nodes[0].fragment.data);
+  if (!first) {
+    project.addError(nodes[0].fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
-    const directive = project.local.get(path[0]);
-    const member = project.local.get(identifier);
-    if (!directive || !member) {
-      project.addError(node, Errors.UNDEFINED_IDENTIFIER);
-    } else if (member.dynamic) {
-      project.addError(node, Errors.INVALID_MAP_REFERENCE);
-    } else if (directive.alias) {
-      project.addError(node, Errors.INVALID_MAP_ENTRY_REFERENCE);
-    } else {
-      parent.setChild(direction, new Identity.Node(node, member.identity));
+    const member = getMember(project, first, nodes);
+    if (member) {
+      if (state.type !== Symbols.Types.Node || member.data.type === Symbols.Types.Node) {
+        project.addError(member.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+      } else if (member.data.dynamic) {
+        project.addError(member.node!.fragment, Errors.INVALID_MAP_REFERENCE);
+      } else if (first.value === Parser.Symbols.AliasToken) {
+        project.addError(first.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+      } else {
+        parent.setChild(direction, new Identity.Node(node, member.data.identity));
+      }
     }
   }
 };

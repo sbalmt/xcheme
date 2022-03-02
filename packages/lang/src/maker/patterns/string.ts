@@ -1,8 +1,8 @@
 import * as Core from '@xcheme/core';
 
-import * as Directive from '../../core/nodes/directive';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Symbols from '../../core/symbols';
 import * as String from '../../core/string';
 import * as Context from '../context';
 
@@ -17,10 +17,10 @@ import { Errors } from '../../core/errors';
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   const directive = state.directive;
-  if (directive.type !== Directive.Types.Node) {
+  if (directive.type !== Symbols.Types.Node) {
     const units = String.extract(node.fragment.data).split('');
     return project.coder.emitExpectUnitsPattern(units);
   }
-  project.addError(node, Errors.UNSUPPORTED_NODE);
+  project.addError(node.fragment, Errors.UNSUPPORTED_NODE);
   return void 0;
 };

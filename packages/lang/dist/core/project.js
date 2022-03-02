@@ -2,15 +2,29 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Context = void 0;
 const Core = require("@xcheme/core");
-const Entries = require("./entries");
+const Parser = require("../parser");
+const Counter = require("./counter");
+const Symbols = require("./symbols");
 /**
  * Project context.
  */
 class Context {
     /**
-     * Context depth for the same coder.
+     * Global project counter.
      */
-    static #depth = new WeakMap();
+    static #project = new Counter.Context();
+    /**
+     * Global identity counter.
+     */
+    static #identity = new Counter.Context();
+    /**
+     * Project Id.
+     */
+    #id;
+    /**
+     * Project name.
+     */
+    #name;
     /**
      * Project coder.
      */
@@ -20,75 +34,78 @@ class Context {
      */
     #options;
     /**
-     * Local entries aggregator.
+     * Project symbols.
      */
-    #localEntries;
-    /**
-     * External entries aggregators.
-     */
-    #externalEntries = {};
+    #symbols = new Symbols.Aggregator();
     /**
      * Project errors.
      */
     #errors = [];
     /**
-     * Get the current depth for the given coder.
-     * @param coder Input coder.
-     * @returns Returns the current depth.
+     * Get an array of records that corresponds to the specified record type.
+     * @param types Record types.
+     * @returns Returns an array containing all the corresponding records.
      */
-    static #count(coder) {
-        return this.#depth.get(coder) ?? 0;
-    }
-    /**
-     * Increment the current depth for the given coder.
-     * @param coder Input coder.
-     */
-    static #increment(coder) {
-        const count = this.#count(coder);
-        this.#depth.set(coder, count + 1);
-        return count;
-    }
-    /**
-     * Get an array of patterns from the the specified entries.
-     * @param type Entry type.
-     * @param entries Input entries.
-     * @returns Returns an array containing all the patterns.
-     */
-    #getPatterns(type, entries) {
-        return entries.map((entry) => {
-            if (entry.dependents.includes(entry) || entry.dependents.filter((entry) => entry.type === type).length > 1) {
-                return this.#coder.emitReferencePattern(entry);
-            }
-            return entry.pattern;
-        });
-    }
-    /**
-     * Get an array of references from the specified entries.
-     * @param entries Input entries.
-     * @returns Returns an array containing all the references.
-     */
-    #getReferences(entries) {
-        return entries.map((entry) => ({ name: entry.name, pattern: entry.pattern }));
-    }
-    /**
-     * Get an array of entries (including all sub entries) that corresponds to the specified entry type.
-     * @param type Entry type.
-     * @param entries Input entries.
-     * @param cache Optional cache for entries already processed.
-     * @returns Returns an array containing all the corresponding entries.
-     */
-    #getAllEntries(type, entries, cache = new WeakSet()) {
+    #getRecordsByType(...types) {
         const list = [];
-        for (const entry of entries) {
-            if (!cache.has(entry)) {
-                cache.add(entry);
-                if (entry.pattern && entry.type === type) {
-                    list.push(entry);
-                }
-                list.push(...this.#getAllEntries(type, entry.dependencies, cache));
+        for (const current of this.#symbols) {
+            const { pattern } = current.data;
+            if (pattern && types.includes(current.value)) {
+                list.push(current);
             }
         }
         return list;
+    }
+    /**
+     * Get an array of records (including all sub record) that corresponds to the specified record type.
+     * @param records Record list.
+     * @param types Record types.
+     * @returns Returns an array containing all the corresponding records.
+     */
+    #getFlattenRecordsByType(records, ...types) {
+        const list = [];
+        const cache = new WeakSet();
+        const action = (records) => {
+            for (const current of records) {
+                if (!cache.has(current)) {
+                    cache.add(current);
+                    const { pattern, dependencies } = current.data;
+                    if (pattern && types.includes(current.value)) {
+                        list.push(current);
+                    }
+                    action(dependencies);
+                }
+            }
+        };
+        action(records);
+        return list;
+    }
+    /**
+     * Get an array of references from the specified records.
+     * @param records Record list.
+     * @returns Returns an array containing all the references.
+     */
+    #getReferences(records) {
+        return records.map((record) => {
+            return {
+                name: record.data.name,
+                pattern: record.data.pattern
+            };
+        });
+    }
+    /**
+     * Get an array of patterns from the the specified records.
+     * @param records Record list.
+     * @param types Symbol types.
+     * @returns Returns an array containing all the patterns.
+     */
+    #getPatterns(records, ...types) {
+        return records.map((current) => {
+            if (Symbols.isReferencedBy(current, ...types)) {
+                return this.#coder.emitReferencePattern(current);
+            }
+            return current.data.pattern;
+        });
     }
     /**
      * Default constructor.
@@ -97,9 +114,28 @@ class Context {
      * @param options Project options.
      */
     constructor(name, coder, options = {}) {
+        this.#id = Context.#project.increment(coder);
+        this.#name = name;
         this.#coder = coder;
         this.#options = options;
-        this.#localEntries = new Entries.Aggregator(`L${Context.#increment(coder)}`, name);
+    }
+    /**
+     * Get the global identity counter.
+     */
+    static get identity() {
+        return Context.#identity;
+    }
+    /**
+     * Get the project Id.
+     */
+    get id() {
+        return this.#id;
+    }
+    /**
+     * Get the project name.
+     */
+    get name() {
+        return this.#name;
     }
     /**
      * Get the project coder.
@@ -114,16 +150,10 @@ class Context {
         return this.#options;
     }
     /**
-     * Get the local entries aggregator.
+     * Get the project symbols.
      */
-    get local() {
-        return this.#localEntries;
-    }
-    /**
-     * Get the external entries aggregator.
-     */
-    get external() {
-        return this.#externalEntries;
+    get symbols() {
+        return this.#symbols;
     }
     /**
      * Get the project errors.
@@ -135,32 +165,32 @@ class Context {
      * Get the resulting lexer.
      */
     get lexer() {
-        const patterns = this.#localEntries.getPatternsByType([1 /* Skip */, 2 /* Token */, 3 /* Node */]);
-        const entries = this.#getAllEntries(2 /* Token */, patterns);
-        const dependencies = entries.filter((entry) => Entries.isReferencedBy(entry, 2 /* Token */));
-        const tokens = entries.filter((entry) => !entry.alias);
-        return this.#coder.getEntry('Lexer', this.#getReferences(dependencies), [
-            ...this.#getPatterns(2 /* Token */, this.#localEntries.getPatternsByType([1 /* Skip */])),
-            ...this.#getPatterns(2 /* Token */, tokens)
+        const records = this.#getRecordsByType(300 /* Skip */, 301 /* Token */, 303 /* Node */);
+        const flatten = this.#getFlattenRecordsByType(records, 301 /* Token */, 302 /* AliasToken */);
+        const references = flatten.filter((current) => Symbols.isReferencedBy(current, 2 /* Token */));
+        const tokens = flatten.filter((current) => current.value === 301 /* Token */);
+        return this.#coder.getEntry('Lexer', this.#getReferences(references), [
+            ...this.#getPatterns(this.#getRecordsByType(300 /* Skip */), 2 /* Token */),
+            ...this.#getPatterns(tokens, 2 /* Token */)
         ]);
     }
     /**
      * Get the resulting parser.
      */
     get parser() {
-        const patterns = this.#localEntries.getPatternsByType([3 /* Node */]);
-        const entries = this.#getAllEntries(3 /* Node */, patterns);
-        const dependencies = entries.filter((entry) => Entries.isReferencedBy(entry, 3 /* Node */));
-        const nodes = entries.filter((entry) => !entry.alias);
-        return this.#coder.getEntry('Parser', this.#getReferences(dependencies), this.#getPatterns(3 /* Node */, nodes));
+        const records = this.#getRecordsByType(303 /* Node */);
+        const flatten = this.#getFlattenRecordsByType(records, 303 /* Node */, 304 /* AliasNode */);
+        const references = flatten.filter((current) => Symbols.isReferencedBy(current, 3 /* Node */));
+        const nodes = flatten.filter((current) => current.value === 303 /* Node */);
+        return this.#coder.getEntry('Parser', this.#getReferences(references), this.#getPatterns(nodes, 3 /* Node */));
     }
     /**
      * Add a new error in the project.
-     * @param node Input node.
+     * @param fragment Error fragment.
      * @param value Error value.
      */
-    addError(node, value) {
-        this.#errors.push(new Core.Error(node.fragment, value));
+    addError(fragment, value) {
+        this.#errors.push(new Core.Error(fragment, value));
     }
 }
 exports.Context = Context;

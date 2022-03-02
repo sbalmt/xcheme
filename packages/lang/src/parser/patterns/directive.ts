@@ -29,7 +29,8 @@ export default class Directive extends Core.Pattern {
           Nodes.Identifier,
           Core.Nodes.Right,
           Core.Nodes.Left,
-          new Core.ExpectUnitPattern(Lexer.Tokens.Identifier)
+          new Core.ExpectUnitPattern(Lexer.Tokens.Identifier),
+          new Core.PeekFlowPattern(new Core.ExpectUnitPattern(Lexer.Tokens.As))
         ),
         new Core.ExpectUnitPattern(Lexer.Tokens.As),
         new Core.PlaceNodePattern(Core.Nodes.Right, expression)

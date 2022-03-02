@@ -4,8 +4,9 @@ exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Member = require("../../core/nodes/member");
 const Mergeable = require("../../core/nodes/mergeable");
-const Identity = require("../../core/nodes/identity");
+const Identified = require("../../core/nodes/identity");
 const Parser = require("../../parser");
+const Identity = require("../identity");
 const Context = require("../context");
 const Loose = require("../loose");
 const Expression = require("./expression");
@@ -17,7 +18,7 @@ const Expression = require("./expression");
  */
 const getCandidate = (node, parent) => {
     if (node.value !== 209 /* Then */ && node.value !== 211 /* Or */) {
-        if (node.value === 204 /* String */ || node instanceof Identity.Node || node instanceof Mergeable.Node) {
+        if (node.value === 204 /* String */ || node instanceof Identified.Node || node instanceof Mergeable.Node) {
             if (parent) {
                 const right = parent.right;
                 parent.setChild(0 /* Left */, void 0);
@@ -41,47 +42,47 @@ const getCandidate = (node, parent) => {
  */
 const consume = (project, direction, parent, state) => {
     let member = parent.getChild(direction).right;
-    state.entry.dynamic = true;
+    state.record.data.dynamic = true;
     while (member) {
         const expression = member.right;
         if (expression.value === 200 /* Identifier */) {
-            if (state.entry.type === 1 /* Skip */) {
-                project.addError(expression, 4101 /* UNSUPPORTED_IDENTITY */);
+            if (state.type === 1 /* Skip */) {
+                project.addError(expression.fragment, 4101 /* UNSUPPORTED_IDENTITY */);
                 break;
             }
-            const entry = state.entry;
-            state.entry = Context.getNewStateEntry({
-                type: entry.type,
-                identity: expression.left ? parseInt(expression.left.fragment.data) : NaN || state.entry.identity,
-                identifier: `${state.entry.identifier}@${expression.fragment.data}`
-            });
+            const record = state.record;
+            const identity = state.identity;
+            const identifier = `${record.data.identifier}@${expression.fragment.data}`;
+            state.identity = Identity.resolve(expression) ?? state.identity;
+            state.record = member.table.get(expression.fragment.data);
+            Context.setMetadata(project, identifier, state.record, state);
             Expression.consume(project, 1 /* Right */, expression, state);
             const candidate = getCandidate(expression.right);
             if (!candidate) {
-                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
+                project.addError(member.fragment, 4114 /* INVALID_MAP_ENTRY */);
             }
             else {
                 if (candidate.value === 204 /* String */) {
-                    Loose.collision(project, candidate, candidate.fragment.data);
+                    Loose.collision(project, candidate.fragment.data, candidate);
                 }
-                const { type, origin, identifier, identity } = state.entry;
-                const replacement = new Member.Node(expression.right, state.entry, candidate);
-                project.local.create(type, origin, identifier, identity, state.entry);
+                const replacement = new Member.Node(expression.right, state.record, candidate);
                 member.setChild(1 /* Right */, replacement);
+                project.symbols.add(state.record);
             }
-            state.entry = entry;
+            state.identity = identity;
+            state.record = record;
         }
         else {
             Expression.consume(project, 1 /* Right */, member, state);
             const candidate = getCandidate(member.right);
             if (!candidate) {
-                project.addError(member, 4114 /* INVALID_MAP_ENTRY */);
+                project.addError(member.fragment, 4114 /* INVALID_MAP_ENTRY */);
             }
             else {
                 if (candidate.value === 204 /* String */) {
-                    Loose.collision(project, candidate, candidate.fragment.data);
+                    Loose.collision(project, candidate.fragment.data, candidate);
                 }
-                const replacement = new Member.Node(member.right, state.entry, candidate);
+                const replacement = new Member.Node(member.right, state.record, candidate);
                 member.setChild(1 /* Right */, replacement);
             }
         }

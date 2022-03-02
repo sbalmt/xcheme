@@ -1,5 +1,4 @@
 import * as Core from '@xcheme/core';
-import * as Entries from '../../core/entries';
 /**
  * Pattern entry.
  */
@@ -193,11 +192,17 @@ export declare class Base {
      */
     emitUncasePattern(...patterns: Pattern[]): Pattern;
     /**
-     * Should be implemented to return a reference pattern.
-     * @param entry Referenced entry.
+     * Should be implemented to return a peek pattern.
+     * @param patterns Expected patterns.
      * @returns Should return the pattern.
      */
-    emitReferencePattern(entry: Entries.Entry): Pattern;
+    emitPeekPattern(...patterns: Pattern[]): Pattern;
+    /**
+     * Should be implemented to return a reference pattern.
+     * @param record Referenced record.
+     * @returns Should return the pattern.
+     */
+    emitReferencePattern(record: Core.Record): Pattern;
     /**
      * Should be implemented to return an any pattern.
      * @returns Should return the pattern.
