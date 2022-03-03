@@ -1,13 +1,11 @@
-import * as Lang from '../../../src/index';
-import * as Helper from '../helper';
+import * as Assert from './utils/assert';
 
 test("Output a 'SCOPE' pattern", () => {
-  const input = "skip scope '@';";
-  const project = Helper.makeParser(new Lang.TextCoder(), input);
-
-  // Check the output code.
-  const rule = project.symbols.get('@SKIP0')!;
-  expect(rule).toBeDefined();
-  expect(rule.data.identity).toBe(0);
-  expect(rule.data.pattern).toBe(`new Core.ScopeSymbolPattern(new Core.ExpectUnitPattern('@'))`);
+  Assert.output(
+    `
+    skip scope '@';`,
+    {
+      '@SKIP0': `new Core.ScopeSymbolPattern(new Core.ExpectUnitPattern('@'))`
+    }
+  );
 });

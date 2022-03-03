@@ -1,129 +1,106 @@
 import * as Core from '@xcheme/core';
 
-import * as Lang from '../../../src/index';
-import * as Helper from '../helper';
+import * as Assert from './utils/assert';
 
 test("Output a 'TOKEN' pattern", () => {
-  const input = "token TOKEN as '@';";
-  const project = Helper.makeParser(new Lang.TextCoder(), input);
-
-  // Check the output code.
-  const token = project.symbols.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.data.identity).toBe(0);
-  expect(token.data.pattern).toBe(`new Core.EmitTokenPattern(${token.data.identity}, new Core.ExpectUnitPattern('@'))`);
+  Assert.output(
+    `
+    token TOKEN as '@';`,
+    {
+      TOKEN: `new Core.EmitTokenPattern(0, new Core.ExpectUnitPattern('@'))`
+    }
+  );
 });
 
 test("Output a 'TOKEN' pattern with an alias token reference", () => {
-  const input = "alias token ALIAS as '@'; token TOKEN as ALIAS;";
-  const project = Helper.makeParser(new Lang.TextCoder(), input);
-
-  // Check the output code.
-  const alias = project.symbols.get('ALIAS')!;
-  expect(alias).toBeDefined();
-  expect(alias.data.identity).toBe(0);
-  expect(alias.data.pattern).toBe(`new Core.ExpectUnitPattern('@')`);
-
-  const token = project.symbols.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.data.identity).toBe(1);
-  expect(token.data.pattern).toBe(`new Core.EmitTokenPattern(${token.data.identity}, new Core.ExpectUnitPattern('@'))`);
+  Assert.output(
+    `
+    alias token ALIAS as '@';
+          token TOKEN as ALIAS;`,
+    {
+      ALIAS: `new Core.ExpectUnitPattern('@')`,
+      TOKEN: `new Core.EmitTokenPattern(1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
 });
 
 test("Output a 'TOKEN' pattern with a reference to itself", () => {
-  const input = "token TOKEN as '@' & opt TOKEN;";
-  const project = Helper.makeParser(new Lang.TextCoder(), input);
-
-  // Check the output code.
-  const token = project.symbols.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.data.identity).toBe(0);
-  expect(token.data.pattern).toBe(
-    `new Core.EmitTokenPattern(${token.data.identity}, ` +
-      /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.ExpectUnitPattern('@'), ` +
-      /******/ `new Core.OptFlowPattern(` +
-      /**********/ `new Core.RunFlowPattern(() => L0_TOKEN)` +
-      /******/ `)` +
-      /**/ `)` +
-      `)`
+  Assert.output(
+    `
+    token TOKEN as '@' & opt TOKEN;`,
+    {
+      TOKEN:
+        `new Core.EmitTokenPattern(0, ` +
+        /**/ `new Core.ExpectFlowPattern(` +
+        /******/ `new Core.ExpectUnitPattern('@'), ` +
+        /******/ `new Core.OptFlowPattern(` +
+        /**********/ `new Core.RunFlowPattern(() => L0_TOKEN)` +
+        /******/ `)` +
+        /**/ `)` +
+        `)`
+    }
   );
 });
 
 test("Output a 'TOKEN' pattern with an alias token that has a reference to itself", () => {
-  const input = "alias token ALIAS as '@' & opt ALIAS; token TOKEN as ALIAS;";
-  const project = Helper.makeParser(new Lang.TextCoder(), input);
-
-  // Check the output code.
-  const alias = project.symbols.get('ALIAS')!;
-  expect(alias).toBeDefined();
-  expect(alias.data.identity).toBe(0);
-  expect(alias.data.pattern).toBe(
-    `new Core.ExpectFlowPattern(` +
-      /**/ `new Core.ExpectUnitPattern('@'), ` +
-      /**/ `new Core.OptFlowPattern(` +
-      /******/ `new Core.RunFlowPattern(() => L0_ALIAS)` +
-      /**/ `)` +
-      `)`
+  Assert.output(
+    `
+    alias token ALIAS as '@' & opt ALIAS;
+          token TOKEN as ALIAS;`,
+    {
+      ALIAS:
+        `new Core.ExpectFlowPattern(` +
+        /**/ `new Core.ExpectUnitPattern('@'), ` +
+        /**/ `new Core.OptFlowPattern(` +
+        /******/ `new Core.RunFlowPattern(() => L0_ALIAS)` +
+        /**/ `)` +
+        `)`,
+      TOKEN: `new Core.EmitTokenPattern(1, L0_ALIAS)`
+    }
   );
-
-  const token = project.symbols.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.data.identity).toBe(1);
-  expect(token.data.pattern).toBe(`new Core.EmitTokenPattern(${token.data.identity}, L0_ALIAS)`);
 });
 
 test("Output a 'TOKEN' pattern with a whole token map reference", () => {
-  const input = "alias token TOKEN1 as map { <100> A as 'a', <101> B as 'b' }; token <auto> TOKEN2 as TOKEN1 & '!';";
-  const project = Helper.makeParser(new Lang.TextCoder(), input);
-
-  // Check the output code.
-  const tokenRouteA = project.symbols.get('TOKEN1@A')!;
-  expect(tokenRouteA).toBeDefined();
-  expect(tokenRouteA.data.identity).toBe(100);
-
-  const tokenRouteB = project.symbols.get('TOKEN1@B')!;
-  expect(tokenRouteB).toBeDefined();
-  expect(tokenRouteB.data.identity).toBe(101);
-
-  const token1 = project.symbols.get('TOKEN1')!;
-  expect(token1).toBeDefined();
-  expect(token1.data.identity).toBe(0);
-  expect(token1.data.pattern).toBe(
-    `new Core.MapFlowPattern(` +
-      /**/ `new Core.SetValueRoute(${tokenRouteA.data.identity}, 'a'), ` +
-      /**/ `new Core.SetValueRoute(${tokenRouteB.data.identity}, 'b')` +
-      `)`
-  );
-
-  const token2 = project.symbols.get('TOKEN2')!;
-  expect(token2).toBeDefined();
-  expect(token2.data.identity).toBe(Core.BaseSource.Output);
-  expect(token2.data.pattern).toBe(
-    `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
-      /**/ `new Core.ExpectFlowPattern(` +
-      /******/ `new Core.MapFlowPattern(` +
-      /**********/ `new Core.SetValueRoute(${tokenRouteA.data.identity}, 'a'), ` +
-      /**********/ `new Core.SetValueRoute(${tokenRouteB.data.identity}, 'b')` +
-      /******/ `), ` +
-      /******/ `new Core.ExpectUnitPattern('!')` +
-      /**/ `)` +
-      `)`
+  Assert.output(
+    `
+    alias token ALIAS as map {
+      <100> A as 'a',
+      <101> B as 'b'
+    };
+    token <auto> TOKEN as ALIAS & '!';`,
+    {
+      ALIAS:
+        `new Core.MapFlowPattern(` +
+        /**/ `new Core.SetValueRoute(100, 'a'), ` +
+        /**/ `new Core.SetValueRoute(101, 'b')` +
+        `)`,
+      TOKEN:
+        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        /**/ `new Core.ExpectFlowPattern(` +
+        /******/ `new Core.MapFlowPattern(` +
+        /**********/ `new Core.SetValueRoute(100, 'a'), ` +
+        /**********/ `new Core.SetValueRoute(101, 'b')` +
+        /******/ `), ` +
+        /******/ `new Core.ExpectUnitPattern('!')` +
+        /**/ `)` +
+        `)`
+    }
   );
 });
 
-test("Output a 'TOKEN' pattern with an imported alias pattern", () => {
-  const input = "import './module2'; token <3030> TOKEN as EXTERNAL_TOKEN1;";
-  const project = Helper.makeParser(new Lang.TextCoder(), input);
-
-  // Check the output code.
-  const external = project.symbols.get('EXTERNAL_TOKEN1')!;
-  expect(external).toBeDefined();
-  expect(external.data.identity).toBe(1010);
-  expect(external.data.pattern).toBe(`L2_ALIAS_TOKEN`);
-
-  const token = project.symbols.get('TOKEN')!;
-  expect(token).toBeDefined();
-  expect(token.data.identity).toBe(3030);
-  expect(token.data.pattern).toBe(`new Core.EmitTokenPattern(${token.data.identity}, ${external.data.pattern})`);
+test("Output a 'TOKEN' pattern with an imported token alias directive", () => {
+  Assert.output(
+    `
+    import './module2';
+    token <3030> TOKEN as EXTERNAL_TOKEN1;`,
+    {
+      EXTERNAL_ISOLATED_TOKEN1: `L1_ALIAS_TOKEN`,
+      EXTERNAL_ISOLATED_TOKEN2: `new Core.EmitTokenPattern(1013, L1_ALIAS_TOKEN)`,
+      EXTERNAL_ISOLATED_NODE1: `L1_ALIAS_NODE`,
+      EXTERNAL_ISOLATED_NODE2: `new Core.EmitNodePattern(2023, 1, L1_ALIAS_NODE)`,
+      EXTERNAL_TOKEN1: `L2_ALIAS_TOKEN`,
+      EXTERNAL_NODE1: `L2_ALIAS_NODE`,
+      TOKEN: `new Core.EmitTokenPattern(3030, L2_ALIAS_TOKEN)`
+    }
+  );
 });
