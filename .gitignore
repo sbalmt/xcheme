@@ -1,5 +1,8 @@
 *.log
 *.map
 *.tsbuildinfo
+**/bin
+**/dist
+**/types
 **/coverage
 **/node_modules
