@@ -8,7 +8,7 @@ import * as Tokens from './tokens';
  * Tokenize the given input source.
  * @param text Input text.
  * @param context Consumption context.
- * @param tokens Determines whether or not the debug mode is active fot tokens.
+ * @param tokens Determines whether or not the debug mode is active for tokens.
  * @returns Returns true in case of success, false otherwise.
  */
 export const tokenize = (program: Core.Pattern, text: string, context: Core.Context, tokens: boolean): boolean => {
