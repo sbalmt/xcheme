@@ -54,6 +54,8 @@ test("Parse a 'MAP' pattern in a token directive", () => {
   const token = project.symbols.get('TOKEN')!;
   expect(tokenA).toBeDefined();
   expect(token).toBeDefined();
+  expect(tokenA.data.identity).toBe(100);
+  expect(token.data.identity).toBe(0);
   Assert.tokens(context, [tokenA.data.identity, token.data.identity], 3);
 });
 
@@ -80,5 +82,7 @@ test("Parse a 'MAP' pattern in a node directive", () => {
   const node = project.symbols.get('NODE')!;
   expect(nodeA).toBeDefined();
   expect(node).toBeDefined();
+  expect(nodeA.data.identity).toBe(100);
+  expect(node.data.identity).toBe(0);
   Assert.nodes(context, [nodeA.data.identity, node.data.identity], 3);
 });

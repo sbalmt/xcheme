@@ -9,10 +9,12 @@ test("Parse a 'NODE' pattern with a loose token reference", () => {
   // Assert tokens.
   const ref1 = project.symbols.get('@REF1')!; // '@'
   expect(ref1).toBeDefined();
+  expect(ref1.data.identity).toBe(1);
   Assert.tokens(context, [ref1.data.identity], 3);
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(0);
   Assert.nodes(context, [node.data.identity], 2);
 });
 
@@ -25,10 +27,12 @@ test("Parse a 'NODE' pattern with a loose token range reference", () => {
   // Assert tokens.
   const ref1 = project.symbols.get('@REF1')!;
   expect(ref1).toBeDefined();
+  expect(ref1.data.identity).toBe(1);
   Assert.tokens(context, [ref1.data.identity], 10);
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(0);
   Assert.nodes(context, [node.data.identity], 10);
 });
 
@@ -46,10 +50,13 @@ test("Parse a 'NODE' pattern with a loose token map reference", () => {
   const ref2 = project.symbols.get('@REF2')!;
   expect(ref1).toBeDefined();
   expect(ref2).toBeDefined();
+  expect(ref1.data.identity).toBe(1);
+  expect(ref2.data.identity).toBe(2);
   Assert.tokens(context, [ref1.data.identity, ref2.data.identity], 4);
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(0);
   Assert.nodes(context, [node.data.identity], 4);
 });
 
@@ -63,10 +70,12 @@ test("Parse a 'NODE' pattern with a token reference", () => {
   // Assert tokens.
   const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
+  expect(token.data.identity).toBe(0);
   Assert.tokens(context, [token.data.identity], 3);
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(1);
   Assert.nodes(context, [node.data.identity], 3);
 });
 
@@ -80,10 +89,12 @@ test("Parse a 'NODE' pattern with an alias node reference", () => {
   // Assert tokens.
   const ref1 = project.symbols.get('@REF1')!; // '@'
   expect(ref1).toBeDefined();
+  expect(ref1.data.identity).toBe(1);
   Assert.tokens(context, [ref1.data.identity], 3);
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(2);
   Assert.nodes(context, [node.data.identity], 3);
 });
 
@@ -96,10 +107,12 @@ test("Parse a 'NODE' pattern with a reference to itself", () => {
   // Assert tokens.
   const ref1 = project.symbols.get('@REF1')!; // '@'
   expect(ref1).toBeDefined();
+  expect(ref1.data.identity).toBe(1);
   Assert.tokens(context, [ref1.data.identity], 3);
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(0);
   Assert.nodes(context, [node.data.identity], 3);
 });
 
@@ -113,10 +126,12 @@ test("Parse a 'NODE' pattern with an alias node that has a reference to itself",
   // Assert tokens.
   const ref1 = project.symbols.get('@REF1')!; // '@'
   expect(ref1).toBeDefined();
+  expect(ref1.data.identity).toBe(1);
   Assert.tokens(context, [ref1.data.identity], 3);
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(2);
   Assert.nodes(context, [node.data.identity], 1);
 });
 
@@ -138,12 +153,16 @@ test("Parse a 'NODE' pattern with token map entry references", () => {
   const tokenB = project.symbols.get('TOKEN@B')!;
   expect(tokenA).toBeDefined();
   expect(tokenB).toBeDefined();
+  expect(tokenA.data.identity).toBe(100);
+  expect(tokenB.data.identity).toBe(101);
   Assert.tokens(context, [tokenA.data.identity, tokenB.data.identity], 4);
   // Assert tokens.
   const nodeA = project.symbols.get('NODE@A')!;
   const nodeB = project.symbols.get('NODE@B')!;
   expect(nodeA).toBeDefined();
   expect(nodeB).toBeDefined();
+  expect(nodeA.data.identity).toBe(200);
+  expect(nodeB.data.identity).toBe(201);
   Assert.nodes(context, [nodeA.data.identity, nodeB.data.identity], 4);
 });
 
@@ -151,11 +170,11 @@ test("Parse a 'NODE' pattern with a whole node map reference", () => {
   const { project, context } = Assert.parser(
     'a!b!',
     `
-    alias node NODE1 as map {
+    alias node ALIAS as map {
         <200> A as 'a',
         <201> B as 'b'
     };
-    node <auto> NODE2 as NODE1 & '!';`
+    node <auto> NODE as ALIAS & '!';`
   );
   // Assert tokens.
   const ref1 = project.symbols.get('@REF1')!; // 'a'
@@ -164,37 +183,44 @@ test("Parse a 'NODE' pattern with a whole node map reference", () => {
   expect(ref1).toBeDefined();
   expect(ref2).toBeDefined();
   expect(ref3).toBeDefined();
+  expect(ref1.data.identity).toBe(1);
+  expect(ref2.data.identity).toBe(2);
+  expect(ref3.data.identity).toBe(3);
   Assert.tokens(context, [ref1.data.identity, ref2.data.identity, ref3.data.identity], 4);
   // Assert nodes.
-  const nodeA = project.symbols.get('NODE1@A')!;
-  const nodeB = project.symbols.get('NODE1@B')!;
-  expect(nodeA).toBeDefined();
-  expect(nodeB).toBeDefined();
-  Assert.nodes(context, [nodeA.data.identity, nodeB.data.identity], 2);
+  const aliasA = project.symbols.get('ALIAS@A')!;
+  const aliasB = project.symbols.get('ALIAS@B')!;
+  expect(aliasA).toBeDefined();
+  expect(aliasB).toBeDefined();
+  expect(aliasA.data.identity).toBe(200);
+  expect(aliasB.data.identity).toBe(201);
+  Assert.nodes(context, [aliasA.data.identity, aliasB.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with an imported alias node pattern", () => {
+test("Parse a 'NODE' pattern with an imported alias node directive", () => {
   const { project, context } = Assert.parser(
     'node1node1',
     `
     import './module2';
-    node NODE as EXTERNAL_NODE1;`
+    node <4040> NODE as EXTERNAL_NODE1;`
   );
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(4040);
   Assert.nodes(context, [node.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with an imported token pattern", () => {
+test("Parse a 'NODE' pattern with an imported token directive", () => {
   const { project, context } = Assert.parser(
     'token2token2',
     `
     import './module2';
-    node NODE as EXTERNAL_ISOLATED_TOKEN2;`
+    node <4040> NODE as EXTERNAL_ISOLATED_TOKEN2;`
   );
   // Assert nodes.
   const node = project.symbols.get('NODE')!;
   expect(node).toBeDefined();
+  expect(node.data.identity).toBe(4040);
   Assert.nodes(context, [node.data.identity], 2);
 });
