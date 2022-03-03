@@ -4,7 +4,7 @@
   "description": "Provides syntax highlighting, bracket matching and folding for XCHEME files.",
   "icon": "media/icon.png",
   "publisher": "balmanth",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "engines": {
     "vscode": "*"
   },
