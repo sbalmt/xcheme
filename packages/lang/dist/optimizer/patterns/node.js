@@ -32,6 +32,7 @@ const consume = (project, direction, parent, state) => {
         project.addError(node.fragment, 4096 /* DUPLICATE_IDENTIFIER */);
     }
     else {
+        state.type = 3 /* Node */;
         state.record = node.table.get(identifier);
         Context.setMetadata(project, identifier, state.record, state);
         Expression.consume(project, 1 /* Right */, node, state);

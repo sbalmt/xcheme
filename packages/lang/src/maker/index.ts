@@ -4,7 +4,7 @@ import * as Directive from '../core/nodes/directive';
 import * as Project from '../core/project';
 import * as Parser from '../parser';
 
-import { Errors } from '../core/errors';
+import { Exception } from '../core/exception';
 
 import * as Node from './patterns/node';
 import * as Token from './patterns/token';
@@ -13,12 +13,13 @@ import * as Skip from './patterns/skip';
 /**
  * Resolve the token or node directive for the given node and update the specified project.
  * @param project Project context.
- * @param node Input node.
+ * @param node Main node.
+ * @throws Throws an exception when the given node isn't valid.
  */
-const resolveTokenOrNode = (project: Project.Context, node: Core.Node): void => {
+const resolveMain = (project: Project.Context, node: Core.Node): void => {
   const directive = node.right!;
   if (!(directive instanceof Directive.Node)) {
-    throw `An AST node directive is expected.`;
+    throw new Exception('Main nodes must be instances of directive nodes.');
   }
   const state = { directive };
   switch (node.value) {
@@ -35,27 +36,27 @@ const resolveTokenOrNode = (project: Project.Context, node: Core.Node): void => 
       Node.consume(project, state);
       break;
     default:
-      throw `Unsupported AST node directive.`;
+      throw new Exception(`Invalid node type (${node.value}).`);
   }
 };
 
 /**
  * Resolve the skip directive for the given node and update the specified project.
  * @param project Project context.
- * @param node Input node.
+ * @param node Skip node.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const resolveSkip = (project: Project.Context, node: Core.Node): void => {
   if (!(node instanceof Directive.Node)) {
-    project.addError(node.fragment, Errors.UNEXPECTED_NODE);
-  } else {
-    const state = { directive: node };
-    Skip.consume(project, state);
+    throw new Exception('Skip nodes must be instances of directive nodes.');
   }
+  const state = { directive: node };
+  Skip.consume(project, state);
 };
 
 /**
- * Consume the specified node (organized as an AST) and produce output entries for updating the given project.
- * @param node Input node.
+ * Consume the specified node (organized as an AST) and update the given project.
+ * @param node Root node.
  * @param project Project context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
@@ -66,12 +67,12 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
     } else if (node.value === Parser.Nodes.Export) {
       const current = node.right!;
       if (current.value !== Parser.Nodes.Identifier) {
-        resolveTokenOrNode(project, current);
+        resolveMain(project, current);
       }
     } else if (node.value === Parser.Nodes.Skip) {
       resolveSkip(project, node);
     } else {
-      resolveTokenOrNode(project, node);
+      resolveMain(project, node);
     }
   }
   return project.errors.length === 0;

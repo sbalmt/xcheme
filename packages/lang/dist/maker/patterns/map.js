@@ -6,36 +6,59 @@ const Identified = require("../../core/nodes/identified");
 const Member = require("../../core/nodes/member");
 const String = require("../../core/string");
 const Parser = require("../../parser");
+const exception_1 = require("../../core/exception");
 const Expression = require("./expression");
 /**
- * Resolve all units for the given entry node.
- * @param node Entry node.
- * @returns Returns the units array or undefined when the given entry isn't supported.
+ * Resolve all units for the given map entry node.
+ * @param node Map entry node.
+ * @returns Returns an array containing all the entry units.
+ * @throws Throws an exception when the given node isn't valid.
  */
-const resolve = (node) => {
+const resolveUnits = (node) => {
     if (node.value === 204 /* String */) {
         return String.extract(node.fragment.data).split('');
     }
-    else if (node instanceof Identified.Node) {
+    if (node instanceof Identified.Node) {
         return [node.identity];
     }
-    else if (node instanceof Sequential.Node) {
-        if (node.type !== 204 /* String */) {
-            return node.sequence.map((node) => node.identity);
-        }
-        return node.sequence
-            .map((node) => String.extract(node.fragment.data))
-            .join('')
-            .split('');
+    if (!(node instanceof Sequential.Node)) {
+        throw new exception_1.Exception('Unable to resolve the units for the map entry node.');
     }
-    return void 0;
+    if (node.type !== 204 /* String */) {
+        return node.sequence.map((node) => node.identity);
+    }
+    const words = node.sequence.map((node) => String.extract(node.fragment.data));
+    return words.join('').split('');
+};
+/**
+ * Resolve the corresponding route for the given map entry member.
+ * @param project Project context.
+ * @param map Map directive.
+ * @param entry Map entry member.
+ * @param state Consumption state.
+ * @param units Route units.
+ * @returns Returns the resolved route.
+ */
+const resolveRoute = (project, map, entry, state, units) => {
+    if (!entry.empty) {
+        const pattern = Expression.consume(project, entry, state);
+        if (entry.dynamic || map.type === 1 /* Skip */) {
+            return project.coder.getRoute(units, void 0, pattern);
+        }
+        return project.coder.getRoute(units, entry.identity, pattern);
+    }
+    if (map.type === 1 /* Skip */) {
+        return project.coder.getRoute(units, void 0);
+    }
+    return project.coder.getRoute(units, entry.identity);
 };
 /**
  * Consume the given node resolving the 'MAP' pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node Map node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern or undefined when the map node has no entry members.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, node, state) => {
     let member = node.right;
@@ -44,33 +67,11 @@ const consume = (project, node, state) => {
     while (member) {
         const current = member.right;
         if (!(current instanceof Member.Node)) {
-            project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
+            throw new exception_1.Exception('Map entry nodes must be instances of member nodes.');
         }
-        else {
-            const units = resolve(current.route);
-            if (!units) {
-                project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
-            }
-            else {
-                let route;
-                if (!current.empty) {
-                    const pattern = Expression.consume(project, current, state);
-                    if (current.dynamic || directive.type === 1 /* Skip */) {
-                        route = project.coder.getRoute(units, void 0, pattern);
-                    }
-                    else {
-                        route = project.coder.getRoute(units, current.identity, pattern);
-                    }
-                }
-                else if (directive.type === 1 /* Skip */) {
-                    route = project.coder.getRoute(units, void 0);
-                }
-                else {
-                    route = project.coder.getRoute(units, current.identity);
-                }
-                routes.push(route);
-            }
-        }
+        const units = resolveUnits(current.route);
+        const route = resolveRoute(project, directive, current, state, units);
+        routes.push(route);
         member = member.next;
     }
     if (routes.length > 0) {

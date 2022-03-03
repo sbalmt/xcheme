@@ -7,5 +7,6 @@ import * as Context from '../context';
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
+ * @throws Throws an exception when the given node isn't valid.
  */
 export declare const consume: (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State) => void;

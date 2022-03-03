@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Base = void 0;
+const exception_1 = require("../exception");
 /**
  * Common interface for any kind of coder.
  */
@@ -13,7 +14,7 @@ class Base {
      * @returns Should return the pattern.
      */
     getEntry(identifier, references, patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a route.
@@ -23,7 +24,7 @@ class Base {
      * @returns Should return the route.
      */
     getRoute(path, value, pattern) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a map pattern.
@@ -31,7 +32,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitMapPattern(...routes) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a token pattern.
@@ -40,7 +41,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitTokenPattern(identity, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a node pattern.
@@ -50,7 +51,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitNodePattern(identity, output, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Get a new identity pattern for dynamic directives.
@@ -59,7 +60,7 @@ class Base {
      * @returns Returns the pattern.
      */
     emitIdentityPattern(identity, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a condition pattern.
@@ -69,7 +70,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitConditionPattern(test, success, failure) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a choose pattern.
@@ -77,7 +78,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitChoosePattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a choose units pattern.
@@ -85,7 +86,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitChooseUnitsPattern(units) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an expect pattern.
@@ -93,7 +94,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitExpectPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an expect units pattern.
@@ -101,7 +102,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitExpectUnitsPattern(units) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a not pattern.
@@ -109,7 +110,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitNotPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an opt pattern.
@@ -117,7 +118,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitOptPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a repeat pattern.
@@ -125,7 +126,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitRepeatPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a place node pattern.
@@ -134,7 +135,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPlacePattern(current, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an append node pattern.
@@ -145,7 +146,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitAppendPattern(identity, current, head, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a prepend node pattern.
@@ -156,7 +157,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPrependPattern(identity, current, head, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a pivot node pattern.
@@ -166,7 +167,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPivotPattern(identity, pivot, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a symbol pattern.
@@ -175,7 +176,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitSymbolPattern(value, symbol, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a symbol scope pattern.
@@ -183,7 +184,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitScopePattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an error pattern.
@@ -192,7 +193,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitErrorPattern(value, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a has pattern.
@@ -201,7 +202,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitHasPattern(state, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a set pattern.
@@ -210,7 +211,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitSetPattern(state, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an uncase pattern.
@@ -218,7 +219,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitUncasePattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a peek pattern.
@@ -226,7 +227,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPeekPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a reference pattern.
@@ -234,14 +235,14 @@ class Base {
      * @returns Should return the pattern.
      */
     emitReferencePattern(record) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an any pattern.
      * @returns Should return the pattern.
      */
     emitAnyPattern() {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a range pattern.
@@ -250,7 +251,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitRangePattern(from, to) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
 }
 exports.Base = Base;

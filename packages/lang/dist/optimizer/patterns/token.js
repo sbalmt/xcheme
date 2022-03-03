@@ -37,6 +37,7 @@ const consume = (project, direction, parent, state) => {
     }
     else {
         const expression = node.right;
+        state.type = 2 /* Token */;
         state.record = node.table.get(identifier);
         Context.setMetadata(project, identifier, state.record, state);
         if (expression.value === 204 /* String */) {

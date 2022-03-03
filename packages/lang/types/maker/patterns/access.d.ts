@@ -4,7 +4,8 @@ import * as Project from '../../core/project';
 /**
  * Consume the given node resolving the access pattern.
  * @param project Project context.
- * @param node Input node.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @param node Access node.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
-export declare const consume: (project: Project.Context, node: Core.Node) => Coder.Pattern | undefined;
+export declare const consume: (project: Project.Context, node: Core.Node) => Coder.Pattern;

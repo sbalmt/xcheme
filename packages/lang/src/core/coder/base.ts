@@ -1,5 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import { Exception } from '../exception';
+
 /**
  * Pattern entry.
  */
@@ -36,7 +38,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   getEntry(identifier: string, references: Reference[], patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -47,7 +49,7 @@ export class Base {
    * @returns Should return the route.
    */
   getRoute(path: (string | number)[], value?: number, pattern?: Pattern): Route {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -56,7 +58,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitMapPattern(...routes: Route[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -66,7 +68,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitTokenPattern(identity: string | number, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -77,7 +79,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -87,7 +89,7 @@ export class Base {
    * @returns Returns the pattern.
    */
   emitIdentityPattern(identity: string | number, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -98,7 +100,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitConditionPattern(test: Pattern, success: Pattern, failure?: Pattern): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -107,7 +109,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitChoosePattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -116,7 +118,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitChooseUnitsPattern(units: (string | number)[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -125,7 +127,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitExpectPattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -134,7 +136,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitExpectUnitsPattern(units: (string | number)[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -143,7 +145,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitNotPattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -152,7 +154,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitOptPattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -161,7 +163,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitRepeatPattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -171,7 +173,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitPlacePattern(current: Core.Nodes, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -183,7 +185,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitAppendPattern(identity: string | number, current: Core.Nodes, head: Pattern, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -195,7 +197,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitPrependPattern(identity: string | number, current: Core.Nodes, head: Pattern, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -206,7 +208,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitPivotPattern(identity: string | number, pivot: Pattern, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -216,7 +218,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitSymbolPattern(value: string | number, symbol: Pattern, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -225,7 +227,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitScopePattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -235,7 +237,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitErrorPattern(value: number, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -245,7 +247,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitHasPattern(state: number, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -255,7 +257,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitSetPattern(state: number, ...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -264,7 +266,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitUncasePattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -273,7 +275,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitPeekPattern(...patterns: Pattern[]): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -282,7 +284,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitReferencePattern(record: Core.Record): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -290,7 +292,7 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitAnyPattern(): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 
   /**
@@ -300,6 +302,6 @@ export class Base {
    * @returns Should return the pattern.
    */
   emitRangePattern(from: string | number, to: string | number): Pattern {
-    throw "Method doesn't implemented.";
+    throw new Exception("Method doesn't implemented.");
   }
 }

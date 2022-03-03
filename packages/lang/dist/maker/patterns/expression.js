@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Core = require("@xcheme/core");
 const Parser = require("../../parser");
+const exception_1 = require("../../core/exception");
 const Reference = require("./reference");
 const String = require("./string");
 const Range = require("./range");
@@ -28,9 +29,10 @@ const Peek = require("./peek");
 /**
  * Consume the given node resolving the expression patterns.
  * @param project Project context.
- * @param node Input node.
+ * @param node Expression node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, node, state) => {
     switch (node.value) {
@@ -96,9 +98,8 @@ const consume = (project, node, state) => {
         case 235 /* Peek */:
             return Peek.consume(project, node, state);
         default:
-            project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
+            throw new exception_1.Exception(`Invalid expression node type (${node.value}).`);
     }
-    return void 0;
 };
 exports.consume = consume;
 //# sourceMappingURL=expression.js.map

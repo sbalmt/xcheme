@@ -1,5 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import { Exception } from './exception';
+
 /**
  * Event callback.
  */
@@ -118,7 +120,7 @@ export class Aggregator {
    */
   #get(identifier: string): Core.Record {
     if (!this.has(identifier)) {
-      throw `A record named '${identifier}' doesn't exists.`;
+      throw new Exception(`A record named '${identifier}' doesn't exists.`);
     }
     return this.get(identifier)!;
   }
@@ -150,7 +152,7 @@ export class Aggregator {
   add(record: Core.Record): Core.Record {
     const { identifier } = record.data;
     if (!identifier || this.has(identifier)) {
-      throw `A record named '${identifier}' can't be added.`;
+      throw new Exception(`A record named '${identifier}' can't be added.`);
     }
     const events = this.#events[identifier];
     this.#records[identifier] = record;
@@ -172,7 +174,7 @@ export class Aggregator {
    */
   link(identifier: string, alias: string): Core.Record {
     if (this.has(identifier)) {
-      throw `An entry named '${identifier}' already exists.`;
+      throw new Exception(`An entry named '${identifier}' already exists.`);
     }
     const entry = this.#get(alias);
     this.#links[identifier] = entry;

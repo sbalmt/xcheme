@@ -5,8 +5,9 @@ import * as Context from '../context';
 /**
  * Consume the given node resolving the reference pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node Reference node.
  * @param state Consumption state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
-export declare const consume: (project: Project.Context, node: Core.Node, state: Context.State) => Coder.Pattern | undefined;
+export declare const consume: (project: Project.Context, node: Core.Node, state: Context.State) => Coder.Pattern;

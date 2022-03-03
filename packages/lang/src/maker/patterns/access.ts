@@ -4,18 +4,18 @@ import * as Identified from '../../core/nodes/identified';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 
-import { Errors } from '../../core/errors';
+import { Exception } from '../../core/exception';
 
 /**
  * Consume the given node resolving the access pattern.
  * @param project Project context.
- * @param node Input node.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @param node Access node.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
-export const consume = (project: Project.Context, node: Core.Node): Coder.Pattern | undefined => {
-  if (node instanceof Identified.Node) {
-    return project.coder.emitExpectUnitsPattern([node.identity]);
+export const consume = (project: Project.Context, node: Core.Node): Coder.Pattern => {
+  if (!(node instanceof Identified.Node)) {
+    throw new Exception('Access nodes must be instances of identified nodes.');
   }
-  project.addError(node.fragment, Errors.UNSUPPORTED_NODE);
-  return void 0;
+  return project.coder.emitExpectUnitsPattern([node.identity]);
 };

@@ -12,6 +12,7 @@ const Export = require("./patterns/export");
 const Node = require("./patterns/node");
 const Token = require("./patterns/token");
 const Skip = require("./patterns/skip");
+const exception_1 = require("../core/exception");
 /**
  * Global skip counter.
  */
@@ -19,8 +20,9 @@ const skipCounter = new Counter.Context();
 /**
  * Resolve the token or node directive for the given node and update the specified project.
  * @param project Project context.
- * @param node Input node.
+ * @param node Directive node.
  * @param state Consumption state.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const resolveTokenOrNode = (project, node, state) => {
     const identity = Identity.resolve(node.right);
@@ -28,16 +30,14 @@ const resolveTokenOrNode = (project, node, state) => {
     switch (node.value) {
         case 238 /* Token */:
         case 240 /* AliasToken */:
-            state.type = 2 /* Token */;
             Token.consume(project, 1 /* Right */, node, state);
             break;
         case 239 /* Node */:
         case 241 /* AliasNode */:
-            state.type = 3 /* Node */;
             Node.consume(project, 1 /* Right */, node, state);
             break;
         default:
-            throw `Unexpected AST node.`;
+            throw new exception_1.Exception(`Invalid node type (${node.value}).`);
     }
 };
 /**
@@ -62,7 +62,6 @@ const consumeNodes = (node, project) => {
                 break;
             case 237 /* Skip */:
                 state.identity = skipCounter.increment(project);
-                state.type = 1 /* Skip */;
                 Skip.consume(project, 2 /* Next */, node, state);
                 break;
             default:

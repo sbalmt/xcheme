@@ -34,6 +34,7 @@ const consume = (project, direction, parent, state) => {
     const location = new Core.Location(project.name, line, column);
     const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
     const record = new Core.Record(fragment, 300 /* Skip */, node);
+    state.type = 1 /* Skip */;
     state.record = node.table.add(record);
     Context.setMetadata(project, identifier, state.record, state);
     Expression.consume(project, 1 /* Right */, node, state);

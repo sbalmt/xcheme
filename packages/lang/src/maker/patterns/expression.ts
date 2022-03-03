@@ -5,7 +5,7 @@ import * as Project from '../../core/project';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
-import { Errors } from '../../core/errors';
+import { Exception } from '../../core/exception';
 
 import * as Reference from './reference';
 import * as String from './string';
@@ -33,9 +33,10 @@ import * as Peek from './peek';
 /**
  * Consume the given node resolving the expression patterns.
  * @param project Project context.
- * @param node Input node.
+ * @param node Expression node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
   switch (node.value) {
@@ -101,7 +102,6 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
     case Parser.Nodes.Peek:
       return Peek.consume(project, node, state);
     default:
-      project.addError(node.fragment, Errors.UNEXPECTED_NODE);
+      throw new Exception(`Invalid expression node type (${node.value}).`);
   }
-  return void 0;
 };

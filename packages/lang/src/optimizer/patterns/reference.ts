@@ -7,6 +7,7 @@ import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
+import { Exception } from '../../core/exception';
 
 /**
  * Update the specified node for an optimized one after resolving its reference.
@@ -128,6 +129,7 @@ const resolveNode = (
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
+ * @throws Throws an exception when the given node isn't valid.
  */
 export const consume = (
   project: Project.Context,
@@ -151,7 +153,7 @@ export const consume = (
         resolveNode(project, direction, parent, record, state);
         break;
       default:
-        throw `Unsupported context state type: ${state.type}`;
+        throw new Exception(`Unsupported context state type: ${state.type}`);
     }
   }
 };

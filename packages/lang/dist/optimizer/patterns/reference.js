@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
 const Identified = require("../../core/nodes/identified");
 const Parser = require("../../parser");
+const exception_1 = require("../../core/exception");
 /**
  * Update the specified node for an optimized one after resolving its reference.
  * @param project Project context.
@@ -125,6 +126,7 @@ const resolveNode = (project, direction, parent, record, state) => {
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
@@ -144,7 +146,7 @@ const consume = (project, direction, parent, state) => {
                 resolveNode(project, direction, parent, record, state);
                 break;
             default:
-                throw `Unsupported context state type: ${state.type}`;
+                throw new exception_1.Exception(`Unsupported context state type: ${state.type}`);
         }
     }
 };

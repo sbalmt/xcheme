@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
+import * as Symbols from '../../core/symbols';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
@@ -40,6 +41,7 @@ export const consume = (
   if (project.symbols.has(identifier)) {
     project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
+    state.type = Symbols.Types.Node;
     state.record = node.table.get(identifier)!;
     Context.setMetadata(project, identifier, state.record!, state);
     Expression.consume(project, Core.Nodes.Right, node, state);

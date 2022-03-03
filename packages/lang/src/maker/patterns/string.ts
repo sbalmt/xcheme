@@ -6,21 +6,20 @@ import * as Symbols from '../../core/symbols';
 import * as String from '../../core/string';
 import * as Context from '../context';
 
-import { Errors } from '../../core/errors';
+import { Exception } from '../../core/exception';
 
 /**
- * Consume the given node resolving the string patterns.
+ * Consume the given node resolving the string pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node String node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
-export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
-  const directive = state.directive;
-  if (directive.type !== Symbols.Types.Node) {
-    const units = String.extract(node.fragment.data).split('');
-    return project.coder.emitExpectUnitsPattern(units);
+export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern => {
+  if (state.directive.type !== Symbols.Types.Skip && state.directive.type !== Symbols.Types.Token) {
+    throw new Exception(`String nodes can only be in a token or skip directive. ${state.directive.type}`);
   }
-  project.addError(node.fragment, Errors.UNSUPPORTED_NODE);
-  return void 0;
+  const units = String.extract(node.fragment.data).split('');
+  return project.coder.emitExpectUnitsPattern(units);
 };

@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
+import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -41,6 +42,7 @@ export const consume = (
   const location = new Core.Location(project.name, line, column);
   const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
   const record = new Core.Record(fragment, Parser.Symbols.Skip, node);
+  state.type = Symbols.Types.Skip;
   state.record = node.table.add(record);
   Context.setMetadata(project, identifier, state.record!, state);
   Expression.consume(project, Core.Nodes.Right, node, state);

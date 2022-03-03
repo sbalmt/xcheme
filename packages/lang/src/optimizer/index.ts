@@ -2,7 +2,6 @@ import * as Core from '@xcheme/core';
 
 import * as Project from '../core/project';
 import * as Counter from '../core/counter';
-import * as Symbols from '../core/symbols';
 import * as Parser from '../parser';
 import * as Identity from './identity';
 import * as Context from './context';
@@ -13,6 +12,8 @@ import * as Node from './patterns/node';
 import * as Token from './patterns/token';
 import * as Skip from './patterns/skip';
 
+import { Exception } from '../core/exception';
+
 /**
  * Global skip counter.
  */
@@ -21,8 +22,9 @@ const skipCounter = new Counter.Context();
 /**
  * Resolve the token or node directive for the given node and update the specified project.
  * @param project Project context.
- * @param node Input node.
+ * @param node Directive node.
  * @param state Consumption state.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const resolveTokenOrNode = (project: Project.Context, node: Core.Node, state: Context.State): void => {
   const identity = Identity.resolve(node.right!);
@@ -30,16 +32,14 @@ const resolveTokenOrNode = (project: Project.Context, node: Core.Node, state: Co
   switch (node.value) {
     case Parser.Nodes.Token:
     case Parser.Nodes.AliasToken:
-      state.type = Symbols.Types.Token;
       Token.consume(project, Core.Nodes.Right, node, state);
       break;
     case Parser.Nodes.Node:
     case Parser.Nodes.AliasNode:
-      state.type = Symbols.Types.Node;
       Node.consume(project, Core.Nodes.Right, node, state);
       break;
     default:
-      throw `Unexpected AST node.`;
+      throw new Exception(`Invalid node type (${node.value}).`);
   }
 };
 
@@ -65,7 +65,6 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
         break;
       case Parser.Nodes.Skip:
         state.identity = skipCounter.increment(project);
-        state.type = Symbols.Types.Skip;
         Skip.consume(project, Core.Nodes.Next, node, state);
         break;
       default:

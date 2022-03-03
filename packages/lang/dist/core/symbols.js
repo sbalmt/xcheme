@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.isReferencedBy = exports.Aggregator = void 0;
+const exception_1 = require("./exception");
 /**
  * Symbol aggregator class.
  */
@@ -25,7 +26,7 @@ class Aggregator {
      */
     #get(identifier) {
         if (!this.has(identifier)) {
-            throw `A record named '${identifier}' doesn't exists.`;
+            throw new exception_1.Exception(`A record named '${identifier}' doesn't exists.`);
         }
         return this.get(identifier);
     }
@@ -54,7 +55,7 @@ class Aggregator {
     add(record) {
         const { identifier } = record.data;
         if (!identifier || this.has(identifier)) {
-            throw `A record named '${identifier}' can't be added.`;
+            throw new exception_1.Exception(`A record named '${identifier}' can't be added.`);
         }
         const events = this.#events[identifier];
         this.#records[identifier] = record;
@@ -75,7 +76,7 @@ class Aggregator {
      */
     link(identifier, alias) {
         if (this.has(identifier)) {
-            throw `An entry named '${identifier}' already exists.`;
+            throw new exception_1.Exception(`An entry named '${identifier}' already exists.`);
         }
         const entry = this.#get(alias);
         this.#links[identifier] = entry;
