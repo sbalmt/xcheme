@@ -1,10 +1,10 @@
-# XCHEME Language Features
+# XCHEME Features
 
 Provides rich language support for XCHEME Lang.
 
-<p>
-  <img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/preview.gif" alt="Preview" width="560">
-</p>
+## What is XCHEME
+
+XCHEME is a set of tools that includes a programming language for generating lexers and parsers for other languages. [Learn more...](https://github.com/balmanth/xcheme)
 
 ## License
 
