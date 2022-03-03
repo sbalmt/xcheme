@@ -1,7 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.consume = void 0;
-const Splitter = require("../resolvers/splitter");
+const Splitter = require("../splitter");
 /**
  * Consume the given node resolving the 'PIVOT' pattern.
  * @param project Project context.

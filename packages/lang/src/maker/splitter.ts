@@ -1,14 +1,14 @@
 import * as Core from '@xcheme/core';
 
-import * as Sequential from '../../core/nodes/sequential';
-import * as Identified from '../../core/nodes/identified';
-import * as Coder from '../../core/coder/base';
-import * as String from '../../core/string';
-import * as Project from '../../core/project';
-import * as Parser from '../../parser';
-import * as Context from '../context';
+import * as Sequential from '../core/nodes/sequential';
+import * as Identified from '../core/nodes/identified';
+import * as Coder from '../core/coder/base';
+import * as String from '../core/string';
+import * as Project from '../core/project';
+import * as Parser from '../parser';
+import * as Context from './context';
 
-import * as And from '../patterns/and';
+import * as And from './patterns/and';
 
 /**
  * Split the first part of the specified sequential node and resolve all the patterns.

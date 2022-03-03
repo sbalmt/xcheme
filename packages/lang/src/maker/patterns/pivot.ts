@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
-import * as Splitter from '../resolvers/splitter';
+import * as Splitter from '../splitter';
 import * as Context from '../context';
 
 /**
