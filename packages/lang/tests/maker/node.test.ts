@@ -86,6 +86,23 @@ test('Node with a dependency (loose token reference)', () => {
   expect(loose.data.dependents).toHaveLength(1);
 });
 
+test('Node with a zero-value identity', () => {
+  const input = "node <0> NODE as '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
+
+  // Check the resulting node.
+  const node = project.symbols.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.value).toBe(Lang.Parser.Symbols.Node);
+  expect(node.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(node.data.exported).toBeFalsy();
+  expect(node.data.imported).toBeFalsy();
+  expect(node.data.dynamic).toBeFalsy();
+  expect(node.data.identity).toBe(0);
+  expect(node.data.dependencies).toHaveLength(1);
+  expect(node.data.dependents).toHaveLength(0);
+});
+
 test('Node with an identity', () => {
   const input = "node <2020> NODE as '@';";
   const project = Helper.makeParser(new Lang.TextCoder(), input);

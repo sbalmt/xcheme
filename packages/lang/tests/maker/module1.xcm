@@ -11,3 +11,7 @@ export token       <1011> EXTERNAL_TOKEN2 as ALIAS_TOKEN;
 
 export alias node  <2020> EXTERNAL_NODE1 as ALIAS_NODE;
 export node        <2021> EXTERNAL_NODE2 as ALIAS_NODE;
+
+// Local directives.
+token LOCAL_TOKEN_USING_EXTERNAL as EXTERNAL_TOKEN1;
+node  LOCAL_NODE_USING_EXTERNAL  as EXTERNAL_NODE1;

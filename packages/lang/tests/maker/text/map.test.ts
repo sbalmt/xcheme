@@ -89,6 +89,25 @@ test("Output a 'MAP' pattern in a token directive", () => {
   );
 });
 
+test("Output a 'MAP' pattern in an alias token directive", () => {
+  Assert.output(
+    `
+    alias token ALIAS as map {
+      <100> A as 'a',
+                 'b',
+                 'c'
+    };`,
+    {
+      ALIAS:
+        `new Core.MapFlowPattern(` +
+        /**/ `new Core.SetValueRoute(100, 'a'), ` +
+        /**/ `new Core.SetValueRoute(0, 'b'), ` +
+        /**/ `new Core.SetValueRoute(0, 'c')` +
+        `)`
+    }
+  );
+});
+
 test("Output a 'MAP' pattern in a node directive", () => {
   Assert.output(
     `
@@ -104,6 +123,57 @@ test("Output a 'MAP' pattern in a node directive", () => {
         /******/ `new Core.SetValueRoute(100, 0), ` +
         /******/ `new Core.SetValueRoute(${Core.BaseSource.Output}, 1), ` +
         /******/ `new Core.SetValueRoute(${Core.BaseSource.Output}, 2)` +
+        /**/ `)` +
+        `)`
+    }
+  );
+});
+
+test("Output a 'MAP' pattern in an alias node directive", () => {
+  Assert.output(
+    `
+    alias node ALIAS as map {
+      <100> A as 'a',
+                 'b',
+                 'c'
+    };`,
+    {
+      ALIAS:
+        `new Core.MapFlowPattern(` +
+        /**/ `new Core.SetValueRoute(100, 1), ` +
+        /**/ `new Core.SetValueRoute(0, 2), ` +
+        /**/ `new Core.SetValueRoute(0, 3)` +
+        `)`
+    }
+  );
+});
+
+test("Output a 'MAP' pattern in a node directive using map expressions", () => {
+  Assert.output(
+    `
+    token <auto> TOKEN as map {
+      <100> A as 'a',
+      <101> B as 'b',
+      <102> C as 'c'
+    };
+    node <auto> NODE as map {
+      <200> A as TOKEN.A & TOKEN.C,
+      TOKEN.B & TOKEN.C
+    };`,
+    {
+      TOKEN:
+        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        /**/ `new Core.MapFlowPattern(` +
+        /******/ `new Core.SetValueRoute(100, 'a'), ` +
+        /******/ `new Core.SetValueRoute(101, 'b'), ` +
+        /******/ `new Core.SetValueRoute(102, 'c')` +
+        /**/ `)` +
+        `)`,
+      NODE:
+        `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
+        /**/ `new Core.MapFlowPattern(` +
+        /******/ `new Core.SetValueRoute(200, 100, 102), ` +
+        /******/ `new Core.SetValueRoute(${Core.BaseSource.Output}, 101, 102)` +
         /**/ `)` +
         `)`
     }

@@ -97,6 +97,23 @@ test('Token with a dependency (alias token reference)', () => {
   expect(alias.data.dependents).toHaveLength(1);
 });
 
+test('Token with a zero-value identity', () => {
+  const input = "token<0> TOKEN as '@';";
+  const project = Helper.makeParser(new Lang.TextCoder(), input);
+
+  // Check the resulting token.
+  const token = project.symbols.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.value).toBe(Lang.Parser.Symbols.Token);
+  expect(token.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(token.data.exported).toBeFalsy();
+  expect(token.data.imported).toBeFalsy();
+  expect(token.data.dynamic).toBeFalsy();
+  expect(token.data.identity).toBe(0);
+  expect(token.data.dependencies).toHaveLength(0);
+  expect(token.data.dependents).toHaveLength(0);
+});
+
 test('Token with an identity', () => {
   const input = "token<1010> TOKEN as '@';";
   const project = Helper.makeParser(new Lang.TextCoder(), input);
