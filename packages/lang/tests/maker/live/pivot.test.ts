@@ -1,28 +1,25 @@
-import * as Core from '@xcheme/core';
-
-import * as Lang from '../../../src/index';
-import * as Helper from '../helper';
+import * as Assert from './utils/assert';
 
 test("Parse a 'PIVOT' pattern", () => {
-  const input = "skip pivot '@';";
-  const project = Helper.makeParser(new Lang.LiveCoder(), input);
-  const context = new Core.Context('test');
-
-  Helper.testLexer(project, context, '@@@');
+  Assert.lexer(
+    '@@@',
+    `
+    skip pivot '@';`
+  );
 });
 
 test("Parse a 'PIVOT' pattern with multiple patterns", () => {
-  const input = "skip pivot ('@' | '*');";
-  const project = Helper.makeParser(new Lang.LiveCoder(), input);
-  const context = new Core.Context('test');
-
-  Helper.testLexer(project, context, '@*');
+  Assert.lexer(
+    '@*',
+    `
+    skip pivot ('@' | '*');`
+  );
 });
 
 test("Parse a 'PIVOT' pattern with chained patterns", () => {
-  const input = "skip pivot ('@' & '*' & '*' & opt '!');";
-  const project = Helper.makeParser(new Lang.LiveCoder(), input);
-  const context = new Core.Context('test');
-
-  Helper.testLexer(project, context, '@**!');
+  Assert.lexer(
+    '@**!',
+    `
+    skip pivot ('@' & '*' & '*' & opt '!');`
+  );
 });

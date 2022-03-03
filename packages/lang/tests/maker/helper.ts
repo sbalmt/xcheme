@@ -95,9 +95,7 @@ export const makeError = (coder: Coder, text: string, errors: Errors[]): Project
   expect(status).toBeTruthy();
 
   // Consume input nodes and optimize its tree.
-  if ((status = Optimizer.consumeNodes(context.node, project))) {
-    status = Maker.consumeNodes(context.node, project);
-  }
+  status = Optimizer.consumeNodes(context.node, project) && Maker.consumeNodes(context.node, project);
 
   expect(status).toBeFalsy();
   expect(project.errors).toHaveLength(errors.length);
@@ -122,6 +120,7 @@ export const testLexer = (project: Project.Context, context: Core.Context, text:
   // Parse the given input text.
   const status = lexer.consume(source);
   if (!status) {
+    context.addError(source.fragment, Errors.UNEXPECTED_TOKEN);
     printErrors(context.errors);
   }
 
@@ -143,6 +142,8 @@ export const testParser = (project: Project.Context, context: Core.Context, toke
   // Parse the given input tokens.
   const status = parser.consume(source);
   if (!status) {
+    const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
+    context.addError(fragment, Errors.UNEXPECTED_SYNTAX);
     printErrors(context.errors);
   }
 

@@ -1,12 +1,9 @@
-import * as Core from '@xcheme/core';
-
-import * as Lang from '../../../src/index';
-import * as Helper from '../helper';
+import * as Assert from './utils/assert';
 
 test("Parse an 'UNCASE' pattern", () => {
-  const input = "skip uncase 'a';";
-  const project = Helper.makeParser(new Lang.LiveCoder(), input);
-  const context = new Core.Context('test');
-
-  Helper.testLexer(project, context, 'A');
+  Assert.lexer(
+    'AaAa',
+    `
+    skip uncase 'a';`
+  );
 });
