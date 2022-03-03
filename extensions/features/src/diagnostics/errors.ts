@@ -25,7 +25,7 @@ const errorMessages = {
   [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE]: 'References for an alias node cannot be in use here.',
   [Lang.Errors.INVALID_MAP_REFERENCE]: 'Map cannot be referenced here.',
   [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: 'Map entries cannot be referenced here.',
-  [Lang.Errors.INVALID_MAP_ENTRY]: 'Map entries must start with token or string.',
+  [Lang.Errors.INVALID_MAP_ENTRY]: 'Map entries must start with a token or string.',
   [Lang.Errors.TOKEN_COLLISION]: 'Multiple tokens with the same expression.',
   [Lang.Errors.IMPORT_DISABLED]: 'Import feature disabled.',
   [Lang.Errors.IMPORT_NOT_FOUND]: "File doesn't found.",
@@ -34,7 +34,7 @@ const errorMessages = {
 
 /**
  * Get the corresponding error message based on the given error object.
- * @param error Input error.
+ * @param error Error object.
  * @returns Returns the corresponding error message.
  * @throws Throws an exception when the specified error isn't supported.
  */
@@ -47,8 +47,8 @@ const getMessage = (error: Core.Error): string => {
 };
 
 /**
- * Get a new diagnostics list based on the specified errors.
- * @param error Inputs errors.
+ * Get a new diagnostics list based on the specified errors list.
+ * @param error Errors list.
  * @returns Returns the diagnostics list.
  */
 export const getDiagnostics = (errors: Core.Error[]): VSCode.Diagnostic[] => {

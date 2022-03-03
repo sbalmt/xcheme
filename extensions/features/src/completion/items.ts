@@ -17,9 +17,13 @@ type ItemOptions = {
    */
   commit?: string[];
   /**
-   * Automatic include a whitespace.
+   * Determines whether or not a whitespace should be included automatically.
    */
   space?: boolean;
+  /**
+   * Determines whether or not the auto completion should auto retrigger.
+   */
+  retry?: boolean;
 };
 
 /**
@@ -41,34 +45,54 @@ export const getItem = (label: string, documentation: string, options: ItemOptio
   const text = options?.text ?? label;
   const item = new VSCode.CompletionItem(label, options.kind);
   item.insertText = new VSCode.SnippetString(options.space ? `${text} ` : text);
-  item.commitCharacters = options?.commit;
+  item.command = options.retry ? retriggerCommand : void 0;
+  item.commitCharacters = options.commit;
   item.documentation = documentation;
-  item.command = retriggerCommand;
   return item;
 };
 
 /**
- * Completion item for a 'SKIP' directive.
+ * Completion item for an 'IMPORT' keyword directive.
+ */
+export const importItem = getItem('import', 'Create an import directive.', {
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true
+});
+
+/**
+ * Completion item for an 'EXPORT' keyword directive.
+ */
+export const exportItem = getItem('export', 'Create an export directive.', {
+  kind: VSCode.CompletionItemKind.Keyword,
+  space: true,
+  retry: true
+});
+
+/**
+ * Completion item for a 'SKIP' keyword directive.
  */
 export const skipItem = getItem('skip', 'Create a skip directive.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  space: true,
+  retry: true
 });
 
 /**
- * Completion item for an 'ALIAS' directive.
+ * Completion item for an 'ALIAS' keyword directive.
  */
 export const aliasItem = getItem('alias', 'Create an alias directive for a token or node.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  space: true,
+  retry: true
 });
 
 /**
- * Completion item for a 'TOKEN' directive.
+ * Completion item for a 'TOKEN' keyword directive.
  */
 export const tokenItem = getItem('token', 'Create a token directive.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  space: true,
+  retry: true
 });
 
 /**
@@ -76,7 +100,8 @@ export const tokenItem = getItem('token', 'Create a token directive.', {
  */
 export const nodeItem = getItem('node', 'Create a node directive.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  space: true,
+  retry: true
 });
 
 /**
@@ -98,7 +123,7 @@ export const identifierItem = getItem('IDENTIFIER', 'Set an identifier for the c
 });
 
 /**
- * Completion item for an 'AS' operator.
+ * Completion item for an 'AS' keyword operator.
  */
 export const asItem = getItem('as', 'Set an expression for the current directive.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -106,7 +131,7 @@ export const asItem = getItem('as', 'Set an expression for the current directive
 });
 
 /**
- * Completion item for a 'THEN' operator.
+ * Completion item for a 'THEN' keyword operator.
  */
 export const thenItem = getItem('then', 'Set a partial condition based on the last consumption state.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -114,7 +139,7 @@ export const thenItem = getItem('then', 'Set a partial condition based on the la
 });
 
 /**
- * Completion item for a 'THEN/ELSE' operator.
+ * Completion item for a 'THEN/ELSE' keyword operator.
  */
 export const thenElseItem = getItem('then else', 'Set a full condition based on the last consumption state.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -123,15 +148,15 @@ export const thenElseItem = getItem('then else', 'Set a full condition based on 
 });
 
 /**
- * Completion item for an 'OR' operator.
+ * Completion item for an 'OR' keyword operator.
  */
-export const orItem = getItem('or', 'Set another consumption option.', {
+export const orItem = getItem('or', 'Set another optional consumption.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: '|'
 });
 
 /**
- * Completion item for an 'AND' operator.
+ * Completion item for an 'AND' keyword operator.
  */
 export const andItem = getItem('and', 'Set another expected consumption.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -139,7 +164,7 @@ export const andItem = getItem('and', 'Set another expected consumption.', {
 });
 
 /**
- * Completion item for a 'NOT' operator.
+ * Completion item for a 'NOT' keyword operator.
  */
 export const notItem = getItem('not', 'Invert the next consumption state (true to false and vice versa).', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -147,7 +172,7 @@ export const notItem = getItem('not', 'Invert the next consumption state (true t
 });
 
 /**
- * Completion item for an 'OPT' operator.
+ * Completion item for an 'OPT' keyword operator.
  */
 export const optItem = getItem('opt', 'Set the next consumption as optional.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -155,7 +180,7 @@ export const optItem = getItem('opt', 'Set the next consumption as optional.', {
 });
 
 /**
- * Completion item for a 'REPEAT' operator.
+ * Completion item for a 'REPEAT' keyword operator.
  */
 export const repeatItem = getItem('repeat', 'Repeat the next consumption in case of success after the first try.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -163,31 +188,34 @@ export const repeatItem = getItem('repeat', 'Repeat the next consumption in case
 });
 
 /**
- * Completion item for a 'PLACE' operator.
+ * Completion item for a 'PLACE' keyword operator.
  */
 export const placeItem = getItem('place', 'Place the resulting node from the next consumption in another direction.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  space: true,
+  retry: true
 });
 
 /**
- * Completion item for an 'APPEND' operator.
+ * Completion item for an 'APPEND' keyword operator.
  */
-export const appendItem = getItem('append', 'Create and append a new node if the next consumption is successful.', {
+export const appendItem = getItem('append', 'Append a new node when the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  space: true,
+  retry: true
 });
 
 /**
- * Completion item for a 'PREPEND' operator.
+ * Completion item for a 'PREPEND' keyword operator.
  */
-export const prependItem = getItem('prepend', 'Create and prepend a new node if the next consumption is successful.', {
+export const prependItem = getItem('prepend', 'Prepend a new node when the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  space: true,
+  retry: true
 });
 
 /**
- * Completion item for a 'LEFT' modifier.
+ * Completion item for a 'LEFT' keyword operator modifier.
  */
 export const leftItem = getItem('left', 'Modify the current node direction to left.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -195,7 +223,7 @@ export const leftItem = getItem('left', 'Modify the current node direction to le
 });
 
 /**
- * Completion item for a 'RIGHT' modifier.
+ * Completion item for a 'RIGHT' keyword operator modifier.
  */
 export const rightItem = getItem('right', 'Modify the current node direction to right.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -203,7 +231,7 @@ export const rightItem = getItem('right', 'Modify the current node direction to 
 });
 
 /**
- * Completion item for a 'NEXT' modifier.
+ * Completion item for a 'NEXT' keyword operator modifier.
  */
 export const nextItem = getItem('next', 'Modify the current node direction to next.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -211,23 +239,23 @@ export const nextItem = getItem('next', 'Modify the current node direction to ne
 });
 
 /**
- * Completion item for a 'PIVOT' operator.
+ * Completion item for a 'PIVOT' keyword operator.
  */
-export const pivotItem = getItem('pivot', 'Create a new node and pivot the current one if the next consumption is successful.', {
+export const pivotItem = getItem('pivot', 'Create a new pivot node when the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
   space: true
 });
 
 /**
- * Completion item for a 'SYMBOL' operator.
+ * Completion item for a 'SYMBOL' keyword operator.
  */
-export const symbolItem = getItem('symbol', 'Create a new symbol if the next consumption is successful.', {
+export const symbolItem = getItem('symbol', 'Create a new symbol when the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
   space: true
 });
 
 /**
- * Completion item for a 'SCOPE' operator.
+ * Completion item for a 'SCOPE' keyword operator.
  */
 export const scopeItem = getItem('scope', 'Create a new symbol scope for the next consumption.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -235,9 +263,9 @@ export const scopeItem = getItem('scope', 'Create a new symbol scope for the nex
 });
 
 /**
- * Completion item for an 'ERROR' operator.
+ * Completion item for an 'ERROR' keyword operator.
  */
-export const errorItem = getItem('error', 'Create a new error if the next consumption is successful.', {
+export const errorItem = getItem('error', 'Create a new error when the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'error <${1}>',
   commit: ['>'],
@@ -245,9 +273,9 @@ export const errorItem = getItem('error', 'Create a new error if the next consum
 });
 
 /**
- * Completion item for a 'HAS' operator.
+ * Completion item for a 'HAS' keyword operator.
  */
-export const hasItem = getItem('has', 'Perform the next consumption if the expected state matches.', {
+export const hasItem = getItem('has', 'Perform the next consumption when the expected state matches.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'has <${1}>',
   commit: ['>'],
@@ -255,12 +283,20 @@ export const hasItem = getItem('has', 'Perform the next consumption if the expec
 });
 
 /**
- * Completion item for a 'SET' operator.
+ * Completion item for a 'SET' keyword operator.
  */
-export const setItem = getItem('set', 'Set the state if the next consumption is successful.', {
+export const setItem = getItem('set', 'Set the state when the next consumption is successful.', {
   kind: VSCode.CompletionItemKind.Keyword,
   text: 'set <${1}>',
   commit: ['>'],
+  space: true
+});
+
+/**
+ * Completion item for an 'UNCASE' keyword operator.
+ */
+export const uncaseItem = getItem('uncase', 'Consume the next expression without case-sensitivity.', {
+  kind: VSCode.CompletionItemKind.Keyword,
   space: true
 });
 
@@ -273,7 +309,7 @@ export const accessItem = getItem('access', 'Access a map member.', {
 });
 
 /**
- * Completion item for a 'MAP' operator.
+ * Completion item for a 'MAP' keyword operator.
  */
 export const mapItem = getItem('map', 'Perform the next consumption in a prefix tree.', {
   kind: VSCode.CompletionItemKind.Keyword,
@@ -282,10 +318,10 @@ export const mapItem = getItem('map', 'Perform the next consumption in a prefix 
 });
 
 /**
- * Completion item for a word.
+ * Completion item for a word operand.
  */
 export const wordItem = getItem('WORD', 'Accept a sequence of units.', {
-  kind: VSCode.CompletionItemKind.Keyword,
+  kind: VSCode.CompletionItemKind.Constant,
   text: "'${1}'",
   commit: ["'"]
 });
@@ -294,7 +330,7 @@ export const wordItem = getItem('WORD', 'Accept a sequence of units.', {
  * Completion item for an 'ANY' operand.
  */
 export const anyItem = getItem('any', 'Accept any unit.', {
-  kind: VSCode.CompletionItemKind.Keyword,
+  kind: VSCode.CompletionItemKind.Constant,
   text: '*'
 });
 
@@ -302,7 +338,7 @@ export const anyItem = getItem('any', 'Accept any unit.', {
  * Completion item for a 'FROM/TO' operand.
  */
 export const rangeItem = getItem('from to', 'Accept an unit range.', {
-  kind: VSCode.CompletionItemKind.Keyword,
+  kind: VSCode.CompletionItemKind.Constant,
   text: "from '${1}' to '${2}'",
   commit: ["'"]
 });
@@ -328,6 +364,7 @@ export const unaryOperatorList = [
   errorItem,
   hasItem,
   setItem,
+  uncaseItem,
   mapItem
 ];
 

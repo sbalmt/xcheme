@@ -173,10 +173,10 @@ const Path = __webpack_require__(8);
 const FS = __webpack_require__(9);
 const Core = __webpack_require__(10);
 const Lang = __webpack_require__(63);
-const Lexer = __webpack_require__(128);
-const Parser = __webpack_require__(131);
+const Lexer = __webpack_require__(129);
+const Parser = __webpack_require__(132);
 const Console = __webpack_require__(3);
-const Errors = __webpack_require__(134);
+const Errors = __webpack_require__(135);
 /**
  * Global language options.
  */
@@ -3395,25 +3395,26 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Maker = exports.Optimizer = exports.Parser = exports.Lexer = exports.Symbols = exports.Project = exports.TextCoder = exports.LiveCoder = exports.Coder = void 0;
 var base_1 = __webpack_require__(64);
 Object.defineProperty(exports, "Coder", ({ enumerable: true, get: function () { return base_1.Base; } }));
-var live_1 = __webpack_require__(65);
+var live_1 = __webpack_require__(66);
 Object.defineProperty(exports, "LiveCoder", ({ enumerable: true, get: function () { return live_1.Live; } }));
-var text_1 = __webpack_require__(66);
+var text_1 = __webpack_require__(67);
 Object.defineProperty(exports, "TextCoder", ({ enumerable: true, get: function () { return text_1.Text; } }));
-exports.Project = __webpack_require__(69);
-exports.Symbols = __webpack_require__(68);
-exports.Lexer = __webpack_require__(72);
-exports.Parser = __webpack_require__(70);
-exports.Optimizer = __webpack_require__(78);
-exports.Maker = __webpack_require__(82);
+exports.Project = __webpack_require__(70);
+exports.Symbols = __webpack_require__(69);
+exports.Lexer = __webpack_require__(73);
+exports.Parser = __webpack_require__(71);
+exports.Optimizer = __webpack_require__(79);
+exports.Maker = __webpack_require__(83);
 //# sourceMappingURL=index.js.map
 
 /***/ }),
 /* 64 */
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Base = void 0;
+const exception_1 = __webpack_require__(65);
 /**
  * Common interface for any kind of coder.
  */
@@ -3426,7 +3427,7 @@ class Base {
      * @returns Should return the pattern.
      */
     getEntry(identifier, references, patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a route.
@@ -3436,7 +3437,7 @@ class Base {
      * @returns Should return the route.
      */
     getRoute(path, value, pattern) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a map pattern.
@@ -3444,7 +3445,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitMapPattern(...routes) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a token pattern.
@@ -3453,7 +3454,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitTokenPattern(identity, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a node pattern.
@@ -3463,7 +3464,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitNodePattern(identity, output, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Get a new identity pattern for dynamic directives.
@@ -3472,7 +3473,7 @@ class Base {
      * @returns Returns the pattern.
      */
     emitIdentityPattern(identity, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a condition pattern.
@@ -3482,7 +3483,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitConditionPattern(test, success, failure) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a choose pattern.
@@ -3490,7 +3491,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitChoosePattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a choose units pattern.
@@ -3498,7 +3499,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitChooseUnitsPattern(units) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an expect pattern.
@@ -3506,7 +3507,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitExpectPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an expect units pattern.
@@ -3514,7 +3515,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitExpectUnitsPattern(units) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a not pattern.
@@ -3522,7 +3523,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitNotPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an opt pattern.
@@ -3530,7 +3531,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitOptPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a repeat pattern.
@@ -3538,7 +3539,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitRepeatPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a place node pattern.
@@ -3547,7 +3548,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPlacePattern(current, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an append node pattern.
@@ -3558,7 +3559,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitAppendPattern(identity, current, head, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a prepend node pattern.
@@ -3569,7 +3570,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPrependPattern(identity, current, head, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a pivot node pattern.
@@ -3579,7 +3580,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPivotPattern(identity, pivot, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a symbol pattern.
@@ -3588,7 +3589,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitSymbolPattern(value, symbol, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a symbol scope pattern.
@@ -3596,7 +3597,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitScopePattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an error pattern.
@@ -3605,7 +3606,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitErrorPattern(value, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a has pattern.
@@ -3614,7 +3615,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitHasPattern(state, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a set pattern.
@@ -3623,7 +3624,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitSetPattern(state, ...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an uncase pattern.
@@ -3631,7 +3632,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitUncasePattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a peek pattern.
@@ -3639,7 +3640,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitPeekPattern(...patterns) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a reference pattern.
@@ -3647,14 +3648,14 @@ class Base {
      * @returns Should return the pattern.
      */
     emitReferencePattern(record) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return an any pattern.
      * @returns Should return the pattern.
      */
     emitAnyPattern() {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
     /**
      * Should be implemented to return a range pattern.
@@ -3663,7 +3664,7 @@ class Base {
      * @returns Should return the pattern.
      */
     emitRangePattern(from, to) {
-        throw "Method doesn't implemented.";
+        throw new exception_1.Exception("Method doesn't implemented.");
     }
 }
 exports.Base = Base;
@@ -3671,6 +3672,28 @@ exports.Base = Base;
 
 /***/ }),
 /* 65 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Exception = void 0;
+/**
+ * Exception class.
+ */
+class Exception extends Error {
+    /**
+     * Default constructor.
+     * @param message Message.
+     */
+    constructor(message) {
+        super(message);
+    }
+}
+exports.Exception = Exception;
+//# sourceMappingURL=exception.js.map
+
+/***/ }),
+/* 66 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -3949,15 +3972,15 @@ exports.Live = Live;
 //# sourceMappingURL=live.js.map
 
 /***/ }),
-/* 66 */
+/* 67 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Text = void 0;
 const Core = __webpack_require__(10);
-const String = __webpack_require__(67);
-const Symbols = __webpack_require__(68);
+const String = __webpack_require__(68);
+const Symbols = __webpack_require__(69);
 const base_1 = __webpack_require__(64);
 /**
  * Can generate a project output to be saved as a JavaScript source.
@@ -4278,7 +4301,7 @@ exports.Text = Text;
 //# sourceMappingURL=text.js.map
 
 /***/ }),
-/* 67 */
+/* 68 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -4369,12 +4392,13 @@ exports.compose = compose;
 //# sourceMappingURL=string.js.map
 
 /***/ }),
-/* 68 */
-/***/ ((__unused_webpack_module, exports) => {
+/* 69 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.isReferencedBy = exports.Aggregator = void 0;
+const exception_1 = __webpack_require__(65);
 /**
  * Symbol aggregator class.
  */
@@ -4399,7 +4423,7 @@ class Aggregator {
      */
     #get(identifier) {
         if (!this.has(identifier)) {
-            throw `A record named '${identifier}' doesn't exists.`;
+            throw new exception_1.Exception(`A record named '${identifier}' doesn't exists.`);
         }
         return this.get(identifier);
     }
@@ -4428,7 +4452,7 @@ class Aggregator {
     add(record) {
         const { identifier } = record.data;
         if (!identifier || this.has(identifier)) {
-            throw `A record named '${identifier}' can't be added.`;
+            throw new exception_1.Exception(`A record named '${identifier}' can't be added.`);
         }
         const events = this.#events[identifier];
         this.#records[identifier] = record;
@@ -4449,7 +4473,7 @@ class Aggregator {
      */
     link(identifier, alias) {
         if (this.has(identifier)) {
-            throw `An entry named '${identifier}' already exists.`;
+            throw new exception_1.Exception(`An entry named '${identifier}' already exists.`);
         }
         const entry = this.#get(alias);
         this.#links[identifier] = entry;
@@ -4499,16 +4523,16 @@ exports.isReferencedBy = isReferencedBy;
 //# sourceMappingURL=symbols.js.map
 
 /***/ }),
-/* 69 */
+/* 70 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Context = void 0;
 const Core = __webpack_require__(10);
-const Parser = __webpack_require__(70);
-const Counter = __webpack_require__(77);
-const Symbols = __webpack_require__(68);
+const Parser = __webpack_require__(71);
+const Counter = __webpack_require__(78);
+const Symbols = __webpack_require__(69);
 /**
  * Project context.
  */
@@ -4701,14 +4725,14 @@ exports.Context = Context;
 //# sourceMappingURL=project.js.map
 
 /***/ }),
-/* 70 */
+/* 71 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.consumeTokens = void 0;
 const Core = __webpack_require__(10);
-const program_1 = __webpack_require__(71);
+const program_1 = __webpack_require__(72);
 /**
  * Consume the specified tokens and produce an AST for updating the given context.
  * @param tokens Input tokens.
@@ -4737,17 +4761,17 @@ exports.consume = consume;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 71 */
+/* 72 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Program = void 0;
 const Core = __webpack_require__(10);
-const Lexer = __webpack_require__(72);
-const unary_1 = __webpack_require__(74);
-const binary_1 = __webpack_require__(75);
-const directive_1 = __webpack_require__(76);
+const Lexer = __webpack_require__(73);
+const unary_1 = __webpack_require__(75);
+const binary_1 = __webpack_require__(76);
+const directive_1 = __webpack_require__(77);
 /**
  * Identity pattern.
  */
@@ -4827,14 +4851,14 @@ exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.Re
 //# sourceMappingURL=program.js.map
 
 /***/ }),
-/* 72 */
+/* 73 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.consumeText = void 0;
 const Core = __webpack_require__(10);
-const program_1 = __webpack_require__(73);
+const program_1 = __webpack_require__(74);
 /**
  * Consume the specified text and produce a list of tokens for updating the given context.
  * @param text Input text.
@@ -4862,7 +4886,7 @@ exports.consume = consume;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 73 */
+/* 74 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -4924,7 +4948,7 @@ exports.Program = new Core.ExpectFlowPattern(new Core.OptFlowPattern(new Core.Re
 //# sourceMappingURL=program.js.map
 
 /***/ }),
-/* 74 */
+/* 75 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -4960,7 +4984,7 @@ exports["default"] = Unary;
 //# sourceMappingURL=unary.js.map
 
 /***/ }),
-/* 75 */
+/* 76 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -4996,13 +5020,13 @@ exports["default"] = Binary;
 //# sourceMappingURL=binary.js.map
 
 /***/ }),
-/* 76 */
+/* 77 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const Core = __webpack_require__(10);
-const Lexer = __webpack_require__(72);
+const Lexer = __webpack_require__(73);
 /**
  * Directive pattern
  */
@@ -5034,7 +5058,7 @@ exports["default"] = Directive;
 //# sourceMappingURL=directive.js.map
 
 /***/ }),
-/* 77 */
+/* 78 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -5073,23 +5097,24 @@ exports.Context = Context;
 //# sourceMappingURL=counter.js.map
 
 /***/ }),
-/* 78 */
+/* 79 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consumeNodes = void 0;
 const Core = __webpack_require__(10);
-const Project = __webpack_require__(69);
-const Counter = __webpack_require__(77);
-const Parser = __webpack_require__(70);
-const Identity = __webpack_require__(79);
-const Context = __webpack_require__(80);
-const Import = __webpack_require__(81);
-const Export = __webpack_require__(115);
-const Node = __webpack_require__(116);
-const Token = __webpack_require__(122);
-const Skip = __webpack_require__(127);
+const Project = __webpack_require__(70);
+const Counter = __webpack_require__(78);
+const Parser = __webpack_require__(71);
+const Identity = __webpack_require__(80);
+const Context = __webpack_require__(81);
+const Import = __webpack_require__(82);
+const Export = __webpack_require__(116);
+const Node = __webpack_require__(117);
+const Token = __webpack_require__(123);
+const Skip = __webpack_require__(128);
+const exception_1 = __webpack_require__(65);
 /**
  * Global skip counter.
  */
@@ -5097,8 +5122,9 @@ const skipCounter = new Counter.Context();
 /**
  * Resolve the token or node directive for the given node and update the specified project.
  * @param project Project context.
- * @param node Input node.
+ * @param node Directive node.
  * @param state Consumption state.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const resolveTokenOrNode = (project, node, state) => {
     const identity = Identity.resolve(node.right);
@@ -5106,16 +5132,14 @@ const resolveTokenOrNode = (project, node, state) => {
     switch (node.value) {
         case 238 /* Token */:
         case 240 /* AliasToken */:
-            state.type = 2 /* Token */;
             Token.consume(project, 1 /* Right */, node, state);
             break;
         case 239 /* Node */:
         case 241 /* AliasNode */:
-            state.type = 3 /* Node */;
             Node.consume(project, 1 /* Right */, node, state);
             break;
         default:
-            throw `Unexpected AST node.`;
+            throw new exception_1.Exception(`Invalid node type (${node.value}).`);
     }
 };
 /**
@@ -5140,7 +5164,6 @@ const consumeNodes = (node, project) => {
                 break;
             case 237 /* Skip */:
                 state.identity = skipCounter.increment(project);
-                state.type = 1 /* Skip */;
                 Skip.consume(project, 2 /* Next */, node, state);
                 break;
             default:
@@ -5154,7 +5177,7 @@ exports.consumeNodes = consumeNodes;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 79 */
+/* 80 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5183,7 +5206,7 @@ exports.resolve = resolve;
 //# sourceMappingURL=identity.js.map
 
 /***/ }),
-/* 80 */
+/* 81 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -5231,7 +5254,7 @@ exports.setMetadata = setMetadata;
 //# sourceMappingURL=context.js.map
 
 /***/ }),
-/* 81 */
+/* 82 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5239,12 +5262,12 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Path = __webpack_require__(8);
 const Core = __webpack_require__(10);
-const String = __webpack_require__(67);
-const Project = __webpack_require__(69);
-const Lexer = __webpack_require__(72);
-const Parser = __webpack_require__(70);
-const Maker = __webpack_require__(82);
-const Optimizer = __webpack_require__(78);
+const String = __webpack_require__(68);
+const Project = __webpack_require__(70);
+const Lexer = __webpack_require__(73);
+const Parser = __webpack_require__(71);
+const Maker = __webpack_require__(83);
+const Optimizer = __webpack_require__(79);
 /**
  * Purge from the given record list all dependents that doesn't exists in the specified project context.
  * @param project Project context.
@@ -5336,26 +5359,28 @@ exports.consume = consume;
 //# sourceMappingURL=import.js.map
 
 /***/ }),
-/* 82 */
+/* 83 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consumeNodes = void 0;
-const Directive = __webpack_require__(83);
-const Parser = __webpack_require__(70);
-const Node = __webpack_require__(86);
-const Token = __webpack_require__(113);
-const Skip = __webpack_require__(114);
+const Directive = __webpack_require__(84);
+const Parser = __webpack_require__(71);
+const exception_1 = __webpack_require__(65);
+const Node = __webpack_require__(87);
+const Token = __webpack_require__(114);
+const Skip = __webpack_require__(115);
 /**
  * Resolve the token or node directive for the given node and update the specified project.
  * @param project Project context.
- * @param node Input node.
+ * @param node Main node.
+ * @throws Throws an exception when the given node isn't valid.
  */
-const resolveTokenOrNode = (project, node) => {
+const resolveMain = (project, node) => {
     const directive = node.right;
     if (!(directive instanceof Directive.Node)) {
-        throw `An AST node directive is expected.`;
+        throw new exception_1.Exception('Main nodes must be instances of directive nodes.');
     }
     const state = { directive };
     switch (node.value) {
@@ -5372,26 +5397,25 @@ const resolveTokenOrNode = (project, node) => {
             Node.consume(project, state);
             break;
         default:
-            throw `Unsupported AST node directive.`;
+            throw new exception_1.Exception(`Invalid node type (${node.value}).`);
     }
 };
 /**
  * Resolve the skip directive for the given node and update the specified project.
  * @param project Project context.
- * @param node Input node.
+ * @param node Skip node.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const resolveSkip = (project, node) => {
     if (!(node instanceof Directive.Node)) {
-        project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
+        throw new exception_1.Exception('Skip nodes must be instances of directive nodes.');
     }
-    else {
-        const state = { directive: node };
-        Skip.consume(project, state);
-    }
+    const state = { directive: node };
+    Skip.consume(project, state);
 };
 /**
- * Consume the specified node (organized as an AST) and produce output entries for updating the given project.
- * @param node Input node.
+ * Consume the specified node (organized as an AST) and update the given project.
+ * @param node Root node.
  * @param project Project context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
@@ -5403,14 +5427,14 @@ const consumeNodes = (node, project) => {
         else if (node.value === 243 /* Export */) {
             const current = node.right;
             if (current.value !== 200 /* Identifier */) {
-                resolveTokenOrNode(project, current);
+                resolveMain(project, current);
             }
         }
         else if (node.value === 237 /* Skip */) {
             resolveSkip(project, node);
         }
         else {
-            resolveTokenOrNode(project, node);
+            resolveMain(project, node);
         }
     }
     return project.errors.length === 0;
@@ -5419,14 +5443,14 @@ exports.consumeNodes = consumeNodes;
 //# sourceMappingURL=index.js.map
 
 /***/ }),
-/* 83 */
+/* 84 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Parser = __webpack_require__(70);
-const Identified = __webpack_require__(84);
+const Parser = __webpack_require__(71);
+const Identified = __webpack_require__(85);
 /**
  * Directive node.
  */
@@ -5467,13 +5491,13 @@ exports.Node = Node;
 //# sourceMappingURL=directive.js.map
 
 /***/ }),
-/* 84 */
+/* 85 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Basic = __webpack_require__(85);
+const Basic = __webpack_require__(86);
 /**
  * Identified node.
  */
@@ -5502,7 +5526,7 @@ exports.Node = Node;
 //# sourceMappingURL=identified.js.map
 
 /***/ }),
-/* 85 */
+/* 86 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -5534,14 +5558,14 @@ exports.Node = Node;
 //# sourceMappingURL=basic.js.map
 
 /***/ }),
-/* 86 */
+/* 87 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Expression = __webpack_require__(87);
+const Expression = __webpack_require__(88);
 /**
  * Consume the specified state resolving the 'NODE' directive.
  * @param project Project context.
@@ -5564,42 +5588,44 @@ exports.consume = consume;
 //# sourceMappingURL=node.js.map
 
 /***/ }),
-/* 87 */
+/* 88 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Parser = __webpack_require__(70);
-const Reference = __webpack_require__(88);
-const String = __webpack_require__(89);
-const Range = __webpack_require__(90);
-const Map = __webpack_require__(91);
-const Access = __webpack_require__(94);
-const Or = __webpack_require__(95);
-const And = __webpack_require__(96);
-const Condition = __webpack_require__(97);
-const Not = __webpack_require__(98);
-const Option = __webpack_require__(99);
-const Repeat = __webpack_require__(100);
-const Place = __webpack_require__(101);
-const Pivot = __webpack_require__(102);
-const Append = __webpack_require__(104);
-const Prepend = __webpack_require__(105);
-const Symbol = __webpack_require__(106);
-const Scope = __webpack_require__(107);
-const Error = __webpack_require__(108);
-const Has = __webpack_require__(109);
-const Set = __webpack_require__(110);
-const Uncase = __webpack_require__(111);
-const Peek = __webpack_require__(112);
+const Parser = __webpack_require__(71);
+const exception_1 = __webpack_require__(65);
+const Reference = __webpack_require__(89);
+const String = __webpack_require__(90);
+const Range = __webpack_require__(91);
+const Map = __webpack_require__(92);
+const Access = __webpack_require__(95);
+const Or = __webpack_require__(96);
+const And = __webpack_require__(97);
+const Condition = __webpack_require__(98);
+const Not = __webpack_require__(99);
+const Option = __webpack_require__(100);
+const Repeat = __webpack_require__(101);
+const Place = __webpack_require__(102);
+const Pivot = __webpack_require__(103);
+const Append = __webpack_require__(105);
+const Prepend = __webpack_require__(106);
+const Symbol = __webpack_require__(107);
+const Scope = __webpack_require__(108);
+const Error = __webpack_require__(109);
+const Has = __webpack_require__(110);
+const Set = __webpack_require__(111);
+const Uncase = __webpack_require__(112);
+const Peek = __webpack_require__(113);
 /**
  * Consume the given node resolving the expression patterns.
  * @param project Project context.
- * @param node Input node.
+ * @param node Expression node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, node, state) => {
     switch (node.value) {
@@ -5665,96 +5691,11 @@ const consume = (project, node, state) => {
         case 235 /* Peek */:
             return Peek.consume(project, node, state);
         default:
-            project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
+            throw new exception_1.Exception(`Invalid expression node type (${node.value}).`);
     }
-    return void 0;
 };
 exports.consume = consume;
 //# sourceMappingURL=expression.js.map
-
-/***/ }),
-/* 88 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.consume = void 0;
-const Identified = __webpack_require__(84);
-const Parser = __webpack_require__(70);
-/**
- * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
- * REMARKS: Skips can only accept alias tokens references.
- * @param project Project context.
- * @param node Input node.
- * @param record Referenced record symbol.
- * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
- */
-const resolveSkip = (project, node, record) => {
-    if (record.value === 302 /* AliasToken */) {
-        return project.coder.emitReferencePattern(record);
-    }
-    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
-    return void 0;
-};
-/**
- * Resolve the corresponding reference for the specified record in a 'TOKEN' directive.
- * REMARKS: Tokens can only accept tokens and alias tokens references.
- * @param project Project context.
- * @param node Input node.
- * @param record Referenced record.
- * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
- */
-const resolveToken = (project, node, record) => {
-    if (record.value === 301 /* Token */ || record.value === 302 /* AliasToken */) {
-        return project.coder.emitReferencePattern(record);
-    }
-    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
-    return void 0;
-};
-/**
- * Resolve the corresponding reference for the specified record in a 'NODE' directive.
- * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
- * @param project Project context.
- * @param node Input node.
- * @param record Referenced record.
- * @returns Returns the corresponding reference pattern or undefined when the reference isn't valid.
- */
-const resolveNode = (project, node, record) => {
-    if (record.value === 303 /* Node */ || record.value === 304 /* AliasNode */) {
-        return project.coder.emitReferencePattern(record);
-    }
-    if (node instanceof Identified.Node) {
-        return project.coder.emitExpectUnitsPattern([node.identity]);
-    }
-    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
-    return void 0;
-};
-/**
- * Consume the given node resolving the reference pattern.
- * @param project Project context.
- * @param node Input node.
- * @param state Consumption state.
- * @returns Returns the consumption result or undefined when the pattern is invalid.
- */
-const consume = (project, node, state) => {
-    const identifier = node.fragment.data;
-    const record = node.table.find(identifier);
-    if (record) {
-        const directive = state.directive;
-        switch (directive.type) {
-            case 1 /* Skip */:
-                return resolveSkip(project, node, record);
-            case 2 /* Token */:
-                return resolveToken(project, node, record);
-            case 3 /* Node */:
-                return resolveNode(project, node, record);
-        }
-    }
-    project.addError(node.fragment, 4102 /* UNDEFINED_IDENTIFIER */);
-    return void 0;
-};
-exports.consume = consume;
-//# sourceMappingURL=reference.js.map
 
 /***/ }),
 /* 89 */
@@ -5763,25 +5704,83 @@ exports.consume = consume;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const String = __webpack_require__(67);
+const Identified = __webpack_require__(85);
+const Parser = __webpack_require__(71);
+const exception_1 = __webpack_require__(65);
 /**
- * Consume the given node resolving the string patterns.
+ * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
+ * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
- * @param node Input node.
+ * @param record Referenced record symbol.
+ * @returns Returns the corresponding reference pattern.
+ * @throws Throws an exception when the given node isn't valid.
+ */
+const resolveSkip = (project, record) => {
+    if (record.value !== 302 /* AliasToken */) {
+        throw new exception_1.Exception('Skip reference can only accept alias tokens references.');
+    }
+    return project.coder.emitReferencePattern(record);
+};
+/**
+ * Resolve the corresponding reference for the specified record in a 'TOKEN' directive.
+ * REMARKS: Tokens can only accept tokens and alias tokens references.
+ * @param project Project context.
+ * @param record Referenced record.
+ * @returns Returns the corresponding reference pattern.
+ * @throws Throws an exception when the given node isn't valid.
+ */
+const resolveToken = (project, record) => {
+    if (record.value !== 301 /* Token */ && record.value !== 302 /* AliasToken */) {
+        throw new exception_1.Exception('Token reference can only accept tokens and alias tokens references.');
+    }
+    return project.coder.emitReferencePattern(record);
+};
+/**
+ * Resolve the corresponding reference for the specified record in a 'NODE' directive.
+ * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
+ * @param project Project context.
+ * @param node Reference node.
+ * @param record Referenced record.
+ * @returns Returns the corresponding reference pattern.
+ * @throws Throws an exception when the given node isn't valid.
+ */
+const resolveNode = (project, node, record) => {
+    if (record.value !== 303 /* Node */ && record.value !== 304 /* AliasNode */) {
+        if (!(node instanceof Identified.Node)) {
+            throw new exception_1.Exception('Node reference can only accept tokens, nodes and alias nodes references.');
+        }
+        return project.coder.emitExpectUnitsPattern([node.identity]);
+    }
+    return project.coder.emitReferencePattern(record);
+};
+/**
+ * Consume the given node resolving the reference pattern.
+ * @param project Project context.
+ * @param node Reference node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, node, state) => {
-    const directive = state.directive;
-    if (directive.type !== 3 /* Node */) {
-        const units = String.extract(node.fragment.data).split('');
-        return project.coder.emitExpectUnitsPattern(units);
+    const identifier = node.fragment.data;
+    const record = node.table.find(identifier);
+    if (!record) {
+        throw new exception_1.Exception(`Node reference ${identifier} doesn't exists in the symbol table.`);
     }
-    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
-    return void 0;
+    const directive = state.directive;
+    switch (directive.type) {
+        case 1 /* Skip */:
+            return resolveSkip(project, record);
+        case 2 /* Token */:
+            return resolveToken(project, record);
+        case 3 /* Node */:
+            return resolveNode(project, node, record);
+        default:
+            throw new exception_1.Exception(`Unsupported directive node type (${directive.type}).`);
+    }
 };
 exports.consume = consume;
-//# sourceMappingURL=string.js.map
+//# sourceMappingURL=reference.js.map
 
 /***/ }),
 /* 90 */
@@ -5790,26 +5789,25 @@ exports.consume = consume;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const String = __webpack_require__(67);
+const String = __webpack_require__(68);
+const exception_1 = __webpack_require__(65);
 /**
- * Consume the given node resolving the range pattern.
+ * Consume the given node resolving the string pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node String node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, node, state) => {
-    const directive = state.directive;
-    if (directive.type !== 3 /* Node */) {
-        const from = String.extract(node.left.fragment.data);
-        const to = String.extract(node.right.fragment.data);
-        return project.coder.emitRangePattern(from, to);
+    if (state.directive.type !== 1 /* Skip */ && state.directive.type !== 2 /* Token */) {
+        throw new exception_1.Exception(`String nodes can only be in a token or skip directive. ${state.directive.type}`);
     }
-    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
-    return void 0;
+    const units = String.extract(node.fragment.data).split('');
+    return project.coder.emitExpectUnitsPattern(units);
 };
 exports.consume = consume;
-//# sourceMappingURL=range.js.map
+//# sourceMappingURL=string.js.map
 
 /***/ }),
 /* 91 */
@@ -5818,41 +5816,92 @@ exports.consume = consume;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Sequential = __webpack_require__(92);
-const Identified = __webpack_require__(84);
-const Member = __webpack_require__(93);
-const String = __webpack_require__(67);
-const Parser = __webpack_require__(70);
-const Expression = __webpack_require__(87);
+const String = __webpack_require__(68);
+const exception_1 = __webpack_require__(65);
 /**
- * Resolve all units for the given entry node.
- * @param node Entry node.
- * @returns Returns the units array or undefined when the given entry isn't supported.
+ * Consume the given node resolving the range pattern.
+ * @param project Project context.
+ * @param node Range node.
+ * @param state Consumption state.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
  */
-const resolve = (node) => {
+const consume = (project, node, state) => {
+    if (state.directive.type !== 1 /* Skip */ && state.directive.type !== 2 /* Token */) {
+        throw new exception_1.Exception('Range nodes can only be in a token or skip directive.');
+    }
+    const from = String.extract(node.left.fragment.data);
+    const to = String.extract(node.right.fragment.data);
+    return project.coder.emitRangePattern(from, to);
+};
+exports.consume = consume;
+//# sourceMappingURL=range.js.map
+
+/***/ }),
+/* 92 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.consume = void 0;
+const Sequential = __webpack_require__(93);
+const Identified = __webpack_require__(85);
+const Member = __webpack_require__(94);
+const String = __webpack_require__(68);
+const Parser = __webpack_require__(71);
+const exception_1 = __webpack_require__(65);
+const Expression = __webpack_require__(88);
+/**
+ * Resolve all units for the given map entry node.
+ * @param node Map entry node.
+ * @returns Returns an array containing all the entry units.
+ * @throws Throws an exception when the given node isn't valid.
+ */
+const resolveUnits = (node) => {
     if (node.value === 204 /* String */) {
         return String.extract(node.fragment.data).split('');
     }
-    else if (node instanceof Identified.Node) {
+    if (node instanceof Identified.Node) {
         return [node.identity];
     }
-    else if (node instanceof Sequential.Node) {
-        if (node.type !== 204 /* String */) {
-            return node.sequence.map((node) => node.identity);
-        }
-        return node.sequence
-            .map((node) => String.extract(node.fragment.data))
-            .join('')
-            .split('');
+    if (!(node instanceof Sequential.Node)) {
+        throw new exception_1.Exception('Unable to resolve the units for the map entry node.');
     }
-    return void 0;
+    if (node.type !== 204 /* String */) {
+        return node.sequence.map((node) => node.identity);
+    }
+    const words = node.sequence.map((node) => String.extract(node.fragment.data));
+    return words.join('').split('');
+};
+/**
+ * Resolve the corresponding route for the given map entry member.
+ * @param project Project context.
+ * @param map Map directive.
+ * @param entry Map entry member.
+ * @param state Consumption state.
+ * @param units Route units.
+ * @returns Returns the resolved route.
+ */
+const resolveRoute = (project, map, entry, state, units) => {
+    if (!entry.empty) {
+        const pattern = Expression.consume(project, entry, state);
+        if (entry.dynamic || map.type === 1 /* Skip */) {
+            return project.coder.getRoute(units, void 0, pattern);
+        }
+        return project.coder.getRoute(units, entry.identity, pattern);
+    }
+    if (map.type === 1 /* Skip */) {
+        return project.coder.getRoute(units, void 0);
+    }
+    return project.coder.getRoute(units, entry.identity);
 };
 /**
  * Consume the given node resolving the 'MAP' pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node Map node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the resolved pattern or undefined when the map node has no entry members.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, node, state) => {
     let member = node.right;
@@ -5861,33 +5910,11 @@ const consume = (project, node, state) => {
     while (member) {
         const current = member.right;
         if (!(current instanceof Member.Node)) {
-            project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
+            throw new exception_1.Exception('Map entry nodes must be instances of member nodes.');
         }
-        else {
-            const units = resolve(current.route);
-            if (!units) {
-                project.addError(node.fragment, 4099 /* UNEXPECTED_NODE */);
-            }
-            else {
-                let route;
-                if (!current.empty) {
-                    const pattern = Expression.consume(project, current, state);
-                    if (current.dynamic || directive.type === 1 /* Skip */) {
-                        route = project.coder.getRoute(units, void 0, pattern);
-                    }
-                    else {
-                        route = project.coder.getRoute(units, current.identity, pattern);
-                    }
-                }
-                else if (directive.type === 1 /* Skip */) {
-                    route = project.coder.getRoute(units, void 0);
-                }
-                else {
-                    route = project.coder.getRoute(units, current.identity);
-                }
-                routes.push(route);
-            }
-        }
+        const units = resolveUnits(current.route);
+        const route = resolveRoute(project, directive, current, state, units);
+        routes.push(route);
         member = member.next;
     }
     if (routes.length > 0) {
@@ -5899,14 +5926,14 @@ exports.consume = consume;
 //# sourceMappingURL=map.js.map
 
 /***/ }),
-/* 92 */
+/* 93 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
 const Core = __webpack_require__(10);
-const Basic = __webpack_require__(85);
+const Basic = __webpack_require__(86);
 /**
  * Sequential node.
  */
@@ -5960,13 +5987,13 @@ exports.Node = Node;
 //# sourceMappingURL=sequential.js.map
 
 /***/ }),
-/* 93 */
+/* 94 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Node = void 0;
-const Identified = __webpack_require__(84);
+const Identified = __webpack_require__(85);
 /**
  * Member node.
  */
@@ -6013,40 +6040,41 @@ exports.Node = Node;
 //# sourceMappingURL=member.js.map
 
 /***/ }),
-/* 94 */
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.consume = void 0;
-const Identified = __webpack_require__(84);
-/**
- * Consume the given node resolving the access pattern.
- * @param project Project context.
- * @param node Input node.
- * @returns Returns the pattern or undefined when the node is invalid.
- */
-const consume = (project, node) => {
-    if (node instanceof Identified.Node) {
-        return project.coder.emitExpectUnitsPattern([node.identity]);
-    }
-    project.addError(node.fragment, 4100 /* UNSUPPORTED_NODE */);
-    return void 0;
-};
-exports.consume = consume;
-//# sourceMappingURL=access.js.map
-
-/***/ }),
 /* 95 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.consume = void 0;
+const Identified = __webpack_require__(85);
+const exception_1 = __webpack_require__(65);
+/**
+ * Consume the given node resolving the access pattern.
+ * @param project Project context.
+ * @param node Access node.
+ * @returns Returns the resolved pattern.
+ * @throws Throws an exception when the given node isn't valid.
+ */
+const consume = (project, node) => {
+    if (!(node instanceof Identified.Node)) {
+        throw new exception_1.Exception('Access nodes must be instances of identified nodes.');
+    }
+    return project.coder.emitExpectUnitsPattern([node.identity]);
+};
+exports.consume = consume;
+//# sourceMappingURL=access.js.map
+
+/***/ }),
+/* 96 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.resolve = void 0;
-const Sequential = __webpack_require__(92);
-const String = __webpack_require__(67);
-const Parser = __webpack_require__(70);
-const Expression = __webpack_require__(87);
+const Sequential = __webpack_require__(93);
+const String = __webpack_require__(68);
+const Parser = __webpack_require__(71);
+const Expression = __webpack_require__(88);
 /**
  * Resolve the given node as an 'OR' pattern.
  * @param project Project context.
@@ -6112,16 +6140,16 @@ exports.consume = consume;
 //# sourceMappingURL=or.js.map
 
 /***/ }),
-/* 96 */
+/* 97 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = exports.resolve = void 0;
-const Sequential = __webpack_require__(92);
-const String = __webpack_require__(67);
-const Parser = __webpack_require__(70);
-const Expression = __webpack_require__(87);
+const Sequential = __webpack_require__(93);
+const String = __webpack_require__(68);
+const Parser = __webpack_require__(71);
+const Expression = __webpack_require__(88);
 /**
  * Resolve the given input node as an 'AND' pattern.
  * @param project Project context.
@@ -6180,14 +6208,14 @@ exports.consume = consume;
 //# sourceMappingURL=and.js.map
 
 /***/ }),
-/* 97 */
+/* 98 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Parser = __webpack_require__(70);
-const Expression = __webpack_require__(87);
+const Parser = __webpack_require__(71);
+const Expression = __webpack_require__(88);
 /**
  * Consume the given node resolving the condition pattern.
  * @param project Project context.
@@ -6221,13 +6249,13 @@ exports.consume = consume;
 //# sourceMappingURL=condition.js.map
 
 /***/ }),
-/* 98 */
+/* 99 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'NOT' pattern.
  * @param project Project context.
@@ -6246,13 +6274,13 @@ exports.consume = consume;
 //# sourceMappingURL=not.js.map
 
 /***/ }),
-/* 99 */
+/* 100 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'OPTION' pattern.
  * @param project Project context.
@@ -6271,13 +6299,13 @@ exports.consume = consume;
 //# sourceMappingURL=option.js.map
 
 /***/ }),
-/* 100 */
+/* 101 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'REPEAT' pattern.
  * @param project Project context.
@@ -6296,13 +6324,13 @@ exports.consume = consume;
 //# sourceMappingURL=repeat.js.map
 
 /***/ }),
-/* 101 */
+/* 102 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'PLACE' pattern.
  * @param project Project context.
@@ -6322,13 +6350,13 @@ exports.consume = consume;
 //# sourceMappingURL=place.js.map
 
 /***/ }),
-/* 102 */
+/* 103 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(103);
+const Splitter = __webpack_require__(104);
 /**
  * Consume the given node resolving the 'PIVOT' pattern.
  * @param project Project context.
@@ -6349,16 +6377,16 @@ exports.consume = consume;
 //# sourceMappingURL=pivot.js.map
 
 /***/ }),
-/* 103 */
+/* 104 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.resolve = void 0;
-const Sequential = __webpack_require__(92);
-const String = __webpack_require__(67);
-const Parser = __webpack_require__(70);
-const And = __webpack_require__(96);
+const Sequential = __webpack_require__(93);
+const String = __webpack_require__(68);
+const Parser = __webpack_require__(71);
+const And = __webpack_require__(97);
 /**
  * Split the first part of the specified sequential node and resolve all the patterns.
  * @param project Project context.
@@ -6422,13 +6450,13 @@ exports.resolve = resolve;
 //# sourceMappingURL=splitter.js.map
 
 /***/ }),
-/* 104 */
+/* 105 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(103);
+const Splitter = __webpack_require__(104);
 /**
  * Consume the given node resolving the 'APPEND' pattern.
  * @param project Project context.
@@ -6450,13 +6478,13 @@ exports.consume = consume;
 //# sourceMappingURL=append.js.map
 
 /***/ }),
-/* 105 */
+/* 106 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(103);
+const Splitter = __webpack_require__(104);
 /**
  * Consume the given node resolving the 'PREPEND' pattern.
  * @param project Project context.
@@ -6478,13 +6506,13 @@ exports.consume = consume;
 //# sourceMappingURL=prepend.js.map
 
 /***/ }),
-/* 106 */
+/* 107 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Splitter = __webpack_require__(103);
+const Splitter = __webpack_require__(104);
 /**
  * Consume the given node resolving the 'SYMBOL' pattern.
  * @param project Project context.
@@ -6505,13 +6533,13 @@ exports.consume = consume;
 //# sourceMappingURL=symbol.js.map
 
 /***/ }),
-/* 107 */
+/* 108 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'SCOPE' pattern.
  * @param project Project context.
@@ -6530,13 +6558,13 @@ exports.consume = consume;
 //# sourceMappingURL=scope.js.map
 
 /***/ }),
-/* 108 */
+/* 109 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'ERROR' pattern.
  * @param project Context project.
@@ -6557,13 +6585,13 @@ exports.consume = consume;
 //# sourceMappingURL=error.js.map
 
 /***/ }),
-/* 109 */
+/* 110 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'HAS' pattern.
  * @param project Project context.
@@ -6584,13 +6612,13 @@ exports.consume = consume;
 //# sourceMappingURL=has.js.map
 
 /***/ }),
-/* 110 */
+/* 111 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'SET' pattern.
  * @param project Project context.
@@ -6611,13 +6639,13 @@ exports.consume = consume;
 //# sourceMappingURL=set.js.map
 
 /***/ }),
-/* 111 */
+/* 112 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'UNCASE' pattern.
  * @param project Project context.
@@ -6636,13 +6664,13 @@ exports.consume = consume;
 //# sourceMappingURL=uncase.js.map
 
 /***/ }),
-/* 112 */
+/* 113 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const And = __webpack_require__(96);
+const And = __webpack_require__(97);
 /**
  * Consume the given node resolving the 'PEEK' pattern.
  * @param project Project context.
@@ -6661,13 +6689,13 @@ exports.consume = consume;
 //# sourceMappingURL=peek.js.map
 
 /***/ }),
-/* 113 */
+/* 114 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Expression = __webpack_require__(87);
+const Expression = __webpack_require__(88);
 /**
  * Consume the specified state resolving the 'TOKEN' directive.
  * @param project Project context.
@@ -6690,13 +6718,13 @@ exports.consume = consume;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 114 */
+/* 115 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Expression = __webpack_require__(87);
+const Expression = __webpack_require__(88);
 /**
  * Consume the specified state resolving the 'SKIP' directive.
  * @param project Project context.
@@ -6714,13 +6742,13 @@ exports.consume = consume;
 //# sourceMappingURL=skip.js.map
 
 /***/ }),
-/* 115 */
+/* 116 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Parser = __webpack_require__(70);
+const Parser = __webpack_require__(71);
 /**
  * Consume the export directive for the given node and update the specified state.
  * @param project Project context.
@@ -6748,16 +6776,16 @@ exports.consume = consume;
 //# sourceMappingURL=export.js.map
 
 /***/ }),
-/* 116 */
+/* 117 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Directive = __webpack_require__(83);
-const Context = __webpack_require__(80);
-const Expression = __webpack_require__(117);
+const Directive = __webpack_require__(84);
+const Context = __webpack_require__(81);
+const Expression = __webpack_require__(118);
 /**
  * Emit a new node entry and replace the current node by an optimized one.
  * @param project Project context.
@@ -6781,29 +6809,35 @@ const emit = (project, direction, parent, state) => {
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     const identifier = node.fragment.data;
-    state.record = node.table.get(identifier);
-    Context.setMetadata(project, identifier, state.record, state);
-    Expression.consume(project, 1 /* Right */, node, state);
-    emit(project, direction, parent, state);
+    if (project.symbols.has(identifier)) {
+        project.addError(node.fragment, 4096 /* DUPLICATE_IDENTIFIER */);
+    }
+    else {
+        state.type = 3 /* Node */;
+        state.record = node.table.get(identifier);
+        Context.setMetadata(project, identifier, state.record, state);
+        Expression.consume(project, 1 /* Right */, node, state);
+        emit(project, direction, parent, state);
+    }
 };
 exports.consume = consume;
 //# sourceMappingURL=node.js.map
 
 /***/ }),
-/* 117 */
+/* 118 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Parser = __webpack_require__(70);
-const Reference = __webpack_require__(118);
-const Sequential = __webpack_require__(119);
-const String = __webpack_require__(120);
-const Range = __webpack_require__(123);
-const Map = __webpack_require__(125);
-const Access = __webpack_require__(126);
+const Parser = __webpack_require__(71);
+const Reference = __webpack_require__(119);
+const Sequential = __webpack_require__(120);
+const String = __webpack_require__(121);
+const Range = __webpack_require__(124);
+const Map = __webpack_require__(126);
+const Access = __webpack_require__(127);
 /**
  * Consume a child node from the AST on the given parent and optimize the expression pattern.
  * @param project Project context.
@@ -6844,14 +6878,15 @@ exports.consume = consume;
 //# sourceMappingURL=expression.js.map
 
 /***/ }),
-/* 118 */
+/* 119 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Identified = __webpack_require__(84);
-const Parser = __webpack_require__(70);
+const Identified = __webpack_require__(85);
+const Parser = __webpack_require__(71);
+const exception_1 = __webpack_require__(65);
 /**
  * Update the specified node for an optimized one after resolving its reference.
  * @param project Project context.
@@ -6974,6 +7009,7 @@ const resolveNode = (project, direction, parent, record, state) => {
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param state Consumption state.
+ * @throws Throws an exception when the given node isn't valid.
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
@@ -6993,7 +7029,7 @@ const consume = (project, direction, parent, state) => {
                 resolveNode(project, direction, parent, record, state);
                 break;
             default:
-                throw `Unsupported context state type: ${state.type}`;
+                throw new exception_1.Exception(`Unsupported context state type: ${state.type}`);
         }
     }
 };
@@ -7001,17 +7037,17 @@ exports.consume = consume;
 //# sourceMappingURL=reference.js.map
 
 /***/ }),
-/* 119 */
+/* 120 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Sequential = __webpack_require__(92);
-const Identified = __webpack_require__(84);
-const Parser = __webpack_require__(70);
-const Expression = __webpack_require__(117);
+const Sequential = __webpack_require__(93);
+const Identified = __webpack_require__(85);
+const Parser = __webpack_require__(71);
+const Expression = __webpack_require__(118);
 /**
  * Determines whether or not the given node contains sequential units.
  * @param node Input node.
@@ -7076,15 +7112,15 @@ exports.consume = consume;
 //# sourceMappingURL=sequential.js.map
 
 /***/ }),
-/* 120 */
+/* 121 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Loose = __webpack_require__(121);
-const Nodes = __webpack_require__(124);
-const Expression = __webpack_require__(117);
+const Loose = __webpack_require__(122);
+const Nodes = __webpack_require__(125);
+const Expression = __webpack_require__(118);
 /**
  * Consume a child node from the AST on the given parent and optimize the string pattern.
  * @param project Project context.
@@ -7105,17 +7141,17 @@ exports.consume = consume;
 //# sourceMappingURL=string.js.map
 
 /***/ }),
-/* 121 */
+/* 122 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.resolve = exports.collision = void 0;
 const Core = __webpack_require__(10);
-const Project = __webpack_require__(69);
-const Token = __webpack_require__(122);
-const Context = __webpack_require__(80);
-const Nodes = __webpack_require__(124);
+const Project = __webpack_require__(70);
+const Token = __webpack_require__(123);
+const Context = __webpack_require__(81);
+const Nodes = __webpack_require__(125);
 /**
  * Emit a new loose token and returns the corresponding record.
  * @param project Project context.
@@ -7171,20 +7207,20 @@ exports.resolve = resolve;
 //# sourceMappingURL=loose.js.map
 
 /***/ }),
-/* 122 */
+/* 123 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Directive = __webpack_require__(83);
-const Parser = __webpack_require__(70);
-const Context = __webpack_require__(80);
-const Loose = __webpack_require__(121);
-const Expression = __webpack_require__(117);
-const Range = __webpack_require__(123);
-const String = __webpack_require__(120);
+const Directive = __webpack_require__(84);
+const Parser = __webpack_require__(71);
+const Context = __webpack_require__(81);
+const Loose = __webpack_require__(122);
+const Expression = __webpack_require__(118);
+const Range = __webpack_require__(124);
+const String = __webpack_require__(121);
 /**
  * Emit a new token entry and replace the current token node by an optimized one.
  * @param project Project context.
@@ -7207,44 +7243,50 @@ const emit = (project, direction, parent, state) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const expression = node.right;
     const identifier = node.fragment.data;
-    state.record = node.table.get(identifier);
-    Context.setMetadata(project, identifier, state.record, state);
-    if (expression.value === 204 /* String */) {
-        String.consume(project, 1 /* Right */, node, state);
-        const word = expression.fragment.data;
-        if (!Loose.collision(project, word, expression)) {
-            emit(project, direction, parent, state);
-            project.symbols.link(word, identifier);
-        }
-    }
-    else if (expression.value === 206 /* Range */) {
-        Range.consume(project, 1 /* Right */, node, state);
-        const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
-        if (!Loose.collision(project, range, expression)) {
-            emit(project, direction, parent, state);
-            project.symbols.link(range, identifier);
-        }
+    if (project.symbols.has(identifier)) {
+        project.addError(node.fragment, 4096 /* DUPLICATE_IDENTIFIER */);
     }
     else {
-        Expression.consume(project, 1 /* Right */, node, state);
-        emit(project, direction, parent, state);
+        const expression = node.right;
+        state.type = 2 /* Token */;
+        state.record = node.table.get(identifier);
+        Context.setMetadata(project, identifier, state.record, state);
+        if (expression.value === 204 /* String */) {
+            String.consume(project, 1 /* Right */, node, state);
+            const word = expression.fragment.data;
+            if (!Loose.collision(project, word, expression)) {
+                emit(project, direction, parent, state);
+                project.symbols.link(word, identifier);
+            }
+        }
+        else if (expression.value === 206 /* Range */) {
+            Range.consume(project, 1 /* Right */, node, state);
+            const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
+            if (!Loose.collision(project, range, expression)) {
+                emit(project, direction, parent, state);
+                project.symbols.link(range, identifier);
+            }
+        }
+        else {
+            Expression.consume(project, 1 /* Right */, node, state);
+            emit(project, direction, parent, state);
+        }
     }
 };
 exports.consume = consume;
 //# sourceMappingURL=token.js.map
 
 /***/ }),
-/* 123 */
+/* 124 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Loose = __webpack_require__(121);
-const Nodes = __webpack_require__(124);
-const Expression = __webpack_require__(117);
+const Loose = __webpack_require__(122);
+const Nodes = __webpack_require__(125);
+const Expression = __webpack_require__(118);
 /**
  * Consume a child node from the AST on the given parent and optimize the range pattern.
  * @param project Project context.
@@ -7266,14 +7308,14 @@ exports.consume = consume;
 //# sourceMappingURL=range.js.map
 
 /***/ }),
-/* 124 */
+/* 125 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.getReference = exports.getToken = exports.getIdentifier = exports.getIdentity = void 0;
 const Core = __webpack_require__(10);
-const Parser = __webpack_require__(70);
+const Parser = __webpack_require__(71);
 /**
  * Get a new identity node.
  * @param identity Node identity.
@@ -7337,21 +7379,21 @@ exports.getReference = getReference;
 //# sourceMappingURL=nodes.js.map
 
 /***/ }),
-/* 125 */
+/* 126 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Member = __webpack_require__(93);
-const Sequential = __webpack_require__(92);
-const Identified = __webpack_require__(84);
-const Parser = __webpack_require__(70);
-const Identity = __webpack_require__(79);
-const Context = __webpack_require__(80);
-const Loose = __webpack_require__(121);
-const Expression = __webpack_require__(117);
+const Member = __webpack_require__(94);
+const Sequential = __webpack_require__(93);
+const Identified = __webpack_require__(85);
+const Parser = __webpack_require__(71);
+const Identity = __webpack_require__(80);
+const Context = __webpack_require__(81);
+const Loose = __webpack_require__(122);
+const Expression = __webpack_require__(118);
 /**
  * Get the candidate node based on the given input node.
  * @param node Input node.
@@ -7393,26 +7435,31 @@ const consume = (project, direction, parent, state) => {
                 break;
             }
             const record = state.record;
-            const identity = state.identity;
             const identifier = `${record.data.identifier}@${expression.fragment.data}`;
-            state.identity = Identity.resolve(expression) ?? state.identity;
-            state.record = member.table.get(expression.fragment.data);
-            Context.setMetadata(project, identifier, state.record, state);
-            Expression.consume(project, 1 /* Right */, expression, state);
-            const candidate = getCandidate(expression.right);
-            if (!candidate) {
-                project.addError(member.fragment, 4114 /* INVALID_MAP_ENTRY */);
+            if (project.symbols.has(identifier)) {
+                project.addError(expression.fragment, 4096 /* DUPLICATE_IDENTIFIER */);
             }
             else {
-                if (candidate.value === 204 /* String */) {
-                    Loose.collision(project, candidate.fragment.data, candidate);
+                const identity = state.identity;
+                state.identity = Identity.resolve(expression) ?? state.identity;
+                state.record = member.table.get(expression.fragment.data);
+                Context.setMetadata(project, identifier, state.record, state);
+                Expression.consume(project, 1 /* Right */, expression, state);
+                const candidate = getCandidate(expression.right);
+                if (!candidate) {
+                    project.addError(member.fragment, 4114 /* INVALID_MAP_ENTRY */);
                 }
-                const replacement = new Member.Node(expression.right, state.record, candidate);
-                member.setChild(1 /* Right */, replacement);
-                project.symbols.add(state.record);
+                else {
+                    if (candidate.value === 204 /* String */) {
+                        Loose.collision(project, candidate.fragment.data, candidate);
+                    }
+                    const replacement = new Member.Node(expression.right, state.record, candidate);
+                    member.setChild(1 /* Right */, replacement);
+                    project.symbols.add(state.record);
+                }
+                state.identity = identity;
+                state.record = record;
             }
-            state.identity = identity;
-            state.record = record;
         }
         else {
             Expression.consume(project, 1 /* Right */, member, state);
@@ -7435,14 +7482,14 @@ exports.consume = consume;
 //# sourceMappingURL=map.js.map
 
 /***/ }),
-/* 126 */
+/* 127 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
-const Identified = __webpack_require__(84);
-const Parser = __webpack_require__(70);
+const Identified = __webpack_require__(85);
+const Parser = __webpack_require__(71);
 /**
  * Get all nodes from the given access node.
  * @param node Access node.
@@ -7514,17 +7561,17 @@ exports.consume = consume;
 //# sourceMappingURL=access.js.map
 
 /***/ }),
-/* 127 */
+/* 128 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.consume = void 0;
 const Core = __webpack_require__(10);
-const Directive = __webpack_require__(83);
-const Parser = __webpack_require__(70);
-const Context = __webpack_require__(80);
-const Expression = __webpack_require__(117);
+const Directive = __webpack_require__(84);
+const Parser = __webpack_require__(71);
+const Context = __webpack_require__(81);
+const Expression = __webpack_require__(118);
 /**
  * Emit a new skip entry and replace the current skip node by an optimized one.
  * @param project Project context.
@@ -7553,6 +7600,7 @@ const consume = (project, direction, parent, state) => {
     const location = new Core.Location(project.name, line, column);
     const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
     const record = new Core.Record(fragment, 300 /* Skip */, node);
+    state.type = 1 /* Skip */;
     state.record = node.table.add(record);
     Context.setMetadata(project, identifier, state.record, state);
     Expression.consume(project, 1 /* Right */, node, state);
@@ -7562,7 +7610,7 @@ exports.consume = consume;
 //# sourceMappingURL=skip.js.map
 
 /***/ }),
-/* 128 */
+/* 129 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7571,12 +7619,12 @@ exports.tokenize = void 0;
 const Core = __webpack_require__(10);
 const Lang = __webpack_require__(63);
 const Console = __webpack_require__(3);
-const Tokens = __webpack_require__(129);
+const Tokens = __webpack_require__(130);
 /**
  * Tokenize the given input source.
  * @param text Input text.
  * @param context Consumption context.
- * @param tokens Determines whether or not the debug mode is active fot tokens.
+ * @param tokens Determines whether or not the debug mode is active for tokens.
  * @returns Returns true in case of success, false otherwise.
  */
 const tokenize = (program, text, context, tokens) => {
@@ -7597,14 +7645,14 @@ exports.tokenize = tokenize;
 
 
 /***/ }),
-/* 129 */
+/* 130 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.print = void 0;
 const Console = __webpack_require__(3);
-const Fragment = __webpack_require__(130);
+const Fragment = __webpack_require__(131);
 /**
  * Print a list for the given tokens.
  * @param tokens Input tokens.
@@ -7623,7 +7671,7 @@ exports.print = print;
 
 
 /***/ }),
-/* 130 */
+/* 131 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -7653,7 +7701,7 @@ exports.getLocation = getLocation;
 
 
 /***/ }),
-/* 131 */
+/* 132 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7662,8 +7710,8 @@ exports.parse = void 0;
 const Core = __webpack_require__(10);
 const Lang = __webpack_require__(63);
 const Console = __webpack_require__(3);
-const Symbols = __webpack_require__(132);
-const Nodes = __webpack_require__(133);
+const Symbols = __webpack_require__(133);
+const Nodes = __webpack_require__(134);
 /**
  * Parse the given input tokens.
  * @param tokens Input tokens.
@@ -7694,14 +7742,14 @@ exports.parse = parse;
 
 
 /***/ }),
-/* 132 */
+/* 133 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.print = void 0;
 const Console = __webpack_require__(3);
-const Fragment = __webpack_require__(130);
+const Fragment = __webpack_require__(131);
 /**
  * Print all the symbols in the given table.
  * @param table Symbol table.
@@ -7737,7 +7785,7 @@ exports.print = print;
 
 
 /***/ }),
-/* 133 */
+/* 134 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -7745,7 +7793,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.print = void 0;
 const Core = __webpack_require__(10);
 const Console = __webpack_require__(3);
-const Fragment = __webpack_require__(130);
+const Fragment = __webpack_require__(131);
 /**
  * Get the node indent based on the specified state.
  * @param state Determines whether or not there are next nodes.
@@ -7818,7 +7866,7 @@ exports.print = print;
 
 
 /***/ }),
-/* 134 */
+/* 135 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 

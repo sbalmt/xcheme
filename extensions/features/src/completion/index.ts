@@ -3,8 +3,8 @@ import * as VSCode from 'vscode';
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
+import * as Diagnostics from '../diagnostics';
 import * as Items from './items';
-import * as Analysis from '../common/analysis';
 
 /**
  * Completion items type.
@@ -16,68 +16,42 @@ type CompletionItems = VSCode.ProviderResult<VSCode.CompletionItem[]>;
  */
 export class Provider implements VSCode.CompletionItemProvider<VSCode.CompletionItem> {
   /**
+   * Diagnostics cache.
+   */
+  #cache: Diagnostics.Cache;
+
+  /**
    * Determines whether or not the token before the given offset compound a valid identity.
-   * @param tokens Input tokens.
+   * @param tokens Tokens list.
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
    */
   #isIdentity(tokens: Core.Token[], offset: number): boolean {
-    return tokens[offset]?.value === Lang.Lexer.Tokens.Number && tokens[offset - 1]?.value === Lang.Lexer.Tokens.OpenChevron;
+    const value = tokens[offset]?.value;
+    return (
+      (value === Lang.Lexer.Tokens.Number || value === Lang.Lexer.Tokens.Auto) &&
+      tokens[offset - 1]?.value === Lang.Lexer.Tokens.OpenChevron
+    );
   }
 
   /**
    * Determines whether or not the token before the given offset compound a valid identifier.
-   * @param tokens Input tokens.
+   * @param tokens Tokens list.
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
    */
   #isIdentifier(tokens: Core.Token[], offset: number): boolean {
     const value = tokens[offset]?.value;
     return (
-      (value === Lang.Lexer.Tokens.CloseChevron && this.#isIdentity(tokens, offset)) ||
+      (value === Lang.Lexer.Tokens.CloseChevron && this.#isIdentity(tokens, offset - 1)) ||
       value === Lang.Lexer.Tokens.Token ||
       value === Lang.Lexer.Tokens.Node
     );
   }
 
   /**
-   * Provide basic completion items for the given tokens and offset.
-   * @param tokens Input tokens.
-   * @param offset Token offset.
-   * @returns Returns an array of completion items or undefined when there's no basic completion items to suggest.
-   */
-  #basicItems(tokens: Core.Token[], offset: number): CompletionItems | undefined {
-    switch (tokens[offset--].value) {
-      case Lang.Lexer.Tokens.CloseChevron:
-        return this.#isIdentity(tokens, offset) ? [Items.identifierItem] : [];
-      case Lang.Lexer.Tokens.Identifier:
-        return this.#isIdentifier(tokens, offset) ? [Items.asItem] : Items.binaryOperatorList;
-      case Lang.Lexer.Tokens.Skip:
-        return Items.operandList;
-      case Lang.Lexer.Tokens.Alias:
-        return [Items.tokenItem, Items.nodeItem];
-      case Lang.Lexer.Tokens.Token:
-      case Lang.Lexer.Tokens.Node:
-        return [Items.identityItem, Items.identifierItem];
-      case Lang.Lexer.Tokens.From:
-        return [Items.wordItem];
-      case Lang.Lexer.Tokens.To:
-      case Lang.Lexer.Tokens.String:
-      case Lang.Lexer.Tokens.Any:
-      case Lang.Lexer.Tokens.CloseParenthesis:
-        return Items.binaryOperatorList;
-      case Lang.Lexer.Tokens.OpenBraces:
-        return [Items.identityItem, Items.identifierItem, Items.wordItem];
-      case Lang.Lexer.Tokens.Map:
-      case Lang.Lexer.Tokens.OpenChevron:
-        return [];
-    }
-    return void 0;
-  }
-
-  /**
    * Get the symbol filters according to the node or token before the given offset.
-   * @param tokens Input tokens.
+   * @param tokens Tokens list.
    * @param offset Token offset.
    * @returns Returns the corresponding filters.
    */
@@ -97,19 +71,19 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
 
   /**
    * Get a symbol table path based on the given tokens and offset.
-   * @param tokens Input tokens.
+   * @param tokens Tokens list.
    * @param offset Token offset.
-   * @returns Returns the symbol table path compound by all the record names.
+   * @returns Returns an array containing all records for the corresponding path.
    */
   #getSymbolTablePath(tokens: Core.Token[], offset: number): string[] {
-    const path = [];
+    const records = [];
     do {
       const token = tokens[offset--];
       if (token?.value === Lang.Lexer.Tokens.Identifier) {
-        path.unshift(token.fragment.data);
+        records.unshift(token.fragment.data);
       }
     } while (tokens[offset--]?.value === Lang.Lexer.Tokens.Period);
-    return path;
+    return records;
   }
 
   /**
@@ -130,21 +104,43 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   }
 
   /**
-   * Get a completion list for all the symbols in the specified table.
-   * @param table Input table.
+   * Get the completion item kind based on the given symbol record.
+   * @param record Symbol record.
+   * @returns Returns the corresponding completion item kind.
+   */
+  #getItemKind(record: Core.Record): VSCode.CompletionItemKind {
+    if (record.link) {
+      return VSCode.CompletionItemKind.Enum;
+    } else {
+      switch (record.value) {
+        case Lang.Parser.Symbols.Token:
+        case Lang.Parser.Symbols.Node:
+        case Lang.Parser.Symbols.AliasToken:
+        case Lang.Parser.Symbols.AliasNode:
+          return VSCode.CompletionItemKind.Field;
+        case Lang.Parser.Symbols.MapMember:
+          return VSCode.CompletionItemKind.EnumMember;
+      }
+    }
+    return VSCode.CompletionItemKind.Reference;
+  }
+
+  /**
+   * Get a completion items list for all the symbols in the given symbol table.
+   * @param table Symbol table.
    * @param types Symbol types for filtering.
-   * @returns Returns the completion list.
+   * @returns Returns the completion items list.
    */
   #getSymbolList(table: Core.Table, types: Lang.Parser.Symbols[]): VSCode.CompletionItem[] {
     const list = [];
     for (const name of table.names) {
       const record = table.get(name)!;
       if (types.includes(record.value as Lang.Parser.Symbols)) {
-        const link = record.link !== void 0;
-        const item = Items.getItem(name, `Insert the reference.`, {
-          kind: VSCode.CompletionItemKind.Reference,
+        const link = !!record.link;
+        const item = Items.getItem(name, `Insert the ${name} reference.`, {
+          kind: this.#getItemKind(record),
           text: link ? `${name}.` : name,
-          space: !link
+          retry: link
         });
         list.push(item);
       }
@@ -153,76 +149,142 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   }
 
   /**
-   * Consume the given document and provide complex completion items for the specified token offset.
-   * @param document Input document.
-   * @param offset Token offset.
-   * @returns Returns an array of completion items or undefined when there's no basic completion items to suggest.
+   * Find the best token offset for the given offset position.
+   * @param tokens Tokens list.
+   * @param position Offset position.
+   * @returns Returns the best token offset.
    */
-  #complexItems(document: VSCode.TextDocument, offset: number): CompletionItems | undefined {
-    const context = Analysis.consumeDocument(document);
-    const tokens = context.tokens;
-    switch (tokens[offset--].value) {
-      case Lang.Lexer.Tokens.Period:
-        const path = this.#getSymbolTablePath(tokens, offset);
-        const table = this.#getSymbolTableFromPath(context.table, path);
-        return table ? this.#getSymbolList(table, [Lang.Parser.Symbols.Member]) : [];
-      case Lang.Lexer.Tokens.As:
-      case Lang.Lexer.Tokens.Then:
-      case Lang.Lexer.Tokens.Else:
-      case Lang.Lexer.Tokens.Or:
-      case Lang.Lexer.Tokens.And:
-        return [
-          ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, offset)),
-          ...Items.operandList,
-          ...Items.unaryOperatorList
-        ];
-      case Lang.Lexer.Tokens.Not:
-      case Lang.Lexer.Tokens.Opt:
-      case Lang.Lexer.Tokens.Repeat:
-      case Lang.Lexer.Tokens.Left:
-      case Lang.Lexer.Tokens.Right:
-      case Lang.Lexer.Tokens.Next:
-      case Lang.Lexer.Tokens.Pivot:
-      case Lang.Lexer.Tokens.Symbol:
-      case Lang.Lexer.Tokens.Scope:
-      case Lang.Lexer.Tokens.Error:
-      case Lang.Lexer.Tokens.Has:
-      case Lang.Lexer.Tokens.Set:
-      case Lang.Lexer.Tokens.OpenParenthesis:
-        return [
-          ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, offset)),
-          ...Items.operandList,
-          ...Items.unaryOperatorList
-        ];
-      case Lang.Lexer.Tokens.Place:
-      case Lang.Lexer.Tokens.Append:
-      case Lang.Lexer.Tokens.Prepend:
-        return [
-          ...this.#getSymbolList(context.table, this.#getSymbolFilters(tokens, offset)),
-          ...Items.operandList,
-          ...Items.directionList,
-          ...Items.unaryOperatorList
-        ];
+  #findBestOffset(tokens: Core.Token[], position: number): number {
+    let best = -1;
+    for (let index = 0; index < tokens.length; ++index) {
+      const token = tokens[index];
+      if (token.fragment.end === position) {
+        return index;
+      }
+      if (token.fragment.begin < position) {
+        best = index;
+      }
+    }
+    return best;
+  }
+
+  /**
+   * Consume the given document and provide all the completion items for the specified token offset.
+   * @param table Symbol table.
+   * @param tokens Tokens list.
+   * @param offset Token offset.
+   * @returns Returns an array of completion items or undefined when there's no completion items to suggest.
+   */
+  #getCompletionItems(table: Core.Table, tokens: Core.Token[], offset: number): CompletionItems | undefined {
+    if (offset > 0) {
+      switch (tokens[offset--].value) {
+        case Lang.Lexer.Tokens.Export:
+          return [Items.aliasItem, Items.tokenItem, Items.nodeItem];
+        case Lang.Lexer.Tokens.CloseChevron:
+          return this.#isIdentity(tokens, offset) ? [Items.identifierItem] : [];
+        case Lang.Lexer.Tokens.Identifier:
+          return this.#isIdentifier(tokens, offset) ? [Items.asItem] : Items.binaryOperatorList;
+        case Lang.Lexer.Tokens.Skip:
+          return Items.operandList;
+        case Lang.Lexer.Tokens.Alias:
+          return [Items.tokenItem, Items.nodeItem];
+        case Lang.Lexer.Tokens.Token:
+        case Lang.Lexer.Tokens.Node:
+          return [Items.identityItem, Items.identifierItem];
+        case Lang.Lexer.Tokens.From:
+          return [Items.wordItem];
+        case Lang.Lexer.Tokens.To:
+        case Lang.Lexer.Tokens.String:
+        case Lang.Lexer.Tokens.Any:
+        case Lang.Lexer.Tokens.Asterisk:
+        case Lang.Lexer.Tokens.CloseBraces:
+        case Lang.Lexer.Tokens.CloseParenthesis:
+          return Items.binaryOperatorList;
+        case Lang.Lexer.Tokens.Comma:
+        case Lang.Lexer.Tokens.OpenBraces:
+          return [Items.identityItem, Items.identifierItem, Items.wordItem];
+        case Lang.Lexer.Tokens.Period:
+          const result = this.#getSymbolTableFromPath(table, this.#getSymbolTablePath(tokens, offset));
+          return result ? this.#getSymbolList(result, [Lang.Parser.Symbols.MapMember]) : [];
+        case Lang.Lexer.Tokens.As:
+        case Lang.Lexer.Tokens.Then:
+        case Lang.Lexer.Tokens.Else:
+        case Lang.Lexer.Tokens.Or:
+        case Lang.Lexer.Tokens.VerticalBar:
+        case Lang.Lexer.Tokens.And:
+        case Lang.Lexer.Tokens.Ampersand:
+          return [
+            ...this.#getSymbolList(table, this.#getSymbolFilters(tokens, offset)),
+            ...Items.operandList,
+            ...Items.unaryOperatorList
+          ];
+        case Lang.Lexer.Tokens.Not:
+        case Lang.Lexer.Tokens.Opt:
+        case Lang.Lexer.Tokens.Repeat:
+        case Lang.Lexer.Tokens.Left:
+        case Lang.Lexer.Tokens.Right:
+        case Lang.Lexer.Tokens.Next:
+        case Lang.Lexer.Tokens.Pivot:
+        case Lang.Lexer.Tokens.Symbol:
+        case Lang.Lexer.Tokens.Scope:
+        case Lang.Lexer.Tokens.Error:
+        case Lang.Lexer.Tokens.Has:
+        case Lang.Lexer.Tokens.Set:
+        case Lang.Lexer.Tokens.OpenParenthesis:
+          return [
+            ...this.#getSymbolList(table, this.#getSymbolFilters(tokens, offset)),
+            ...Items.operandList,
+            ...Items.unaryOperatorList
+          ];
+        case Lang.Lexer.Tokens.Place:
+        case Lang.Lexer.Tokens.Append:
+        case Lang.Lexer.Tokens.Prepend:
+          return [
+            ...this.#getSymbolList(table, this.#getSymbolFilters(tokens, offset)),
+            ...Items.operandList,
+            ...Items.directionList,
+            ...Items.unaryOperatorList
+          ];
+        case Lang.Lexer.Tokens.Map:
+        case Lang.Lexer.Tokens.Import:
+        case Lang.Lexer.Tokens.OpenChevron:
+          return [];
+      }
     }
     return void 0;
   }
 
   /**
+   * Default constructor.
+   * @param cache Diagnostics cache.
+   */
+  constructor(cache: Diagnostics.Cache) {
+    this.#cache = cache;
+  }
+
+  /**
    * Provide completion items for the given position and document.
-   * @param document Input document.
+   * @param document Current document.
    * @param position Position in the document.
-   * @returns Returns the completion items list.
+   * @returns Returns the completion items list or undefined when there's no completion items to suggest.
    */
   provideCompletionItems(document: VSCode.TextDocument, position: VSCode.Position): CompletionItems {
-    const range = Analysis.tokenizeDocumentRange(document, document.lineAt(0).range.start, position);
-    const tokens = range.tokens;
-    if (tokens.length > 0) {
-      const offset = range.tokens.length - 1;
-      const items = this.#basicItems(tokens, offset) || this.#complexItems(document, offset);
-      if (items) {
-        return items;
-      }
+    const last = this.#cache.last;
+    if (last) {
+      const begin = document.offsetAt(position);
+      const source = last.source;
+      const offset = this.#findBestOffset(source.tokens, begin);
+      return (
+        this.#getCompletionItems(source.table, source.tokens, offset) ?? [
+          Items.importItem,
+          Items.exportItem,
+          Items.skipItem,
+          Items.aliasItem,
+          Items.tokenItem,
+          Items.nodeItem
+        ]
+      );
     }
-    return [Items.skipItem, Items.aliasItem, Items.tokenItem, Items.nodeItem];
+    return void 0;
   }
 }
