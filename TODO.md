@@ -1,8 +1,19 @@
-# XCHEME
+# XCHEME Todo
 
-## Coming soon
+- **Library**
 
-- Use map patterns for loose tokens (output optimization).
-- Add infinite loop/recursion detection (runtime optimization).
-- Add errors/warnings for ambiguous syntax (coding optimization).
-- Add support for getting all the next possible tokens (new feature).
+  - Add support for getting all the next possible tokens.
+
+- **Runtime**
+
+  - Add infinite loop/recursion detection.
+
+- **Output**
+
+  - Optimize loose tokens for using map patterns.
+  - Optimize map entry identities for aliased and non-aliased tokens/nodes.
+
+- **Extension**
+
+  - Add errors/warnings for ambiguous syntax.
+  - Add support for auto completing .xcm files in the current workspace.

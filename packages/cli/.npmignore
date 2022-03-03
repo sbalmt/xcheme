@@ -1,4 +1,9 @@
-.gitignore
-tsconfig.json
 webpack.config.js
+tsconfig.json
+*.xcm
+*.log
+*.map
+*.tsbuildinfo
 **/src
+**/types
+**/node_modules

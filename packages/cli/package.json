@@ -1,7 +1,7 @@
 {
 	"name": "@xcheme/cli",
-	"version": "0.0.4",
-	"description": "Command Line Interface.",
+	"version": "0.0.5",
+	"description": "Command line interface.",
 	"license": "MIT",
 	"keywords": [
 		"xcheme",
