@@ -4,6 +4,8 @@ import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
 import * as Context from '../context';
 
+import { Errors } from '../../core/errors';
+
 import * as Expression from './expression';
 
 /**
@@ -35,8 +37,12 @@ export const consume = (
 ): void => {
   const node = parent.getChild(direction)!;
   const identifier = node.fragment.data;
-  state.record = node.table.get(identifier)!;
-  Context.setMetadata(project, identifier, state.record!, state);
-  Expression.consume(project, Core.Nodes.Right, node, state);
-  emit(project, direction, parent, state);
+  if (project.symbols.has(identifier)) {
+    project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);
+  } else {
+    state.record = node.table.get(identifier)!;
+    Context.setMetadata(project, identifier, state.record!, state);
+    Expression.consume(project, Core.Nodes.Right, node, state);
+    emit(project, direction, parent, state);
+  }
 };

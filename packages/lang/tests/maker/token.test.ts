@@ -1,6 +1,11 @@
 import * as Lang from '../../src/index';
 import * as Helper from './helper';
 
+test('Token with duplicate identifier', () => {
+  const input = `token TOKEN as 'a'; token TOKEN as 'b';`;
+  Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.DUPLICATE_IDENTIFIER]);
+});
+
 test('Token referring an undefined identifier', () => {
   const input = 'token TOKEN as ALIAS;';
   Helper.makeError(new Lang.LiveCoder(), input, [Lang.Errors.UNDEFINED_IDENTIFIER]);

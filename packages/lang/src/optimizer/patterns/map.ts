@@ -61,25 +61,29 @@ export const consume = (
         break;
       }
       const record = state.record;
-      const identity = state.identity;
       const identifier = `${record!.data.identifier}@${expression.fragment.data}`;
-      state.identity = Identity.resolve(expression) ?? state.identity;
-      state.record = member.table.get(expression.fragment.data)!;
-      Context.setMetadata(project, identifier, state.record!, state);
-      Expression.consume(project, Core.Nodes.Right, expression, state);
-      const candidate = getCandidate(expression.right!);
-      if (!candidate) {
-        project.addError(member.fragment, Errors.INVALID_MAP_ENTRY);
+      if (project.symbols.has(identifier)) {
+        project.addError(expression.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
-        if (candidate.value === Parser.Nodes.String) {
-          Loose.collision(project, candidate.fragment.data, candidate);
+        const identity = state.identity;
+        state.identity = Identity.resolve(expression) ?? state.identity;
+        state.record = member.table.get(expression.fragment.data)!;
+        Context.setMetadata(project, identifier, state.record!, state);
+        Expression.consume(project, Core.Nodes.Right, expression, state);
+        const candidate = getCandidate(expression.right!);
+        if (!candidate) {
+          project.addError(member.fragment, Errors.INVALID_MAP_ENTRY);
+        } else {
+          if (candidate.value === Parser.Nodes.String) {
+            Loose.collision(project, candidate.fragment.data, candidate);
+          }
+          const replacement = new Member.Node(expression.right!, state.record!, candidate);
+          member.setChild(Core.Nodes.Right, replacement);
+          project.symbols.add(state.record);
         }
-        const replacement = new Member.Node(expression.right!, state.record!, candidate);
-        member.setChild(Core.Nodes.Right, replacement);
-        project.symbols.add(state.record);
+        state.identity = identity;
+        state.record = record;
       }
-      state.identity = identity;
-      state.record = record;
     } else {
       Expression.consume(project, Core.Nodes.Right, member, state);
       const candidate = getCandidate(member.right!);

@@ -6,6 +6,8 @@ import * as Parser from '../../parser';
 import * as Context from '../context';
 import * as Loose from '../loose';
 
+import { Errors } from '../../core/errors';
+
 import * as Expression from './expression';
 import * as Range from './range';
 import * as String from './string';
@@ -38,26 +40,30 @@ export const consume = (
   state: Context.State
 ): void => {
   const node = parent.getChild(direction)!;
-  const expression = node.right!;
   const identifier = node.fragment.data;
-  state.record = node.table.get(identifier)!;
-  Context.setMetadata(project, identifier, state.record!, state);
-  if (expression.value === Parser.Nodes.String) {
-    String.consume(project, Core.Nodes.Right, node, state);
-    const word = expression.fragment.data;
-    if (!Loose.collision(project, word, expression)) {
-      emit(project, direction, parent, state);
-      project.symbols.link(word, identifier);
-    }
-  } else if (expression.value === Parser.Nodes.Range) {
-    Range.consume(project, Core.Nodes.Right, node, state);
-    const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
-    if (!Loose.collision(project, range, expression)) {
-      emit(project, direction, parent, state);
-      project.symbols.link(range, identifier);
-    }
+  if (project.symbols.has(identifier)) {
+    project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
-    Expression.consume(project, Core.Nodes.Right, node, state);
-    emit(project, direction, parent, state);
+    const expression = node.right!;
+    state.record = node.table.get(identifier)!;
+    Context.setMetadata(project, identifier, state.record!, state);
+    if (expression.value === Parser.Nodes.String) {
+      String.consume(project, Core.Nodes.Right, node, state);
+      const word = expression.fragment.data;
+      if (!Loose.collision(project, word, expression)) {
+        emit(project, direction, parent, state);
+        project.symbols.link(word, identifier);
+      }
+    } else if (expression.value === Parser.Nodes.Range) {
+      Range.consume(project, Core.Nodes.Right, node, state);
+      const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
+      if (!Loose.collision(project, range, expression)) {
+        emit(project, direction, parent, state);
+        project.symbols.link(range, identifier);
+      }
+    } else {
+      Expression.consume(project, Core.Nodes.Right, node, state);
+      emit(project, direction, parent, state);
+    }
   }
 };

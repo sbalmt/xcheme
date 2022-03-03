@@ -28,10 +28,15 @@ const emit = (project, direction, parent, state) => {
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
     const identifier = node.fragment.data;
-    state.record = node.table.get(identifier);
-    Context.setMetadata(project, identifier, state.record, state);
-    Expression.consume(project, 1 /* Right */, node, state);
-    emit(project, direction, parent, state);
+    if (project.symbols.has(identifier)) {
+        project.addError(node.fragment, 4096 /* DUPLICATE_IDENTIFIER */);
+    }
+    else {
+        state.record = node.table.get(identifier);
+        Context.setMetadata(project, identifier, state.record, state);
+        Expression.consume(project, 1 /* Right */, node, state);
+        emit(project, direction, parent, state);
+    }
 };
 exports.consume = consume;
 //# sourceMappingURL=node.js.map

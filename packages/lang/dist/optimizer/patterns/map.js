@@ -51,26 +51,31 @@ const consume = (project, direction, parent, state) => {
                 break;
             }
             const record = state.record;
-            const identity = state.identity;
             const identifier = `${record.data.identifier}@${expression.fragment.data}`;
-            state.identity = Identity.resolve(expression) ?? state.identity;
-            state.record = member.table.get(expression.fragment.data);
-            Context.setMetadata(project, identifier, state.record, state);
-            Expression.consume(project, 1 /* Right */, expression, state);
-            const candidate = getCandidate(expression.right);
-            if (!candidate) {
-                project.addError(member.fragment, 4114 /* INVALID_MAP_ENTRY */);
+            if (project.symbols.has(identifier)) {
+                project.addError(expression.fragment, 4096 /* DUPLICATE_IDENTIFIER */);
             }
             else {
-                if (candidate.value === 204 /* String */) {
-                    Loose.collision(project, candidate.fragment.data, candidate);
+                const identity = state.identity;
+                state.identity = Identity.resolve(expression) ?? state.identity;
+                state.record = member.table.get(expression.fragment.data);
+                Context.setMetadata(project, identifier, state.record, state);
+                Expression.consume(project, 1 /* Right */, expression, state);
+                const candidate = getCandidate(expression.right);
+                if (!candidate) {
+                    project.addError(member.fragment, 4114 /* INVALID_MAP_ENTRY */);
                 }
-                const replacement = new Member.Node(expression.right, state.record, candidate);
-                member.setChild(1 /* Right */, replacement);
-                project.symbols.add(state.record);
+                else {
+                    if (candidate.value === 204 /* String */) {
+                        Loose.collision(project, candidate.fragment.data, candidate);
+                    }
+                    const replacement = new Member.Node(expression.right, state.record, candidate);
+                    member.setChild(1 /* Right */, replacement);
+                    project.symbols.add(state.record);
+                }
+                state.identity = identity;
+                state.record = record;
             }
-            state.identity = identity;
-            state.record = record;
         }
         else {
             Expression.consume(project, 1 /* Right */, member, state);

@@ -31,29 +31,34 @@ const emit = (project, direction, parent, state) => {
  */
 const consume = (project, direction, parent, state) => {
     const node = parent.getChild(direction);
-    const expression = node.right;
     const identifier = node.fragment.data;
-    state.record = node.table.get(identifier);
-    Context.setMetadata(project, identifier, state.record, state);
-    if (expression.value === 204 /* String */) {
-        String.consume(project, 1 /* Right */, node, state);
-        const word = expression.fragment.data;
-        if (!Loose.collision(project, word, expression)) {
-            emit(project, direction, parent, state);
-            project.symbols.link(word, identifier);
-        }
-    }
-    else if (expression.value === 206 /* Range */) {
-        Range.consume(project, 1 /* Right */, node, state);
-        const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
-        if (!Loose.collision(project, range, expression)) {
-            emit(project, direction, parent, state);
-            project.symbols.link(range, identifier);
-        }
+    if (project.symbols.has(identifier)) {
+        project.addError(node.fragment, 4096 /* DUPLICATE_IDENTIFIER */);
     }
     else {
-        Expression.consume(project, 1 /* Right */, node, state);
-        emit(project, direction, parent, state);
+        const expression = node.right;
+        state.record = node.table.get(identifier);
+        Context.setMetadata(project, identifier, state.record, state);
+        if (expression.value === 204 /* String */) {
+            String.consume(project, 1 /* Right */, node, state);
+            const word = expression.fragment.data;
+            if (!Loose.collision(project, word, expression)) {
+                emit(project, direction, parent, state);
+                project.symbols.link(word, identifier);
+            }
+        }
+        else if (expression.value === 206 /* Range */) {
+            Range.consume(project, 1 /* Right */, node, state);
+            const range = `${expression.left.fragment.data}-${expression.right.fragment.data}`;
+            if (!Loose.collision(project, range, expression)) {
+                emit(project, direction, parent, state);
+                project.symbols.link(range, identifier);
+            }
+        }
+        else {
+            Expression.consume(project, 1 /* Right */, node, state);
+            emit(project, direction, parent, state);
+        }
     }
 };
 exports.consume = consume;
