@@ -60,7 +60,7 @@ export const consume = (
         project.addError(expression.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
-      const record = state.record;
+      const record = state.record!;
       const identifier = `${record!.data.identifier}@${expression.fragment.data}`;
       if (project.symbols.has(identifier)) {
         project.addError(expression.fragment, Errors.DUPLICATE_IDENTIFIER);
@@ -69,6 +69,8 @@ export const consume = (
         state.identity = Identity.resolve(expression) ?? state.identity;
         state.record = member.table.get(expression.fragment.data)!;
         Context.setMetadata(project, identifier, state.record!, state);
+        record.data.dependencies.push(state.record);
+        state.record.data.dependents.push(record);
         Expression.consume(project, Core.Nodes.Right, expression, state);
         const candidate = getCandidate(expression.right!);
         if (!candidate) {
