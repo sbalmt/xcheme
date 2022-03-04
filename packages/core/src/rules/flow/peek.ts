@@ -30,6 +30,7 @@ export default class Peek extends Pattern {
     source.saveState();
     const status = this.#target.consume(source);
     source.restoreState();
+    source.discardState();
     return status;
   }
 }
