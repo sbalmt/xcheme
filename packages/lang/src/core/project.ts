@@ -76,10 +76,9 @@ export class Context {
    */
   #getRecordsByType(...types: Parser.Symbols[]): Core.Record[] {
     const list = [];
-    for (const current of this.#symbols) {
-      const { pattern } = current.data;
-      if (pattern && types.includes(current.value as Parser.Symbols)) {
-        list.push(current);
+    for (const record of this.#symbols) {
+      if (types.includes(record.value as Parser.Symbols)) {
+        list.push(record);
       }
     }
     return list;
@@ -95,14 +94,13 @@ export class Context {
     const list: Core.Record[] = [];
     const cache = new WeakSet<Core.Record>();
     const action = (records: Core.Record[]): void => {
-      for (const current of records) {
-        if (!cache.has(current)) {
-          cache.add(current);
-          const { pattern, dependencies } = current.data;
-          if (pattern && types.includes(current.value as Parser.Symbols)) {
-            list.push(current);
+      for (const record of records) {
+        if (!cache.has(record)) {
+          cache.add(record);
+          action(record.data.dependencies);
+          if (types.includes(record.value as Parser.Symbols)) {
+            list.push(record);
           }
-          action(dependencies);
         }
       }
     };
@@ -116,12 +114,14 @@ export class Context {
    * @returns Returns an array containing all the references.
    */
   #getReferences(records: Core.Record[]): Coder.Reference[] {
-    return records.map((record) => {
-      return {
-        name: record.data.name,
-        pattern: record.data.pattern!
-      };
-    });
+    return records
+      .sort((a, b) => (a.data.order <= b.data.order ? -1 : 1))
+      .map((record) => {
+        return {
+          name: record.data.name,
+          pattern: record.data.pattern!
+        };
+      });
   }
 
   /**
@@ -207,8 +207,8 @@ export class Context {
   get lexer(): string | Core.Pattern {
     const records = this.#getRecordsByType(Parser.Symbols.Skip, Parser.Symbols.Token, Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Token, Parser.Symbols.AliasToken);
-    const references = flatten.filter((current) => Symbols.isReferencedBy(current, Symbols.Types.Token));
-    const tokens = flatten.filter((current) => current.value === Parser.Symbols.Token);
+    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Symbols.Types.Token));
+    const tokens = flatten.filter((record) => record.value === Parser.Symbols.Token);
     return this.#coder.getEntry('Lexer', this.#getReferences(references), [
       ...this.#getPatterns(this.#getRecordsByType(Parser.Symbols.Skip), Symbols.Types.Token),
       ...this.#getPatterns(tokens, Symbols.Types.Token)
@@ -221,8 +221,8 @@ export class Context {
   get parser(): string | Core.Pattern {
     const records = this.#getRecordsByType(Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Node, Parser.Symbols.AliasNode);
-    const references = flatten.filter((current) => Symbols.isReferencedBy(current, Symbols.Types.Node));
-    const nodes = flatten.filter((current) => current.value === Parser.Symbols.Node);
+    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Symbols.Types.Node));
+    const nodes = flatten.filter((record) => record.value === Parser.Symbols.Node);
     return this.#coder.getEntry(
       'Parser',
       this.#getReferences(references),

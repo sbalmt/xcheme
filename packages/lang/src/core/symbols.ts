@@ -34,7 +34,11 @@ export type Metadata = {
    */
   origin: Origins;
   /**
-   * Record path.
+   * Record order.
+   */
+  order: number;
+  /**
+   * Record name.
    */
   name: string;
   /**
@@ -212,12 +216,18 @@ export class Aggregator {
  * @returns Returns true when the record is referenced, false otherwise.
  */
 export const isReferencedBy = (record: Core.Record, ...types: Types[]): boolean => {
-  const { dependents } = record.data;
-  if (!dependents.includes(record)) {
-    const references = dependents.reduce((previous: number, current: Core.Record) => {
-      return types.includes(current.data.type) ? previous + 1 : previous;
-    }, 0);
-    return references > 1;
+  const { order, dependents } = record.data;
+  let counter = 0;
+  for (const dependent of dependents) {
+    if (counter > 1 || dependent === record) {
+      return true;
+    }
+    if (types.includes(dependent.data.type)) {
+      if (order > dependent.data.order) {
+        return true;
+      }
+      counter++;
+    }
   }
-  return true;
+  return counter > 1;
 };

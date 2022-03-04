@@ -1,7 +1,13 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../core/project';
+import * as Counter from '../core/counter';
 import * as Symbols from '../core/symbols';
+
+/**
+ * Global order counter.
+ */
+const orderCounter = new Counter.Context();
 
 /**
  * Context consumption state.
@@ -55,6 +61,7 @@ export const setMetadata = (project: Project.Context, identifier: string, record
   Object.assign<any, Symbols.Metadata>(record.data, {
     type: state.type,
     origin: state.origin,
+    order: orderCounter.increment(project.coder),
     name: `L${project.id}:${identifier}`,
     identifier,
     identity: state.identity,
