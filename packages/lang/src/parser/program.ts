@@ -240,20 +240,21 @@ const aliasNode = new Core.SetValueRoute(
 );
 
 /**
- * Export identifier route.
+ * Export modifier route.
  */
-const exportIdentifier = new Core.SetValueRoute(Nodes.Identifier, Lexer.Tokens.Identifier);
-
-/**
- * Export aliases route.
- */
-const exportAliases = new Core.SetValueRoute(
+const exportModifier = new Core.SetValueRoute(
   Nodes.Export,
   new Core.AppendNodePattern(
     Core.BaseSource.Output,
     Core.Nodes.Right,
     Core.Nodes.Right,
-    new Core.MapFlowPattern(token, node, aliasToken, aliasNode, exportIdentifier)
+    new Core.MapFlowPattern(
+      token,
+      node,
+      aliasToken,
+      aliasNode,
+      new Core.SetValueRoute(Nodes.Identifier, Lexer.Tokens.Identifier)
+    )
   ),
   Lexer.Tokens.Export
 );
@@ -281,7 +282,7 @@ export const Program = new Core.ExpectFlowPattern(
       new Core.EmitNodePattern(
         Core.BaseSource.Output,
         Core.Nodes.Right,
-        new Core.MapFlowPattern(importModule, skip, token, node, aliasToken, aliasNode, exportAliases),
+        new Core.MapFlowPattern(importModule, skip, token, node, aliasToken, aliasNode, exportModifier),
         new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)
       )
     )
