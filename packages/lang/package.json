@@ -32,6 +32,6 @@
 		"typescript": "^4.3.5"
 	},
 	"dependencies": {
-		"@xcheme/core": "^0.0.4"
+		"@xcheme/core": "^0.0.5"
 	}
 }
