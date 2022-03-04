@@ -52,8 +52,8 @@ export const parser = (text: string, code: string): Result => {
  */
 export const tokens = (context: Core.Context, identities: number[], total: number): void => {
   let count = 0;
-  for (const current of context.tokens) {
-    expect(identities).toContain(current.value);
+  for (const token of context.tokens) {
+    expect(identities).toContain(token.value);
     count++;
   }
   expect(count).toBe(total);

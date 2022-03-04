@@ -19,11 +19,11 @@ import * as Optimizer from '../index';
  * @param records Record list.
  */
 const purge = (project: Project.Context, records: Core.Record[]): void => {
-  for (const current of records) {
-    current.data.dependents = current.data.dependents.filter((dependent: Core.Record) => {
+  for (const record of records) {
+    record.data.dependents = record.data.dependents.filter((dependent: Core.Record) => {
       return project.symbols.has(dependent.data.identifier);
     });
-    purge(project, current.data.dependencies);
+    purge(project, record.data.dependencies);
   }
 };
 
@@ -36,18 +36,18 @@ const purge = (project: Project.Context, records: Core.Record[]): void => {
  */
 const integrate = (project: Project.Context, node: Core.Node, source: Symbols.Aggregator): Core.Record[] => {
   const list = [];
-  for (const current of source) {
-    const { identifier, exported } = current.data;
+  for (const record of source) {
+    const { identifier, exported } = record.data;
     if (exported) {
-      const record = node.table.find(identifier);
-      if (record) {
-        project.addError(record.node!.fragment, Errors.DUPLICATE_IDENTIFIER);
+      const current = node.table.find(identifier);
+      if (current) {
+        project.addError(current.node!.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
-        list.push(current);
-        node.table.add(current);
-        project.symbols.add(current);
-        current.data.exported = false;
-        current.data.imported = true;
+        list.push(record);
+        node.table.add(record);
+        project.symbols.add(record);
+        record.data.exported = false;
+        record.data.imported = true;
       }
     }
   }
