@@ -12,6 +12,7 @@
 
   - Optimize loose tokens for using map patterns.
   - Optimize map entry identities for aliased and non-aliased tokens/nodes.
+  - Reference order swap for avoiding single references in the output.
 
 - **Extension**
 
