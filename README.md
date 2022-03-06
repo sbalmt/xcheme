@@ -7,18 +7,45 @@
 
 A set of tools that includes a programming language for generating lexers and parsers for other languages.
 
+### Get started
+
+1. Install the CLI:
+
+```sh
+npm i @xcheme/cli
+```
+
+2. Create the _Hello World_ parser.
+
 ```xcm
 skip ' ' | '\t' | '\r' | '\n';
 
-alias token T_H as 'h' | 'H';
-alias token T_E as 'e' | 'E';
-alias token T_L as 'l' | 'L';
-alias token T_O as 'o' | 'O';
+token <auto> T_KWD as uncase map {
+  <10> HELLO as 'hello',
+  <11> WORLD as 'world'
+};
 
-token T_HELLO as T_H & T_E & T_L & T_L & T_O;
-token T_EP    as repeat '!';
+token <auto> T_SBL as map {
+  <12> EXC as '!',
+  <13> PRD as '.'
+};
 
-node HELLO as T_HELLO & opt T_EP;
+node <auto> N_KWD as map {
+  <20> HELLO_WORLD as T_KWD.HELLO & T_KWD.WORLD & opt (T_SBL.EXC | T_SBL.PRD)
+};
+```
+
+3. Create the input file.
+
+```txt
+Hello World!
+heLo WoRlD.
+```
+
+4. Run the parser by using the CLI:
+
+```sh
+xcm -s ./example.xcm -t ./input.txt --run --tokens --nodes
 ```
 
 ## Documentation
