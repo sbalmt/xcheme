@@ -1,11 +1,18 @@
 /**
  * A basic "Hello world" parser.
  */
-skip ' ' | '\r' | '\n';
+skip ' ' | '\t' | '\r' | '\n';
 
-token T_HELLO       as 'Hello';
-token T_WORLD       as 'world';
-token T_EXCL_POINT  as '!';
-token T_PERIOD      as '.';
+token <auto> T_KWD as uncase map {
+  <10> HELLO as 'hello',
+  <11> WORLD as 'world'
+};
 
-node HELLO_WORLD    as T_HELLO & T_WORLD & opt (T_EXCL_POINT | T_PERIOD);
+token <auto> T_SBL as map {
+  <12> EXC as '!',
+  <13> PRD as '.'
+};
+
+node <auto> N_KWD as map {
+  <20> HELLO_WORLD as T_KWD.HELLO & T_KWD.WORLD & opt (T_SBL.EXC | T_SBL.PRD)
+};
