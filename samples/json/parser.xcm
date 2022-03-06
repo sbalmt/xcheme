@@ -27,13 +27,13 @@ alias token T_EXPONENT  as ('E' | 'e') & ('+' | '-') & T_DIGIT;
 token<110> T_NUMBER     as T_INTEGER & opt T_FRACTION & opt T_EXPONENT;
 
 // Parser
-alias node<208> OBJECT_ELEMENTS as append (T_MAP.STRING & T_MAP.COLON & VALUE & opt (T_MAP.COMMA & place next OBJECT_ELEMENTS));
-alias node      ARRAY_ELEMENTS  as VALUE & opt (T_MAP.COMMA & place next ARRAY_ELEMENTS);
+alias node<208> OBJECT_ELEMENT as append (T_MAP.STRING & T_MAP.COLON & VALUE) & opt (T_MAP.COMMA & place next OBJECT_ELEMENT);
+alias node      ARRAY_ELEMENT  as VALUE & opt (T_MAP.COMMA & place next ARRAY_ELEMENT);
 
 alias node<201> STRING  as append T_MAP.STRING;
 alias node<202> NUMBER  as append T_NUMBER;
-alias node<203> OBJECT  as T_MAP.OBJECT_OPEN & opt append OBJECT_ELEMENTS & T_MAP.OBJECT_CLOSE;
-alias node<204> ARRAY   as T_MAP.ARRAY_OPEN & opt append ARRAY_ELEMENTS & T_MAP.ARRAY_CLOSE;
+alias node<203> OBJECT  as T_MAP.OBJECT_OPEN & append opt OBJECT_ELEMENT & T_MAP.OBJECT_CLOSE;
+alias node<204> ARRAY   as T_MAP.ARRAY_OPEN & append opt ARRAY_ELEMENT & T_MAP.ARRAY_CLOSE;
 alias node<205> TRUE    as append T_MAP.TRUE;
 alias node<206> FALSE   as append T_MAP.FALSE;
 alias node<207> NULL    as append T_MAP.NULL;
