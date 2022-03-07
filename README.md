@@ -1,5 +1,5 @@
 <h1>
-  <img src="./resources/logo.svg" alt="XCHEME Logo" width="256"/>
+  <img src="./assets/logo.svg" alt="XCHEME Logo" width="256"/>
 </h1>
 
 ![ts](https://badgen.net/badge/-/TypeScript?icon=typescript&label&labelColor=blue&color=555555)
@@ -7,7 +7,7 @@
 
 A set of tools that includes a programming language for generating lexers and parsers for other languages.
 
-### Get started
+## Get started
 
 1. Install the CLI:
 
@@ -70,7 +70,7 @@ Take a look at the samples and learn even more.
 
 ## Packages
 
-See each package index for more information.
+See each package for more information.
 
 - [Core](./packages/core#get-started) - Where the magic happens.
 - [Lang](./packages/lang#get-started) - Woah, a language for building languages.
@@ -78,4 +78,6 @@ See each package index for more information.
 
 ## License
 
-[MIT](https://balmante.eti.br)
+All the packages and extensions in this project are covered by their respective licenses.
+
+All other files are covered by the MIT license, see [LICENSE](./LICENSE).

@@ -8,4 +8,4 @@ XCHEME is a set of tools that includes a programming language for generating lex
 
 ## License
 
-[MIT](https://balmante.eti.br)
+All files in this extension are covered by the MIT license, see [LICENSE](./LICENSE).

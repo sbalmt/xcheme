@@ -16,4 +16,4 @@ npm i @xcheme/core
 
 ## License
 
-[MIT](https://balmante.eti.br)
+All files in this package are covered by the MIT license, see [LICENSE](./LICENSE).

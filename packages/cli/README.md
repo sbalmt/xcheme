@@ -22,13 +22,13 @@ Seeing all options available:
 xcm --help
 ```
 
-Generating a parser in JavaScript:
+Generating the parser in JavaScript:
 
 ```sh
 xcm -s ./path/to/source.xcm
 ```
 
-Running a parser instantly:
+Running the parser instantly:
 
 ```sh
 xcm -s ./path/to/source.xcm -t ./path/to/file.ex --run
@@ -36,4 +36,4 @@ xcm -s ./path/to/source.xcm -t ./path/to/file.ex --run
 
 ## License
 
-[MIT](https://balmante.eti.br)
+All files in this package are covered by the MIT license, see [LICENSE](./LICENSE).
