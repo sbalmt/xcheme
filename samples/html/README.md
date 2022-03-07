@@ -19,7 +19,3 @@ xcm -s ./samples/html/parser.xcm -t ./samples/html/input.html --run
 ```
 
 > Change the option `-t` with another location for parsing another HTML source.
-
-## License
-
-[MIT](https://balmante.eti.br)

@@ -19,7 +19,3 @@ xcm -s ./samples/xcheme/parser.xcm -t ./samples/xcheme/parser.xcm --run
 ```
 
 > Change the option `-t` with another location for parsing another XCHEME source.
-
-## License
-
-[MIT](https://balmante.eti.br)

@@ -19,7 +19,3 @@ xcm -s ./samples/ini/parser.xcm -t ./samples/ini/input.ini --run
 ```
 
 > Change the option `-t` with another location for parsing another JSON source.
-
-## License
-
-[MIT](https://balmante.eti.br)
