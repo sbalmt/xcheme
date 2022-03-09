@@ -66,7 +66,7 @@ export const consume = (
     if (member) {
       if (state.type !== Symbols.Types.Node || member.data.type === Symbols.Types.Node) {
         project.addError(member.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-      } else if (member.data.dynamic) {
+      } else if (Symbols.isDynamic(member)) {
         project.addError(member.node!.fragment, Errors.INVALID_MAP_REFERENCE);
       } else if (first.value === Parser.Symbols.AliasToken) {
         project.addError(first.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);

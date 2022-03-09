@@ -63,7 +63,7 @@ test("Output a 'TOKEN' pattern with an alias token that has a reference to itsel
 test("Output a 'TOKEN' pattern with a whole token map reference", () => {
   Assert.output(
     `
-    alias token ALIAS as map {
+    alias token <auto> ALIAS as map {
       <100> A as 'a',
       <101> B as 'b'
     };

@@ -61,7 +61,7 @@ const resolveRoute = (
     }
     return project.coder.getRoute(units, entry.identity, pattern);
   }
-  if (map.type === Symbols.Types.Skip) {
+  if (entry.dynamic || map.type === Symbols.Types.Skip) {
     return project.coder.getRoute(units, void 0);
   }
   return project.coder.getRoute(units, entry.identity);

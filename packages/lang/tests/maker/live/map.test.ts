@@ -45,7 +45,7 @@ test("Parse a 'MAP' pattern in a token directive", () => {
   const { project, context } = Assert.lexer(
     'abc',
     `
-    token TOKEN as map {
+    token <auto> TOKEN as map {
       <100> A as 'a',
                  'b',
                  'c'
@@ -53,40 +53,34 @@ test("Parse a 'MAP' pattern in a token directive", () => {
   );
   // Assert tokens.
   const tokenA = project.symbols.get('TOKEN@A')!;
-  const token = project.symbols.get('TOKEN')!;
   expect(tokenA).toBeDefined();
-  expect(token).toBeDefined();
   expect(tokenA.data.identity).toBe(100);
-  expect(token.data.identity).toBe(0);
-  Assert.tokens(context, [tokenA.data.identity, token.data.identity], 3);
+  Assert.tokens(context, [tokenA.data.identity, 1, 2], 3);
 });
 
 test("Parse a 'MAP' pattern in a node directive", () => {
   const { project, context } = Assert.parser(
     'abc',
     `
-    node NODE as map {
+    node <auto> NODE as map {
       <100> A as 'a',
                  'b',
                  'c'
     };`
   );
   // Assert tokens.
-  const ref1 = project.symbols.get('@REF1')!; // 'a'
-  const ref2 = project.symbols.get('@REF2')!; // 'b'
+  const ref0 = project.symbols.get('@REF0')!; // 'a'
+  const ref1 = project.symbols.get('@REF1')!; // 'b'
   const ref3 = project.symbols.get('@REF3')!; // 'c'
+  expect(ref0).toBeDefined();
   expect(ref1).toBeDefined();
-  expect(ref2).toBeDefined();
   expect(ref3).toBeDefined();
-  Assert.tokens(context, [ref1.data.identity, ref2.data.identity, ref3.data.identity], 3);
+  Assert.tokens(context, [ref0.data.identity, ref1.data.identity, ref3.data.identity], 3);
   // Assert nodes.
   const nodeA = project.symbols.get('NODE@A')!;
-  const node = project.symbols.get('NODE')!;
   expect(nodeA).toBeDefined();
-  expect(node).toBeDefined();
   expect(nodeA.data.identity).toBe(100);
-  expect(node.data.identity).toBe(0);
-  Assert.nodes(context, [nodeA.data.identity, node.data.identity], 3);
+  Assert.nodes(context, [nodeA.data.identity, 2, 4], 3);
 });
 
 test("Parse a 'MAP' pattern in a node directive using map expressions", () => {

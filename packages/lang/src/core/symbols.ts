@@ -54,10 +54,6 @@ export type Metadata = {
    */
   location: string;
   /**
-   * Determines whether or not the record is dynamic.
-   */
-  dynamic: boolean;
-  /**
    * Determines whether or not the record is imported.
    */
   imported: boolean;
@@ -208,6 +204,15 @@ export class Aggregator {
     }
   }
 }
+
+/**
+ * Determines whether or not the given record has a dynamic identity.
+ * @param record Symbol record.
+ * @returns Returns true when the record has a dynamic identity, false otherwise.
+ */
+export const isDynamic = (record: Core.Record): boolean => {
+  return record.data.identity === Core.BaseSource.Output;
+};
 
 /**
  * Determines whether or not the given record is referenced.

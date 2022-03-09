@@ -96,12 +96,13 @@ export const makeError = (coder: Coder, text: string, errors: Errors[]): Project
 
   // Consume input nodes and optimize its tree.
   status = Optimizer.consumeNodes(context.node, project) && Maker.consumeNodes(context.node, project);
+  const values = project.errors.map((error) => error.value);
 
   expect(status).toBeFalsy();
-  expect(project.errors).toHaveLength(errors.length);
+  expect(values).toHaveLength(errors.length);
 
-  for (const error of project.errors) {
-    expect(errors).toContain(error.value);
+  for (const error of errors) {
+    expect(values).toContain(error);
   }
 
   return project;

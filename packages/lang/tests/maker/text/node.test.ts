@@ -39,8 +39,8 @@ test("Output a 'NODE' pattern with a loose token map reference", () => {
       NODE:
         `new Core.EmitNodePattern(0, 1, ` +
         /**/ `new Core.MapFlowPattern(` +
-        /******/ `new Core.SetValueRoute(0, 1), ` +
-        /******/ `new Core.SetValueRoute(0, 2)` +
+        /******/ `new Core.UnitRoute(1), ` +
+        /******/ `new Core.UnitRoute(2)` +
         /**/ `)` +
         `)`
     }
@@ -137,7 +137,7 @@ test("Output a 'NODE' pattern with token map entry references", () => {
 test("Output a 'NODE' pattern with a whole node map reference", () => {
   Assert.output(
     `
-    alias node ALIAS as map {
+    alias node <auto> ALIAS as map {
       <200> A as 'a',
       <201> B as 'b'
     };
@@ -145,17 +145,17 @@ test("Output a 'NODE' pattern with a whole node map reference", () => {
     {
       ALIAS:
         `new Core.MapFlowPattern(` +
-        /**/ `new Core.SetValueRoute(200, 1), ` +
-        /**/ `new Core.SetValueRoute(201, 2)` +
+        /**/ `new Core.SetValueRoute(200, 0), ` +
+        /**/ `new Core.SetValueRoute(201, 1)` +
         `)`,
       NODE:
         `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
         /**/ `new Core.ExpectFlowPattern(` +
         /******/ `new Core.MapFlowPattern(` +
-        /**********/ `new Core.SetValueRoute(200, 1), ` +
-        /**********/ `new Core.SetValueRoute(201, 2)` +
+        /**********/ `new Core.SetValueRoute(200, 0), ` +
+        /**********/ `new Core.SetValueRoute(201, 1)` +
         /******/ `), ` +
-        /******/ `new Core.ExpectUnitPattern(3)` +
+        /******/ `new Core.ExpectUnitPattern(2)` +
         /**/ `)` +
         `)`
     }

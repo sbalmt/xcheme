@@ -18,7 +18,7 @@ import { Exception } from '../../core/exception';
  */
 const upgrade = (project: Project.Context, record: Core.Record, parent: Core.Node, direction: Core.Nodes): void => {
   const node = parent.getChild(direction)!;
-  if (!record.data.dynamic) {
+  if (!Symbols.isDynamic(record)) {
     parent.setChild(direction, new Identified.Node(node, record.data.identity));
   } else {
     project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
@@ -109,7 +109,7 @@ const resolveNode = (
     connect(project, identifier, record, state);
   } else if (record.value === Parser.Symbols.Token) {
     connect(project, identifier, record, state);
-    if (record.data.dynamic !== void 0) {
+    if (record.data.name !== void 0) {
       upgrade(project, record, parent, direction);
     } else {
       project.symbols.listen(identifier, () => {

@@ -170,23 +170,23 @@ test("Parse a 'NODE' pattern with a whole node map reference", () => {
   const { project, context } = Assert.parser(
     'a!b!',
     `
-    alias node ALIAS as map {
+    alias node <auto> ALIAS as map {
         <200> A as 'a',
         <201> B as 'b'
     };
     node <auto> NODE as ALIAS & '!';`
   );
   // Assert tokens.
-  const ref1 = project.symbols.get('@REF1')!; // 'a'
-  const ref2 = project.symbols.get('@REF2')!; // 'b'
-  const ref3 = project.symbols.get('@REF3')!; // '!'
+  const ref0 = project.symbols.get('@REF0')!; // 'a'
+  const ref1 = project.symbols.get('@REF1')!; // 'b'
+  const ref2 = project.symbols.get('@REF2')!; // '!'
+  expect(ref0).toBeDefined();
   expect(ref1).toBeDefined();
   expect(ref2).toBeDefined();
-  expect(ref3).toBeDefined();
+  expect(ref0.data.identity).toBe(0);
   expect(ref1.data.identity).toBe(1);
   expect(ref2.data.identity).toBe(2);
-  expect(ref3.data.identity).toBe(3);
-  Assert.tokens(context, [ref1.data.identity, ref2.data.identity, ref3.data.identity], 4);
+  Assert.tokens(context, [ref0.data.identity, ref1.data.identity, ref2.data.identity], 4);
   // Assert nodes.
   const aliasA = project.symbols.get('ALIAS@A')!;
   const aliasB = project.symbols.get('ALIAS@B')!;

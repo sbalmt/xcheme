@@ -66,7 +66,6 @@ export const setMetadata = (project: Project.Context, identifier: string, record
     identifier,
     identity: state.identity,
     location: project.name,
-    dynamic: false,
     imported: false,
     exported: false,
     dependencies: [],

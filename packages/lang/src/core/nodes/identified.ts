@@ -22,6 +22,13 @@ export class Node extends Basic.Node {
   }
 
   /**
+   * Get whether or not the identity is dynamic.
+   */
+  get dynamic(): boolean {
+    return this.#identity === Core.BaseSource.Output;
+  }
+
+  /**
    * Get the node identity.
    */
   get identity(): number {

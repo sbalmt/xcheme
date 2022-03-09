@@ -26,9 +26,9 @@ test("Parse an 'ACCESS' pattern in a nested token map", () => {
     'abac',
     `
     token <auto> TOKEN as map {
-      <100> A as 'a' & map {
+      <auto> A as 'a' & map {
         <200> B as 'b',
-              C as 'c'
+        <100> C as 'c'
       }
     };
     node NODE_AB as TOKEN.A.B;

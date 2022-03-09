@@ -7,11 +7,6 @@ import * as Identified from './identified';
  */
 export class Node extends Identified.Node {
   /**
-   * Symbol record.
-   */
-  #record: Core.Record;
-
-  /**
    * Route node.
    */
   #route: Core.Node;
@@ -19,12 +14,11 @@ export class Node extends Identified.Node {
   /**
    * Default constructor.
    * @param node Original node.
-   * @param record Symbol record.
+   * @param identity Member identity.
    * @param route Route node.
    */
-  constructor(node: Core.Node, record: Core.Record, route: Core.Node) {
-    super(node, record.data.identity);
-    this.#record = record;
+  constructor(node: Core.Node, identity: number, route: Core.Node) {
+    super(node, identity);
     this.#route = route;
   }
 
@@ -33,13 +27,6 @@ export class Node extends Identified.Node {
    */
   get empty(): boolean {
     return this.#route.fragment === this.fragment;
-  }
-
-  /**
-   * Get whether or not the member is dynamic.
-   */
-  get dynamic(): boolean {
-    return this.#record.data.dynamic;
   }
 
   /**
