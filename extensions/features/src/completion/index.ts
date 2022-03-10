@@ -110,16 +110,16 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    */
   #getItemKind(record: Core.Record): VSCode.CompletionItemKind {
     if (record.link) {
-      return VSCode.CompletionItemKind.Enum;
+      return VSCode.CompletionItemKind.Class;
     } else {
       switch (record.value) {
-        case Lang.Parser.Symbols.Token:
         case Lang.Parser.Symbols.Node:
-        case Lang.Parser.Symbols.AliasToken:
+        case Lang.Parser.Symbols.Token:
+          return VSCode.CompletionItemKind.Method;
         case Lang.Parser.Symbols.AliasNode:
-          return VSCode.CompletionItemKind.Field;
+        case Lang.Parser.Symbols.AliasToken:
         case Lang.Parser.Symbols.MapMember:
-          return VSCode.CompletionItemKind.EnumMember;
+          return VSCode.CompletionItemKind.Field;
       }
     }
     return VSCode.CompletionItemKind.Reference;

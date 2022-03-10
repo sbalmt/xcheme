@@ -19,4 +19,3 @@
 
   - Add errors/warnings for ambiguous syntax.
   - Add support for auto completing .xcm files in the current workspace.
-  - Add different icons for tokens/nodes in the auto completion tool.
