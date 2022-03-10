@@ -29,7 +29,8 @@ const errorMessages = {
   [Lang.Errors.TOKEN_COLLISION]: 'Multiple tokens with the same expression.',
   [Lang.Errors.IMPORT_DISABLED]: 'Import feature disabled.',
   [Lang.Errors.IMPORT_NOT_FOUND]: "File doesn't found.",
-  [Lang.Errors.IMPORT_FAILURE]: 'Failed to compile.'
+  [Lang.Errors.IMPORT_FAILURE]: 'Failed to compile.',
+  [Lang.Errors.IMPORT_CYCLIC]: 'Cyclic import error.'
 };
 
 /**

@@ -28,4 +28,5 @@ export const enum Errors {
   IMPORT_DISABLED,
   IMPORT_NOT_FOUND,
   IMPORT_FAILURE,
+  IMPORT_CYCLIC
 }

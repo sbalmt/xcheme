@@ -7,11 +7,16 @@ import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Lexer from '../../lexer';
 import * as Parser from '../../parser';
+import * as Maker from '../../maker';
+import * as Cache from '../cache';
+import * as Optimizer from '../index';
 
 import { Errors } from '../../core/errors';
 
-import * as Maker from '../../maker';
-import * as Optimizer from '../index';
+/**
+ * Cache of imported files.
+ */
+const cache = new Cache.Context<string>();
 
 /**
  * Purge from the given record list all dependents that doesn't exists in the specified project context.
@@ -82,21 +87,26 @@ export const consume = (project: Project.Context, node: Core.Node): void => {
   } else {
     const file = `${String.extract(location.fragment.data)}.xcm`;
     const path = Path.join(project.options.directory ?? './', file);
-    const content = project.options.loadFileHook(path);
-    if (!content) {
-      project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
+    if (cache.has(project.coder, path)) {
+      project.addError(location.fragment, Errors.IMPORT_CYCLIC);
     } else {
-      const extContext = new Core.Context(file);
-      const extProject = new Project.Context(file, project.coder, {
-        ...project.options,
-        directory: Path.dirname(path)
-      });
-      if (compile(extProject, extContext, content)) {
-        const records = integrate(project, node, extProject.symbols);
-        purge(project, records);
+      const content = project.options.loadFileHook(path);
+      if (!content) {
+        project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
       } else {
-        project.addError(location.fragment, Errors.IMPORT_FAILURE);
-        project.errors.push(...extProject.errors);
+        const extContext = new Core.Context(file);
+        const extProject = new Project.Context(file, project.coder, {
+          ...project.options,
+          directory: Path.dirname(path)
+        });
+        cache.add(project.coder, path);
+        if (compile(extProject, extContext, content)) {
+          const records = integrate(project, node, extProject.symbols);
+          purge(project, records);
+        } else {
+          project.addError(location.fragment, Errors.IMPORT_FAILURE);
+          project.errors.push(...extProject.errors);
+        }
       }
     }
   }

@@ -30,7 +30,8 @@ const errorMessages = {
   [Lang.Errors.TOKEN_COLLISION]: "Multiple tokens with the same expression, '{0}' at line {1}, column {2}.",
   [Lang.Errors.IMPORT_DISABLED]: 'Import feature disabled, {0} at line {1}, column {2}.',
   [Lang.Errors.IMPORT_NOT_FOUND]: "File doesn't found, {0} at line {1}, column {2}.",
-  [Lang.Errors.IMPORT_FAILURE]: 'Failed to compile, {0} at line {1}, column {2}.'
+  [Lang.Errors.IMPORT_FAILURE]: 'Failed to compile, {0} at line {1}, column {2}.',
+  [Lang.Errors.IMPORT_CYCLIC]: 'Cyclic import error , {0} at line {1}, column {2}.'
 };
 
 /**
