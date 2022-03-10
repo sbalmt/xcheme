@@ -3,7 +3,7 @@ import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
 
-import { Lexer, Parser, Optimizer, Maker, Errors, Project, Coder } from '../../src/index';
+import * as Lang from '../../src/index';
 
 /**
  * Import hook for loading the imported file contents.
@@ -38,31 +38,31 @@ const printErrors = (errors: Core.Error[]): void => {
  * @param text Input text.
  * @returns Returns the generated project.
  */
-export const makeParser = (coder: Coder, text: string): Project.Context => {
-  const project = new Project.Context('make', coder, { loadFileHook });
+export const makeParser = (coder: Lang.Coder, text: string): Lang.Project.Context => {
+  const project = new Lang.Project.Context('make', coder, { loadFileHook });
   const context = new Core.Context('make');
   let status: boolean;
 
   // Consume input text.
-  if (!(status = Lexer.consumeText(text, context))) {
+  if (!(status = Lang.Lexer.consumeText(text, context))) {
     printErrors(context.errors);
   }
   expect(status).toBeTruthy();
 
   // Consume input tokens.
-  if (!(status = Parser.consumeTokens(context.tokens, context))) {
+  if (!(status = Lang.Parser.consumeTokens(context.tokens, context))) {
     printErrors(context.errors);
   }
   expect(status).toBeTruthy();
 
   // Consume input nodes and optimize its tree.
-  if (!(status = Optimizer.consumeNodes(context.node, project))) {
+  if (!(status = Lang.Optimizer.consumeNodes(context.node, project))) {
     printErrors(project.errors);
   }
   expect(status).toBeTruthy();
 
   // Consume input nodes and make the output.
-  if (!(status = Maker.consumeNodes(context.node, project))) {
+  if (!(status = Lang.Maker.consumeNodes(context.node, project))) {
     printErrors(project.errors);
   }
   expect(status).toBeTruthy();
@@ -77,25 +77,25 @@ export const makeParser = (coder: Coder, text: string): Project.Context => {
  * @param errors Expected errors.
  * @returns Returns the generated project.
  */
-export const makeError = (coder: Coder, text: string, errors: Errors[]): Project.Context => {
-  const project = new Project.Context('make', coder, { loadFileHook });
+export const makeError = (coder: Lang.Coder, text: string, errors: Lang.Errors[]): Lang.Project.Context => {
+  const project = new Lang.Project.Context('make', coder, { loadFileHook });
   const context = new Core.Context('make');
   let status: boolean;
 
   // Consume input text.
-  if (!(status = Lexer.consumeText(text, context))) {
+  if (!(status = Lang.Lexer.consumeText(text, context))) {
     printErrors(context.errors);
   }
   expect(status).toBeTruthy();
 
   // Consume input tokens.
-  if (!(status = Parser.consumeTokens(context.tokens, context))) {
+  if (!(status = Lang.Parser.consumeTokens(context.tokens, context))) {
     printErrors(context.errors);
   }
   expect(status).toBeTruthy();
 
   // Consume input nodes and optimize its tree.
-  status = Optimizer.consumeNodes(context.node, project) && Maker.consumeNodes(context.node, project);
+  status = Lang.Optimizer.consumeNodes(context.node, project) && Lang.Maker.consumeNodes(context.node, project);
   const values = project.errors.map((error) => error.value);
 
   expect(status).toBeFalsy();
@@ -114,14 +114,14 @@ export const makeError = (coder: Coder, text: string, errors: Errors[]): Project
  * @param context Lexer context.
  * @param text Input text.
  */
-export const testLexer = (project: Project.Context, context: Core.Context, text: string): void => {
+export const testLexer = (project: Lang.Project.Context, context: Core.Context, text: string): void => {
   const source = new Core.TextSource(text, context);
   const lexer = project.lexer as Core.Pattern;
 
   // Parse the given input text.
   const status = lexer.consume(source);
   if (!status) {
-    context.addError(source.fragment, Errors.UNEXPECTED_TOKEN);
+    context.addError(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
     printErrors(context.errors);
   }
 
@@ -136,7 +136,7 @@ export const testLexer = (project: Project.Context, context: Core.Context, text:
  * @param context Parser context.
  * @param tokens Input tokens.
  */
-export const testParser = (project: Project.Context, context: Core.Context, tokens: Core.Token[]): void => {
+export const testParser = (project: Lang.Project.Context, context: Core.Context, tokens: Core.Token[]): void => {
   const source = new Core.TokenSource(tokens, context);
   const parser = project.parser as Core.Pattern;
 
@@ -144,7 +144,7 @@ export const testParser = (project: Project.Context, context: Core.Context, toke
   const status = parser.consume(source);
   if (!status) {
     const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
-    context.addError(fragment, Errors.UNEXPECTED_SYNTAX);
+    context.addError(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
     printErrors(context.errors);
   }
 
