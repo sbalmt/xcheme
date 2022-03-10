@@ -1,8 +1,10 @@
 import * as VSCode from 'vscode';
+import * as Path from 'path';
 
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
+import * as Utils from '../utils';
 import * as Diagnostics from '../diagnostics';
 import * as Items from './items';
 
@@ -126,6 +128,28 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   }
 
   /**
+   * Get a completion items list for all .xcm files in the current workspace.
+   * @param document Current document.
+   * @returns Returns the completion items list.
+   */
+  #getFileList(document: VSCode.TextDocument): CompletionItems {
+    const path = Utils.getDirectory(document);
+    return VSCode.workspace.findFiles('**/*.xcm', null, 10).then((uriFiles) => {
+      const items = [];
+      for (const uri of uriFiles) {
+        const relative = Path.relative(path, uri.fsPath);
+        items.push(
+          Items.getItem(relative, 'Import file.', {
+            kind: VSCode.CompletionItemKind.File,
+            text: relative.replace(/\\/g, '/').replace(/\.xcm/g, '')
+          })
+        );
+      }
+      return items;
+    });
+  }
+
+  /**
    * Get a completion items list for all the symbols in the given symbol table.
    * @param table Symbol table.
    * @param types Symbol types for filtering.
@@ -175,9 +199,16 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Token offset.
    * @returns Returns an array of completion items or undefined when there's no completion items to suggest.
    */
-  #getCompletionItems(table: Core.Table, tokens: Core.Token[], offset: number): CompletionItems | undefined {
-    if (offset > 0) {
+  #getCompletionItems(
+    document: VSCode.TextDocument,
+    table: Core.Table,
+    tokens: Core.Token[],
+    offset: number
+  ): CompletionItems | undefined {
+    if (offset > -1) {
       switch (tokens[offset--].value) {
+        case Lang.Lexer.Tokens.Import:
+          return this.#getFileList(document);
         case Lang.Lexer.Tokens.Export:
           return [Items.aliasItem, Items.tokenItem, Items.nodeItem];
         case Lang.Lexer.Tokens.CloseChevron:
@@ -246,7 +277,6 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
             ...Items.unaryOperatorList
           ];
         case Lang.Lexer.Tokens.Map:
-        case Lang.Lexer.Tokens.Import:
         case Lang.Lexer.Tokens.OpenChevron:
           return [];
       }
@@ -271,11 +301,10 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   provideCompletionItems(document: VSCode.TextDocument, position: VSCode.Position): CompletionItems {
     const last = this.#cache.last;
     if (last) {
-      const begin = document.offsetAt(position);
       const source = last.source;
-      const offset = this.#findBestOffset(source.tokens, begin);
+      const offset = this.#findBestOffset(source.tokens, document.offsetAt(position));
       return (
-        this.#getCompletionItems(source.table, source.tokens, offset) ?? [
+        this.#getCompletionItems(document, source.table, source.tokens, offset) ?? [
           Items.importItem,
           Items.exportItem,
           Items.skipItem,

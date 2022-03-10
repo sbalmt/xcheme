@@ -18,4 +18,3 @@
 - **Extension**
 
   - Add errors/warnings for ambiguous syntax.
-  - Add support for auto completing .xcm files in the current workspace.

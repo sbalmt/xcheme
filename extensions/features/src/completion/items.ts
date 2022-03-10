@@ -54,15 +54,17 @@ export const getItem = (label: string, documentation: string, options: ItemOptio
 /**
  * Completion item for an 'IMPORT' keyword directive.
  */
-export const importItem = getItem('import', 'Create an import directive.', {
+export const importItem = getItem('import', 'Import a file.', {
   kind: VSCode.CompletionItemKind.Keyword,
-  space: true
+  text: "import '${1}'",
+  commit: ["'"],
+  retry: true
 });
 
 /**
  * Completion item for an 'EXPORT' keyword directive.
  */
-export const exportItem = getItem('export', 'Create an export directive.', {
+export const exportItem = getItem('export', 'Export a directive.', {
   kind: VSCode.CompletionItemKind.Keyword,
   space: true,
   retry: true
