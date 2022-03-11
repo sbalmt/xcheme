@@ -40,6 +40,8 @@ The following table lists the precedence and associativity of all operators from
 | ---------- | ---------------------------------------- | ------------- | --------------- |
 | 1️⃣         | [Grouping](#grouping-operator)           | N/A           | (…)             |
 | 2️⃣         | [Member access](#member-access-operator) | Left to Right | … . …           |
+| 3️⃣         | [Uncase](#uncase-operator)               | Right to Left | uncase …        |
+| 3️⃣         | [Peek](#peek-operator)                   | Right to Left | peek …          |
 | 3️⃣         | [State has](#state-has)                  | Right to Left | has<…> …        |
 | 3️⃣         | [State set](#state-set)                  | Right to Left | set<…> …        |
 | 3️⃣         | [Error](#error-operator)                 | Right to Left | error<…> …      |
@@ -414,6 +416,42 @@ token<101> T_Y as has<1> 'y';
 ```
 
 > Look for `'y'` only when the state `1` is defined, and the state `1` is set only after finding `x` during the expression evaluation.
+
+#### Peek operator
+
+The `peek` operator is a unary operator used to test an expression ahead without advancing the consumption state.
+
+Syntax:
+
+```xcm
+peek operand
+```
+
+For example:
+
+```xcm
+token<100> T_X as 'x' & peek 'y';
+```
+
+> A token `T_X` will be generated for each occurrence of `x` that precedes `y`.
+
+#### Uncase operator
+
+The `uncase` operator is a unary operator used for case-insensitive expressions.
+
+Syntax:
+
+```xcm
+uncase operand
+```
+
+For example:
+
+```xcm
+token<100> T_X as uncase 'x';
+```
+
+> A token `T_X` will be generated for any occurrence of `x` or `X`.
 
 ## Member access operator
 
