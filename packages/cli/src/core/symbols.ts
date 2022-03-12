@@ -4,23 +4,35 @@ import * as Console from './console';
 import * as Fragment from './fragment';
 
 /**
+ * Get the depth indentation string.
+ * @param depth Depth states.
+ * @returns Return the depth indentation string.
+ */
+const getIndent = (depth: boolean[]): string => {
+  const padding = [];
+  for (let index = 1; index < depth.length; ++index) {
+    padding.push(depth[index] ? '│  ' : '   ');
+  }
+  return padding.join('');
+};
+
+/**
  * Print all the symbols in the given table.
  * @param table Symbol table.
- * @param deep Input depth.
+ * @param depth Depth states.
  */
-const printTable = (table: Core.Table, deep: number): void => {
-  const scope = (deep > 0 ? 'Inner' : 'Global').padEnd(7, ' ');
-  const padding = deep > 0 ? '   '.repeat(deep - 1) : '';
-  const level = deep.toString().padStart(3, ' ');
+const printTable = (table: Core.Table, ...depth: boolean[]): void => {
+  const padding = getIndent(depth);
   let index = 1;
   for (const record of table) {
-    const value = record.value;
-    const identifier = record.fragment.data;
+    const ending = index === table.length;
     const location = Fragment.getLocation(record.fragment);
-    const connector = deep > 0 ? (index === table.length ? ' └─ ' : ' ├─ ') : ' ';
-    Console.printLine(` ${location} ${scope} ${level} ${value} ${padding}${connector}${identifier}`);
+    const value = record.value.toString().padStart(4, '0');
+    const connector = depth.length > 0 ? (ending ? '└─ ' : '├─ ') : '';
+    const identifier = record.fragment.data;
+    Console.printLine(`${location} ${value} ${padding}${connector}${identifier}`);
     if (record.link) {
-      printTable(record.link, deep + 1);
+      printTable(record.link, ...depth, !ending);
     }
     index++;
   }
@@ -32,6 +44,7 @@ const printTable = (table: Core.Table, deep: number): void => {
  */
 export const print = (table: Core.Table): void => {
   Console.printLine('Symbols:\n');
-  printTable(table, 0);
+  Console.printLine('          Code Identifier');
+  printTable(table);
   Console.printLine('');
 };
