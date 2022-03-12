@@ -14,7 +14,7 @@ test('Map with a duplicate entry identifier', () => {
 
 test('Dynamic map without an <auto> identity', () => {
   Assert.error(
-    [Lang.Errors.UNSUPPORTED_IDENTITY],
+    [Lang.Errors.UNDEFINED_AUTO_IDENTITY, Lang.Errors.UNSUPPORTED_IDENTITY],
     `
     token TOKEN as map {
       <0> A as 'a'

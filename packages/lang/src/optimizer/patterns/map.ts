@@ -56,7 +56,12 @@ export const consume = (
   while (member) {
     const expression = member.right!;
     if (expression.value === Parser.Nodes.Identifier) {
-      if (!dynamic || state.type === Symbols.Types.Skip) {
+      if (state.type === Symbols.Types.Skip) {
+        project.addError(expression.fragment, Errors.UNSUPPORTED_IDENTITY);
+        break;
+      }
+      if (!dynamic) {
+        project.addError(state.record!.fragment, Errors.UNDEFINED_AUTO_IDENTITY);
         project.addError(expression.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
