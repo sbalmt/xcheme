@@ -8,12 +8,13 @@ import * as Fragment from './fragment';
  * @param tokens Input tokens.
  */
 export const print = (tokens: Core.Token[]): void => {
-  Console.printLine('Tokens:');
+  Console.printLine('Tokens:\n');
+  Console.printLine('          Code Fragment');
   for (const token of tokens) {
     const location = Fragment.getLocation(token.fragment);
-    const message = Fragment.getMessage(token.fragment);
-    const code = token.value.toString().padStart(4, '0');
-    Console.printLine(` ${location} ${code} "${message}"`);
+    const fragment = Fragment.getMessage(token.fragment);
+    const value = token.value.toString().padStart(4, '0');
+    Console.printLine(`${location} ${value} "${fragment}"`);
   }
   Console.printLine('');
 };
