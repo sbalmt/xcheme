@@ -27,10 +27,10 @@ export default class Peek extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    source.saveState();
+    source.save();
     const status = this.#target.consume(source);
-    source.restoreState();
-    source.discardState();
+    source.restore();
+    source.discard();
     return status;
   }
 }

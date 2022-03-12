@@ -42,7 +42,7 @@ export default class Emit extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    source.saveState();
+    source.save();
     let status = this.#test.consume(source);
     if (status) {
       const { node, table, value } = source.output;
@@ -59,7 +59,7 @@ export default class Emit extends Pattern {
         }
       }
     }
-    source.discardState();
+    source.discard();
     return status;
   }
 }

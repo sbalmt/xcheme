@@ -43,7 +43,7 @@ export default class Emit extends Pattern {
    * @throws Throws an error when there's no node to emit.
    */
   consume(source: Base): boolean {
-    source.saveState();
+    source.save();
     const status = this.#target.consume(source);
     if (status) {
       const { table, value } = source.output;
@@ -53,7 +53,7 @@ export default class Emit extends Pattern {
       source.output.node = void 0;
       source.emit(node);
     }
-    source.discardState();
+    source.discard();
     return status;
   }
 }

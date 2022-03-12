@@ -133,7 +133,7 @@ export default class Map extends Pattern {
    * @returns Returns the corresponding node or undefined when it wasn't found.
    */
   #findNode(source: Base, current: Node | undefined): Node | undefined {
-    source.saveState();
+    source.save();
     while (current && source.length > 0) {
       const unit = Uncase.transform(source.value);
       const diff = this.#compare(current.value, unit);
@@ -143,15 +143,15 @@ export default class Map extends Pattern {
         current = current.right;
       } else {
         if (current.pattern !== void 0) {
-          source.discardState();
+          source.discard();
           return current;
         }
-        source.nextState();
+        source.next();
         current = current.next;
       }
     }
-    source.restoreState();
-    source.discardState();
+    source.restore();
+    source.discard();
     return void 0;
   }
 
@@ -166,7 +166,7 @@ export default class Map extends Pattern {
     while ((current = this.#findNode(source, current))) {
       longest = current;
       current = current.next;
-      source.nextState();
+      source.next();
     }
     return longest;
   }

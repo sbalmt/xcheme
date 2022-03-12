@@ -30,7 +30,7 @@ export default class Choose extends Pattern {
     if (source.length > 0) {
       const unit = Uncase.transform(source.value);
       if (this.#units.has(unit)) {
-        source.nextState();
+        source.next();
         return true;
       }
     }

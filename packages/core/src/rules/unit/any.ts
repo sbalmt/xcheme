@@ -13,7 +13,7 @@ export default class Any extends Pattern {
    */
   consume(source: Base): boolean {
     if (source.length > 0) {
-      source.nextState();
+      source.next();
       return true;
     }
     return false;

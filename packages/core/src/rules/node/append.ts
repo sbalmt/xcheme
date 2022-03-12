@@ -56,7 +56,7 @@ export default class Append extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    source.saveState();
+    source.save();
     const output = source.output;
     let current = output.node;
     output.node = void 0;
@@ -77,7 +77,7 @@ export default class Append extends Pattern {
       }
     }
     output.node = current;
-    source.discardState();
+    source.discard();
     return status;
   }
 }

@@ -27,12 +27,12 @@ export default class Try extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    source.saveState();
+    source.save();
     const status = this.#target.consume(source);
     if (!status) {
-      source.restoreState();
+      source.restore();
     }
-    source.discardState();
+    source.discard();
     return status;
   }
 }

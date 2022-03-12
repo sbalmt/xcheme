@@ -60,7 +60,7 @@ test('Next source state', () => {
   expect(location.column.end).toBe(1);
 
   // Test the next state.
-  source.nextState();
+  source.next();
 
   expect(source.offset).toBe(1);
   expect(source.length).toBe(2);
@@ -78,7 +78,7 @@ test('Next source state', () => {
   expect(location.column.end).toBe(1);
 
   // Test the next state.
-  source.nextState();
+  source.next();
 
   expect(source.offset).toBe(2);
   expect(source.length).toBe(1);
@@ -96,7 +96,7 @@ test('Next source state', () => {
   expect(location.column.end).toBe(2);
 
   // Test the last state.
-  source.nextState();
+  source.next();
 
   expect(source.offset).toBe(3);
   expect(source.length).toBe(0);
@@ -132,12 +132,12 @@ test('Save/Discard source state', () => {
   expect(location.column.end).toBe(1);
 
   // Save state.
-  source.saveState();
+  source.save();
 
   // Move to the last state.
-  source.nextState();
-  source.nextState();
-  source.nextState();
+  source.next();
+  source.next();
+  source.next();
 
   fragment = source.fragment;
   expect(fragment.data).toBe('abc');
@@ -151,7 +151,7 @@ test('Save/Discard source state', () => {
   expect(location.column.end).toBe(2);
 
   // Discard state.
-  source.discardState();
+  source.discard();
 });
 
 test('Save/Restore/Discard source state', () => {
@@ -172,13 +172,13 @@ test('Save/Restore/Discard source state', () => {
   expect(location.column.end).toBe(1);
 
   // Save state.
-  source.saveState();
+  source.save();
 
   // Move to the next state.
-  source.nextState();
+  source.next();
 
   // Restore state.
-  source.restoreState();
+  source.restore();
 
   // Test the restored state.
   fragment = source.fragment;
@@ -193,10 +193,10 @@ test('Save/Restore/Discard source state', () => {
   expect(location.column.end).toBe(1);
 
   // Discard state.
-  source.discardState();
+  source.discard();
 
   // Test no more states to restore.
-  expect(() => source.restoreState()).toThrow("There's no state to restore.");
+  expect(() => source.restore()).toThrow("There's no state to restore.");
 });
 
 test('Open/Close symbol table', () => {
@@ -210,7 +210,7 @@ test('Open/Close symbol table', () => {
   expect(table.names).toHaveLength(0);
 
   // Open symbol table.
-  source.openTable();
+  source.expand();
 
   // Emit a new record to the output symbol table.
   source.emit(new Record(source.fragment, 123, context.node));
@@ -221,7 +221,7 @@ test('Open/Close symbol table', () => {
   expect(table.names).toHaveLength(1);
 
   // Close the current symbol table.
-  source.closeTable();
+  source.collapse();
 
   // Test the default symbol table state.
   table = context.table;
@@ -229,7 +229,7 @@ test('Open/Close symbol table', () => {
   expect(table.names).toHaveLength(0);
 
   // Test no more symbol tabes to close.
-  expect(() => source.closeTable()).toThrow("There's no parent symbol table to collapse.");
+  expect(() => source.collapse()).toThrow("There's no parent symbol table to collapse.");
 });
 
 test('Emit token', () => {

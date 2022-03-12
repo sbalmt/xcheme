@@ -31,7 +31,7 @@ export default class Expect extends Pattern {
       if (source.length === 0 || unit !== Uncase.transform(source.value)) {
         return false;
       }
-      source.nextState();
+      source.next();
     }
     return true;
   }

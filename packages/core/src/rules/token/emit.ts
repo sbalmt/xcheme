@@ -34,7 +34,7 @@ export default class Emit extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    source.saveState();
+    source.save();
     const status = this.#target.consume(source);
     if (status) {
       const { value } = source.output;
@@ -42,7 +42,7 @@ export default class Emit extends Pattern {
       const token = new Token(source.fragment, result);
       source.emit(token);
     }
-    source.discardState();
+    source.discard();
     return status;
   }
 }

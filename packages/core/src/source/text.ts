@@ -123,7 +123,7 @@ export default class Text extends Base {
   /**
    * Save the current source state.
    */
-  saveState(): void {
+  save(): void {
     this.#states.push({ ...this.#current });
   }
 
@@ -131,7 +131,7 @@ export default class Text extends Base {
    * Restore the previous source state.
    * @throws Throws an error when there's no state to restore.
    */
-  restoreState(): void {
+  restore(): void {
     if (!(this.#current = this.#states[this.#states.length - 1])) {
       throw "There's no state to restore.";
     }
@@ -140,14 +140,14 @@ export default class Text extends Base {
   /**
    * Discard the current source state.
    */
-  discardState(): void {
+  discard(): void {
     this.#states.pop();
   }
 
   /**
    * Move to the next source state.
    */
-  nextState(): void {
+  next(): void {
     if (this.value !== '\n') {
       this.#current.column++;
     } else {

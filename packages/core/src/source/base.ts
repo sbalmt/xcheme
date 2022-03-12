@@ -121,28 +121,28 @@ export default class Base {
   /**
    * Should be implement to push the current source state.
    */
-  saveState(): void {
+  save(): void {
     throw "Method doesn't implemented.";
   }
 
   /**
    * Should be implemented to restore the previous source state.
    */
-  restoreState(): void {
+  restore(): void {
     throw "Method doesn't implemented.";
   }
 
   /**
    * Should be implemented to pop the previous source state.
    */
-  discardState(): void {
+  discard(): void {
     throw "Method doesn't implemented.";
   }
 
   /**
    * Should be implemented to move to the next source state.
    */
-  nextState(): void {
+  next(): void {
     throw "Move method doesn't implemented.";
   }
 
@@ -169,7 +169,7 @@ export default class Base {
   /**
    * Open a new symbol table.
    */
-  openTable(): void {
+  expand(): void {
     this.#table = new Table(this.#table);
     this.#output.table = this.#table;
   }
@@ -178,7 +178,7 @@ export default class Base {
    * Close the current symbol table.
    * @throws Throws an error when there's no parent symbol table to be collapsed.
    */
-  closeTable(): void {
+  collapse(): void {
     if (!this.#table.parent) {
       throw "There's no parent symbol table to collapse.";
     }

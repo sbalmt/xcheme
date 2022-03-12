@@ -59,7 +59,7 @@ export default class Pivot extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    source.saveState();
+    source.save();
     let status = this.#head.consume(source);
     if (status) {
       const output = source.output;
@@ -77,7 +77,7 @@ export default class Pivot extends Pattern {
         output.node = child;
       }
     }
-    source.discardState();
+    source.discard();
     return status;
   }
 }

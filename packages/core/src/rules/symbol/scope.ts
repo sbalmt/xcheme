@@ -27,9 +27,9 @@ export default class Scope extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    source.openTable();
+    source.expand();
     const status = this.#target.consume(source);
-    source.closeTable();
+    source.collapse();
     return status;
   }
 }

@@ -37,7 +37,7 @@ export default class Range extends Pattern {
     if (source.length > 0) {
       const unit = Uncase.transform(source.value);
       if (unit >= this.#begin && unit <= this.#end) {
-        source.nextState();
+        source.next();
         return true;
       }
     }
