@@ -8,7 +8,7 @@ import * as Fragment from './fragment';
  * @param depth Depth states.
  * @returns Return the depth indentation string.
  */
-const getIndent = (depth: boolean[]): string => {
+const getPadding = (depth: boolean[]): string => {
   const padding = [];
   for (let index = 1; index < depth.length; ++index) {
     padding.push(depth[index] ? '│  ' : '   ');
@@ -22,15 +22,15 @@ const getIndent = (depth: boolean[]): string => {
  * @param depth Depth states.
  */
 const printTable = (table: Core.Table, ...depth: boolean[]): void => {
-  const padding = getIndent(depth);
+  const padding = getPadding(depth);
   let index = 1;
   for (const record of table) {
     const ending = index === table.length;
     const location = Fragment.getLocation(record.fragment);
-    const value = record.value.toString().padStart(4, '0');
+    const fragment = Fragment.getMessage(record.fragment);
     const connector = depth.length > 0 ? (ending ? '└─ ' : '├─ ') : '';
-    const identifier = record.fragment.data;
-    Console.printLine(`${location} ${value} ${padding}${connector}${identifier}`);
+    const value = record.value.toString().padStart(4, '0');
+    Console.printLine(`${location} ${value} ${padding}${connector}${fragment}`);
     if (record.link) {
       printTable(record.link, ...depth, !ending);
     }

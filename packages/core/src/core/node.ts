@@ -139,4 +139,15 @@ export default class Node {
     }
     return node;
   }
+
+  /**
+   * Iterable generator.
+   */
+  *[Symbol.iterator]() {
+    let node: Node | undefined = this;
+    do {
+      yield node;
+      node = node.next;
+    } while (node !== void 0);
+  }
 }

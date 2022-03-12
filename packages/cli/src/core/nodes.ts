@@ -4,29 +4,11 @@ import * as Console from './console';
 import * as Fragment from './fragment';
 
 /**
- * Get the node indent based on the specified state.
- * @param state Determines whether or not there are next nodes.
- * @returns Returns the node indent.
+ * Get the node direction name based on the given direction value.
+ * @param direction Direction value.
+ * @returns Returns the direction name.
  */
-const getIndent = (state: boolean): string => {
-  return state ? '│  ' : '   ';
-};
-
-/**
- * Get the node prefix based on the specified state.
- * @param state Determines whether or not there are next nodes.
- * @returns Returns the node prefix.
- */
-const getPrefix = (state: boolean): string => {
-  return state ? '├─ ' : '└─ ';
-};
-
-/**
- * Get the node name based on the given direction.
- * @param direction Node direction.
- * @returns Returns the node name.
- */
-const getName = (direction: Core.Nodes): string => {
+const getDirection = (direction: Core.Nodes): string => {
   switch (direction) {
     case Core.Nodes.Left:
       return 'L';
@@ -38,29 +20,44 @@ const getName = (direction: Core.Nodes): string => {
 };
 
 /**
+ * Get the depth indentation string.
+ * @param depth Depth states.
+ * @returns Return the depth indentation string.
+ */
+const getPadding = (depth: boolean[]): string => {
+  const padding = [];
+  const length = depth.length - 1;
+  for (let index = 0; index < length; ++index) {
+    padding.push(depth[index] ? '│  ' : '   ');
+  }
+  return padding.join('');
+};
+
+/**
  * Print recursively all the child nodes in the given parent node.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param prefix Node prefix.
- * @param indent Node ident.
+ * @param depth Depth states.
  */
-const printTree = (direction: Core.Nodes, parent: Core.Node, prefix: string, indent: string): void => {
+const printTree = (direction: Core.Nodes, parent: Core.Node, ...depth: boolean[]): void => {
   const node = parent.getChild(direction)!;
-  const fragment = Fragment.getMessage(node.fragment);
-  const location = Fragment.getLocation(node.fragment);
-  const code = node.value.toString();
-  const name = getName(direction);
-  Console.printLine(` ${location} ${prefix}${name} ${code} "${fragment}"`);
-  if (node.left) {
-    const state = node.right !== void 0 || node.next !== void 0;
-    printTree(Core.Nodes.Left, node, indent + getPrefix(state), indent + getIndent(state));
-  }
-  if (node.right) {
-    const state = node.next !== void 0;
-    printTree(Core.Nodes.Right, node, indent + getPrefix(state), indent + getIndent(state));
-  }
-  if (node.next) {
-    printTree(Core.Nodes.Next, node, indent, indent);
+  const padding = getPadding(depth);
+  const children = depth.length > 0;
+  const connected = children && depth[depth.length - 1];
+  for (const current of node) {
+    const name = getDirection(direction);
+    const location = Fragment.getLocation(current.fragment);
+    const fragment = Fragment.getMessage(current.fragment);
+    const connector = children ? (direction === Core.Nodes.Next ? '   ' : connected ? '├─ ' : '└─ ') : '';
+    const value = current.value.toString();
+    Console.printLine(` ${location} ${padding}${connector}${name} ${value} "${fragment}"`);
+    if (current.left) {
+      printTree(Core.Nodes.Left, current, ...depth, current.right !== void 0 || current.next !== void 0);
+    }
+    if (current.right) {
+      printTree(Core.Nodes.Right, current, ...depth, current.next !== void 0);
+    }
+    direction = Core.Nodes.Next;
   }
 };
 
@@ -71,7 +68,7 @@ const printTree = (direction: Core.Nodes, parent: Core.Node, prefix: string, ind
 export const print = (node: Core.Node): void => {
   if (node.next) {
     Console.printLine('Nodes:\n');
-    printTree(Core.Nodes.Next, node, '', '');
+    printTree(Core.Nodes.Next, node);
     Console.printLine('');
   }
 };
