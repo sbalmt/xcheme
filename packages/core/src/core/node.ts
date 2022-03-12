@@ -113,7 +113,7 @@ export default class Node {
    * @param child Child node direction.
    * @returns Return the corresponding child node.
    */
-  getChild(child: Nodes): Node | undefined {
+  get(child: Nodes): Node | undefined {
     return this.#children[child];
   }
 
@@ -122,7 +122,7 @@ export default class Node {
    * @param child Child node direction.
    * @param node New child node.
    */
-  setChild(child: Nodes, node: Node | undefined): void {
+  set(child: Nodes, node: Node | undefined): void {
     this.#children[child] = node;
   }
 
@@ -131,10 +131,10 @@ export default class Node {
    * @param child Child node direction.
    * @returns Returns the corresponding child node.
    */
-  getLowestChild(child: Nodes): Node | undefined {
+  lowest(child: Nodes): Node | undefined {
     let current: Node | undefined = this;
     let node;
-    while ((current = current.getChild(child))) {
+    while ((current = current.get(child))) {
       node = current;
     }
     return node;

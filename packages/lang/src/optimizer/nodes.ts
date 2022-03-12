@@ -27,7 +27,7 @@ export const getIdentifier = (identifier: string, table: Core.Table, location: C
   const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
   const node = new Core.Node(fragment, Parser.Nodes.Identifier, table);
   const record = new Core.Record(fragment, Parser.Symbols.Token, node);
-  node.setChild(Core.Nodes.Left, getIdentity(identity, table, location));
+  node.set(Core.Nodes.Left, getIdentity(identity, table, location));
   table.add(record);
   return node;
 };
@@ -43,9 +43,9 @@ export const getIdentifier = (identifier: string, table: Core.Table, location: C
 export const getToken = (identifier: string, table: Core.Table, location: Core.Location, expression: Core.Node): Core.Node => {
   const fragment = new Core.Fragment('token', 0, 5, location);
   const node = new Core.Node(fragment, Parser.Nodes.Token, table);
-  const ident = getIdentifier(identifier, table, location);
-  ident.setChild(Core.Nodes.Right, expression);
-  node.setChild(Core.Nodes.Right, ident);
+  const name = getIdentifier(identifier, table, location);
+  name.set(Core.Nodes.Right, expression);
+  node.set(Core.Nodes.Right, name);
   return node;
 };
 

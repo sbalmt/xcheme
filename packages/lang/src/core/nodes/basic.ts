@@ -12,9 +12,9 @@ export class Node extends Core.Node {
    */
   constructor(node: Core.Node) {
     super(node.fragment, node.value, node.table);
-    this.setChild(Core.Nodes.Left, node.left);
-    this.setChild(Core.Nodes.Right, node.right);
-    this.setChild(Core.Nodes.Next, node.next);
+    this.set(Core.Nodes.Left, node.left);
+    this.set(Core.Nodes.Right, node.right);
+    this.set(Core.Nodes.Next, node.next);
   }
 
   /**

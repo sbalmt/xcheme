@@ -157,8 +157,8 @@ export default class Base {
     } else if (product instanceof Token) {
       this.#context.tokens.push(product);
     } else if (product instanceof Node) {
-      const root = this.#context.node.getLowestChild(Nodes.Next) ?? this.#context.node;
-      root.setChild(Nodes.Next, product);
+      const root = this.#context.node.lowest(Nodes.Next) ?? this.#context.node;
+      root.set(Nodes.Next, product);
     } else if (product instanceof Record) {
       this.#table.add(product);
     } else {

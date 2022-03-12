@@ -22,8 +22,8 @@ const emit = (project: Project.Context, node: Core.Node, state: Context.State): 
   const temp = Context.getNewState(state.anchor, identity);
   temp.origin = Symbols.Origins.Loose;
   Token.consume(project, Core.Nodes.Right, token, temp);
-  token.setChild(Core.Nodes.Next, state.anchor.next);
-  state.anchor.setChild(Core.Nodes.Next, token);
+  token.set(Core.Nodes.Next, state.anchor.next);
+  state.anchor.set(Core.Nodes.Next, token);
   state.anchor = token;
   return temp.record!;
 };

@@ -24,7 +24,7 @@ export const consume = (
   parent: Core.Node,
   state: Context.State
 ): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   switch (node.value) {
     case Parser.Nodes.Any:
     case Parser.Nodes.Range:

@@ -25,8 +25,8 @@ const getCandidate = (node: Core.Node, parent?: Core.Node): Core.Node | undefine
     if (node.value === Parser.Nodes.String || node instanceof Identified.Node || node instanceof Sequential.Node) {
       if (parent) {
         const right = parent.right!;
-        parent.setChild(Core.Nodes.Left, void 0);
-        parent.setChild(Core.Nodes.Right, void 0);
+        parent.set(Core.Nodes.Left, void 0);
+        parent.set(Core.Nodes.Right, void 0);
         parent.swap(right);
       }
       return node;
@@ -51,7 +51,7 @@ export const consume = (
   parent: Core.Node,
   state: Context.State
 ): void => {
-  let member = parent.getChild(direction)!.right;
+  let member = parent.get(direction)!.right;
   const dynamic = Symbols.isDynamic(state.record!);
   while (member) {
     const expression = member.right!;
@@ -85,7 +85,7 @@ export const consume = (
             Loose.collision(project, candidate.fragment.data, candidate);
           }
           const replacement = new Member.Node(expression.right!, state.identity, candidate);
-          member.setChild(Core.Nodes.Right, replacement);
+          member.set(Core.Nodes.Right, replacement);
           project.symbols.add(state.record);
         }
         state.identity = lastIdentity;
@@ -104,7 +104,7 @@ export const consume = (
           ? Project.Context.identity.increment(project.coder, project.options.identity)
           : Core.BaseSource.Output;
         const replacement = new Member.Node(member.right!, identity, candidate);
-        member.setChild(Core.Nodes.Right, replacement);
+        member.set(Core.Nodes.Right, replacement);
       }
     }
     member = member.next!;

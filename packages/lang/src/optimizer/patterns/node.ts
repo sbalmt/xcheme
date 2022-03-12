@@ -17,9 +17,9 @@ import * as Expression from './expression';
  * @param state Consumption state.
  */
 const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   const replacement = new Directive.Node(node, state.record!);
-  parent.setChild(direction, replacement);
+  parent.set(direction, replacement);
   project.symbols.add(state.record!);
 };
 
@@ -36,7 +36,7 @@ export const consume = (
   parent: Core.Node,
   state: Context.State
 ): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   const identifier = node.fragment.data;
   if (project.symbols.has(identifier)) {
     project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);

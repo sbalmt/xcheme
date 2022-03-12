@@ -43,8 +43,8 @@ export default class Place extends Pattern {
     const child = output.node;
     if (status && child) {
       if (current) {
-        const parent = current.getLowestChild(this.#current) ?? current;
-        parent.setChild(this.#current, child);
+        const parent = current.lowest(this.#current) ?? current;
+        parent.set(this.#current, child);
       } else {
         current = child;
       }

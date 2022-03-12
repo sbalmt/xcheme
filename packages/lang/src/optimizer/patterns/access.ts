@@ -56,7 +56,7 @@ export const consume = (
   parent: Core.Node,
   state: Context.State
 ): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   const nodes = getNodes(node);
   const first = node.table.find(nodes[0].fragment.data);
   if (!first) {
@@ -71,7 +71,7 @@ export const consume = (
       } else if (first.value === Parser.Symbols.AliasToken) {
         project.addError(first.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
       } else {
-        parent.setChild(direction, new Identified.Node(node, member.data.identity));
+        parent.set(direction, new Identified.Node(node, member.data.identity));
       }
     }
   }

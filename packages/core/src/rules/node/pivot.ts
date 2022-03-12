@@ -72,8 +72,8 @@ export default class Pivot extends Pattern {
       } else {
         const result = this.#value === Base.Output ? value ?? -1 : this.#value;
         const child = new Node(fragment, result, table);
-        child.setChild(this.#output, output.node);
-        child.setChild(this.#current, current);
+        child.set(this.#output, output.node);
+        child.set(this.#current, current);
         output.node = child;
       }
     }

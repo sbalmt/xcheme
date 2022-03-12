@@ -39,9 +39,9 @@ export class Node extends Basic.Node {
     super(node);
     this.#type = type;
     this.#sequence = this.#getNodes(node);
-    this.setChild(Core.Nodes.Left, void 0);
-    this.setChild(Core.Nodes.Right, void 0);
-    this.setChild(Core.Nodes.Next, void 0);
+    this.set(Core.Nodes.Left, void 0);
+    this.set(Core.Nodes.Right, void 0);
+    this.set(Core.Nodes.Next, void 0);
   }
 
   /**

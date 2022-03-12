@@ -56,18 +56,18 @@ export const consume = (
   type: Parser.Nodes,
   state: Context.State
 ): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   if (node.value !== type) {
     Expression.consume(project, direction, parent, state);
   } else if (state.type === Symbols.Types.Node) {
     Expression.consume(project, Core.Nodes.Left, node, state);
     Expression.consume(project, Core.Nodes.Right, node, state);
     if (areSequentialReferences(node, type)) {
-      parent.setChild(direction, new Sequential.Node(node, Parser.Nodes.Reference));
+      parent.set(direction, new Sequential.Node(node, Parser.Nodes.Reference));
     }
   } else {
     if (areSequentialUnits(node, type)) {
-      parent.setChild(direction, new Sequential.Node(node, Parser.Nodes.String));
+      parent.set(direction, new Sequential.Node(node, Parser.Nodes.String));
     } else {
       Expression.consume(project, Core.Nodes.Left, node, state);
       Expression.consume(project, Core.Nodes.Right, node, state);

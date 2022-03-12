@@ -67,10 +67,10 @@ export default class Prepend extends Pattern {
         const { table, value } = output;
         const result = this.#value === Base.Output ? value ?? -1 : this.#value;
         const child = new Node(fragment, result, table);
-        child.setChild(this.#output, output.node);
+        child.set(this.#output, output.node);
         if (current) {
-          const parent = child.getLowestChild(this.#current) ?? child;
-          parent.setChild(this.#current, current);
+          const parent = child.lowest(this.#current) ?? child;
+          parent.set(this.#current, current);
         }
         current = child;
       }

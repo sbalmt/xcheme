@@ -17,9 +17,9 @@ import { Exception } from '../../core/exception';
  * @param direction Node direction.
  */
 const upgrade = (project: Project.Context, record: Core.Record, parent: Core.Node, direction: Core.Nodes): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   if (!Symbols.isDynamic(record)) {
-    parent.setChild(direction, new Identified.Node(node, record.data.identity));
+    parent.set(direction, new Identified.Node(node, record.data.identity));
   } else {
     project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
   }
@@ -103,7 +103,7 @@ const resolveNode = (
   record: Core.Record,
   state: Context.State
 ): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Node || record.value === Parser.Symbols.AliasNode) {
     connect(project, identifier, record, state);
@@ -137,7 +137,7 @@ export const consume = (
   parent: Core.Node,
   state: Context.State
 ): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   const record = node.table.find(node.fragment.data);
   if (!record) {
     project.addError(node.fragment, Errors.UNDEFINED_IDENTIFIER);

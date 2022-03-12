@@ -67,10 +67,10 @@ export default class Append extends Pattern {
         const { table, value } = output;
         const result = this.#value === Base.Output ? value ?? -1 : this.#value;
         const child = new Node(fragment, result, table);
-        child.setChild(this.#output, output.node);
+        child.set(this.#output, output.node);
         if (current) {
-          const parent = current.getLowestChild(this.#current) ?? current;
-          parent.setChild(this.#current, child);
+          const parent = current.lowest(this.#current) ?? current;
+          parent.set(this.#current, child);
         } else {
           current = child;
         }

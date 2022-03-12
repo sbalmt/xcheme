@@ -40,7 +40,7 @@ const getPadding = (depth: boolean[]): string => {
  * @param depth Depth states.
  */
 const printTree = (direction: Core.Nodes, parent: Core.Node, ...depth: boolean[]): void => {
-  const node = parent.getChild(direction)!;
+  const node = parent.get(direction)!;
   const padding = getPadding(depth);
   const children = depth.length > 0;
   const connected = children && depth[depth.length - 1];

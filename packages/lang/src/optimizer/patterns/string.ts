@@ -22,10 +22,10 @@ export const consume = (
   state: Context.State
 ): void => {
   if (state.type === Symbols.Types.Node) {
-    const node = parent.getChild(direction)!;
+    const node = parent.get(direction)!;
     const record = Loose.resolve(project, node.fragment.data, node, state);
     const reference = Nodes.getReference(record.data.identifier, node.table, node.fragment.location);
-    parent.setChild(direction, reference);
+    parent.set(direction, reference);
     Expression.consume(project, direction, parent, state);
   }
 };
