@@ -15,6 +15,27 @@ test("Consume an expected 'APPEND' pattern", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.Append, 'REF');
 });
 
+test("Consume an expected 'APPEND' pattern with an identity", () => {
+  Helper.tree(
+    `
+    skip append <1> REF;`,
+    {
+      type: Parser.Nodes.Skip,
+      right: {
+        type: Parser.Nodes.Append,
+        right: {
+          type: Parser.Nodes.State,
+          value: '1',
+          right: {
+            type: Parser.Nodes.Reference,
+            value: 'REF'
+          }
+        }
+      }
+    }
+  );
+});
+
 test("Consume an expected 'APPEND NEXT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip append next REF_NEXT;';

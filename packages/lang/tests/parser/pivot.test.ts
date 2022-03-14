@@ -1,4 +1,5 @@
 import * as Core from '@xcheme/core';
+import * as Helper from './common/helper';
 
 import { Lexer, Parser } from '../../src/index';
 
@@ -32,4 +33,25 @@ test("Consume an expected 'PIVOT' pattern", () => {
   expect(reference.left).toBeUndefined();
   expect(reference.right).toBeUndefined();
   expect(reference.next).toBeUndefined();
+});
+
+test("Consume an expected 'PIVOT' pattern with an identity", () => {
+  Helper.tree(
+    `
+    skip pivot <1> REF;`,
+    {
+      type: Parser.Nodes.Skip,
+      right: {
+        type: Parser.Nodes.Pivot,
+        right: {
+          type: Parser.Nodes.State,
+          value: '1',
+          right: {
+            type: Parser.Nodes.Reference,
+            value: 'REF'
+          }
+        }
+      }
+    }
+  );
 });

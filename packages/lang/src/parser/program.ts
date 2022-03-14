@@ -37,6 +37,36 @@ const state = new Core.ExpectFlowPattern(
 );
 
 /**
+ * Append pattern.
+ */
+const appendPattern = new Core.ExpectFlowPattern(
+  new Core.OptFlowPattern(state),
+  new Core.ChooseFlowPattern(
+    new Core.MapFlowPattern(
+      new Core.SetValueRoute(Nodes.AppendLeft, Lexer.Tokens.Left),
+      new Core.SetValueRoute(Nodes.AppendRight, Lexer.Tokens.Right),
+      new Core.SetValueRoute(Nodes.AppendNext, Lexer.Tokens.Next)
+    ),
+    new Core.SetValuePattern(Nodes.Append)
+  )
+);
+
+/**
+ * Prepend pattern.
+ */
+const prependPattern = new Core.ExpectFlowPattern(
+  new Core.OptFlowPattern(state),
+  new Core.ChooseFlowPattern(
+    new Core.MapFlowPattern(
+      new Core.SetValueRoute(Nodes.PrependLeft, Lexer.Tokens.Left),
+      new Core.SetValueRoute(Nodes.PrependRight, Lexer.Tokens.Right),
+      new Core.SetValueRoute(Nodes.PrependNext, Lexer.Tokens.Next)
+    ),
+    new Core.SetValuePattern(Nodes.Prepend)
+  )
+);
+
+/**
  * Unary operators pattern.
  */
 const unaryOperators = new Core.MapFlowPattern(
@@ -47,16 +77,10 @@ const unaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.PlaceLeft, Lexer.Tokens.Place, Lexer.Tokens.Left),
   new Core.SetValueRoute(Nodes.PlaceRight, Lexer.Tokens.Place, Lexer.Tokens.Right),
   new Core.SetValueRoute(Nodes.Place, Lexer.Tokens.Place),
-  new Core.SetValueRoute(Nodes.AppendNext, Lexer.Tokens.Append, Lexer.Tokens.Next),
-  new Core.SetValueRoute(Nodes.AppendLeft, Lexer.Tokens.Append, Lexer.Tokens.Left),
-  new Core.SetValueRoute(Nodes.AppendRight, Lexer.Tokens.Append, Lexer.Tokens.Right),
-  new Core.SetValueRoute(Nodes.Append, Lexer.Tokens.Append),
-  new Core.SetValueRoute(Nodes.PrependNext, Lexer.Tokens.Prepend, Lexer.Tokens.Next),
-  new Core.SetValueRoute(Nodes.PrependLeft, Lexer.Tokens.Prepend, Lexer.Tokens.Left),
-  new Core.SetValueRoute(Nodes.PrependRight, Lexer.Tokens.Prepend, Lexer.Tokens.Right),
-  new Core.SetValueRoute(Nodes.Prepend, Lexer.Tokens.Prepend),
-  new Core.SetValueRoute(Nodes.Pivot, Lexer.Tokens.Pivot),
-  new Core.SetValueRoute(Nodes.Symbol, Lexer.Tokens.Symbol),
+  new Core.FlowRoute(appendPattern, Lexer.Tokens.Append),
+  new Core.FlowRoute(prependPattern, Lexer.Tokens.Prepend),
+  new Core.SetValueRoute(Nodes.Pivot, new Core.OptFlowPattern(state), Lexer.Tokens.Pivot),
+  new Core.SetValueRoute(Nodes.Symbol, new Core.OptFlowPattern(state), Lexer.Tokens.Symbol),
   new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
   new Core.SetValueRoute(Nodes.Error, state, Lexer.Tokens.Error),
   new Core.SetValueRoute(Nodes.Has, state, Lexer.Tokens.Has),

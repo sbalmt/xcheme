@@ -15,6 +15,27 @@ test("Consume an expected 'PREPEND' pattern", () => {
   Helper.testSkipNode(context.node, Parser.Nodes.Prepend, 'REF');
 });
 
+test("Consume an expected 'PREPEND' pattern with an identity", () => {
+  Helper.tree(
+    `
+    skip prepend <1> REF;`,
+    {
+      type: Parser.Nodes.Skip,
+      right: {
+        type: Parser.Nodes.Prepend,
+        right: {
+          type: Parser.Nodes.State,
+          value: '1',
+          right: {
+            type: Parser.Nodes.Reference,
+            value: 'REF'
+          }
+        }
+      }
+    }
+  );
+});
+
 test("Consume an expected 'PREPEND NEXT' pattern", () => {
   const context = new Core.Context('test');
   const text = 'skip prepend next REF_NEXT;';

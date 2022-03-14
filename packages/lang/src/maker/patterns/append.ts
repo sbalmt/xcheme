@@ -1,9 +1,13 @@
 import * as Core from '@xcheme/core';
 
+import * as Identified from '../../core/nodes/identified';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Parser from '../../parser';
 import * as Splitter from '../splitter';
 import * as Context from '../context';
+
+import { Exception } from '../../core/exception';
 
 /**
  * Consume the given node resolving the 'APPEND' pattern.
@@ -19,11 +23,14 @@ export const consume = (
   state: Context.State,
   direction: Core.Nodes
 ): Coder.Pattern | undefined => {
-  const patterns = Splitter.resolve(project, node.right!, state);
+  if (!(node instanceof Identified.Node)) {
+    throw new Exception('Append nodes must be instances of identified nodes.');
+  }
+  const expression = (node.right!.value === Parser.Nodes.State ? node.right!.right : node.right)!;
+  const patterns = Splitter.resolve(project, expression, state);
   if (patterns) {
-    const identity = state.directive.identity;
     const [test, ...remaining] = patterns;
-    return project.coder.emitAppendPattern(identity, direction, test, ...remaining);
+    return project.coder.emitAppendPattern(node.identity, direction, test, ...remaining);
   }
   return void 0;
 };

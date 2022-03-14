@@ -27,7 +27,7 @@ const skipCounter = new Counter.Context();
  * @throws Throws an exception when the given node isn't valid.
  */
 const resolveTokenOrNode = (project: Project.Context, node: Core.Node, state: Context.State): void => {
-  state.identity = Identity.resolve(project, node.right!);
+  state.identity = Identity.consume(project, node.right!);
   switch (node.value) {
     case Parser.Nodes.Token:
     case Parser.Nodes.AliasToken:

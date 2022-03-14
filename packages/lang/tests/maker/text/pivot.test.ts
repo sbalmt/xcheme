@@ -10,6 +10,16 @@ test("Output a 'PIVOT' pattern", () => {
   );
 });
 
+test("Output a 'PIVOT' pattern with an identity", () => {
+  Assert.output(
+    `
+    skip pivot<100> '@';`,
+    {
+      '@SKIP0': `new Core.PivotNodePattern(100, 1, 0, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
 test("Output a 'PIVOT' pattern with multiple patterns", () => {
   Assert.output(
     `

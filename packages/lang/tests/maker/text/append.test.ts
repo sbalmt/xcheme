@@ -40,6 +40,16 @@ test("Output an 'APPEND' pattern", () => {
   );
 });
 
+test("Output an 'APPEND' pattern with an identity", () => {
+  Assert.output(
+    `
+    skip append<100> '@';`,
+    {
+      '@SKIP0': `new Core.AppendNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
 test("Output an 'APPEND' pattern with multiple patterns", () => {
   Assert.output(
     `

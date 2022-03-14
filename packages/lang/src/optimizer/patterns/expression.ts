@@ -4,8 +4,9 @@ import * as Project from '../../core/project';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
-import * as Reference from './reference';
+import * as Identified from './identified';
 import * as Sequential from './sequential';
+import * as Reference from './reference';
 import * as String from './string';
 import * as Range from './range';
 import * as Map from './map';
@@ -48,6 +49,20 @@ export const consume = (
     case Parser.Nodes.And:
       Sequential.consume(project, direction, parent, Parser.Nodes.And, state);
       break;
+    case Parser.Nodes.Append:
+    case Parser.Nodes.AppendLeft:
+    case Parser.Nodes.AppendNext:
+    case Parser.Nodes.AppendRight:
+      return Identified.consume(project, direction, parent, state);
+    case Parser.Nodes.Prepend:
+    case Parser.Nodes.PrependLeft:
+    case Parser.Nodes.PrependNext:
+    case Parser.Nodes.PrependRight:
+      return Identified.consume(project, direction, parent, state);
+    case Parser.Nodes.Pivot:
+      return Identified.consume(project, direction, parent, state);
+    case Parser.Nodes.Symbol:
+      return Identified.consume(project, direction, parent, state);
     default:
       consume(project, Core.Nodes.Right, node, state);
   }

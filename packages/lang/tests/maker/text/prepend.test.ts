@@ -33,9 +33,19 @@ test("Output a 'PREPEND RIGHT' pattern", () => {
 test("Output a 'PREPEND' pattern", () => {
   Assert.output(
     `
-    skip prepend right '@';`,
+    skip prepend '@';`,
     {
       '@SKIP0': `new Core.PrependNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output a 'PREPEND' pattern with an identity", () => {
+  Assert.output(
+    `
+    skip prepend<100> '@';`,
+    {
+      '@SKIP0': `new Core.PrependNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
     }
   );
 });
