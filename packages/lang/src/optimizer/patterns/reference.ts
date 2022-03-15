@@ -153,7 +153,7 @@ export const consume = (
         resolveNode(project, direction, parent, record, state);
         break;
       default:
-        throw new Exception(`Unsupported context state type: ${state.type}`);
+        throw new Exception(`Unsupported state type: ${state.type}`);
     }
   }
 };

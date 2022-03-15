@@ -24,7 +24,7 @@ export const consume = (
   direction: Core.Nodes
 ): Coder.Pattern | undefined => {
   if (!(node instanceof Identified.Node)) {
-    throw new Exception('Prepend nodes must be instances of identified nodes.');
+    throw new Exception('The PREPEND node must be an instance of an identified node.');
   }
   const expression = (node.right!.value === Parser.Nodes.State ? node.right!.right : node.right)!;
   const patterns = Splitter.resolve(project, expression, state);

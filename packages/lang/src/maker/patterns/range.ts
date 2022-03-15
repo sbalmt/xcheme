@@ -18,7 +18,7 @@ import { Exception } from '../../core/exception';
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern => {
   if (state.directive.type !== Symbols.Types.Skip && state.directive.type !== Symbols.Types.Token) {
-    throw new Exception('Range nodes can only be in a token or skip directive.');
+    throw new Exception('The range node can only exists in a token or skip directive.');
   }
   const from = String.extract(node.left!.fragment.data);
   const to = String.extract(node.right!.fragment.data);

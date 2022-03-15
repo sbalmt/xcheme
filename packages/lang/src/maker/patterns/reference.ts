@@ -11,7 +11,6 @@ import { Exception } from '../../core/exception';
 
 /**
  * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
- * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
  * @param record Referenced record symbol.
  * @returns Returns the corresponding reference pattern.
@@ -19,14 +18,13 @@ import { Exception } from '../../core/exception';
  */
 const resolveSkip = (project: Project.Context, record: Core.Record): Coder.Pattern => {
   if (record.value !== Parser.Symbols.AliasToken) {
-    throw new Exception('Skip reference can only accept alias tokens references.');
+    throw new Exception('The SKIP directive can only accept alias token references.');
   }
   return project.coder.emitReferencePattern(record);
 };
 
 /**
  * Resolve the corresponding reference for the specified record in a 'TOKEN' directive.
- * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
  * @param record Referenced record.
  * @returns Returns the corresponding reference pattern.
@@ -34,14 +32,13 @@ const resolveSkip = (project: Project.Context, record: Core.Record): Coder.Patte
  */
 const resolveToken = (project: Project.Context, record: Core.Record): Coder.Pattern => {
   if (record.value !== Parser.Symbols.Token && record.value !== Parser.Symbols.AliasToken) {
-    throw new Exception('Token reference can only accept tokens and alias tokens references.');
+    throw new Exception('The TOKEN directive can only accept token and alias token references.');
   }
   return project.coder.emitReferencePattern(record);
 };
 
 /**
  * Resolve the corresponding reference for the specified record in a 'NODE' directive.
- * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Project context.
  * @param node Reference node.
  * @param record Referenced record.
@@ -51,7 +48,7 @@ const resolveToken = (project: Project.Context, record: Core.Record): Coder.Patt
 const resolveNode = (project: Project.Context, node: Core.Node, record: Core.Record): Coder.Pattern => {
   if (record.value !== Parser.Symbols.Node && record.value !== Parser.Symbols.AliasNode) {
     if (!(node instanceof Identified.Node)) {
-      throw new Exception('Node reference can only accept tokens, nodes and alias nodes references.');
+      throw new Exception('The NODE directive can only accept token, node and alias node references.');
     }
     return project.coder.emitExpectUnitsPattern([node.identity]);
   }
@@ -70,7 +67,7 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   const identifier = node.fragment.data;
   const record = node.table.find(identifier);
   if (!record) {
-    throw new Exception(`Node reference ${identifier} doesn't exists in the symbol table.`);
+    throw new Exception(`The referenced node (${identifier}) doesn't exists.`);
   }
   const directive = state.directive;
   switch (directive.type) {
@@ -81,6 +78,6 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
     case Symbols.Types.Node:
       return resolveNode(project, node, record);
     default:
-      throw new Exception(`Unsupported directive node type (${directive.type}).`);
+      throw new Exception(`Unsupported directive type (${directive.type}).`);
   }
 };

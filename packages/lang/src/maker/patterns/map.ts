@@ -29,7 +29,7 @@ const resolveUnits = (node: Core.Node): (string | number)[] => {
     return [node.identity];
   }
   if (!(node instanceof Sequential.Node)) {
-    throw new Exception('Unable to resolve the units for the map entry node.');
+    throw new Exception('The MAP entry node must be an instance of a sequential node.');
   }
   if (node.type !== Parser.Nodes.String) {
     return node.sequence.map((node) => (node as Identified.Node).identity);
@@ -82,7 +82,7 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   while (member) {
     const current = member.right!;
     if (!(current instanceof Member.Node)) {
-      throw new Exception('Map entry nodes must be instances of member nodes.');
+      throw new Exception('The MAP entry node must be an instance of a member node.');
     }
     const units = resolveUnits(current.route);
     const route = resolveRoute(project, directive, current, state, units);

@@ -18,7 +18,7 @@ import { Exception } from '../../core/exception';
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern => {
   if (state.directive.type !== Symbols.Types.Skip && state.directive.type !== Symbols.Types.Token) {
-    throw new Exception(`String nodes can only be in a token or skip directive. ${state.directive.type}`);
+    throw new Exception(`The string node can only exists in a token or skip directive.`);
   }
   const units = String.extract(node.fragment.data).split('');
   return project.coder.emitExpectUnitsPattern(units);

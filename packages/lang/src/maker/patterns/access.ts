@@ -15,7 +15,7 @@ import { Exception } from '../../core/exception';
  */
 export const consume = (project: Project.Context, node: Core.Node): Coder.Pattern => {
   if (!(node instanceof Identified.Node)) {
-    throw new Exception('Access nodes must be instances of identified nodes.');
+    throw new Exception('The ACCESS node must be an instance of an identified node.');
   }
   return project.coder.emitExpectUnitsPattern([node.identity]);
 };
