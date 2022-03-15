@@ -1,73 +1,68 @@
-import * as Core from '@xcheme/core';
-import * as Helper from './common/helper';
+import * as Lang from '../../src';
 
-import { Lexer, Parser } from '../../src/index';
+import * as Helper from './common/helper';
+import * as Assert from './common/assert';
 
 test("Consume an expected 'APPEND' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip append REF;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.Append, 'REF');
+  Assert.tree(
+    `
+    skip append REF;`,
+    Helper.getTree(Lang.Parser.Nodes.Append, 'REF')
+  );
 });
 
 test("Consume an expected 'APPEND' pattern with an identity", () => {
-  Helper.tree(
+  Assert.tree(
     `
     skip append <1> REF;`,
-    {
-      type: Parser.Nodes.Skip,
-      right: {
-        type: Parser.Nodes.Append,
-        right: {
-          type: Parser.Nodes.State,
-          value: '1',
-          right: {
-            type: Parser.Nodes.Reference,
-            value: 'REF'
-          }
-        }
-      }
-    }
+    Helper.getTree(Lang.Parser.Nodes.Append, 'REF', '1')
+  );
+});
+
+test("Consume an expected 'APPEND LEFT' pattern", () => {
+  Assert.tree(
+    `
+    skip append left REF_LEFT;`,
+    Helper.getTree(Lang.Parser.Nodes.AppendLeft, 'REF_LEFT')
+  );
+});
+
+test("Consume an expected 'APPEND LEFT' pattern ith an identity", () => {
+  Assert.tree(
+    `
+    skip append <1> left REF_LEFT;`,
+    Helper.getTree(Lang.Parser.Nodes.AppendLeft, 'REF_LEFT', '1')
+  );
+});
+
+test("Consume an expected 'APPEND RIGHT' pattern", () => {
+  Assert.tree(
+    `
+    skip append right REF_RIGHT;`,
+    Helper.getTree(Lang.Parser.Nodes.AppendRight, 'REF_RIGHT')
+  );
+});
+
+test("Consume an expected 'APPEND RIGHT' pattern with an identity", () => {
+  Assert.tree(
+    `
+    skip append <1> right REF_RIGHT;`,
+    Helper.getTree(Lang.Parser.Nodes.AppendRight, 'REF_RIGHT', '1')
   );
 });
 
 test("Consume an expected 'APPEND NEXT' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip append next REF_NEXT;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.AppendNext, 'REF_NEXT');
+  Assert.tree(
+    `
+    skip append next REF_NEXT;`,
+    Helper.getTree(Lang.Parser.Nodes.AppendNext, 'REF_NEXT')
+  );
 });
 
-test("Consume an expected 'APPEND LEFT' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip append left REF_LEFT;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.AppendLeft, 'REF_LEFT');
-});
-
-test("Consume an expected 'APPEND RIGHT' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip append right REF_RIGHT;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.AppendRight, 'REF_RIGHT');
+test("Consume an expected 'APPEND NEXT' pattern with an identity", () => {
+  Assert.tree(
+    `
+    skip append <1> next REF_NEXT;`,
+    Helper.getTree(Lang.Parser.Nodes.AppendNext, 'REF_NEXT', '1')
+  );
 });

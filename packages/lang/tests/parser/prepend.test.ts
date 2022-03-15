@@ -1,73 +1,68 @@
-import * as Core from '@xcheme/core';
-import * as Helper from './common/helper';
+import * as Lang from '../../src';
 
-import { Lexer, Parser } from '../../src/index';
+import * as Helper from './common/helper';
+import * as Assert from './common/assert';
 
 test("Consume an expected 'PREPEND' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip prepend REF;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.Prepend, 'REF');
+  Assert.tree(
+    `
+    skip prepend REF;`,
+    Helper.getTree(Lang.Parser.Nodes.Prepend, 'REF')
+  );
 });
 
 test("Consume an expected 'PREPEND' pattern with an identity", () => {
-  Helper.tree(
+  Assert.tree(
     `
     skip prepend <1> REF;`,
-    {
-      type: Parser.Nodes.Skip,
-      right: {
-        type: Parser.Nodes.Prepend,
-        right: {
-          type: Parser.Nodes.State,
-          value: '1',
-          right: {
-            type: Parser.Nodes.Reference,
-            value: 'REF'
-          }
-        }
-      }
-    }
+    Helper.getTree(Lang.Parser.Nodes.Prepend, 'REF', '1')
+  );
+});
+
+test("Consume an expected 'PREPEND LEFT' pattern", () => {
+  Assert.tree(
+    `
+    skip prepend left REF_LEFT;`,
+    Helper.getTree(Lang.Parser.Nodes.PrependLeft, 'REF_LEFT')
+  );
+});
+
+test("Consume an expected 'PREPEND LEFT' pattern ith an identity", () => {
+  Assert.tree(
+    `
+    skip prepend <1> left REF_LEFT;`,
+    Helper.getTree(Lang.Parser.Nodes.PrependLeft, 'REF_LEFT', '1')
+  );
+});
+
+test("Consume an expected 'PREPEND RIGHT' pattern", () => {
+  Assert.tree(
+    `
+    skip prepend right REF_RIGHT;`,
+    Helper.getTree(Lang.Parser.Nodes.PrependRight, 'REF_RIGHT')
+  );
+});
+
+test("Consume an expected 'PREPEND RIGHT' pattern with an identity", () => {
+  Assert.tree(
+    `
+    skip prepend <1> right REF_RIGHT;`,
+    Helper.getTree(Lang.Parser.Nodes.PrependRight, 'REF_RIGHT', '1')
   );
 });
 
 test("Consume an expected 'PREPEND NEXT' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip prepend next REF_NEXT;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.PrependNext, 'REF_NEXT');
+  Assert.tree(
+    `
+    skip prepend next REF_NEXT;`,
+    Helper.getTree(Lang.Parser.Nodes.PrependNext, 'REF_NEXT')
+  );
 });
 
-test("Consume an expected 'PREPEND LEFT' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip prepend left REF_LEFT;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.PrependLeft, 'REF_LEFT');
-});
-
-test("Consume an expected 'PREPEND RIGHT' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'skip prepend right REF_RIGHT;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  Helper.testSkipNode(context.node, Parser.Nodes.PrependRight, 'REF_RIGHT');
+test("Consume an expected 'PREPEND NEXT' pattern with an identity", () => {
+  Assert.tree(
+    `
+    skip prepend <1> next REF_NEXT;`,
+    Helper.getTree(Lang.Parser.Nodes.PrependNext, 'REF_NEXT', '1')
+  );
 });
