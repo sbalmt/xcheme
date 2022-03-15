@@ -53,15 +53,15 @@ export const consume = (
     case Parser.Nodes.AppendLeft:
     case Parser.Nodes.AppendNext:
     case Parser.Nodes.AppendRight:
-      return Identified.consume(project, direction, parent, state);
     case Parser.Nodes.Prepend:
     case Parser.Nodes.PrependLeft:
     case Parser.Nodes.PrependNext:
     case Parser.Nodes.PrependRight:
-      return Identified.consume(project, direction, parent, state);
     case Parser.Nodes.Pivot:
-      return Identified.consume(project, direction, parent, state);
     case Parser.Nodes.Symbol:
+    case Parser.Nodes.Error:
+    case Parser.Nodes.Has:
+    case Parser.Nodes.Set:
       return Identified.consume(project, direction, parent, state);
     default:
       consume(project, Core.Nodes.Right, node, state);
