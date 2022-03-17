@@ -47,7 +47,7 @@ test('Skip referring an alias token map entry (reference error)', () => {
   Assert.error(
     [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE],
     `
-    alias token <auto> TOKEN as map {
+    alias token TOKEN as map {
       <100> A as 'a'
     };
     skip TOKEN.A;`
@@ -91,7 +91,7 @@ test('Token referring an alias token map entry (reference error)', () => {
   Assert.error(
     [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE],
     `
-    alias token <auto> TOKEN1 as map {
+    alias token TOKEN1 as map {
       <100> A as 'a'
     };
     token TOKEN2 as TOKEN1.A;`
@@ -179,7 +179,7 @@ test('Node referring an alias token map entry (reference error)', () => {
   Assert.error(
     [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE],
     `
-    alias token <auto> TOKEN as map {
+    alias token TOKEN as map {
       A as 'a'
     };
     node NODE as TOKEN.A;`

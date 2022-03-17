@@ -58,7 +58,7 @@ test("Parse a 'TOKEN' pattern with a whole token map reference", () => {
   const { project, context } = Assert.lexer(
     'a!b!',
     `
-    alias token <auto> ALIAS as map {
+    alias token ALIAS as map {
       <100> A as 'a',
       <101> B as 'b'
     };

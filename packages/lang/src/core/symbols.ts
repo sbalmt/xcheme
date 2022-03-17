@@ -1,5 +1,6 @@
 import * as Core from '@xcheme/core';
 
+import { Symbols } from '../parser/symbols';
 import { Exception } from './exception';
 
 /**
@@ -204,6 +205,15 @@ export class Aggregator {
     }
   }
 }
+
+/**
+ * Determines whether or not the given record is an alias directive.
+ * @param record Symbol record.
+ * @returns Returns true when the record is an alias, false otherwise.
+ */
+export const isAlias = (record: Core.Record): boolean => {
+  return record.value === Symbols.AliasToken || record.value === Symbols.AliasNode;
+};
 
 /**
  * Determines whether or not the given record has a dynamic identity.

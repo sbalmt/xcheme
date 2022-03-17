@@ -1,6 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Parser from '../../parser';
 import * as Symbols from '../symbols';
 import * as Identified from './identified';
 
@@ -41,6 +40,6 @@ export class Node extends Identified.Node {
    * Get whether or not the directive is an alias.
    */
   get alias(): boolean {
-    return this.#record.value === Parser.Symbols.AliasNode || this.#record.value === Parser.Symbols.AliasToken;
+    return Symbols.isAlias(this.#record);
   }
 }

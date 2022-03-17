@@ -52,7 +52,8 @@ export const consume = (
   state: Context.State
 ): void => {
   let member = parent.get(direction)!.right;
-  const dynamic = Symbols.isDynamic(state.record!);
+  const record = state.record!;
+  const dynamic = Symbols.isDynamic(record);
   while (member) {
     const expression = member.right!;
     if (expression.value === Parser.Nodes.Identifier) {
@@ -60,7 +61,7 @@ export const consume = (
         project.addError(expression.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
-      if (!dynamic) {
+      if (!dynamic && !Symbols.isAlias(record)) {
         project.addError(state.record!.fragment, Errors.UNDEFINED_AUTO_IDENTITY);
         project.addError(expression.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;

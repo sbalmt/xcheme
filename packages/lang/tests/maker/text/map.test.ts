@@ -92,7 +92,7 @@ test("Output a 'MAP' pattern in a token directive", () => {
 test("Output a 'MAP' pattern in an alias token directive", () => {
   Assert.output(
     `
-    alias token <auto> ALIAS as map {
+    alias token ALIAS as map {
       <100> A as 'a',
                  'b',
                  'c'
@@ -101,8 +101,8 @@ test("Output a 'MAP' pattern in an alias token directive", () => {
       ALIAS:
         `new Core.MapFlowPattern(` +
         /**/ `new Core.SetValueRoute(100, 'a'), ` +
-        /**/ `new Core.SetValueRoute(0, 'b'), ` +
-        /**/ `new Core.SetValueRoute(1, 'c')` +
+        /**/ `new Core.UnitRoute('b'), ` +
+        /**/ `new Core.UnitRoute('c')` +
         `)`
     }
   );
@@ -132,7 +132,7 @@ test("Output a 'MAP' pattern in a node directive", () => {
 test("Output a 'MAP' pattern in an alias node directive", () => {
   Assert.output(
     `
-    alias node <auto> ALIAS as map {
+    alias node ALIAS as map {
       <100> A as 'a',
                  'b',
                  'c'
@@ -140,9 +140,9 @@ test("Output a 'MAP' pattern in an alias node directive", () => {
     {
       ALIAS:
         `new Core.MapFlowPattern(` +
-        /**/ `new Core.SetValueRoute(100, 0), ` +
-        /**/ `new Core.SetValueRoute(2, 1), ` +
-        /**/ `new Core.SetValueRoute(4, 3)` +
+        /**/ `new Core.SetValueRoute(100, 1), ` +
+        /**/ `new Core.UnitRoute(2), ` +
+        /**/ `new Core.UnitRoute(3)` +
         `)`
     }
   );
