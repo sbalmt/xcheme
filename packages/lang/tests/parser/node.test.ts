@@ -1,6 +1,6 @@
 import * as Lang from '../../src';
 
-import * as Assert from './common/assert';
+import * as Assert from './utils/assert';
 
 test("Consume an expected 'NODE' pattern", () => {
   Assert.tree(

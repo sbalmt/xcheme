@@ -1,12 +1,12 @@
 import * as Lang from '../../src';
 
-import * as Helper from './common/helper';
-import * as Assert from './common/assert';
+import * as Helper from './utils/helper';
+import * as Assert from './utils/assert';
 
 test("Consume an expected 'SET' pattern", () => {
   Assert.tree(
     `
     skip set <1> REF;`,
-    Helper.getTree(Lang.Parser.Nodes.Set, 'REF', '1')
+    Helper.withState(Lang.Parser.Nodes.Set, 'REF', '1')
   );
 });
