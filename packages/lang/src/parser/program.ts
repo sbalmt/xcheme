@@ -40,7 +40,7 @@ const state = new Core.ExpectFlowPattern(
  * Append pattern.
  */
 const appendPattern = new Core.ExpectFlowPattern(
-  new Core.OptFlowPattern(state),
+  new Core.OptFlowPattern(identity),
   new Core.ChooseFlowPattern(
     new Core.MapFlowPattern(
       new Core.SetValueRoute(Nodes.AppendLeft, Lexer.Tokens.Left),
@@ -55,7 +55,7 @@ const appendPattern = new Core.ExpectFlowPattern(
  * Prepend pattern.
  */
 const prependPattern = new Core.ExpectFlowPattern(
-  new Core.OptFlowPattern(state),
+  new Core.OptFlowPattern(identity),
   new Core.ChooseFlowPattern(
     new Core.MapFlowPattern(
       new Core.SetValueRoute(Nodes.PrependLeft, Lexer.Tokens.Left),
@@ -79,8 +79,8 @@ const unaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.Place, Lexer.Tokens.Place),
   new Core.FlowRoute(appendPattern, Lexer.Tokens.Append),
   new Core.FlowRoute(prependPattern, Lexer.Tokens.Prepend),
-  new Core.SetValueRoute(Nodes.Pivot, new Core.OptFlowPattern(state), Lexer.Tokens.Pivot),
-  new Core.SetValueRoute(Nodes.Symbol, new Core.OptFlowPattern(state), Lexer.Tokens.Symbol),
+  new Core.SetValueRoute(Nodes.Pivot, new Core.OptFlowPattern(identity), Lexer.Tokens.Pivot),
+  new Core.SetValueRoute(Nodes.Symbol, new Core.OptFlowPattern(identity), Lexer.Tokens.Symbol),
   new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
   new Core.SetValueRoute(Nodes.Error, state, Lexer.Tokens.Error),
   new Core.SetValueRoute(Nodes.Has, state, Lexer.Tokens.Has),

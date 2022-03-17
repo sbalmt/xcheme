@@ -1,3 +1,5 @@
+import * as Core from '@xcheme/core';
+
 import * as Assert from './utils/assert';
 
 test("Output a 'SYMBOL' pattern", () => {
@@ -16,6 +18,16 @@ test("Output a 'SYMBOL' pattern with an identity", () => {
     skip symbol<100> '@';`,
     {
       '@SKIP0': `new Core.EmitSymbolPattern(100, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output a 'SYMBOL' pattern with an auto identity", () => {
+  Assert.output(
+    `
+    skip symbol<auto> '@';`,
+    {
+      '@SKIP0': `new Core.EmitSymbolPattern(${Core.BaseSource.Output}, new Core.ExpectUnitPattern('@'))`
     }
   );
 });

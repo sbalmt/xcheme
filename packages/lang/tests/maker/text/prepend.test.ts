@@ -1,11 +1,33 @@
+import * as Core from '@xcheme/core';
+
 import * as Assert from './utils/assert';
 
-test("Output a 'PREPEND NEXT' pattern", () => {
+test("Output a 'PREPEND' pattern", () => {
   Assert.output(
     `
-    skip prepend next '@';`,
+    skip prepend '@';`,
     {
-      '@SKIP0': `new Core.PrependNodePattern(0, 1, 2, new Core.ExpectUnitPattern('@'))`
+      '@SKIP0': `new Core.PrependNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output a 'PREPEND' pattern with an identity", () => {
+  Assert.output(
+    `
+    skip prepend<100> '@';`,
+    {
+      '@SKIP0': `new Core.PrependNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output a 'PREPEND' pattern with an auto identity", () => {
+  Assert.output(
+    `
+    skip prepend<auto> '@';`,
+    {
+      '@SKIP0': `new Core.PrependNodePattern(${Core.BaseSource.Output}, 1, 1, new Core.ExpectUnitPattern('@'))`
     }
   );
 });
@@ -30,22 +52,12 @@ test("Output a 'PREPEND RIGHT' pattern", () => {
   );
 });
 
-test("Output a 'PREPEND' pattern", () => {
+test("Output a 'PREPEND NEXT' pattern", () => {
   Assert.output(
     `
-    skip prepend '@';`,
+    skip prepend next '@';`,
     {
-      '@SKIP0': `new Core.PrependNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
-    }
-  );
-});
-
-test("Output a 'PREPEND' pattern with an identity", () => {
-  Assert.output(
-    `
-    skip prepend<100> '@';`,
-    {
-      '@SKIP0': `new Core.PrependNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
+      '@SKIP0': `new Core.PrependNodePattern(0, 1, 2, new Core.ExpectUnitPattern('@'))`
     }
   );
 });

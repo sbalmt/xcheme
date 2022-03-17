@@ -1,10 +1,10 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'PREPEND NEXT' pattern", () => {
+test("Parse a 'PREPEND' pattern", () => {
   Assert.lexer(
     '@@@',
     `
-    skip prepend next '@';`
+    skip prepend '@';`
   );
 });
 
@@ -24,11 +24,11 @@ test("Parse a 'PREPEND RIGHT' pattern", () => {
   );
 });
 
-test("Parse a 'PREPEND' pattern", () => {
+test("Parse a 'PREPEND NEXT' pattern", () => {
   Assert.lexer(
     '@@@',
     `
-    skip prepend '@';`
+    skip prepend next '@';`
   );
 });
 

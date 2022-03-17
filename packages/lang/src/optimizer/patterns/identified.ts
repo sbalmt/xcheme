@@ -24,7 +24,7 @@ export const consume = (
   const node = parent.get(direction)!;
   const expression = node.right!;
   let identity;
-  if (expression.value === Parser.Nodes.State) {
+  if (expression.value === Parser.Nodes.Identity || expression.value === Parser.Nodes.State) {
     identity = Identity.resolve(expression);
     Expression.consume(project, Core.Nodes.Right, expression, state);
   } else {

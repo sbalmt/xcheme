@@ -1,4 +1,36 @@
+import * as Core from '@xcheme/core';
+
 import * as Assert from './utils/assert';
+
+test("Output an 'APPEND' pattern", () => {
+  Assert.output(
+    `
+    skip append '@';`,
+    {
+      '@SKIP0': `new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output an 'APPEND' pattern with an identity", () => {
+  Assert.output(
+    `
+    skip append<100> '@';`,
+    {
+      '@SKIP0': `new Core.AppendNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output an 'APPEND' pattern with an auto identity", () => {
+  Assert.output(
+    `
+    skip append<auto> '@';`,
+    {
+      '@SKIP0': `new Core.AppendNodePattern(${Core.BaseSource.Output}, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
 
 test("Output an 'APPEND NEXT' pattern", () => {
   Assert.output(
@@ -26,26 +58,6 @@ test("Output an 'APPEND RIGHT' pattern", () => {
     skip append right '@';`,
     {
       '@SKIP0': `new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
-    }
-  );
-});
-
-test("Output an 'APPEND' pattern", () => {
-  Assert.output(
-    `
-    skip append '@';`,
-    {
-      '@SKIP0': `new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
-    }
-  );
-});
-
-test("Output an 'APPEND' pattern with an identity", () => {
-  Assert.output(
-    `
-    skip append<100> '@';`,
-    {
-      '@SKIP0': `new Core.AppendNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
     }
   );
 });
