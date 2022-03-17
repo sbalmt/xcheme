@@ -5,7 +5,7 @@ import * as Lang from '../../../src/index';
 /**
  * Tree structure.
  */
-export type TreeStructure = {
+export type Tree = {
   /**
    * Node type.
    */
@@ -17,15 +17,15 @@ export type TreeStructure = {
   /**
    * Left structure.
    */
-  left?: TreeStructure;
+  left?: Tree;
   /**
    * Right structure.
    */
-  right?: TreeStructure;
+  right?: Tree;
   /**
    * Next structure.
    */
-  next?: TreeStructure;
+  next?: Tree;
 };
 
 /**
@@ -33,7 +33,7 @@ export type TreeStructure = {
  * @param code Source code.
  * @param tree Tree structure.
  */
-export const tree = (code: string, tree: TreeStructure): void => {
+export const tree = (code: string, tree: Tree): void => {
   const context = new Core.Context('test');
   expect(Lang.Lexer.consumeText(code, context)).toBeTruthy();
   expect(Lang.Parser.consumeTokens(context.tokens, context)).toBeTruthy();
@@ -46,7 +46,7 @@ export const tree = (code: string, tree: TreeStructure): void => {
  * @param node Input node.
  * @param tree Tree structure.
  */
-const match = (node: Core.Node, tree: TreeStructure): void => {
+const match = (node: Core.Node, tree: Tree): void => {
   expect(node.value).toBe(tree.type);
   if (tree.value) {
     expect(node.fragment.data).toBe(tree.value);

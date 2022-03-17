@@ -1,151 +1,83 @@
-import * as Core from '@xcheme/core';
+import * as Lang from '../../src';
 
-import { Lexer, Parser } from '../../src/index';
+import * as Assert from './common/assert';
 
 test("Consume an expected 'NODE' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'node NODE as REF;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  const directive = context.node.next!;
-  expect(directive).toBeDefined();
-  expect(directive.value).toBe(Parser.Nodes.Node);
-  expect(directive.left).toBeUndefined();
-  expect(directive.right).toBeDefined();
-  expect(directive.next).toBeUndefined();
-
-  const identifier = directive.right!;
-  expect(identifier).toBeDefined();
-  expect(identifier.value).toBe(Parser.Nodes.Identifier);
-  expect(identifier.fragment.data).toBe('NODE');
-  expect(identifier.left).toBeUndefined();
-  expect(identifier.right).toBeDefined();
-  expect(identifier.next).toBeUndefined();
-
-  const expression = identifier.right!;
-  expect(expression).toBeDefined();
-  expect(expression.value).toBe(Parser.Nodes.Reference);
-  expect(expression.fragment.data).toBe('REF');
-  expect(expression.left).toBeUndefined();
-  expect(expression.right).toBeUndefined();
-  expect(expression.next).toBeUndefined();
+  Assert.tree(
+    `
+    node NODE as REF;`,
+    {
+      type: Lang.Parser.Nodes.Node,
+      right: {
+        type: Lang.Parser.Nodes.Identifier,
+        value: 'NODE',
+        right: {
+          type: Lang.Parser.Nodes.Reference,
+          value: 'REF'
+        }
+      }
+    }
+  );
 });
 
 test("Consume an expected 'NODE' pattern with an identity", () => {
-  const context = new Core.Context('test');
-  const text = 'node <2020> NODE as REF;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  const directive = context.node.next!;
-  expect(directive).toBeDefined();
-  expect(directive.value).toBe(Parser.Nodes.Node);
-  expect(directive.left).toBeUndefined();
-  expect(directive.right).toBeDefined();
-  expect(directive.next).toBeUndefined();
-
-  const identifier = directive.right!;
-  expect(identifier).toBeDefined();
-  expect(identifier.value).toBe(Parser.Nodes.Identifier);
-  expect(identifier.fragment.data).toBe('NODE');
-  expect(identifier.left).toBeDefined();
-  expect(identifier.right).toBeDefined();
-  expect(identifier.next).toBeUndefined();
-
-  const identity = identifier.left!;
-  expect(identity).toBeDefined();
-  expect(identity.value).toBe(Parser.Nodes.Identity);
-  expect(identity.fragment.data).toBe('2020');
-  expect(identity.left).toBeUndefined();
-  expect(identity.right).toBeUndefined();
-  expect(identity.next).toBeUndefined();
-
-  const expression = identifier.right!;
-  expect(expression).toBeDefined();
-  expect(expression.value).toBe(Parser.Nodes.Reference);
-  expect(expression.fragment.data).toBe('REF');
-  expect(expression.left).toBeUndefined();
-  expect(expression.right).toBeUndefined();
-  expect(expression.next).toBeUndefined();
+  Assert.tree(
+    `
+    node <2020> NODE as REF;`,
+    {
+      type: Lang.Parser.Nodes.Node,
+      right: {
+        type: Lang.Parser.Nodes.Identifier,
+        value: 'NODE',
+        left: {
+          type: Lang.Parser.Nodes.Identity,
+          value: '2020'
+        },
+        right: {
+          type: Lang.Parser.Nodes.Reference,
+          value: 'REF'
+        }
+      }
+    }
+  );
 });
 
 test("Consume an expected 'ALIAS NODE' pattern", () => {
-  const context = new Core.Context('test');
-  const text = 'alias node ALIAS as REF;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  const directive = context.node.next!;
-  expect(directive).toBeDefined();
-  expect(directive.value).toBe(Parser.Nodes.AliasNode);
-  expect(directive.left).toBeUndefined();
-  expect(directive.right).toBeDefined();
-  expect(directive.next).toBeUndefined();
-
-  const identifier = directive.right!;
-  expect(identifier).toBeDefined();
-  expect(identifier.value).toBe(Parser.Nodes.Identifier);
-  expect(identifier.fragment.data).toBe('ALIAS');
-  expect(identifier.left).toBeUndefined();
-  expect(identifier.right).toBeDefined();
-  expect(identifier.next).toBeUndefined();
-
-  const expression = identifier.right!;
-  expect(expression).toBeDefined();
-  expect(expression.value).toBe(Parser.Nodes.Reference);
-  expect(expression.fragment.data).toBe('REF');
-  expect(expression.left).toBeUndefined();
-  expect(expression.right).toBeUndefined();
-  expect(expression.next).toBeUndefined();
+  Assert.tree(
+    `
+    alias node ALIAS as REF;`,
+    {
+      type: Lang.Parser.Nodes.AliasNode,
+      right: {
+        type: Lang.Parser.Nodes.Identifier,
+        value: 'ALIAS',
+        right: {
+          type: Lang.Parser.Nodes.Reference,
+          value: 'REF'
+        }
+      }
+    }
+  );
 });
 
 test("Consume an expected 'ALIAS NODE' pattern with an identity", () => {
-  const context = new Core.Context('test');
-  const text = 'alias node <2020> ALIAS as REF;';
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  const directive = context.node.next!;
-  expect(directive).toBeDefined();
-  expect(directive.value).toBe(Parser.Nodes.AliasNode);
-  expect(directive.left).toBeUndefined();
-  expect(directive.right).toBeDefined();
-  expect(directive.next).toBeUndefined();
-
-  const identifier = directive.right!;
-  expect(identifier).toBeDefined();
-  expect(identifier.value).toBe(Parser.Nodes.Identifier);
-  expect(identifier.fragment.data).toBe('ALIAS');
-  expect(identifier.left).toBeDefined();
-  expect(identifier.right).toBeDefined();
-  expect(identifier.next).toBeUndefined();
-
-  const identity = identifier.left!;
-  expect(identity).toBeDefined();
-  expect(identity.value).toBe(Parser.Nodes.Identity);
-  expect(identity.fragment.data).toBe('2020');
-  expect(identity.left).toBeUndefined();
-  expect(identity.right).toBeUndefined();
-  expect(identity.next).toBeUndefined();
-
-  const expression = identifier.right!;
-  expect(expression).toBeDefined();
-  expect(expression.value).toBe(Parser.Nodes.Reference);
-  expect(expression.fragment.data).toBe('REF');
-  expect(expression.left).toBeUndefined();
-  expect(expression.right).toBeUndefined();
-  expect(expression.next).toBeUndefined();
+  Assert.tree(
+    `
+    alias node <2020> ALIAS as REF;`,
+    {
+      type: Lang.Parser.Nodes.AliasNode,
+      right: {
+        type: Lang.Parser.Nodes.Identifier,
+        value: 'ALIAS',
+        left: {
+          type: Lang.Parser.Nodes.Identity,
+          value: '2020'
+        },
+        right: {
+          type: Lang.Parser.Nodes.Reference,
+          value: 'REF'
+        }
+      }
+    }
+  );
 });

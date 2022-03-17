@@ -1,48 +1,61 @@
-import * as Core from '@xcheme/core';
+import * as Lang from '../../src';
 
-import { Lexer, Parser } from '../../src/index';
+import * as Assert from './common/assert';
 
 test("Consume an expected 'MAP' pattern", () => {
-  const context = new Core.Context('test');
-  const text = "skip map { <1> A as 'a', B as 'b', 'c' };";
-
-  // Test the consumption.
-  expect(Lexer.consumeText(text, context)).toBeTruthy();
-  expect(Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Check the resulting nodes.
-  const directive = context.node.next!;
-  expect(directive).toBeDefined();
-  expect(directive.value).toBe(Parser.Nodes.Skip);
-  expect(directive.left).toBeUndefined();
-  expect(directive.right).toBeDefined();
-  expect(directive.next).toBeUndefined();
-
-  const expression = directive.right!;
-  expect(expression).toBeDefined();
-  expect(expression.value).toBe(Parser.Nodes.Map);
-  expect(expression.left).toBeUndefined();
-  expect(expression.right).toBeDefined();
-  expect(expression.next).toBeUndefined();
-
-  const first = expression.right!;
-  expect(first).toBeDefined();
-  expect(first.value).toBe(Parser.Nodes.MapMember);
-  expect(first.left).toBeUndefined();
-  expect(first.right).toBeDefined();
-  expect(first.next).toBeDefined();
-
-  const second = first.next!;
-  expect(second).toBeDefined();
-  expect(second.value).toBe(Parser.Nodes.MapMember);
-  expect(second.left).toBeUndefined();
-  expect(second.right).toBeDefined();
-  expect(second.next).toBeDefined();
-
-  const last = second.next!;
-  expect(last).toBeDefined();
-  expect(last.value).toBe(Parser.Nodes.MapMember);
-  expect(last.left).toBeUndefined();
-  expect(last.right).toBeDefined();
-  expect(last.next).toBeUndefined();
+  Assert.tree(
+    `
+    skip map {
+      <1> A as 'a',
+          B as 'b',
+               'c',
+               D
+    };`,
+    {
+      type: Lang.Parser.Nodes.Skip,
+      right: {
+        type: Lang.Parser.Nodes.Map,
+        right: {
+          type: Lang.Parser.Nodes.MapMember,
+          right: {
+            type: Lang.Parser.Nodes.Identifier,
+            value: 'A',
+            left: {
+              type: Lang.Parser.Nodes.Identity,
+              value: '1'
+            },
+            right: {
+              type: Lang.Parser.Nodes.String,
+              value: "'a'"
+            }
+          },
+          next: {
+            type: Lang.Parser.Nodes.MapMember,
+            right: {
+              type: Lang.Parser.Nodes.Identifier,
+              value: 'B',
+              right: {
+                type: Lang.Parser.Nodes.String,
+                value: "'b'"
+              }
+            },
+            next: {
+              type: Lang.Parser.Nodes.MapMember,
+              right: {
+                type: Lang.Parser.Nodes.String,
+                value: "'c'"
+              },
+              next: {
+                type: Lang.Parser.Nodes.MapMember,
+                right: {
+                  type: Lang.Parser.Nodes.Reference,
+                  value: 'D'
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  );
 });
