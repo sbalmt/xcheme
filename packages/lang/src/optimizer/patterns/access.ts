@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from '../../core/nodes/identified';
+import * as Referenced from '../../core/nodes/referenced';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
@@ -44,6 +44,18 @@ const getMember = (project: Project.Context, base: Core.Record, nodes: Core.Node
 };
 
 /**
+ * Emit a new identified node replacing the current basic node.
+ * @param direction Child node direction.
+ * @param parent Parent node.
+ * @param identity Node identity.
+ */
+const emit = (direction: Core.Nodes, parent: Core.Node, identity: number): void => {
+  const node = parent.get(direction)!;
+  const replacement = new Referenced.Node(node, identity);
+  parent.set(direction, replacement);
+};
+
+/**
  * Consume a child node from the AST on the given parent and optimize the access pattern.
  * @param project Project context.
  * @param direction Child node direction.
@@ -71,7 +83,7 @@ export const consume = (
       } else if (first.value === Parser.Symbols.AliasToken) {
         project.addError(first.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
       } else {
-        parent.set(direction, new Identified.Node(node, member.data.identity));
+        emit(direction, parent, member.data.identity);
       }
     }
   }

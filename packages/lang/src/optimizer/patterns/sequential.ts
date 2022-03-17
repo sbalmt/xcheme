@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Sequential from '../../core/nodes/sequential';
-import * as Identified from '../../core/nodes/identified';
+import * as Referenced from '../../core/nodes/referenced';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
@@ -38,7 +38,19 @@ const areSequentialReferences = (node: Core.Node, operator: Parser.Nodes): boole
     }
     return false;
   }
-  return node instanceof Identified.Node;
+  return node instanceof Referenced.Node;
+};
+
+/**
+ * Emit a new sequential node replacing the current basic node.
+ * @param direction Child node direction.
+ * @param parent Parent node.
+ * @param type Node type.
+ */
+const emit = (direction: Core.Nodes, parent: Core.Node, type: Parser.Nodes): void => {
+  const node = parent.get(direction)!;
+  const replacement = new Sequential.Node(node, type);
+  parent.set(direction, replacement);
 };
 
 /**
@@ -63,11 +75,11 @@ export const consume = (
     Expression.consume(project, Core.Nodes.Left, node, state);
     Expression.consume(project, Core.Nodes.Right, node, state);
     if (areSequentialReferences(node, type)) {
-      parent.set(direction, new Sequential.Node(node, Parser.Nodes.Reference));
+      emit(direction, parent, Parser.Nodes.Reference);
     }
   } else {
     if (areSequentialUnits(node, type)) {
-      parent.set(direction, new Sequential.Node(node, Parser.Nodes.String));
+      emit(direction, parent, Parser.Nodes.String);
     } else {
       Expression.consume(project, Core.Nodes.Left, node, state);
       Expression.consume(project, Core.Nodes.Right, node, state);

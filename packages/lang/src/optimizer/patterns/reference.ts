@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from '../../core/nodes/identified';
+import * as Referenced from '../../core/nodes/referenced';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
@@ -19,7 +19,8 @@ import { Exception } from '../../core/exception';
 const upgrade = (project: Project.Context, record: Core.Record, parent: Core.Node, direction: Core.Nodes): void => {
   const node = parent.get(direction)!;
   if (!Symbols.isDynamic(record)) {
-    parent.set(direction, new Identified.Node(node, record.data.identity));
+    const replacement = new Referenced.Node(node, record.data.identity);
+    parent.set(direction, replacement);
   } else {
     project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
   }

@@ -9,6 +9,18 @@ import * as Context from '../context';
 import * as Expression from './expression';
 
 /**
+ * Emit a new identified node replacing the current basic node.
+ * @param direction Child node direction.
+ * @param parent Parent node.
+ * @param identity Node identity.
+ */
+const emit = (direction: Core.Nodes, parent: Core.Node, identity: number): void => {
+  const node = parent.get(direction)!;
+  const replacement = new Identified.Node(node, identity);
+  parent.set(direction, replacement);
+};
+
+/**
  * Consume a child node from the AST on the given parent and optimize the identified pattern.
  * @param project Project context.
  * @param direction Child node direction.
@@ -31,6 +43,5 @@ export const consume = (
     identity = state.identity;
     Expression.consume(project, Core.Nodes.Right, node, state);
   }
-  const replacement = new Identified.Node(node, identity);
-  parent.set(Core.Nodes.Right, replacement);
+  emit(direction, parent, identity);
 };
