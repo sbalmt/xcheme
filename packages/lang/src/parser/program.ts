@@ -39,30 +39,30 @@ const state = new Core.ExpectFlowPattern(
 /**
  * Append pattern.
  */
-const appendPattern = new Core.ExpectFlowPattern(
+const appendPattern = new Core.UseValuePattern(
+  Nodes.Append,
   new Core.OptFlowPattern(identity),
-  new Core.ChooseFlowPattern(
+  new Core.OptFlowPattern(
     new Core.MapFlowPattern(
       new Core.SetValueRoute(Nodes.AppendLeft, Lexer.Tokens.Left),
       new Core.SetValueRoute(Nodes.AppendRight, Lexer.Tokens.Right),
       new Core.SetValueRoute(Nodes.AppendNext, Lexer.Tokens.Next)
-    ),
-    new Core.SetValuePattern(Nodes.Append)
+    )
   )
 );
 
 /**
  * Prepend pattern.
  */
-const prependPattern = new Core.ExpectFlowPattern(
+const prependPattern = new Core.UseValuePattern(
+  Nodes.Prepend,
   new Core.OptFlowPattern(identity),
-  new Core.ChooseFlowPattern(
+  new Core.OptFlowPattern(
     new Core.MapFlowPattern(
       new Core.SetValueRoute(Nodes.PrependLeft, Lexer.Tokens.Left),
       new Core.SetValueRoute(Nodes.PrependRight, Lexer.Tokens.Right),
       new Core.SetValueRoute(Nodes.PrependNext, Lexer.Tokens.Next)
-    ),
-    new Core.SetValuePattern(Nodes.Prepend)
+    )
   )
 );
 
