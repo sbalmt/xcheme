@@ -3,9 +3,9 @@ import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
 /**
- * Consume all the given patterns and, in case of success, it will change the current output value.
+ * Change the current output value and Consume all the given patterns.
  */
-export default class Set extends Pattern {
+export default class Use extends Pattern {
   /**
    * Target pattern.
    */
@@ -33,10 +33,7 @@ export default class Set extends Pattern {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base): boolean {
-    if (this.#target.consume(source)) {
-      source.output.value = this.#value;
-      return true;
-    }
-    return false;
+    source.output.value = this.#value;
+    return this.#target.consume(source);
   }
 }

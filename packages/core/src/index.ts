@@ -36,6 +36,7 @@ export { default as TryFlowPattern } from './rules/flow/try';
 
 export { default as SetValueRoute } from './rules/value/route';
 export { default as SetValuePattern } from './rules/value/set';
+export { default as UseValuePattern } from './rules/value/use';
 
 export { default as SetStateRoute } from './rules/state/route';
 export { default as HasStatePattern } from './rules/state/has';
