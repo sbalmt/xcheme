@@ -22,6 +22,13 @@ export class Node extends Basic.Node {
   }
 
   /**
+   * Get whether or not the identity is empty.
+   */
+  get empty(): boolean {
+    return Number.isNaN(this.#identity);
+  }
+
+  /**
    * Get whether or not the identity is dynamic.
    */
   get dynamic(): boolean {

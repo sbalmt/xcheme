@@ -72,7 +72,7 @@ export const consume = (
         project.addError(expression.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
         const lastIdentity = state.identity;
-        state.identity = Identity.consume(project, expression);
+        state.identity = Identity.consume(expression);
         state.record = member.table.get(expression.fragment.data)!;
         Context.setMetadata(project, identifier, state.record!, state);
         lastRecord.data.dependencies.push(state.record);

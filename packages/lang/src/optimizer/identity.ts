@@ -1,7 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Project from '../core/project';
-
 /**
  * Resolve the current identity for the given node.
  * @param node Input node.
@@ -20,14 +18,13 @@ export const resolve = (node: Core.Node): number => {
 };
 
 /**
- * Consume the current identity for the given project and node.
- * @param project Project context.
+ * Consume the current identity for the given node.
  * @param node Input node.
- * @returns Returns the resolved identity.
+ * @returns Returns the resolved identity or NaN when the node doesn't have identity.
  */
-export const consume = (project: Project.Context, node: Core.Node): number => {
-  if (!node.left) {
-    return Project.Context.identity.increment(project.coder, project.options.identity);
+export const consume = (node: Core.Node): number => {
+  if (node.left) {
+    return resolve(node.left);
   }
-  return resolve(node.left!);
+  return NaN;
 };
