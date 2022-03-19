@@ -4,8 +4,8 @@
 export const enum Symbols {
   Skip = 300,
   Token,
-  AliasToken,
   Node,
+  AliasToken,
   AliasNode,
   MapMember
 }
