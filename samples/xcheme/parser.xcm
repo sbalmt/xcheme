@@ -124,7 +124,7 @@ alias node OR     as AND & opt repeat pivot<211> ((T_KEYWORDS.OR | T_SYMBOLS.VER
 alias node ELSE   as pivot<210> (T_KEYWORDS.ELSE & EXPRESSION);
 alias node THEN   as pivot<209> (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
 
-alias node <auto> DIRECTIVES as map {
+alias node DIRECTIVES as map {
   <237> SKIP        as T_KEYWORDS.SKIP & EXPRESSION,
   <238> TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & symbol<301> IDENTIFIER,
   <239> NODE        as T_KEYWORDS.NODE & opt IDENTITY & symbol<302> IDENTIFIER,
@@ -132,7 +132,7 @@ alias node <auto> DIRECTIVES as map {
   <241> ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & symbol<304> IDENTIFIER
 };
 
-alias node <auto> MODULES as map {
+alias node MODULES as map {
   <242> IMPORT as T_KEYWORDS.IMPORT & STRING,
   <243> EXPORT as T_KEYWORDS.EXPORT & (append<auto> DIRECTIVES | append<200> T_IDENTIFIER)
 };
