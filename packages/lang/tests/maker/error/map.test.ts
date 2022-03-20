@@ -1,5 +1,5 @@
-import * as Lang from '../../src/index';
-import * as Assert from './assert';
+import * as Lang from '../../../src/index';
+import * as Assert from './utils/assert';
 
 test('Map with a duplicate entry identifier', () => {
   Assert.error(

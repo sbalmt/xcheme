@@ -2,6 +2,17 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
+test("Output a 'NODE' pattern with zero identity", () => {
+  Assert.output(
+    `
+    token <100> TOKEN as 'a';
+    node  <0>   NODE  as TOKEN;`,
+    {
+      NODE: `new Core.EmitNodePattern(0, 1, new Core.ExpectUnitPattern(100))`
+    }
+  );
+});
+
 test("Output a 'NODE' pattern with a loose token reference", () => {
   Assert.output(
     `

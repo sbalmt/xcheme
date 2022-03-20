@@ -13,6 +13,19 @@ test("Parse a 'TOKEN' pattern", () => {
   Assert.tokens(context, [token.data.identity], 3);
 });
 
+test("Parse a 'TOKEN' pattern with zero identity", () => {
+  const { project, context } = Assert.lexer(
+    'aa',
+    `
+    token <0> TOKEN as 'a';`
+  );
+  // Assert tokens.
+  const token = project.symbols.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.data.identity).toBe(0);
+  Assert.tokens(context, [token.data.identity], 2);
+});
+
 test("Parse a 'TOKEN' pattern with an alias token reference", () => {
   const { project, context } = Assert.lexer(
     '@@@',

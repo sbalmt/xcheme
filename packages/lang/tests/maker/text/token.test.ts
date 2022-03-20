@@ -12,6 +12,16 @@ test("Output a 'TOKEN' pattern", () => {
   );
 });
 
+test("Output a 'TOKEN' pattern with zero identity", () => {
+  Assert.output(
+    `
+    token <0> TOKEN as '@';`,
+    {
+      TOKEN: `new Core.EmitTokenPattern(0, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
 test("Output a 'TOKEN' pattern with an alias token reference", () => {
   Assert.output(
     `

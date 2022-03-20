@@ -1,5 +1,23 @@
 import * as Assert from './utils/assert';
 
+test("Parse a 'NODE' pattern with zero identity", () => {
+  const { project, context } = Assert.parser(
+    'aa',
+    `
+    node <0> NODE as 'a';`
+  );
+  // Assert tokens.
+  const ref1 = project.symbols.get('@REF0')!; // '@'
+  expect(ref1).toBeDefined();
+  expect(ref1.data.identity).toBe(0);
+  Assert.tokens(context, [ref1.data.identity], 2);
+  // Assert nodes.
+  const node = project.symbols.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.data.identity).toBe(0);
+  Assert.nodes(context, [node.data.identity], 2);
+});
+
 test("Parse a 'NODE' pattern with a loose token reference", () => {
   const { project, context } = Assert.parser(
     '@@@',
