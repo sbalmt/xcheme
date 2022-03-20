@@ -130,7 +130,7 @@
 				}
 			]
 		},
-		"operator-expressions": {
+		"short-expressions": {
 			"name": "keyword.operator.xcheme",
 			"match": "\\||\\&|\\*|\\."
 		},
@@ -138,20 +138,13 @@
 			"name": "keyword.control.xcheme",
 			"match": "\\b(or|and|not|opt|repeat|has)\\b"
 		},
-		"new-node-expressions": {
-			"match": "\\b(place|append|prepend)\\b(\\s*\\b(next|left|right)\\b)?",
-			"captures": {
-				"1": {
-					"name": "keyword.operator.new.xcheme"
-				},
-				"2": {
-					"name": "storage.modifier.xcheme"
-				}
-			}
-		},
-		"new-other-expressions": {
+		"new-expressions": {
 			"name": "keyword.operator.new.xcheme",
-			"match": "\\b(pivot|symbol|scope|error|set)\\b"
+			"match": "\\b(place|append|prepend|pivot|symbol|scope|error|set)\\b"
+		},
+		"direction-expressions": {
+			"name": "storage.modifier.xcheme",
+			"match": "\\b(next|left|right)\\b"
 		},
 		"transform-expressions": {
 			"name": "keyword.control.transform.xcheme",
@@ -166,8 +159,8 @@
 			"match": "\\b(any)\\b"
 		},
 		"map-block-expression": {
-			"begin": "\\{",
-			"end": "\\}",
+			"begin": "{",
+			"end": "}",
 			"beginCaptures": {
 				"0": {
 					"name": "meta.brace.curly.xcheme"
@@ -304,7 +297,7 @@
 					"include": "#condition-expression"
 				},
 				{
-					"include": "#operator-expressions"
+					"include": "#short-expressions"
 				},
 				{
 					"include": "#control-expressions"
@@ -313,10 +306,10 @@
 					"include": "#map-expression"
 				},
 				{
-					"include": "#new-node-expressions"
+					"include": "#new-expressions"
 				},
 				{
-					"include": "#new-other-expressions"
+					"include": "#direction-expressions"
 				},
 				{
 					"include": "#transform-expressions"
