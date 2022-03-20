@@ -12,43 +12,43 @@ alias token T_DIGIT as from '0' to '9';
 alias token T_WORD  as T_EXTRA | T_ALPHA | T_DIGIT;
 alias token T_END   as not T_WORD;
 
-token<auto> T_KEYWORDS as map {
-  <103> ANY       as 'any',
-  <104> FROM      as 'from',
-  <105> TO        as 'to',
-  <106> MAP       as 'map',
-  <107> THEN      as 'then',
-  <108> ELSE      as 'else',
-  <109> OR        as 'or',
-  <110> AND       as 'and',
-  <111> NOT       as 'not',
-  <112> OPT       as 'opt',
-  <113> REPEAT    as 'repeat',
-  <114> PLACE     as 'place',
-  <115> APPEND    as 'append',
-  <116> PREPEND   as 'prepend',
-  <117> PIVOT     as 'pivot',
-  <118> NEXT      as 'next',
-  <119> LEFT      as 'left',
-  <120> RIGHT     as 'right',
-  <121> SYMBOL    as 'symbol',
-  <122> SCOPE     as 'scope',
-  <123> ERROR     as 'error',
-  <124> HAS       as 'has',
-  <125> SET       as 'set',
-  <126> UNCASE    as 'uncase',
-  <127> PEEK      as 'peek',
-  <128> SKIP      as 'skip',
-  <129> TOKEN     as 'token',
-  <130> NODE      as 'node',
-  <131> ALIAS     as 'alias',
-  <132> AUTO      as 'auto',
-  <133> AS        as 'as',
-  <134> IMPORT    as 'import',
-  <135> EXPORT    as 'export'
+token <auto> T_KEYWORDS as map {
+  <103> ANY     as 'any',
+  <104> FROM    as 'from',
+  <105> TO      as 'to',
+  <106> MAP     as 'map',
+  <107> THEN    as 'then',
+  <108> ELSE    as 'else',
+  <109> OR      as 'or',
+  <110> AND     as 'and',
+  <111> NOT     as 'not',
+  <112> OPT     as 'opt',
+  <113> REPEAT  as 'repeat',
+  <114> PLACE   as 'place',
+  <115> APPEND  as 'append',
+  <116> PREPEND as 'prepend',
+  <117> PIVOT   as 'pivot',
+  <118> NEXT    as 'next',
+  <119> LEFT    as 'left',
+  <120> RIGHT   as 'right',
+  <121> SYMBOL  as 'symbol',
+  <122> SCOPE   as 'scope',
+  <123> ERROR   as 'error',
+  <124> HAS     as 'has',
+  <125> SET     as 'set',
+  <126> UNCASE  as 'uncase',
+  <127> PEEK    as 'peek',
+  <128> SKIP    as 'skip',
+  <129> TOKEN   as 'token',
+  <130> NODE    as 'node',
+  <131> ALIAS   as 'alias',
+  <132> AUTO    as 'auto',
+  <133> AS      as 'as',
+  <134> IMPORT  as 'import',
+  <135> EXPORT  as 'export'
 } & T_END;
 
-token<auto> T_SYMBOLS as map {
+token <auto> T_SYMBOLS as map {
   <132> ASTERISK        as '*',
   <133> VERTICAL_BAR    as '|',
   <134> AMPERSAND       as '&',
@@ -63,9 +63,9 @@ token<auto> T_SYMBOLS as map {
   <143> IDENTITY_CLOSE  as '>'
 };
 
-token<100> T_IDENTIFIER as (T_ALPHA | T_EXTRA) & opt repeat T_WORD;
-token<101> T_NUMBER     as '0' | from '1' to '9' & opt repeat T_DIGIT;
-token<102> T_STRING     as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
+token <100> T_IDENTIFIER as (T_ALPHA | T_EXTRA) & opt repeat T_WORD;
+token <101> T_NUMBER     as '0' | from '1' to '9' & opt repeat T_DIGIT;
+token <102> T_STRING     as '\'' & repeat ('\\' then * else not '\'' then *) & '\'';
 
 // Parser
 alias node GROUP      as place (T_SYMBOLS.GROUP_OPEN & EXPRESSION & T_SYMBOLS.GROUP_CLOSE);
@@ -73,35 +73,43 @@ alias node OPERAND    as MAP | RANGE | ANY | STRING | REFERENCE | GROUP;
 alias node EXPRESSION as OR & opt THEN;
 alias node MAP_BLOCK  as T_SYMBOLS.OPEN_BRACES & MEMBERS & T_SYMBOLS.CLOSE_BRACES;
 
-alias node<200> IDENTIFIER  as symbol (pivot (T_IDENTIFIER & peek T_KEYWORDS.AS) & T_KEYWORDS.AS & place EXPRESSION);
-alias node<200> EXPORT      as append T_IDENTIFIER;
-alias node<201> REFERENCE   as append T_IDENTIFIER;
-alias node<202> IDENTITY    as T_SYMBOLS.IDENTITY_OPEN & append ((T_NUMBER | T_KEYWORDS.AUTO) & T_SYMBOLS.IDENTITY_CLOSE);
-alias node<203> STATE       as T_SYMBOLS.IDENTITY_OPEN & append (T_NUMBER & T_SYMBOLS.IDENTITY_CLOSE);
-alias node<204> STRING      as append T_STRING;
-alias node<205> ANY         as append (T_KEYWORDS.ANY | T_SYMBOLS.ASTERISK);
-alias node<206> RANGE       as place (T_KEYWORDS.FROM & STRING & pivot (T_KEYWORDS.TO & STRING));
-alias node<207> MAP         as scope (T_KEYWORDS.MAP & append MAP_BLOCK);
-alias node<208> MEMBERS     as append next ((opt IDENTITY & IDENTIFIER) | EXPRESSION) & opt (T_SYMBOLS.COMMA & MEMBERS);
+alias node IDENTIFIER as pivot<200> (T_IDENTIFIER & peek T_KEYWORDS.AS) & T_KEYWORDS.AS & place EXPRESSION;
+alias node REFERENCE  as append<201> T_IDENTIFIER;
+alias node IDENTITY   as T_SYMBOLS.IDENTITY_OPEN & append<202> ((T_NUMBER | T_KEYWORDS.AUTO) & T_SYMBOLS.IDENTITY_CLOSE);
+alias node STATE      as T_SYMBOLS.IDENTITY_OPEN & append<203> (T_NUMBER & T_SYMBOLS.IDENTITY_CLOSE);
+alias node STRING     as append<204> T_STRING;
+alias node ANY        as append<205> (T_KEYWORDS.ANY | T_SYMBOLS.ASTERISK);
+alias node RANGE      as place (T_KEYWORDS.FROM & STRING & pivot<206> (T_KEYWORDS.TO & STRING));
+alias node MAP        as scope (T_KEYWORDS.MAP & append<207> MAP_BLOCK);
+alias node MEMBERS    as append<208> next ((opt IDENTITY & symbol<305> IDENTIFIER) | EXPRESSION) & opt (T_SYMBOLS.COMMA & MEMBERS);
 
-alias node<auto> UNARY as opt repeat append map {
+alias node <219> PLACE_OPTIONS as opt map {
+  <216> LEFT  as T_KEYWORDS.LEFT,
+  <217> RIGHT as T_KEYWORDS.RIGHT,
+  <218> NEXT  as T_KEYWORDS.NEXT
+};
+
+alias node <223> APPEND_OPTIONS as opt IDENTITY & opt map {
+  <220> LEFT  as T_KEYWORDS.LEFT,
+  <221> RIGHT as T_KEYWORDS.RIGHT,
+  <222> NEXT  as T_KEYWORDS.NEXT
+};
+
+alias node <227> PREPEND_OPTIONS as opt IDENTITY & opt map {
+  <224> LEFT  as T_KEYWORDS.LEFT,
+  <225> RIGHT as T_KEYWORDS.RIGHT,
+  <226> NEXT  as T_KEYWORDS.NEXT
+};
+
+alias node UNARY as opt repeat append<auto> map {
   <213> NOT       as T_KEYWORDS.NOT,
   <214> OPT       as T_KEYWORDS.OPT,
   <215> REPEAT    as T_KEYWORDS.REPEAT,
-  <216> PLACE_N   as T_KEYWORDS.PLACE & T_KEYWORDS.NEXT,
-  <217> PLACE_L   as T_KEYWORDS.PLACE & T_KEYWORDS.LEFT,
-  <218> PLACE_R   as T_KEYWORDS.PLACE & T_KEYWORDS.RIGHT,
-  <219> PLACE     as T_KEYWORDS.PLACE,
-  <220> APPEND_N  as T_KEYWORDS.APPEND & T_KEYWORDS.NEXT,
-  <221> APPEND_L  as T_KEYWORDS.APPEND & T_KEYWORDS.LEFT,
-  <222> APPEND_R  as T_KEYWORDS.APPEND & T_KEYWORDS.RIGHT,
-  <223> APPEND    as T_KEYWORDS.APPEND,
-  <224> PREPEND_N as T_KEYWORDS.PREPEND & T_KEYWORDS.NEXT,
-  <225> PREPEND_L as T_KEYWORDS.PREPEND & T_KEYWORDS.LEFT,
-  <226> PREPEND_R as T_KEYWORDS.PREPEND & T_KEYWORDS.RIGHT,
-  <227> PREPEND   as T_KEYWORDS.PREPEND,
-  <228> PIVOT     as T_KEYWORDS.PIVOT,
-  <229> SYMBOL    as T_KEYWORDS.SYMBOL,
+  <auto> PLACE    as T_KEYWORDS.PLACE & PLACE_OPTIONS,
+  <auto> APPEND   as T_KEYWORDS.APPEND & APPEND_OPTIONS,
+  <auto> PREPEND  as T_KEYWORDS.PREPEND & PREPEND_OPTIONS,
+  <228> PIVOT     as T_KEYWORDS.PIVOT & opt IDENTITY,
+  <229> SYMBOL    as T_KEYWORDS.SYMBOL & opt IDENTITY,
   <230> SCOPE     as T_KEYWORDS.SCOPE,
   <231> ERROR     as T_KEYWORDS.ERROR & STATE,
   <232> HAS       as T_KEYWORDS.HAS & STATE,
@@ -110,23 +118,23 @@ alias node<auto> UNARY as opt repeat append map {
   <235> PEEK      as T_KEYWORDS.PEEK
 } & place ACCESS;
 
-alias node<236> ACCESS  as OPERAND & opt repeat pivot (T_SYMBOLS.PERIOD & OPERAND);
-alias node<212> AND     as UNARY & opt repeat pivot ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
-alias node<211> OR      as AND & opt repeat pivot ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
-alias node<210> ELSE    as pivot (T_KEYWORDS.ELSE & EXPRESSION);
-alias node<209> THEN    as pivot (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
+alias node ACCESS as OPERAND & opt repeat pivot<236> (T_SYMBOLS.PERIOD & OPERAND);
+alias node AND    as UNARY & opt repeat pivot<212> ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
+alias node OR     as AND & opt repeat pivot<211> ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
+alias node ELSE   as pivot<210> (T_KEYWORDS.ELSE & EXPRESSION);
+alias node THEN   as pivot<209> (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
 
-alias node<auto> DIRECTIVES as map {
-  <237> _SKIP        as T_KEYWORDS.SKIP & EXPRESSION,
-  <238> _TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
-  <239> _NODE        as T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER,
-  <240> _ALIAS_TOKEN as T_KEYWORDS.ALIAS & T_KEYWORDS.TOKEN & opt IDENTITY & IDENTIFIER,
-  <241> _ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & IDENTIFIER
+alias node <auto> DIRECTIVES as map {
+  <237> SKIP        as T_KEYWORDS.SKIP & EXPRESSION,
+  <238> TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & symbol<301> IDENTIFIER,
+  <239> NODE        as T_KEYWORDS.NODE & opt IDENTITY & symbol<302> IDENTIFIER,
+  <240> ALIAS_TOKEN as T_KEYWORDS.ALIAS & T_KEYWORDS.TOKEN & opt IDENTITY & symbol<303> IDENTIFIER,
+  <241> ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & symbol<304> IDENTIFIER
 };
 
-alias node<auto> MODULES as map {
-  <242> _IMPORT as T_KEYWORDS.IMPORT & STRING,
-  <243> _EXPORT as T_KEYWORDS.EXPORT & (append DIRECTIVES | EXPORT)
+alias node <auto> MODULES as map {
+  <242> IMPORT as T_KEYWORDS.IMPORT & STRING,
+  <243> EXPORT as T_KEYWORDS.EXPORT & (append<auto> DIRECTIVES | append<200> T_IDENTIFIER)
 };
 
-node<auto> STATEMENTS as (DIRECTIVES | MODULES) & T_SYMBOLS.SEMICOLON;
+node <auto> STATEMENTS as (DIRECTIVES | MODULES) & T_SYMBOLS.SEMICOLON;

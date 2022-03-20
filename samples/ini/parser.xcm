@@ -1,13 +1,13 @@
 /**
  * A basic INI parser.
  */
+skip ';' & opt repeat (not '\n' then *);
+skip WHITESPACE;
+
 alias token WHITESPACE as ' ' | '\t' | '\r' | '\n';
 
-skip WHITESPACE;
-skip ';' & opt repeat (not '\n' then *);
-
 // Lexer
-token<auto> T_MAP as map {
+token <auto> T_MAP as map {
   <100> DQ_STRING     as '"' & repeat ('\\' then * else not '"' then *) & '"',
   <101> SQ_STRING     as '\'' & repeat ('\\' then * else not '\'' then *) & '\'',
   <102> SECTION_OPEN  as '[',
@@ -15,13 +15,13 @@ token<auto> T_MAP as map {
   <104> ASSIGNMENT    as '='
 };
 
-token<105> T_IDENTIFIER  as repeat (not (WHITESPACE | '=' | '[' | ']') then *);
+token <105> T_IDENTIFIER  as repeat (not (WHITESPACE | '=' | '[' | ']') then *);
 
 // Parser
-alias node<205> LITERAL  as append T_IDENTIFIER;
-alias node<204> STRING   as append (T_MAP.DQ_STRING | T_MAP.SQ_STRING);
-alias node<203> ENTRY    as append (T_IDENTIFIER & T_MAP.ASSIGNMENT & (LITERAL | STRING));
-alias node<202> ENTRIES  as ENTRY & opt place next ENTRIES;
+alias node LITERAL  as append<205> T_IDENTIFIER;
+alias node STRING   as append<204> (T_MAP.DQ_STRING | T_MAP.SQ_STRING);
+alias node ENTRY    as append<203> (T_IDENTIFIER & T_MAP.ASSIGNMENT & (LITERAL | STRING));
+alias node ENTRIES  as ENTRY & opt place next ENTRIES;
 
-node<200> SECTION   as T_MAP.SECTION_OPEN & append (T_IDENTIFIER & T_MAP.SECTION_CLOSE & opt ENTRIES);
-node<201> GLOBAL    as ENTRY;
+node <200> SECTION   as T_MAP.SECTION_OPEN & append<202> (T_IDENTIFIER & T_MAP.SECTION_CLOSE & opt ENTRIES);
+node <201> GLOBAL    as ENTRY;

@@ -7,7 +7,7 @@ skip ' ' | '\t' | '\r' | '\n';
 alias token T_DIGIT as from '0' to '9';
 alias token T_END   as not (from 'A' to 'Z' | from 'a' to 'z' | '_' | T_DIGIT);
 
-token<auto> T_MAP as map {
+token <auto> T_MAP as map {
   <100> OBJECT_OPEN   as '{',
   <101> OBJECT_CLOSE  as '}',
   <102> ARRAY_OPEN    as '[',
@@ -27,17 +27,19 @@ alias token T_EXPONENT  as ('E' | 'e') & ('+' | '-') & T_DIGIT;
 token<110> T_NUMBER     as T_INTEGER & opt T_FRACTION & opt T_EXPONENT;
 
 // Parser
-alias node<208> OBJECT_ELEMENT as append (T_MAP.STRING & T_MAP.COLON & VALUE) & opt (T_MAP.COMMA & place next OBJECT_ELEMENT);
-alias node      ARRAY_ELEMENT  as VALUE & opt (T_MAP.COMMA & place next ARRAY_ELEMENT);
+alias node OBJECT_ELEMENT as append<208> (T_MAP.STRING & T_MAP.COLON & VALUE) & 
+                              opt (T_MAP.COMMA & place next OBJECT_ELEMENT);
 
-alias node<201> STRING  as append T_MAP.STRING;
-alias node<202> NUMBER  as append T_NUMBER;
-alias node<203> OBJECT  as T_MAP.OBJECT_OPEN & append opt OBJECT_ELEMENT & T_MAP.OBJECT_CLOSE;
-alias node<204> ARRAY   as T_MAP.ARRAY_OPEN & append opt ARRAY_ELEMENT & T_MAP.ARRAY_CLOSE;
-alias node<205> TRUE    as append T_MAP.TRUE;
-alias node<206> FALSE   as append T_MAP.FALSE;
-alias node<207> NULL    as append T_MAP.NULL;
+alias node ARRAY_ELEMENT  as VALUE & opt (T_MAP.COMMA & place next ARRAY_ELEMENT);
 
-alias node<209> VALUE   as STRING | NUMBER | OBJECT | ARRAY | TRUE | FALSE | NULL;
+alias node STRING as append<201> T_MAP.STRING;
+alias node NUMBER as append<202> T_NUMBER;
+alias node OBJECT as T_MAP.OBJECT_OPEN & append<203> opt OBJECT_ELEMENT & T_MAP.OBJECT_CLOSE;
+alias node ARRAY  as T_MAP.ARRAY_OPEN & append<204> opt ARRAY_ELEMENT & T_MAP.ARRAY_CLOSE;
+alias node TRUE   as append<205> T_MAP.TRUE;
+alias node FALSE  as append<206> T_MAP.FALSE;
+alias node NULL   as append<207> T_MAP.NULL;
 
-node<200> DOCUMENT  as OBJECT;
+alias node VALUE  as STRING | NUMBER | OBJECT | ARRAY | TRUE | FALSE | NULL;
+
+node <200> DOCUMENT as OBJECT;
