@@ -1,7 +1,6 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../core/project';
-import * as Counter from '../core/counter';
 import * as Parser from '../parser';
 import * as Identity from './identity';
 import * as Context from './context';
@@ -13,11 +12,6 @@ import * as Token from './patterns/token';
 import * as Skip from './patterns/skip';
 
 import { Exception } from '../core/exception';
-
-/**
- * Global skip counter.
- */
-const skipCounter = new Counter.Context();
 
 /**
  * Resolve the token or node directive for the given node and update the specified project.
@@ -51,7 +45,7 @@ const resolveTokenOrNode = (project: Project.Context, node: Core.Node, state: Co
 export const consumeNodes = (node: Core.Node, project: Project.Context): boolean => {
   let current;
   while ((current = node.next)) {
-    const state = Context.getNewState(node, -1);
+    const state = Context.getNewState(node);
     switch (current.value) {
       case Parser.Nodes.Import:
         Import.consume(project, current);
@@ -63,7 +57,6 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
         }
         break;
       case Parser.Nodes.Skip:
-        state.identity = skipCounter.increment(project);
         Skip.consume(project, Core.Nodes.Next, node, state);
         break;
       default:

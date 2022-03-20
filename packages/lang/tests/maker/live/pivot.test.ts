@@ -4,7 +4,7 @@ test("Parse a 'PIVOT' pattern", () => {
   Assert.lexer(
     '@@@',
     `
-    skip pivot '@';`
+    skip pivot <50> '@';`
   );
 });
 
@@ -12,7 +12,7 @@ test("Parse a 'PIVOT' pattern with multiple patterns", () => {
   Assert.lexer(
     '@*',
     `
-    skip pivot ('@' | '*');`
+    skip pivot <50> ('@' | '*');`
   );
 });
 
@@ -20,6 +20,6 @@ test("Parse a 'PIVOT' pattern with chained patterns", () => {
   Assert.lexer(
     '@**!',
     `
-    skip pivot ('@' & '*' & '*' & opt '!');`
+    skip pivot <50> ('@' & '*' & '*' & opt '!');`
   );
 });

@@ -26,10 +26,13 @@ const emit = (
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
+  const record = state.record!;
   const replacement = new Identified.Node(node, identity);
   parent.set(direction, replacement);
-  if (Symbols.isEmpty(state.record!) && replacement.empty) {
-    project.addError(state.record!.fragment, Errors.UNDEFINED_IDENTITY);
+  if (Symbols.isEmpty(record) && replacement.empty) {
+    if (record.data.type !== Symbols.Types.Skip) {
+      project.addError(state.record!.fragment, Errors.UNDEFINED_IDENTITY);
+    }
     project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
   }
 };

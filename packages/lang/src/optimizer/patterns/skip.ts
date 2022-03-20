@@ -3,10 +3,16 @@ import * as Core from '@xcheme/core';
 import * as Directive from '../../core/nodes/directive';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
+import * as Counter from '../../core/counter';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import * as Expression from './expression';
+
+/**
+ * Global skip counter.
+ */
+const skipCounter = new Counter.Context();
 
 /**
  * Emit a new skip entry and replace the current skip node by an optimized one.
@@ -36,7 +42,7 @@ export const consume = (
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
-  const identifier = `@SKIP${state.identity}`;
+  const identifier = `@SKIP${skipCounter.increment(project)}`;
   const line = new Core.Range(0, 0);
   const column = new Core.Range(0, identifier.length);
   const location = new Core.Location(project.name, line, column);

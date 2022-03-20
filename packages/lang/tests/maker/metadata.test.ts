@@ -15,7 +15,7 @@ test('Skip with an alias token dependency', () => {
   expect(skip.data.origin).toBe(Lang.Symbols.Origins.User);
   expect(skip.data.exported).toBeFalsy();
   expect(skip.data.imported).toBeFalsy();
-  expect(skip.data.identity).toBe(0);
+  expect(skip.data.identity).toBeNaN();
   expect(skip.data.dependencies).toHaveLength(1);
   expect(skip.data.dependents).toHaveLength(0);
 
@@ -46,7 +46,7 @@ test('Skip with an imported dependency', () => {
   expect(skip.data.origin).toBe(Lang.Symbols.Origins.User);
   expect(skip.data.exported).toBeFalsy();
   expect(skip.data.imported).toBeFalsy();
-  expect(skip.data.identity).toBe(0);
+  expect(skip.data.identity).toBeNaN();
   expect(skip.data.dependencies).toHaveLength(1);
   expect(skip.data.dependents).toHaveLength(0);
 

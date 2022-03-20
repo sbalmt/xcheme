@@ -2,12 +2,15 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
-test("Output a 'PIVOT' pattern", () => {
+test("Output a 'PIVOT' pattern without a self identity", () => {
   Assert.output(
     `
-    skip pivot '@';`,
+    token <50> TOKEN as pivot '@';`,
     {
-      '@SKIP0': `new Core.PivotNodePattern(0, 1, 0, new Core.ExpectUnitPattern('@'))`
+      TOKEN:
+        `new Core.EmitTokenPattern(50, ` +
+        /**/ `new Core.PivotNodePattern(50, 1, 0, new Core.ExpectUnitPattern('@'))` +
+        `)`
     }
   );
 });
@@ -15,9 +18,9 @@ test("Output a 'PIVOT' pattern", () => {
 test("Output a 'PIVOT' pattern with an identity", () => {
   Assert.output(
     `
-    skip pivot <100> '@';`,
+    skip pivot <50> '@';`,
     {
-      '@SKIP0': `new Core.PivotNodePattern(100, 1, 0, new Core.ExpectUnitPattern('@'))`
+      '@SKIP0': `new Core.PivotNodePattern(50, 1, 0, new Core.ExpectUnitPattern('@'))`
     }
   );
 });
@@ -25,12 +28,12 @@ test("Output a 'PIVOT' pattern with an identity", () => {
 test("Output a 'PIVOT' pattern with an auto identity", () => {
   Assert.output(
     `
-    alias token <100> ALIAS as '@';
+    alias token <50> ALIAS as '@';
     skip pivot <auto> ALIAS;`,
     {
       '@SKIP0':
         `new Core.PivotNodePattern(${Core.BaseSource.Output}, 1, 0, ` +
-        /**/ `new Core.UseValuePattern(100, new Core.ExpectUnitPattern('@'))` +
+        /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('@'))` +
         `)`
     }
   );
@@ -39,9 +42,9 @@ test("Output a 'PIVOT' pattern with an auto identity", () => {
 test("Output a 'PIVOT' pattern with multiple patterns", () => {
   Assert.output(
     `
-    skip pivot ('@' | '*');`,
+    skip pivot <50> ('@' | '*');`,
     {
-      '@SKIP0': `new Core.PivotNodePattern(0, 1, 0, new Core.ChooseUnitPattern('@', '*'))`
+      '@SKIP0': `new Core.PivotNodePattern(50, 1, 0, new Core.ChooseUnitPattern('@', '*'))`
     }
   );
 });
@@ -49,10 +52,10 @@ test("Output a 'PIVOT' pattern with multiple patterns", () => {
 test("Output a 'PIVOT' pattern with chained patterns", () => {
   Assert.output(
     `
-    skip pivot ('@' & '*' & '*' & opt '!');`,
+    skip pivot <50> ('@' & '*' & '*' & opt '!');`,
     {
       '@SKIP0':
-        `new Core.PivotNodePattern(0, 1, 0, ` +
+        `new Core.PivotNodePattern(50, 1, 0, ` +
         /**/ `new Core.ExpectUnitPattern('@'), ` +
         /**/ `new Core.ExpectUnitPattern('*', '*'), ` +
         /**/ `new Core.OptFlowPattern(` +

@@ -38,14 +38,14 @@ export type State = {
 /**
  * Get a new state based on the given parameters.
  * @param anchor Anchor node.
- * @param identity State identity.
+ * @param identity Initial identity.
  * @returns Returns the new state.
  */
-export const getNewState = (anchor: Core.Node, identity: number): State => {
+export const getNewState = (anchor: Core.Node, identity?: number): State => {
   return {
     type: Symbols.Types.Unknown,
     origin: Symbols.Origins.User,
-    identity,
+    identity: identity ?? NaN,
     anchor
   };
 };
