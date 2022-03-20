@@ -16,3 +16,13 @@ test('Pivot without an identity', () => {
     alias token ALIAS as pivot 'a';`
   );
 });
+
+test("Pivot without an identity in a 'MAP' operand", () => {
+  Assert.error(
+    [Lang.Errors.UNDEFINED_IDENTITY, Lang.Errors.UNDEFINED_IDENTITY],
+    `
+    alias token ALIAS as map {
+      ENTRY as 'a' & pivot 'b'
+    };`
+  );
+});
