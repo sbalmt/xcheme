@@ -55,7 +55,7 @@ test("Parse a 'MAP' pattern in a token directive", () => {
   const tokenA = project.symbols.get('TOKEN@A')!;
   expect(tokenA).toBeDefined();
   expect(tokenA.data.identity).toBe(100);
-  Assert.tokens(context, [tokenA.data.identity, 1, 2], 3);
+  Assert.tokens(context, [tokenA.data.identity, 0, 1], 3);
 });
 
 test("Parse a 'MAP' pattern in a node directive", () => {

@@ -18,3 +18,11 @@ test("Consume an expected 'PIVOT' pattern with an identity", () => {
     Helper.withIdentity(Lang.Parser.Nodes.Pivot, 'REF', '1')
   );
 });
+
+test("Consume an expected 'PIVOT' pattern with an auto identity", () => {
+  Assert.tree(
+    `
+    skip pivot <auto> REF;`,
+    Helper.withIdentity(Lang.Parser.Nodes.Pivot, 'REF', 'auto')
+  );
+});

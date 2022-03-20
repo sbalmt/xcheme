@@ -15,7 +15,7 @@ test("Output an 'APPEND' pattern", () => {
 test("Output an 'APPEND' pattern with an identity", () => {
   Assert.output(
     `
-    skip append<100> '@';`,
+    skip append <100> '@';`,
     {
       '@SKIP0': `new Core.AppendNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
     }
@@ -25,39 +25,13 @@ test("Output an 'APPEND' pattern with an identity", () => {
 test("Output an 'APPEND' pattern with an auto identity", () => {
   Assert.output(
     `
-    skip append<auto> '@';`,
+    alias token <100> ALIAS as '@';
+    skip append <auto> ALIAS;`,
     {
-      '@SKIP0': `new Core.AppendNodePattern(${Core.BaseSource.Output}, 1, 1, new Core.ExpectUnitPattern('@'))`
-    }
-  );
-});
-
-test("Output an 'APPEND NEXT' pattern", () => {
-  Assert.output(
-    `
-    skip append next '@';`,
-    {
-      '@SKIP0': `new Core.AppendNodePattern(0, 1, 2, new Core.ExpectUnitPattern('@'))`
-    }
-  );
-});
-
-test("Output an 'APPEND LEFT' pattern", () => {
-  Assert.output(
-    `
-    skip append left '@';`,
-    {
-      '@SKIP0': `new Core.AppendNodePattern(0, 1, 0, new Core.ExpectUnitPattern('@'))`
-    }
-  );
-});
-
-test("Output an 'APPEND RIGHT' pattern", () => {
-  Assert.output(
-    `
-    skip append right '@';`,
-    {
-      '@SKIP0': `new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
+      '@SKIP0':
+        `new Core.AppendNodePattern(${Core.BaseSource.Output}, 1, 1, ` +
+        /**/ `new Core.UseValuePattern(100, new Core.ExpectUnitPattern('@'))` +
+        `)`
     }
   );
 });
@@ -85,6 +59,36 @@ test("Output an 'APPEND' pattern with chained patterns", () => {
         /******/ `new Core.ExpectUnitPattern('!')` +
         /**/ `)` +
         `)`
+    }
+  );
+});
+
+test("Output an 'APPEND LEFT' pattern", () => {
+  Assert.output(
+    `
+    skip append left '@';`,
+    {
+      '@SKIP0': `new Core.AppendNodePattern(0, 1, 0, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output an 'APPEND RIGHT' pattern", () => {
+  Assert.output(
+    `
+    skip append right '@';`,
+    {
+      '@SKIP0': `new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('@'))`
+    }
+  );
+});
+
+test("Output an 'APPEND NEXT' pattern", () => {
+  Assert.output(
+    `
+    skip append next '@';`,
+    {
+      '@SKIP0': `new Core.AppendNodePattern(0, 1, 2, new Core.ExpectUnitPattern('@'))`
     }
   );
 });

@@ -8,6 +8,22 @@ test("Parse a 'PREPEND' pattern", () => {
   );
 });
 
+test("Parse a 'PREPEND' pattern with multiple patterns", () => {
+  Assert.lexer(
+    '@*',
+    `
+    skip prepend ('@' | '*');`
+  );
+});
+
+test("Parse a 'PREPEND' pattern with chained patterns", () => {
+  Assert.lexer(
+    '@**!',
+    `
+    skip prepend ('@' & '*' & '*' & opt '!');`
+  );
+});
+
 test("Parse a 'PREPEND LEFT' pattern", () => {
   Assert.lexer(
     '@@@',
@@ -29,21 +45,5 @@ test("Parse a 'PREPEND NEXT' pattern", () => {
     '@@@',
     `
     skip prepend next '@';`
-  );
-});
-
-test("Parse a 'PREPEND' pattern with multiple patterns", () => {
-  Assert.lexer(
-    '@*',
-    `
-    skip prepend ('@' | '*');`
-  );
-});
-
-test("Parse a 'PREPEND' pattern with chained patterns", () => {
-  Assert.lexer(
-    '@**!',
-    `
-    skip prepend ('@' & '*' & '*' & opt '!');`
   );
 });

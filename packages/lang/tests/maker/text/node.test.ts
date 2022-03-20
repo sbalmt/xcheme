@@ -5,13 +5,13 @@ import * as Assert from './utils/assert';
 test("Output a 'NODE' pattern with a loose token reference", () => {
   Assert.output(
     `
-    node NODE as '@' & '@' & opt '@';`,
+    node <200> NODE as '@' & '@' & opt '@';`,
     {
       NODE:
-        `new Core.EmitNodePattern(0, 1, ` +
+        `new Core.EmitNodePattern(200, 1, ` +
         /**/ `new Core.ExpectFlowPattern(` +
-        /******/ `new Core.ExpectUnitPattern(1, 1), ` +
-        /******/ `new Core.OptFlowPattern(new Core.ExpectUnitPattern(1))` +
+        /******/ `new Core.ExpectUnitPattern(0, 0), ` +
+        /******/ `new Core.OptFlowPattern(new Core.ExpectUnitPattern(0))` +
         /**/ `)` +
         `)`
     }
@@ -21,9 +21,9 @@ test("Output a 'NODE' pattern with a loose token reference", () => {
 test("Output a 'NODE' pattern with a loose token range reference", () => {
   Assert.output(
     `
-    node NODE as from '0' to '9';`,
+    node <200> NODE as from '0' to '9';`,
     {
-      NODE: `new Core.EmitNodePattern(0, 1, new Core.ExpectUnitPattern(1))`
+      NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(0))`
     }
   );
 });
@@ -31,16 +31,16 @@ test("Output a 'NODE' pattern with a loose token range reference", () => {
 test("Output a 'NODE' pattern with a loose token map reference", () => {
   Assert.output(
     `
-    node NODE as map {
+    node <200> NODE as map {
       'a',
       'b'
     };`,
     {
       NODE:
-        `new Core.EmitNodePattern(0, 1, ` +
+        `new Core.EmitNodePattern(200, 1, ` +
         /**/ `new Core.MapFlowPattern(` +
-        /******/ `new Core.UnitRoute(1), ` +
-        /******/ `new Core.UnitRoute(2)` +
+        /******/ `new Core.UnitRoute(0), ` +
+        /******/ `new Core.UnitRoute(1)` +
         /**/ `)` +
         `)`
     }
@@ -50,10 +50,10 @@ test("Output a 'NODE' pattern with a loose token map reference", () => {
 test("Output a 'NODE' pattern with a token reference", () => {
   Assert.output(
     `
-    token TOKEN as '@';
-    node  NODE  as TOKEN;`,
+    token <100> TOKEN as '@';
+    node  <200> NODE  as TOKEN;`,
     {
-      NODE: `new Core.EmitNodePattern(1, 1, new Core.ExpectUnitPattern(0))`
+      NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(100))`
     }
   );
 });
@@ -62,9 +62,9 @@ test("Output a 'NODE' pattern with an alias node reference", () => {
   Assert.output(
     `
     alias node ALIAS as '@';
-          node NODE  as ALIAS;`,
+    node <200> NODE  as ALIAS;`,
     {
-      NODE: `new Core.EmitNodePattern(2, 1, new Core.ExpectUnitPattern(1))`
+      NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(0))`
     }
   );
 });
@@ -72,12 +72,12 @@ test("Output a 'NODE' pattern with an alias node reference", () => {
 test("Output a 'NODE' pattern with a reference to itself", () => {
   Assert.output(
     `
-    node NODE as '@' & opt NODE;`,
+    node <200> NODE as '@' & opt NODE;`,
     {
       NODE:
-        `new Core.EmitNodePattern(0, 1, ` +
+        `new Core.EmitNodePattern(200, 1, ` +
         /**/ `new Core.ExpectFlowPattern(` +
-        /******/ `new Core.ExpectUnitPattern(1), ` +
+        /******/ `new Core.ExpectUnitPattern(0), ` +
         /******/ `new Core.OptFlowPattern(` +
         /**********/ `new Core.RunFlowPattern(() => L0_NODE)` +
         /******/ `)` +
@@ -91,15 +91,15 @@ test("Output a 'NODE' pattern with an alias node that has a reference to itself"
   Assert.output(
     `
     alias node ALIAS as '@' & opt ALIAS;
-          node NODE  as ALIAS;`,
+    node <200> NODE  as ALIAS;`,
     {
       ALIAS:
         `new Core.ExpectFlowPattern(` +
-        /**/ `new Core.ExpectUnitPattern(1), ` +
+        /**/ `new Core.ExpectUnitPattern(0), ` +
         /******/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => L0_ALIAS)` +
         /**/ `)` +
         `)`,
-      NODE: `new Core.EmitNodePattern(2, 1, L0_ALIAS)`
+      NODE: `new Core.EmitNodePattern(200, 1, L0_ALIAS)`
     }
   );
 });
@@ -137,7 +137,7 @@ test("Output a 'NODE' pattern with token map entry references", () => {
 test("Output a 'NODE' pattern with a whole node map reference", () => {
   Assert.output(
     `
-    alias node <auto> ALIAS as map {
+    alias node ALIAS as map {
       <200> A as 'a',
       <201> B as 'b'
     };
@@ -166,15 +166,15 @@ test("Output a 'NODE' pattern with an imported node alias directive", () => {
   Assert.output(
     `
     import './module2';
-    node <4040> NODE as EXTERNAL_NODE1;`,
+    node <250> NODE as EXTERNAL_NODE1;`,
     {
       EXTERNAL_ISOLATED_TOKEN1: `L1_ALIAS_TOKEN`,
-      EXTERNAL_ISOLATED_TOKEN2: `new Core.EmitTokenPattern(1013, L1_ALIAS_TOKEN)`,
+      EXTERNAL_ISOLATED_TOKEN2: `new Core.EmitTokenPattern(101, L1_ALIAS_TOKEN)`,
       EXTERNAL_ISOLATED_NODE1: `L1_ALIAS_NODE`,
-      EXTERNAL_ISOLATED_NODE2: `new Core.EmitNodePattern(2023, 1, L1_ALIAS_NODE)`,
+      EXTERNAL_ISOLATED_NODE2: `new Core.EmitNodePattern(201, 1, L1_ALIAS_NODE)`,
       EXTERNAL_TOKEN1: `L2_ALIAS_TOKEN`,
       EXTERNAL_NODE1: `L2_ALIAS_NODE`,
-      NODE: `new Core.EmitNodePattern(4040, 1, L2_ALIAS_NODE)`
+      NODE: `new Core.EmitNodePattern(250, 1, L2_ALIAS_NODE)`
     }
   );
 });
@@ -183,15 +183,15 @@ test("Output a 'NODE' pattern with an imported token directive", () => {
   Assert.output(
     `
     import './module2';
-    node <4040> NODE as EXTERNAL_ISOLATED_TOKEN2;`,
+    node <250> NODE as EXTERNAL_ISOLATED_TOKEN2;`,
     {
       EXTERNAL_ISOLATED_TOKEN1: `L1_ALIAS_TOKEN`,
-      EXTERNAL_ISOLATED_TOKEN2: `new Core.EmitTokenPattern(1013, L1_ALIAS_TOKEN)`,
+      EXTERNAL_ISOLATED_TOKEN2: `new Core.EmitTokenPattern(101, L1_ALIAS_TOKEN)`,
       EXTERNAL_ISOLATED_NODE1: `L1_ALIAS_NODE`,
-      EXTERNAL_ISOLATED_NODE2: `new Core.EmitNodePattern(2023, 1, L1_ALIAS_NODE)`,
+      EXTERNAL_ISOLATED_NODE2: `new Core.EmitNodePattern(201, 1, L1_ALIAS_NODE)`,
       EXTERNAL_TOKEN1: `L2_ALIAS_TOKEN`,
       EXTERNAL_NODE1: `L2_ALIAS_NODE`,
-      NODE: `new Core.EmitNodePattern(4040, 1, new Core.ExpectUnitPattern(1013))`
+      NODE: `new Core.EmitNodePattern(250, 1, new Core.ExpectUnitPattern(101))`
     }
   );
 });

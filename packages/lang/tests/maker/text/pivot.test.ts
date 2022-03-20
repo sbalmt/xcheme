@@ -15,7 +15,7 @@ test("Output a 'PIVOT' pattern", () => {
 test("Output a 'PIVOT' pattern with an identity", () => {
   Assert.output(
     `
-    skip pivot<100> '@';`,
+    skip pivot <100> '@';`,
     {
       '@SKIP0': `new Core.PivotNodePattern(100, 1, 0, new Core.ExpectUnitPattern('@'))`
     }
@@ -25,9 +25,13 @@ test("Output a 'PIVOT' pattern with an identity", () => {
 test("Output a 'PIVOT' pattern with an auto identity", () => {
   Assert.output(
     `
-    skip pivot<auto> '@';`,
+    alias token <100> ALIAS as '@';
+    skip pivot <auto> ALIAS;`,
     {
-      '@SKIP0': `new Core.PivotNodePattern(${Core.BaseSource.Output}, 1, 0, new Core.ExpectUnitPattern('@'))`
+      '@SKIP0':
+        `new Core.PivotNodePattern(${Core.BaseSource.Output}, 1, 0, ` +
+        /**/ `new Core.UseValuePattern(100, new Core.ExpectUnitPattern('@'))` +
+        `)`
     }
   );
 });

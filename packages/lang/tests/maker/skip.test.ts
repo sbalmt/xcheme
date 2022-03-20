@@ -13,7 +13,7 @@ test('Skip referring a token (reference error)', () => {
   Assert.error(
     [Lang.Errors.INVALID_TOKEN_REFERENCE],
     `
-    token TOKEN as '@';
+    token <100> TOKEN as '@';
     skip TOKEN;`
   );
 });
@@ -22,7 +22,7 @@ test('Skip referring a node (reference error)', () => {
   Assert.error(
     [Lang.Errors.INVALID_NODE_REFERENCE],
     `
-    node NODE as '@';
+    node <200> NODE as '@';
     skip NODE;`
   );
 });
@@ -62,7 +62,7 @@ test('Skip with a dependency (alias token reference)', () => {
   expect(alias.data.exported).toBeFalsy();
   expect(alias.data.imported).toBeFalsy();
   expect(alias.data.identifier).toBe('ALIAS');
-  expect(alias.data.identity).toBe(0);
+  expect(alias.data.identity).toBeNaN();
   expect(alias.data.dependencies).toHaveLength(0);
   expect(alias.data.dependents).toHaveLength(1);
 });
@@ -93,7 +93,7 @@ test('Skip with an imported pattern', () => {
   expect(imported.data.exported).toBeFalsy();
   expect(imported.data.imported).toBeTruthy();
   expect(imported.data.identifier).toBe('EXTERNAL_TOKEN1');
-  expect(imported.data.identity).toBe(1010);
+  expect(imported.data.identity).toBeNaN();
   expect(imported.data.dependencies).toHaveLength(1);
   expect(imported.data.dependents).toHaveLength(1);
 });

@@ -8,6 +8,22 @@ test("Parse an 'APPEND' pattern", () => {
   );
 });
 
+test("Parse an 'APPEND' pattern with multiple patterns", () => {
+  Assert.lexer(
+    '@*',
+    `
+    skip append ('@' | '*');`
+  );
+});
+
+test("Parse an 'APPEND' pattern with chained patterns", () => {
+  Assert.lexer(
+    '@**!',
+    `
+    skip append ('@' & '*' & '*' & opt '!');`
+  );
+});
+
 test("Parse an 'APPEND LEFT' pattern", () => {
   Assert.lexer(
     '@@@',
@@ -29,21 +45,5 @@ test("Parse an 'APPEND NEXT' pattern", () => {
     '@@@',
     `
     skip append next '@';`
-  );
-});
-
-test("Parse an 'APPEND' pattern with multiple patterns", () => {
-  Assert.lexer(
-    '@*',
-    `
-    skip append ('@' | '*');`
-  );
-});
-
-test("Parse an 'APPEND' pattern with chained patterns", () => {
-  Assert.lexer(
-    '@**!',
-    `
-    skip append ('@' & '*' & '*' & opt '!');`
   );
 });

@@ -19,6 +19,14 @@ test("Consume an expected 'APPEND' pattern with an identity", () => {
   );
 });
 
+test("Consume an expected 'APPEND' pattern with an auto identity", () => {
+  Assert.tree(
+    `
+    skip append <auto> REF;`,
+    Helper.withIdentity(Lang.Parser.Nodes.Append, 'REF', 'auto')
+  );
+});
+
 test("Consume an expected 'APPEND LEFT' pattern", () => {
   Assert.tree(
     `

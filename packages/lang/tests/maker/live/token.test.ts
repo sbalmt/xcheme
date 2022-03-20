@@ -4,12 +4,12 @@ test("Parse a 'TOKEN' pattern", () => {
   const { project, context } = Assert.lexer(
     '@@@',
     `
-    token TOKEN as '@';`
+    token <100> TOKEN as '@';`
   );
   // Assert tokens.
   const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.data.identity).toBe(0);
+  expect(token.data.identity).toBe(100);
   Assert.tokens(context, [token.data.identity], 3);
 });
 
@@ -18,12 +18,12 @@ test("Parse a 'TOKEN' pattern with an alias token reference", () => {
     '@@@',
     `
     alias token ALIAS as '@';
-          token TOKEN as ALIAS;`
+    token <100> TOKEN as ALIAS;`
   );
   // Assert tokens.
   const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.data.identity).toBe(1);
+  expect(token.data.identity).toBe(100);
   Assert.tokens(context, [token.data.identity], 3);
 });
 
@@ -31,12 +31,12 @@ test("Parse a 'TOKEN' pattern with a reference to itself", () => {
   const { project, context } = Assert.lexer(
     '@@@',
     `
-    token TOKEN as '@' & opt TOKEN;`
+    token <100> TOKEN as '@' & opt TOKEN;`
   );
   // Assert tokens.
   const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.data.identity).toBe(0);
+  expect(token.data.identity).toBe(100);
   Assert.tokens(context, [token.data.identity], 3);
 });
 
@@ -45,12 +45,12 @@ test("Parse a 'TOKEN' pattern with an alias token that has a reference to itself
     '@@@',
     `
     alias token ALIAS as '@' & opt ALIAS;
-          token TOKEN as ALIAS;`
+    token <100> TOKEN as ALIAS;`
   );
   // Assert tokens.
   const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.data.identity).toBe(1);
+  expect(token.data.identity).toBe(100);
   Assert.tokens(context, [token.data.identity], 1);
 });
 
@@ -79,11 +79,11 @@ test("Parse a 'TOKEN' pattern with an imported token alias token directive", () 
     'token1token1',
     `
     import './module2';
-    token <3030> TOKEN as EXTERNAL_TOKEN1;`
+    token <150> TOKEN as EXTERNAL_TOKEN1;`
   );
   // Assert tokens.
   const token = project.symbols.get('TOKEN')!;
   expect(token).toBeDefined();
-  expect(token.data.identity).toBe(3030);
+  expect(token.data.identity).toBe(150);
   Assert.tokens(context, [token.data.identity], 2);
 });

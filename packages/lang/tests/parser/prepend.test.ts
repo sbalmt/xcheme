@@ -19,6 +19,14 @@ test("Consume an expected 'PREPEND' pattern with an identity", () => {
   );
 });
 
+test("Consume an expected 'PREPEND' pattern with an auto identity", () => {
+  Assert.tree(
+    `
+    skip prepend <auto> REF;`,
+    Helper.withIdentity(Lang.Parser.Nodes.Prepend, 'REF', 'auto')
+  );
+});
+
 test("Consume an expected 'PREPEND LEFT' pattern", () => {
   Assert.tree(
     `

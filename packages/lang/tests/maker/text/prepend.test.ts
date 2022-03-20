@@ -15,7 +15,7 @@ test("Output a 'PREPEND' pattern", () => {
 test("Output a 'PREPEND' pattern with an identity", () => {
   Assert.output(
     `
-    skip prepend<100> '@';`,
+    skip prepend <100> '@';`,
     {
       '@SKIP0': `new Core.PrependNodePattern(100, 1, 1, new Core.ExpectUnitPattern('@'))`
     }
@@ -25,9 +25,40 @@ test("Output a 'PREPEND' pattern with an identity", () => {
 test("Output a 'PREPEND' pattern with an auto identity", () => {
   Assert.output(
     `
-    skip prepend<auto> '@';`,
+    alias token <100> ALIAS as '@';
+    skip prepend <auto> ALIAS;`,
     {
-      '@SKIP0': `new Core.PrependNodePattern(${Core.BaseSource.Output}, 1, 1, new Core.ExpectUnitPattern('@'))`
+      '@SKIP0':
+        `new Core.PrependNodePattern(${Core.BaseSource.Output}, 1, 1, ` +
+        /**/ `new Core.UseValuePattern(100, new Core.ExpectUnitPattern('@'))` +
+        `)`
+    }
+  );
+});
+
+test("Output a 'PREPEND' pattern with multiple patterns", () => {
+  Assert.output(
+    `
+    skip prepend ('@' | '*');`,
+    {
+      '@SKIP0': `new Core.PrependNodePattern(0, 1, 1, new Core.ChooseUnitPattern('@', '*'))`
+    }
+  );
+});
+
+test("Output a 'PREPEND' pattern with chained patterns", () => {
+  Assert.output(
+    `
+    skip prepend ('@' & '*' & '*' & opt '!');`,
+    {
+      '@SKIP0':
+        `new Core.PrependNodePattern(0, 1, 1, ` +
+        /**/ `new Core.ExpectUnitPattern('@'), ` +
+        /**/ `new Core.ExpectUnitPattern('*', '*'), ` +
+        /**/ `new Core.OptFlowPattern(` +
+        /******/ `new Core.ExpectUnitPattern('!')` +
+        /**/ `)` +
+        `)`
     }
   );
 });
@@ -58,33 +89,6 @@ test("Output a 'PREPEND NEXT' pattern", () => {
     skip prepend next '@';`,
     {
       '@SKIP0': `new Core.PrependNodePattern(0, 1, 2, new Core.ExpectUnitPattern('@'))`
-    }
-  );
-});
-
-test("Output a 'PREPEND' pattern with multiple patterns", () => {
-  Assert.output(
-    `
-    skip prepend ('@' | '*');`,
-    {
-      '@SKIP0': `new Core.PrependNodePattern(0, 1, 1, new Core.ChooseUnitPattern('@', '*'))`
-    }
-  );
-});
-
-test("Output a 'PREPEND' pattern with chained patterns", () => {
-  Assert.output(
-    `
-    skip prepend ('@' & '*' & '*' & opt '!');`,
-    {
-      '@SKIP0':
-        `new Core.PrependNodePattern(0, 1, 1, ` +
-        /**/ `new Core.ExpectUnitPattern('@'), ` +
-        /**/ `new Core.ExpectUnitPattern('*', '*'), ` +
-        /**/ `new Core.OptFlowPattern(` +
-        /******/ `new Core.ExpectUnitPattern('!')` +
-        /**/ `)` +
-        `)`
     }
   );
 });

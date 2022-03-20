@@ -140,9 +140,9 @@ test("Output a 'MAP' pattern in an alias node directive", () => {
     {
       ALIAS:
         `new Core.MapFlowPattern(` +
-        /**/ `new Core.SetValueRoute(100, 1), ` +
-        /**/ `new Core.UnitRoute(2), ` +
-        /**/ `new Core.UnitRoute(3)` +
+        /**/ `new Core.SetValueRoute(100, 0), ` +
+        /**/ `new Core.UnitRoute(1), ` +
+        /**/ `new Core.UnitRoute(2)` +
         `)`
     }
   );

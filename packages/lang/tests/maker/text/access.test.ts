@@ -8,7 +8,7 @@ test("Output an 'ACCESS' pattern in a token map", () => {
     token <auto> TOKEN as map {
       <100> A as 'a'
     };
-    node NODE as TOKEN.A;`,
+    node <200> NODE as TOKEN.A;`,
     {
       TOKEN:
         `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
@@ -16,7 +16,7 @@ test("Output an 'ACCESS' pattern in a token map", () => {
         /******/ `new Core.SetValueRoute(100, 'a')` +
         /**/ `)` +
         `)`,
-      NODE: `new Core.EmitNodePattern(0, 1, new Core.ExpectUnitPattern(100))`
+      NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(100))`
     }
   );
 });
@@ -26,26 +26,26 @@ test("Output an 'ACCESS' pattern in a nested token map", () => {
     `
     token <auto> TOKEN as map {
       <auto> A as 'a' & map {
-        <200> B as 'b',
-        <100> C as 'c'
+        <100> B as 'b',
+        <101> C as 'c'
       }
     };
-    node NODE_AB as TOKEN.A.B;
-    node NODE_AC as TOKEN.A.C;`,
+    node <200> NODE_AB as TOKEN.A.B;
+    node <201> NODE_AC as TOKEN.A.C;`,
     {
       TOKEN:
         `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.FlowRoute(` +
         /********/ `new Core.MapFlowPattern(` +
-        /**********/ `new Core.SetValueRoute(200, 'b'), ` +
-        /**********/ `new Core.SetValueRoute(100, 'c')` +
+        /**********/ `new Core.SetValueRoute(100, 'b'), ` +
+        /**********/ `new Core.SetValueRoute(101, 'c')` +
         /********/ `), ` +
         /******/ `'a')` +
         /**/ `)` +
         `)`,
-      NODE_AB: `new Core.EmitNodePattern(0, 1, new Core.ExpectUnitPattern(200))`,
-      NODE_AC: `new Core.EmitNodePattern(1, 1, new Core.ExpectUnitPattern(100))`
+      NODE_AB: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(100))`,
+      NODE_AC: `new Core.EmitNodePattern(201, 1, new Core.ExpectUnitPattern(101))`
     }
   );
 });
