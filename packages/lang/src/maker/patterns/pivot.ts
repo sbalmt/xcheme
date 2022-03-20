@@ -20,8 +20,11 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   if (!(node instanceof Identified.Node)) {
     throw new Exception('The PIVOT node must be an instance of an identified node.');
   }
+  const current = state.dynamic;
+  state.dynamic = node.dynamic;
   const expression = (node.right!.value === Parser.Nodes.Identity ? node.right!.right : node.right)!;
   const patterns = Splitter.resolve(project, expression, state);
+  state.dynamic = current;
   if (patterns) {
     const [test, ...remaining] = patterns;
     return project.coder.emitPivotPattern(node.identity, test, ...remaining);

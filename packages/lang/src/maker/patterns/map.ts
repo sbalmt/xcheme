@@ -42,7 +42,7 @@ const resolveUnits = (node: Core.Node): (string | number)[] => {
  * Resolve the corresponding route for the given map entry member.
  * @param project Project context.
  * @param map Map directive.
- * @param entry Map entry member.
+ * @param member Map entry member.
  * @param state Consumption state.
  * @param units Route units.
  * @returns Returns the resolved route.
@@ -50,21 +50,24 @@ const resolveUnits = (node: Core.Node): (string | number)[] => {
 const resolveRoute = (
   project: Project.Context,
   map: Directive.Node,
-  entry: Member.Node,
+  member: Member.Node,
   state: Context.State,
   units: (string | number)[]
 ): Coder.Route => {
-  if (!entry.empty) {
-    const pattern = Expression.consume(project, entry, state);
-    if (entry.dynamic || map.type === Symbols.Types.Skip) {
+  if (!member.empty) {
+    const current = state.dynamic;
+    state.dynamic = member.dynamic;
+    const pattern = Expression.consume(project, member, state);
+    state.dynamic = current;
+    if (member.dynamic || map.type === Symbols.Types.Skip) {
       return project.coder.getRoute(units, void 0, pattern);
     }
-    return project.coder.getRoute(units, entry.identity, pattern);
+    return project.coder.getRoute(units, member.identity, pattern);
   }
-  if (entry.dynamic || map.type === Symbols.Types.Skip) {
+  if (member.dynamic || map.type === Symbols.Types.Skip) {
     return project.coder.getRoute(units, void 0);
   }
-  return project.coder.getRoute(units, entry.identity);
+  return project.coder.getRoute(units, member.identity);
 };
 
 /**
@@ -76,18 +79,18 @@ const resolveRoute = (
  * @throws Throws an exception when the given node isn't valid.
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
-  let member = node.right!;
+  let entry = node.right!;
   const directive = state.directive;
   const routes = [];
-  while (member) {
-    const current = member.right!;
-    if (!(current instanceof Member.Node)) {
+  while (entry) {
+    const member = entry.right!;
+    if (!(member instanceof Member.Node)) {
       throw new Exception('The MAP entry node must be an instance of a member node.');
     }
-    const units = resolveUnits(current.route);
-    const route = resolveRoute(project, directive, current, state, units);
+    const units = resolveUnits(member.route);
+    const route = resolveRoute(project, directive, member, state, units);
     routes.push(route);
-    member = member.next!;
+    entry = entry.next!;
   }
   if (routes.length > 0) {
     return project.coder.emitMapPattern(...routes);

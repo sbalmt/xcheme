@@ -21,7 +21,7 @@ const resolveMain = (project: Project.Context, node: Core.Node): void => {
   if (!(directive instanceof Directive.Node)) {
     throw new Exception('The node must be an instance of a directive node.');
   }
-  const state = { directive };
+  const state = { directive, dynamic: directive.dynamic };
   switch (node.value) {
     case Parser.Nodes.Token:
       Token.consume(project, state);
@@ -50,7 +50,7 @@ const resolveSkip = (project: Project.Context, node: Core.Node): void => {
   if (!(node instanceof Directive.Node)) {
     throw new Exception('The SKIP node must be an instance of a directive nodes.');
   }
-  const state = { directive: node };
+  const state = { directive: node, dynamic: false };
   Skip.consume(project, state);
 };
 

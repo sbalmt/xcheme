@@ -152,7 +152,7 @@ export class Text extends Base {
    * @returns Returns the pattern.
    */
   emitIdentityPattern(identity: string | number, ...patterns: string[]): string {
-    return this.#getPattern('SetValuePattern', identity, ...patterns);
+    return this.#getPattern('UseValuePattern', identity, ...patterns);
   }
 
   /**

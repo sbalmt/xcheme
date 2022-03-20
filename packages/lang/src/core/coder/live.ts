@@ -92,7 +92,7 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   emitIdentityPattern(identity: string | number, ...patterns: Core.Pattern[]): Core.Pattern {
-    return new Core.SetValuePattern(identity, ...patterns);
+    return new Core.UseValuePattern(identity, ...patterns);
   }
 
   /**

@@ -8,4 +8,8 @@ export type State = {
    * Current directive.
    */
   directive: Directive.Node;
+  /**
+   * Determines whether or not the current expression is dynamic.
+   */
+  dynamic: boolean;
 };
