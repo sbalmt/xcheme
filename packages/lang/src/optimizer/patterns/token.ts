@@ -46,10 +46,13 @@ export const consume = (
     project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
     const expression = node.right!;
+    const record = node.table.get(identifier)!;
+    state.record = record;
     state.type = Symbols.Types.Token;
-    state.record = node.table.get(identifier)!;
-    Context.setMetadata(project, identifier, state.record!, state);
-    if (expression.value === Parser.Nodes.String) {
+    Context.setMetadata(project, identifier, record, state);
+    if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
+      project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
+    } else if (expression.value === Parser.Nodes.String) {
       String.consume(project, Core.Nodes.Right, node, state);
       const word = expression.fragment.data;
       if (!Loose.collision(project, word, expression)) {

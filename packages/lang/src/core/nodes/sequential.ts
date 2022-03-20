@@ -1,7 +1,6 @@
 import * as Core from '@xcheme/core';
 
 import * as Parser from '../../parser';
-
 import * as Basic from './basic';
 
 /**

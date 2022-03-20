@@ -4,7 +4,7 @@ import * as Project from '../../core/project';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
-import * as Identified from './identified';
+import * as Generic from './generic';
 import * as Sequential from './sequential';
 import * as Reference from './reference';
 import * as String from './string';
@@ -59,10 +59,11 @@ export const consume = (
     case Parser.Nodes.PrependRight:
     case Parser.Nodes.Pivot:
     case Parser.Nodes.Symbol:
+      return Generic.Identity.consume(project, direction, parent, state);
     case Parser.Nodes.Error:
     case Parser.Nodes.Has:
     case Parser.Nodes.Set:
-      return Identified.consume(project, direction, parent, state);
+      return Generic.State.consume(project, direction, parent, state);
     default:
       consume(project, Core.Nodes.Right, node, state);
   }

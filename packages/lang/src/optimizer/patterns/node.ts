@@ -41,10 +41,15 @@ export const consume = (
   if (project.symbols.has(identifier)) {
     project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
+    const record = node.table.get(identifier)!;
+    state.record = record;
     state.type = Symbols.Types.Node;
-    state.record = node.table.get(identifier)!;
-    Context.setMetadata(project, identifier, state.record!, state);
-    Expression.consume(project, Core.Nodes.Right, node, state);
-    emit(project, direction, parent, state);
+    Context.setMetadata(project, identifier, record, state);
+    if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
+      project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
+    } else {
+      Expression.consume(project, Core.Nodes.Right, node, state);
+      emit(project, direction, parent, state);
+    }
   }
 };

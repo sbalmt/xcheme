@@ -225,6 +225,15 @@ export const isDynamic = (record: Core.Record): boolean => {
 };
 
 /**
+ * Determines whether or not the given record has an empty identity.
+ * @param record Symbol record.
+ * @returns Returns true when the symbol identity is empty, false otherwise.
+ */
+export const isEmpty = (record: Core.Record): boolean => {
+  return Number.isNaN(record.data.identity);
+};
+
+/**
  * Determines whether or not the given record is referenced.
  * @param record System record.
  * @param types Symbol types.

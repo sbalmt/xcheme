@@ -1,15 +1,15 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from '../../core/nodes/identified';
-import * as Project from '../../core/project';
-import * as Parser from '../../parser';
-import * as Identity from '../identity';
-import * as Context from '../context';
+import * as Identified from '../../../core/nodes/identified';
+import * as Project from '../../../core/project';
+import * as Parser from '../../../parser';
+import * as Identity from '../../identity';
+import * as Context from '../../context';
 
-import * as Expression from './expression';
+import * as Expression from '../expression';
 
 /**
- * Emit a new identified node replacing the current basic node.
+ * Emit a new state node replacing the current basic node.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param identity Node identity.
@@ -36,7 +36,7 @@ export const consume = (
   const node = parent.get(direction)!;
   const expression = node.right!;
   let identity;
-  if (expression.value === Parser.Nodes.Identity || expression.value === Parser.Nodes.State) {
+  if (expression.value === Parser.Nodes.State) {
     identity = Identity.resolve(expression);
     Expression.consume(project, Core.Nodes.Right, expression, state);
   } else {
