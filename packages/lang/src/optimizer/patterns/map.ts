@@ -62,21 +62,20 @@ export const consume = (
         break;
       }
       if (!dynamic && !Symbols.isAlias(record)) {
-        project.addError(state.record!.fragment, Errors.UNDEFINED_AUTO_IDENTITY);
+        project.addError(record.fragment, Errors.UNDEFINED_AUTO_IDENTITY);
         project.addError(expression.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
-      const lastRecord = state.record!;
-      const identifier = `${lastRecord!.data.identifier}@${expression.fragment.data}`;
+      const identifier = `${record!.data.identifier}@${expression.fragment.data}`;
       if (project.symbols.has(identifier)) {
         project.addError(expression.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
-        const lastIdentity = state.identity;
+        const identity = state.identity;
         state.identity = Identity.consume(expression);
         state.record = member.table.get(expression.fragment.data)!;
         Context.setMetadata(project, identifier, state.record!, state);
-        lastRecord.data.dependencies.push(state.record);
-        state.record.data.dependents.push(lastRecord);
+        record.data.dependencies.push(state.record);
+        state.record.data.dependents.push(record);
         Expression.consume(project, Core.Nodes.Right, expression, state);
         const candidate = getCandidate(expression.right!);
         if (!candidate) {
@@ -89,8 +88,8 @@ export const consume = (
           member.set(Core.Nodes.Right, replacement);
           project.symbols.add(state.record);
         }
-        state.identity = lastIdentity;
-        state.record = lastRecord;
+        state.identity = identity;
+        state.record = record;
       }
     } else {
       Expression.consume(project, Core.Nodes.Right, member, state);
