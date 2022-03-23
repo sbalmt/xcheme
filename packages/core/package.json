@@ -1,7 +1,7 @@
 {
   "name": "@xcheme/core",
-  "version": "0.0.6",
-  "description": "Core components",
+  "version": "0.0.7",
+  "description": "XCHEME core components",
   "license": "MIT",
   "keywords": [
     "xcheme",
