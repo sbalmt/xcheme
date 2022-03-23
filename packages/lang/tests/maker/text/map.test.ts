@@ -121,8 +121,8 @@ test("Output a 'MAP' pattern in a node directive", () => {
         `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(100, 0), ` +
-        /******/ `new Core.SetValueRoute(2, 1), ` +
-        /******/ `new Core.SetValueRoute(4, 3)` +
+        /******/ `new Core.SetValueRoute(1, 2), ` +
+        /******/ `new Core.SetValueRoute(3, 4)` +
         /**/ `)` +
         `)`
     }

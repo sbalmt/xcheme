@@ -23,6 +23,11 @@ export class Context<V> {
    * @param value Input value.
    */
   add<K extends object>(object: K, value: V): void {
-    (this.#cache.has(object) ? this.#cache : this.#cache.set(object, new Set<V>())).get(object)!.add(value);
+    const cache = this.#cache.get(object);
+    if (!cache) {
+      this.#cache.set(object, new Set<V>([value]));
+    } else {
+      cache.add(value);
+    }
   }
 }

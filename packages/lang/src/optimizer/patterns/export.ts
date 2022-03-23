@@ -7,11 +7,11 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 
 /**
- * Consume the export directive for the given node and update the specified state.
+ * Consume the EXPORT directive in the given node and replace it by an optimized one.
  * @param project Project context.
- * @param node Input node.
+ * @param node Directive node.
  * @param state Consumption state.
- * @returns Returns true when the given node is valid for the export directive, false otherwise.
+ * @returns Returns true when the given node was consumed, false otherwise.
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): boolean => {
   const current = node.right!;

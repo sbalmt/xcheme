@@ -1,7 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Sequential from '../../core/nodes/sequential';
-import * as Identified from '../../core/nodes/identified';
+import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as String from '../../core/string';
 import * as Project from '../../core/project';
@@ -27,7 +26,7 @@ export const resolve = (
     if (pattern) {
       return [pattern];
     }
-  } else if (node instanceof Sequential.Node) {
+  } else if (node instanceof Nodes.Sequence) {
     if (node.type === Parser.Nodes.String) {
       const fragments = node.sequence.map((node) => String.extract(node.fragment.data));
       if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1)) {
@@ -36,7 +35,7 @@ export const resolve = (
       }
       return [project.coder.emitChooseUnitsPattern(fragments)];
     } else {
-      const units = node.sequence.map((node) => (node as Identified.Node).identity);
+      const units = node.sequence.map((node) => (node as Nodes.Identity).identity);
       if (units.length > 3) {
         const routes = units.map((unit) => project.coder.getRoute([unit]));
         return [project.coder.emitMapPattern(...routes)];

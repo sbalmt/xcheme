@@ -4,16 +4,16 @@ import * as Project from '../../core/project';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
-import * as Generic from './generic';
-import * as Sequential from './sequential';
+import * as Any from './any';
+import * as Range from './range';
 import * as Reference from './reference';
 import * as String from './string';
-import * as Range from './range';
 import * as Map from './map';
 import * as Access from './access';
+import * as Generic from './generic';
 
 /**
- * Consume a child node from the AST on the given parent and optimize the expression pattern.
+ * Consume a child node from the AST on the given parent and optimize the corresponding expression pattern.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
@@ -28,6 +28,8 @@ export const consume = (
   const node = parent.get(direction)!;
   switch (node.value) {
     case Parser.Nodes.Any:
+      Any.consume(project, direction, parent, state);
+      break;
     case Parser.Nodes.Range:
       Range.consume(project, direction, parent, state);
       break;
@@ -44,10 +46,10 @@ export const consume = (
       Access.consume(project, direction, parent, state);
       break;
     case Parser.Nodes.Or:
-      Sequential.consume(project, direction, parent, Parser.Nodes.Or, state);
+      Generic.Sequence.consume(project, direction, parent, Parser.Nodes.Or, state);
       break;
     case Parser.Nodes.And:
-      Sequential.consume(project, direction, parent, Parser.Nodes.And, state);
+      Generic.Sequence.consume(project, direction, parent, Parser.Nodes.And, state);
       break;
     case Parser.Nodes.Append:
     case Parser.Nodes.AppendLeft:
@@ -59,11 +61,13 @@ export const consume = (
     case Parser.Nodes.PrependRight:
     case Parser.Nodes.Pivot:
     case Parser.Nodes.Symbol:
-      return Generic.Identity.consume(project, direction, parent, state);
+      Generic.Identity.consume(project, direction, parent, state);
+      break;
     case Parser.Nodes.Error:
     case Parser.Nodes.Has:
     case Parser.Nodes.Set:
-      return Generic.State.consume(project, direction, parent, state);
+      Generic.State.consume(project, direction, parent, state);
+      break;
     default:
       consume(project, Core.Nodes.Right, node, state);
   }

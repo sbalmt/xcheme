@@ -76,7 +76,7 @@ const compile = (project: Project.Context, context: Core.Context, content: strin
 };
 
 /**
- * Consume the import directive for the given node and update the specified project.
+ * Consume the IMPORT directive in the given node and replace it by an optimized one.
  * @param project Project context.
  * @param node Input node.
  */

@@ -1,12 +1,13 @@
 import * as Core from '@xcheme/core';
 
 import * as Parser from '../../parser';
-import * as Basic from './basic';
+
+import Basic from './basic';
 
 /**
- * Sequential node.
+ * Optimized sequential node.
  */
-export class Node extends Basic.Node {
+export default class Node extends Basic {
   /**
    * Sequence type.
    */
@@ -18,7 +19,7 @@ export class Node extends Basic.Node {
   #sequence: Core.Node[];
 
   /**
-   * Get all the sequential nodes from the specified node in a sequence.
+   * Get all nodes from the specified node in a sequence.
    * @param node Input node.
    * @returns Returns an array containing the sequence.
    */

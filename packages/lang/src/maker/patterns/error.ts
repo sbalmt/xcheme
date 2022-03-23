@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from '../../core/nodes/identified';
+import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Context from '../context';
@@ -17,7 +17,7 @@ import * as And from './and';
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
-  if (!(node instanceof Identified.Node)) {
+  if (!(node instanceof Nodes.Identity)) {
     throw new Exception('The ERROR node must be an instance of an identified node.');
   }
   const expression = node.right!;

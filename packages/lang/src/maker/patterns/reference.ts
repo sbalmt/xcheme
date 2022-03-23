@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from '../../core/nodes/identified';
+import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
@@ -71,7 +71,7 @@ const resolveNode = (
   state: Context.State
 ): Coder.Pattern => {
   if (record.value !== Parser.Symbols.Node && record.value !== Parser.Symbols.AliasNode) {
-    if (!(node instanceof Identified.Node)) {
+    if (!(node instanceof Nodes.Identity)) {
       throw new Exception('The NODE directive can only accept token, node and alias node references.');
     }
     return project.coder.emitExpectUnitsPattern([node.identity]);

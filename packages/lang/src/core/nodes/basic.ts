@@ -3,9 +3,9 @@ import * as Core from '@xcheme/core';
 import * as Parser from '../../parser';
 
 /**
- * Basic node.
+ * Optimized basic node.
  */
-export class Node extends Core.Node {
+export default class Node extends Core.Node {
   /**
    * Default constructor.
    * @param node Original node.

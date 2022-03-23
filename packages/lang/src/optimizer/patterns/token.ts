@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Directive from '../../core/nodes/directive';
+import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
@@ -14,7 +14,7 @@ import * as Range from './range';
 import * as String from './string';
 
 /**
- * Emit a new token entry and replace the current token node by an optimized one.
+ * Emit a new project symbol and replace the current TOKEN node by an optimized one.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
@@ -22,13 +22,13 @@ import * as String from './string';
  */
 const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
   const node = parent.get(direction)!;
-  const replacement = new Directive.Node(node, state.record!);
+  const replacement = new Nodes.Directive(node, state.record!);
   parent.set(direction, replacement);
   project.symbols.add(state.record!);
 };
 
 /**
- * Consume a child node from the AST on the given parent and optimize the 'TOKEN' directive.
+ * Consume a child node from the AST on the given parent and optimize the TOKEN directive.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.

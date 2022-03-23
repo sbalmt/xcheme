@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Referenced from '../../core/nodes/referenced';
+import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Parser from '../../parser';
@@ -9,30 +9,30 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 
 /**
- * Get all nodes from the given access node.
+ * Get all member nodes from the given ACCESS node.
  * @param node Access node.
- * @returns Returns an array containing all nodes.
+ * @returns Returns an array containing all the member nodes.
  */
-const getNodes = (node: Core.Node): Core.Node[] => {
+const getAllNodes = (node: Core.Node): Core.Node[] => {
   if (node.left && node.right) {
-    return [...getNodes(node.left), ...getNodes(node.right!)];
+    return [...getAllNodes(node.left), ...getAllNodes(node.right!)];
   } else if (node.left) {
-    return getNodes(node.left);
+    return getAllNodes(node.left);
   } else if (node.right) {
-    return getNodes(node.right!);
+    return getAllNodes(node.right!);
   }
   return [node];
 };
 
 /**
- * Get the member record that corresponds to the specified nodes containing a member path.
+ * Get the record that corresponds to the path in all the given member nodes.
  * @param project Project context.
- * @param base Base record.
- * @param nodes Node list containing the member path.
- * @returns Returns the corresponding member record or undefined when the member wasn't found.
+ * @param record Base record.
+ * @param nodes All members nodes.
+ * @returns Returns the corresponding record or undefined when the path wasn't found.
  */
-const getMember = (project: Project.Context, base: Core.Record, nodes: Core.Node[]): Core.Record | undefined => {
-  let member: Core.Record | undefined = base;
+const getRecord = (project: Project.Context, record: Core.Record, nodes: Core.Node[]): Core.Record | undefined => {
+  let member: Core.Record | undefined = record;
   for (let index = 1; index < nodes.length; index++) {
     const node = nodes[index];
     if (!(member = member.link?.get(node.fragment.data))) {
@@ -44,19 +44,19 @@ const getMember = (project: Project.Context, base: Core.Record, nodes: Core.Node
 };
 
 /**
- * Emit a new identified node replacing the current basic node.
+ * Emit a new ACCESS node replacing the current one for an optimized one.
  * @param direction Child node direction.
  * @param parent Parent node.
  * @param identity Node identity.
  */
 const emit = (direction: Core.Nodes, parent: Core.Node, identity: number): void => {
   const node = parent.get(direction)!;
-  const replacement = new Referenced.Node(node, identity);
+  const replacement = new Nodes.Reference(node, identity);
   parent.set(direction, replacement);
 };
 
 /**
- * Consume a child node from the AST on the given parent and optimize the access pattern.
+ * Consume a child node from the AST on the given parent and optimize the ACCESS pattern.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
@@ -69,21 +69,21 @@ export const consume = (
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
-  const nodes = getNodes(node);
+  const nodes = getAllNodes(node);
   const first = node.table.find(nodes[0].fragment.data);
   if (!first) {
     project.addError(nodes[0].fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
-    const member = getMember(project, first, nodes);
-    if (member) {
-      if (state.type !== Symbols.Types.Node || member.data.type === Symbols.Types.Node) {
-        project.addError(member.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-      } else if (Symbols.isDynamic(member)) {
-        project.addError(member.node!.fragment, Errors.INVALID_MAP_REFERENCE);
+    const record = getRecord(project, first, nodes);
+    if (record) {
+      if (state.type !== Symbols.Types.Node || record.data.type === Symbols.Types.Node) {
+        project.addError(record.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+      } else if (Symbols.isDynamic(record)) {
+        project.addError(record.fragment, Errors.INVALID_MAP_REFERENCE);
       } else if (first.value === Parser.Symbols.AliasToken) {
-        project.addError(first.node!.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+        project.addError(first.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
       } else {
-        emit(direction, parent, member.data.identity);
+        emit(direction, parent, record.data.identity);
       }
     }
   }

@@ -56,8 +56,14 @@ export const getNewState = (anchor: Core.Node, identity?: number): State => {
  * @param identifier Record identifier.
  * @param record Target record.
  * @param state Consumption state.
+ * @returns Returns the given symbol record.
  */
-export const setMetadata = (project: Project.Context, identifier: string, record: Core.Record, state: State): void => {
+export const setMetadata = (
+  project: Project.Context,
+  identifier: string,
+  record: Core.Record,
+  state: State
+): Core.Record => {
   Object.assign<any, Symbols.Metadata>(record.data, {
     type: state.type,
     origin: state.origin,
@@ -72,4 +78,5 @@ export const setMetadata = (project: Project.Context, identifier: string, record
     dependents: [],
     pattern: void 0
   });
+  return record;
 };

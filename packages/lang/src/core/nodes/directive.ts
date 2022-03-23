@@ -1,12 +1,13 @@
 import * as Core from '@xcheme/core';
 
 import * as Symbols from '../symbols';
-import * as Identified from './identified';
+
+import Identity from './identity';
 
 /**
- * Directive node.
+ * Optimized directive node.
  */
-export class Node extends Identified.Node {
+export default class Node extends Identity {
   /**
    * Directive record.
    */
@@ -37,7 +38,7 @@ export class Node extends Identified.Node {
   }
 
   /**
-   * Get whether or not the directive is an alias.
+   * Determines whether or not the directive is an alias.
    */
   get alias(): boolean {
     return Symbols.isAlias(this.#record);

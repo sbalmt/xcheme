@@ -1,9 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Directive from '../../core/nodes/directive';
-import * as Sequential from '../../core/nodes/sequential';
-import * as Identified from '../../core/nodes/identified';
-import * as Member from '../../core/nodes/member';
+import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
@@ -25,14 +22,14 @@ const resolveUnits = (node: Core.Node): (string | number)[] => {
   if (node.value === Parser.Nodes.String) {
     return String.extract(node.fragment.data).split('');
   }
-  if (node instanceof Identified.Node) {
+  if (node instanceof Nodes.Identity) {
     return [node.identity];
   }
-  if (!(node instanceof Sequential.Node)) {
+  if (!(node instanceof Nodes.Sequence)) {
     throw new Exception('The MAP entry node must be an instance of a sequential node.');
   }
   if (node.type !== Parser.Nodes.String) {
-    return node.sequence.map((node) => (node as Identified.Node).identity);
+    return node.sequence.map((node) => (node as Nodes.Identity).identity);
   }
   const words = node.sequence.map((node) => String.extract(node.fragment.data));
   return words.join('').split('');
@@ -49,8 +46,8 @@ const resolveUnits = (node: Core.Node): (string | number)[] => {
  */
 const resolveRoute = (
   project: Project.Context,
-  map: Directive.Node,
-  member: Member.Node,
+  map: Nodes.Directive,
+  member: Nodes.Member,
   state: Context.State,
   units: (string | number)[]
 ): Coder.Route => {
@@ -84,7 +81,7 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   const routes = [];
   while (entry) {
     const member = entry.right!;
-    if (!(member instanceof Member.Node)) {
+    if (!(member instanceof Nodes.Member)) {
       throw new Exception('The MAP entry node must be an instance of a member node.');
     }
     const units = resolveUnits(member.route);

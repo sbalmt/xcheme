@@ -14,13 +14,13 @@ import * as Skip from './patterns/skip';
 import { Exception } from '../core/exception';
 
 /**
- * Resolve the token or node directive for the given node and update the specified project.
+ * Resolve the TOKEN or NODE directive for the given node.
  * @param project Project context.
  * @param node Directive node.
  * @param state Consumption state.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveTokenOrNode = (project: Project.Context, node: Core.Node, state: Context.State): void => {
+const resolve = (project: Project.Context, node: Core.Node, state: Context.State): void => {
   state.identity = Identity.consume(node.right!);
   switch (node.value) {
     case Parser.Nodes.Token:
@@ -52,7 +52,7 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
         break;
       case Parser.Nodes.Export:
         if (!Export.consume(project, current, state)) {
-          resolveTokenOrNode(project, current.right!, state);
+          resolve(project, current.right!, state);
           state.record!.data.exported = true;
         }
         break;
@@ -60,7 +60,7 @@ export const consumeNodes = (node: Core.Node, project: Project.Context): boolean
         Skip.consume(project, Core.Nodes.Next, node, state);
         break;
       default:
-        resolveTokenOrNode(project, current, state);
+        resolve(project, current, state);
     }
     node = state.anchor.next!;
   }

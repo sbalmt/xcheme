@@ -1,11 +1,11 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from './identified';
+import Identity from './identity';
 
 /**
- * Member node.
+ * Optimized member node.
  */
-export class Node extends Identified.Node {
+export default class Node extends Identity {
   /**
    * Route node.
    */

@@ -1,4 +1,4 @@
-import * as Directive from '../core/nodes/directive';
+import * as Nodes from '../core/nodes';
 
 /**
  * Store the consumption state for the context.
@@ -7,7 +7,7 @@ export type State = {
   /**
    * Current directive.
    */
-  directive: Directive.Node;
+  directive: Nodes.Directive;
   /**
    * Determines whether or not the current expression is dynamic.
    */

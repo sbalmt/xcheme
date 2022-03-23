@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Directive from '../core/nodes/directive';
+import * as Nodes from '../core/nodes';
 import * as Project from '../core/project';
 import * as Parser from '../parser';
 
@@ -18,7 +18,7 @@ import * as Skip from './patterns/skip';
  */
 const resolveMain = (project: Project.Context, node: Core.Node): void => {
   const directive = node.right!;
-  if (!(directive instanceof Directive.Node)) {
+  if (!(directive instanceof Nodes.Directive)) {
     throw new Exception('The node must be an instance of a directive node.');
   }
   const state = { directive, dynamic: directive.dynamic };
@@ -47,7 +47,7 @@ const resolveMain = (project: Project.Context, node: Core.Node): void => {
  * @throws Throws an exception when the given node isn't valid.
  */
 const resolveSkip = (project: Project.Context, node: Core.Node): void => {
-  if (!(node instanceof Directive.Node)) {
+  if (!(node instanceof Nodes.Directive)) {
     throw new Exception('The SKIP node must be an instance of a directive nodes.');
   }
   const state = { directive: node, dynamic: false };

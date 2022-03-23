@@ -7,7 +7,7 @@ import * as Context from '../context';
 import * as Generic from './generic';
 
 /**
- * Consume a child node from the AST on the given parent and optimize the STRING pattern.
+ * Consume a child node from the AST on the given parent and optimize the ANY pattern.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
@@ -20,8 +20,6 @@ export const consume = (
   state: Context.State
 ): void => {
   if (state.type === Symbols.Types.Node) {
-    const node = parent.get(direction)!;
-    const string = node.fragment.data;
-    Generic.Loose.consume(project, direction, parent, string, state);
+    Generic.Loose.consume(project, direction, parent, '*', state);
   }
 };

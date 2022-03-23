@@ -10,9 +10,9 @@ import * as Context from './context';
 import * as Nodes from './nodes';
 
 /**
- * Emit a new loose token and returns the corresponding record.
+ * Emit a new loose token and returns its corresponding record.
  * @param project Project context.
- * @param node Input node.
+ * @param node Loose record node.
  * @param state Consumption state.
  * @returns Returns the generated record.
  */

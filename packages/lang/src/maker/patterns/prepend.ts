@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from '../../core/nodes/identified';
+import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Parser from '../../parser';
@@ -23,7 +23,7 @@ export const consume = (
   state: Context.State,
   direction: Core.Nodes
 ): Coder.Pattern | undefined => {
-  if (!(node instanceof Identified.Node)) {
+  if (!(node instanceof Nodes.Identity)) {
     throw new Exception('The PREPEND node must be an instance of an identified node.');
   }
   const current = state.dynamic;

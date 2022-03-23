@@ -1,11 +1,11 @@
 import * as Core from '@xcheme/core';
 
-import * as Basic from './basic';
+import Basic from './basic';
 
 /**
- * Identified node.
+ * Optimized identity node.
  */
-export class Node extends Basic.Node {
+export default class Node extends Basic {
   /**
    * Node identity.
    */
@@ -22,14 +22,14 @@ export class Node extends Basic.Node {
   }
 
   /**
-   * Get whether or not the identity is empty.
+   * Determines whether or not the identity is empty.
    */
   get empty(): boolean {
     return Number.isNaN(this.#identity);
   }
 
   /**
-   * Get whether or not the identity is dynamic.
+   * Determines whether or not the identity is dynamic.
    */
   get dynamic(): boolean {
     return this.#identity === Core.BaseSource.Output;

@@ -1,7 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Sequential from '../core/nodes/sequential';
-import * as Identified from '../core/nodes/identified';
+import * as Nodes from '../core/nodes';
 import * as Coder from '../core/coder/base';
 import * as String from '../core/string';
 import * as Project from '../core/project';
@@ -17,7 +16,7 @@ import * as And from './patterns/and';
  * @param state Consumption state.
  * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
-const split = (project: Project.Context, node: Sequential.Node, state: Context.State): Coder.Pattern[] | undefined => {
+const split = (project: Project.Context, node: Nodes.Sequence, state: Context.State): Coder.Pattern[] | undefined => {
   const record = node.sequence.shift()!;
   const patterns = And.resolve(project, node, state);
   if (patterns) {
@@ -25,7 +24,7 @@ const split = (project: Project.Context, node: Sequential.Node, state: Context.S
     if (node.type === Parser.Nodes.String) {
       units = String.extract(record.fragment.data).split('');
     } else {
-      units = [(record as Identified.Node).identity];
+      units = [(record as Nodes.Identity).identity];
     }
     return [project.coder.emitExpectUnitsPattern(units), ...patterns];
   }
@@ -63,7 +62,7 @@ export const resolve = (
   state: Context.State
 ): Coder.Pattern[] | undefined => {
   if (node.value === Parser.Nodes.And) {
-    if (node instanceof Sequential.Node) {
+    if (node instanceof Nodes.Sequence) {
       if (node.sequence.length > 1) {
         return split(project, node, state);
       }

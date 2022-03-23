@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import * as Identified from '../../../core/nodes/identified';
+import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
 import * as Symbols from '../../../core/symbols';
 import * as Parser from '../../../parser';
@@ -11,7 +11,7 @@ import * as Expression from '../expression';
 import { Errors } from '../../../core/errors';
 
 /**
- * Emit a new identity node replacing the current basic node.
+ * Emit a new identified node replacing the current one for an optimized one.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
@@ -27,7 +27,7 @@ const emit = (
 ): void => {
   const node = parent.get(direction)!;
   const record = state.record!;
-  const replacement = new Identified.Node(node, identity);
+  const replacement = new Nodes.Identity(node, identity);
   parent.set(direction, replacement);
   if (Symbols.isEmpty(record) && replacement.empty) {
     if (record.data.type !== Symbols.Types.Skip) {
@@ -38,7 +38,7 @@ const emit = (
 };
 
 /**
- * Consume a child node from the AST on the given parent and optimize the identified pattern.
+ * Consume a child node from the AST on the given parent and optimize the identity pattern.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
@@ -52,13 +52,12 @@ export const consume = (
 ): void => {
   const node = parent.get(direction)!;
   const expression = node.right!;
-  let identity;
   if (expression.value === Parser.Nodes.Identity) {
-    identity = Identity.resolve(expression);
+    const identity = Identity.resolve(expression);
     Expression.consume(project, Core.Nodes.Right, expression, state);
+    emit(project, direction, parent, identity, state);
   } else {
-    identity = state.identity;
     Expression.consume(project, Core.Nodes.Right, node, state);
+    emit(project, direction, parent, state.identity, state);
   }
-  emit(project, direction, parent, identity, state);
 };

@@ -3,7 +3,7 @@ import * as Core from '@xcheme/core';
 /**
  * Resolve the current identity for the given node.
  * @param node Input node.
- * @returns Returns the resolved identity.
+ * @returns Returns the resolved identity number or NaN when the node doesn't have an identity.
  */
 export const resolve = (node: Core.Node): number => {
   const value = node.fragment.data;
@@ -20,7 +20,7 @@ export const resolve = (node: Core.Node): number => {
 /**
  * Consume the current identity for the given node.
  * @param node Input node.
- * @returns Returns the resolved identity or NaN when the node doesn't have identity.
+ * @returns Returns the resolved identity number or NaN when the node doesn't have an identity.
  */
 export const consume = (node: Core.Node): number => {
   if (node.left) {
