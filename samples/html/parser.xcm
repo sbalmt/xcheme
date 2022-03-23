@@ -13,38 +13,38 @@ alias token SELF_CLOSED_TAGS as uncase map {
   'keygen', 'link', 'meta', 'source', 'track', 'wbr'
 };
 
-token <100> DOC_START   as set<3> '<!' & uncase 'doctype';
-token <101> DOC_TYPE    as has<3> repeat (not ('>') then any);
-token <102> DOC_END     as has<3> set<0> '>';
+token <100> DOC_START   as set <3> '<!' & uncase 'doctype';
+token <101> DOC_TYPE    as has <3> repeat (not ('>') then any);
+token <102> DOC_END     as has <3> set <0> '>';
 
-token <103> TAG_OPEN    as set<1> '<';
-token <104> TAG_END     as has<1> '/' | has<2> '/';
-token <105> TAG_SC_NAME as has<1> set<2> SELF_CLOSED_TAGS;
-token <106> TAG_NAME    as has<1> set<2> (ALPHA & opt repeat (ALPHA | DIGIT | '-' | '_' | ':'));
-token <107> TAG_CLOSE   as has<2> set<0> '>';
+token <103> TAG_OPEN    as set <1> '<';
+token <104> TAG_END     as has <1> '/' | has<2> '/';
+token <105> TAG_SC_NAME as has <1> set <2> SELF_CLOSED_TAGS;
+token <106> TAG_NAME    as has <1> set <2> (ALPHA & opt repeat (ALPHA | DIGIT | '-' | '_' | ':'));
+token <107> TAG_CLOSE   as has <2> set <0> '>';
 
-token <108> TEXT_DATA   as has<0> repeat (not ('<') then any);
+token <108> TEXT_DATA   as has <0> repeat (not ('<') then any);
 
-token <109> ATTR_NAME   as has<2> (ALPHA & opt repeat (ALPHA | DIGIT | '-' | '_' | ':'));
-token <110> ATTR_ASSIGN as has<2> '=';
-token <111> ATTR_SQ_STR as has<2> ('\'' & repeat ('\\' then * else not '\'' then *) & '\'');
-token <112> ATTR_DQ_STR as has<2> ('"' & repeat ('\\' then * else not '"' then *) & '"');
+token <109> ATTR_NAME   as has <2> (ALPHA & opt repeat (ALPHA | DIGIT | '-' | '_' | ':'));
+token <110> ATTR_ASSIGN as has <2> '=';
+token <111> ATTR_SQ_STR as has <2> ('\'' & repeat ('\\' then * else not '\'' then *) & '\'');
+token <112> ATTR_DQ_STR as has <2> ('"' & repeat ('\\' then * else not '"' then *) & '"');
 
 // Parser
-alias node ATTR_VALUE  as append<208> (ATTR_SQ_STR | ATTR_DQ_STR);
-alias node ATTR_ENTRY  as append<209> next (ATTR_NAME & opt (ATTR_ASSIGN & ATTR_VALUE));
-alias node ATTR_LIST   as append<210> opt repeat ATTR_ENTRY;
+alias node ATTR_VALUE  as append <208> (ATTR_SQ_STR | ATTR_DQ_STR);
+alias node ATTR_ENTRY  as append <209> next (ATTR_NAME & opt (ATTR_ASSIGN & ATTR_VALUE));
+alias node ATTR_LIST   as append <210> opt repeat ATTR_ENTRY;
 
-alias node ELM_DATA    as append<205> repeat TEXT_DATA;
-alias node ELM_VOIDED  as TAG_OPEN & append<206> (TAG_SC_NAME & ATTR_LIST & opt TAG_END & TAG_CLOSE);
-alias node ELM_CLOSED  as TAG_OPEN & append<206> (TAG_NAME & ATTR_LIST & TAG_END & TAG_CLOSE);
+alias node ELM_DATA    as append <205> repeat TEXT_DATA;
+alias node ELM_VOIDED  as TAG_OPEN & append <206> (TAG_SC_NAME & ATTR_LIST & opt TAG_END & TAG_CLOSE);
+alias node ELM_CLOSED  as TAG_OPEN & append <206> (TAG_NAME & ATTR_LIST & TAG_END & TAG_CLOSE);
 
-alias node ELM_GROUPED as TAG_OPEN & append<207> (TAG_NAME & ATTR_LIST & TAG_CLOSE) & opt CHILDREN &
+alias node ELM_GROUPED as TAG_OPEN & append <207> (TAG_NAME & ATTR_LIST & TAG_CLOSE) & opt CHILDREN &
                             opt (TAG_OPEN & TAG_END & TAG_NAME & TAG_CLOSE);
 
-alias node DOCUMENT  as DOC_START & append<202> (repeat DOC_TYPE & DOC_END);
-alias node CHILDREN  as append<203> next repeat place next ELEMENT;
-alias node ELEMENT   as append<204> (ELM_DATA | ELM_VOIDED | ELM_CLOSED | ELM_GROUPED);
+alias node DOCUMENT  as DOC_START & append <202> (repeat DOC_TYPE & DOC_END);
+alias node CHILDREN  as append <203> next repeat place next ELEMENT;
+alias node ELEMENT   as append <204> (ELM_DATA | ELM_VOIDED | ELM_CLOSED | ELM_GROUPED);
 
 node <200> TYPE as DOCUMENT;
 node <201> ROOT as CHILDREN;

@@ -27,18 +27,18 @@ alias token T_EXPONENT  as ('E' | 'e') & ('+' | '-') & T_DIGIT;
 token<110> T_NUMBER     as T_INTEGER & opt T_FRACTION & opt T_EXPONENT;
 
 // Parser
-alias node OBJECT_ELEMENT as append<208> (T_MAP.STRING & T_MAP.COLON & VALUE) & 
+alias node OBJECT_ELEMENT as append <208> (T_MAP.STRING & T_MAP.COLON & VALUE) & 
                               opt (T_MAP.COMMA & place next OBJECT_ELEMENT);
 
 alias node ARRAY_ELEMENT  as VALUE & opt (T_MAP.COMMA & place next ARRAY_ELEMENT);
 
-alias node STRING as append<201> T_MAP.STRING;
-alias node NUMBER as append<202> T_NUMBER;
-alias node OBJECT as T_MAP.OBJECT_OPEN & append<203> opt OBJECT_ELEMENT & T_MAP.OBJECT_CLOSE;
-alias node ARRAY  as T_MAP.ARRAY_OPEN & append<204> opt ARRAY_ELEMENT & T_MAP.ARRAY_CLOSE;
-alias node TRUE   as append<205> T_MAP.TRUE;
-alias node FALSE  as append<206> T_MAP.FALSE;
-alias node NULL   as append<207> T_MAP.NULL;
+alias node STRING as append <201> T_MAP.STRING;
+alias node NUMBER as append <202> T_NUMBER;
+alias node OBJECT as T_MAP.OBJECT_OPEN & append <203> opt OBJECT_ELEMENT & T_MAP.OBJECT_CLOSE;
+alias node ARRAY  as T_MAP.ARRAY_OPEN & append <204> opt ARRAY_ELEMENT & T_MAP.ARRAY_CLOSE;
+alias node TRUE   as append <205> T_MAP.TRUE;
+alias node FALSE  as append <206> T_MAP.FALSE;
+alias node NULL   as append <207> T_MAP.NULL;
 
 alias node VALUE  as STRING | NUMBER | OBJECT | ARRAY | TRUE | FALSE | NULL;
 

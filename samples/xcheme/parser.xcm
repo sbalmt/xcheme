@@ -73,15 +73,15 @@ alias node OPERAND    as MAP | RANGE | ANY | STRING | REFERENCE | GROUP;
 alias node EXPRESSION as OR & opt THEN;
 alias node MAP_BLOCK  as T_SYMBOLS.OPEN_BRACES & MEMBERS & T_SYMBOLS.CLOSE_BRACES;
 
-alias node IDENTIFIER as pivot<200> (T_IDENTIFIER & peek T_KEYWORDS.AS) & T_KEYWORDS.AS & place EXPRESSION;
-alias node REFERENCE  as append<201> T_IDENTIFIER;
-alias node IDENTITY   as T_SYMBOLS.IDENTITY_OPEN & append<202> ((T_NUMBER | T_KEYWORDS.AUTO) & T_SYMBOLS.IDENTITY_CLOSE);
-alias node STATE      as T_SYMBOLS.IDENTITY_OPEN & append<203> (T_NUMBER & T_SYMBOLS.IDENTITY_CLOSE);
-alias node STRING     as append<204> T_STRING;
-alias node ANY        as append<205> (T_KEYWORDS.ANY | T_SYMBOLS.ASTERISK);
-alias node RANGE      as place (T_KEYWORDS.FROM & STRING & pivot<206> (T_KEYWORDS.TO & STRING));
-alias node MAP        as scope (T_KEYWORDS.MAP & append<207> MAP_BLOCK);
-alias node MEMBERS    as append<208> next ((opt IDENTITY & symbol<305> IDENTIFIER) | EXPRESSION) & opt (T_SYMBOLS.COMMA & MEMBERS);
+alias node IDENTIFIER as pivot <200> (T_IDENTIFIER & peek T_KEYWORDS.AS) & T_KEYWORDS.AS & place EXPRESSION;
+alias node REFERENCE  as append <201> T_IDENTIFIER;
+alias node IDENTITY   as T_SYMBOLS.IDENTITY_OPEN & append <202> ((T_NUMBER | T_KEYWORDS.AUTO) & T_SYMBOLS.IDENTITY_CLOSE);
+alias node STATE      as T_SYMBOLS.IDENTITY_OPEN & append <203> (T_NUMBER & T_SYMBOLS.IDENTITY_CLOSE);
+alias node STRING     as append <204> T_STRING;
+alias node ANY        as append <205> (T_KEYWORDS.ANY | T_SYMBOLS.ASTERISK);
+alias node RANGE      as place (T_KEYWORDS.FROM & STRING & pivot <206> (T_KEYWORDS.TO & STRING));
+alias node MAP        as scope (T_KEYWORDS.MAP & append <207> MAP_BLOCK);
+alias node MEMBERS    as append <208> next ((opt IDENTITY & symbol <305> IDENTIFIER) | EXPRESSION) & opt (T_SYMBOLS.COMMA & MEMBERS);
 
 alias node <219> PLACE_OPTIONS as opt map {
   <216> LEFT  as T_KEYWORDS.LEFT,
@@ -118,23 +118,23 @@ alias node UNARY as opt repeat append<auto> map {
   <235> PEEK      as T_KEYWORDS.PEEK
 } & place ACCESS;
 
-alias node ACCESS as OPERAND & opt repeat pivot<236> (T_SYMBOLS.PERIOD & OPERAND);
-alias node AND    as UNARY & opt repeat pivot<212> ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
-alias node OR     as AND & opt repeat pivot<211> ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
-alias node ELSE   as pivot<210> (T_KEYWORDS.ELSE & EXPRESSION);
-alias node THEN   as pivot<209> (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
+alias node ACCESS as OPERAND & opt repeat pivot <236> (T_SYMBOLS.PERIOD & OPERAND);
+alias node AND    as UNARY & opt repeat pivot <212> ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
+alias node OR     as AND & opt repeat pivot <211> ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
+alias node ELSE   as pivot <210> (T_KEYWORDS.ELSE & EXPRESSION);
+alias node THEN   as pivot <209> (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
 
 alias node DIRECTIVES as map {
   <237> SKIP        as T_KEYWORDS.SKIP & EXPRESSION,
-  <238> TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & symbol<301> IDENTIFIER,
-  <239> NODE        as T_KEYWORDS.NODE & opt IDENTITY & symbol<302> IDENTIFIER,
-  <240> ALIAS_TOKEN as T_KEYWORDS.ALIAS & T_KEYWORDS.TOKEN & opt IDENTITY & symbol<303> IDENTIFIER,
-  <241> ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & symbol<304> IDENTIFIER
+  <238> TOKEN       as T_KEYWORDS.TOKEN & opt IDENTITY & symbol <301> IDENTIFIER,
+  <239> NODE        as T_KEYWORDS.NODE & opt IDENTITY & symbol <302> IDENTIFIER,
+  <240> ALIAS_TOKEN as T_KEYWORDS.ALIAS & T_KEYWORDS.TOKEN & opt IDENTITY & symbol <303> IDENTIFIER,
+  <241> ALIAS_NODE  as T_KEYWORDS.ALIAS & T_KEYWORDS.NODE & opt IDENTITY & symbol <304> IDENTIFIER
 };
 
 alias node MODULES as map {
   <242> IMPORT as T_KEYWORDS.IMPORT & STRING,
-  <243> EXPORT as T_KEYWORDS.EXPORT & (append<auto> DIRECTIVES | append<200> T_IDENTIFIER)
+  <243> EXPORT as T_KEYWORDS.EXPORT & (append <auto> DIRECTIVES | append <200> T_IDENTIFIER)
 };
 
 node <auto> STATEMENTS as (DIRECTIVES | MODULES) & T_SYMBOLS.SEMICOLON;
