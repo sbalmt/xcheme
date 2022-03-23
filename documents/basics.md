@@ -4,7 +4,7 @@ XCHEME Lang is a programming language designed for developing lexers and parsers
 
 ## What is XCHEME?
 
-XCHEME Lang (Or just "XCHEME") is a set of case-sensitive directives and expressions commonly used for validating portions of strings, each directive and expression is an atomic pattern (a small action, e.g: `repeat`, `expect`, `choose`, etc...) that must be valid for make the analysis process move on to the end of the string. By using atomic patterns, it's possible to combine a variety of components and create complex validation rules that will produce _Tokens_ and _Nodes_ already in an AST (Abstract Syntax Tree) for post-processing.
+XCHEME Lang (Or just "XCHEME") is a set of case-sensitive directives and expressions commonly used for validating portions of strings, each directive and expression is an atomic pattern (a small action, e.g: `repeat`, `expect`, `choose`, etc...) that must be valid to make the analysis process move on to the end of the string. By using atomic patterns, it's possible to combine a variety of components and create complex validation rules that will produce _Tokens_ and _Nodes_ already in an AST (Abstract Syntax Tree) for post-processing.
 
 ## A _Hello world!_ example
 
@@ -14,24 +14,24 @@ XCHEME Lang (Or just "XCHEME") is a set of case-sensitive directives and express
 npm i @xcheme/cli -g
 ```
 
-2. Create a new file called `parser.xcm` (or [download](../samples/hello/parser.xcm)) and save it with the following contents.
+2. Create a new file `parser.xcm` (or [download](../samples/hello/parser.xcm) the sample) and save it with the following contents.
 
 ```xcm
 skip ' ' | '\r' | '\n';
 
-token T_HELLO       as 'Hello';
-token T_WORLD       as 'world';
-token T_EXCL_POINT  as '!';
-token T_PERIOD      as '.';
+token <1> T_HELLO      as uncase 'hello';
+token <2> T_WORLD      as uncase 'world';
+token <3> T_EXCL_POINT as '!';
+token <4> T_PERIOD     as '.';
 
-node HELLO_WORLD    as T_HELLO & T_WORLD & opt (T_EXCL_POINT | T_PERIOD);
+node <1> HELLO_WORLD as T_HELLO & T_WORLD & opt (T_EXCL_POINT | T_PERIOD);
 ```
 
-3. Create a new file called `input.txt` (or [download](../samples/hello/input.txt)) and save it with the following contents.
+3. Create a new file `input.txt` (or [download](../samples/hello/input.txt) the sample) and save it with the following contents.
 
 ```
-Hello world!
-Hello world.
+hello world!
+Hello World.
 Hello world
 ```
 
@@ -45,25 +45,29 @@ xcm -s parser.xcm -t input.txt --run --tokens --nodes
 
 ```
 Tokens:
-    0:0    0001 "Hello"
-    0:6    0002 "world"
-    0:11   0003 "!"
-    1:0    0001 "Hello"
-    1:6    0002 "world"
-    1:11   0004 "."
-    2:0    0001 "Hello"
-    2:6    0002 "world"
+
+          Code Fragment
+   0:0    0001 "Hello"
+   0:6    0002 "World"
+   0:11   0003 "!"
+   1:0    0001 "Hello"
+   1:6    0002 "World"
+   1:11   0004 "."
+   2:0    0001 "Hello"
+   2:6    0002 "World"
 
 Nodes:
 
-    0:0    N 5 "Hello world!"
-    1:0    N 5 "Hello world."
-    2:0    N 5 "Hello world"
+    0:0    N 1 "Hello World!"
+    1:0    N 1 "Hello World."
+    2:0    N 1 "Hello World"
+
+Done!
 ```
 
 ## What happened?
 
-We just used XCHEME to make a parser that's able to consume combinations of _Hello world_ sentences, we also printed all the tokens and nodes produced in the analysis process to check if everything was ok. Now to get a deep understanding of what happened, why it happened that way, and start creating your own lexers and parsers, take a time to delve into the next steps.
+We just used XCHEME to make a parser that's able to consume combinations of _hello world_ sentences, and we also printed all the tokens and nodes resulting of the analysis process... To get a deep understanding of what happened, why it happened that way, and start creating your own lexer and/or parser, take a time to delve into the next steps.
 
 ## Next steps
 
@@ -73,4 +77,4 @@ We just used XCHEME to make a parser that's able to consume combinations of _Hel
 
 ## License
 
-[MIT](https://balmante.eti.br)
+[MIT](../LICENSE)

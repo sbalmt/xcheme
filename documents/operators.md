@@ -4,78 +4,81 @@ For making expressions in XCHEME you must use operators and [operands](./operand
 
 #### Unary operators
 
-A unary operator requires a single operand after the operator.
+A unary operator requires a single operand always after the operator.
 
 ```xcm
-operator operand
+operator FOO
 ```
 
-> For example, `opt X` or `opt 'x'`.
+> For example, `opt FOO`.
 
 #### Binary operators
 
-A binary operator requires two operands, one before the operator and another one after the operator.
+A binary operator requires two operands, one before and another one after the operator.
 
 ```xcm
-operand operator operand
+FOO operator BAR
 ```
 
-> For example, `X & Y` or `X and 'y'`.
+> For example, `FOO & BAR` or `FOO and BAR`.
 
 #### Ternary operators
 
 A ternary operator is a special operator that requires three operands, in XCHEME there's only one ternary operator that's used for conditionals.
 
 ```xcm
-operand then operand else operand
+FOO operator BAR operator BAZ
 ```
 
-> For example, `'x' then 'y' else 'z'`.
+> For example, `FOO then BAR else BAZ`.
 
 ## Operator precedence
 
 The following table lists the precedence and associativity of all operators from top to bottom, in descending precedence order. Click on the name to know about the respective operator.
 
-| Precedence | Name                                     | Associativity | Operator        |
-| ---------- | ---------------------------------------- | ------------- | --------------- |
-| 1️⃣         | [Grouping](#grouping-operator)           | N/A           | (…)             |
-| 2️⃣         | [Member access](#member-access-operator) | Left to Right | … . …           |
-| 3️⃣         | [Uncase](#uncase-operator)               | Right to Left | uncase …        |
-| 3️⃣         | [Peek](#peek-operator)                   | Right to Left | peek …          |
-| 3️⃣         | [State has](#state-has)                  | Right to Left | has<…> …        |
-| 3️⃣         | [State set](#state-set)                  | Right to Left | set<…> …        |
-| 3️⃣         | [User error](#error-operator)            | Right to Left | error<…> …      |
-| 3️⃣         | [Symbol scope](#symbol-scope)            | Right to Left | scope …         |
-| 3️⃣         | [Symbol record](#symbol-record)          | Right to Left | symbol …        |
-| 3️⃣         | [AST pivot](#pivot-operator)             | Right to Left | pivot …         |
-| 3️⃣         | [AST place](#place-operator)             | Right to Left | place …         |
-| 3️⃣         | [AST prepend](#prepend-operator)         | Right to Left | prepend …       |
-| 3️⃣         | [AST append](#append-operator)           | Right to Left | append …        |
-| 3️⃣         | [Control repeat](#control-repeat)        | Right to Left | repeat …        |
-| 3️⃣         | [Control option](#control-option)        | Right to Left | opt …           |
-| 3️⃣         | [Logical not](#logical-not)              | Right to Left | not …           |
-| 4️⃣         | [Logical and](#logical-and)              | Left to Right | … and …         |
-| 5️⃣         | [Logical or](#logical-or)                | Left to Right | … or …          |
-| 6️⃣         | [Conditional](#conditional-operator)     | Right to Left | … then … else … |
-| 7️⃣         | [Assignment](#assignment-operator)       | Right to Left | … as …          |
+| Precedence | Name                                 | Associativity | Operator        |
+| ---------- | ------------------------------------ | ------------- | --------------- |
+| 1️⃣         | [Grouping](#grouping-operator)       | N/A           | (…)             |
+| 2️⃣         | [Member access](#access-operator)    | Left to Right | … . …           |
+| 3️⃣         | [Uncase](#uncase-operator)           | Right to Left | uncase …        |
+| 3️⃣         | [Peek](#peek-operator)               | Right to Left | peek …          |
+| 3️⃣         | [Has state](#has-operator)           | Right to Left | has<…> …        |
+| 3️⃣         | [Set state](#set-operator)           | Right to Left | set<…> …        |
+| 3️⃣         | [User error](#error-operator)        | Right to Left | error<…> …      |
+| 3️⃣         | [Symbol scope](#scope-operator)      | Right to Left | scope …         |
+| 3️⃣         | [Symbol record](#symbol-operator)    | Right to Left | symbol …        |
+| 3️⃣         | [AST pivot](#pivot-operator)         | Right to Left | pivot …         |
+| 3️⃣         | [AST place](#place-operator)         | Right to Left | place …         |
+| 3️⃣         | [AST prepend](#prepend-operator)     | Right to Left | prepend …       |
+| 3️⃣         | [AST append](#append-operator)       | Right to Left | append …        |
+| 3️⃣         | [Repeat control](#repeat-operator)   | Right to Left | repeat …        |
+| 3️⃣         | [Option control](#opt-operator)      | Right to Left | opt …           |
+| 3️⃣         | [Logical not](#logical-not)          | Right to Left | not …           |
+| 4️⃣         | [Logical and](#logical-and)          | Left to Right | … and …         |
+| 5️⃣         | [Logical or](#logical-or)            | Left to Right | … or …          |
+| 6️⃣         | [Conditional](#conditional-operator) | Right to Left | … then … else … |
+| 7️⃣         | [Assignment](#assignment-operator)   | Right to Left | … as …          |
 
 ## Assignment operator
 
-The assignment operator is a binary operator that assigns to its left operand, an expression in its right operand.
+The assignment operator is a special binary operator that depends on a directive declaration for assigning to its left operand, an expression in its right operand.
 
 Syntax:
 
 ```xcm
-operand as operand
+token <0> FOO as BAR
+node  <0> FOO as BAR
+alias token <0> FOO as BAR
+alias node  <0> FOO as BAR
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as 'x';
+token <0> T_FOO as BAR;
 ```
 
-> Expect an occurrence of `'x'` during the directive evaluation.
+> Assign a `BAR` expression to `T_FOO`.
 
 [Back to table](#operator-precedence)
 
@@ -86,24 +89,26 @@ The conditional operator is the only ternary operator available in the language,
 Syntax:
 
 ```xcm
-operand then operand else operand
+FOO then BAR else BAZ
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as 'x' then * else 'y';
+token <0> T_FOO as FOO then BAR else BAZ;
 ```
 
-> After an occurrence of `'x'`, any character is accepted, otherwise, only an occurrence of `'y'` will be accepted during the expression evaluation.
+> After an occurrence of `FOO`, `BAR` is accepted, otherwise, `BAZ` is accepted during the expression evaluation.
 
-The `else` part of the syntax can be omitted when a third operand it's not necessary, and in this case, the syntax is interchangeable with an `and` expression.
+The `else` syntax can be omitted when a third operand is not necessary, and in this case, the syntax is interchangeable with the `and` expression.
 
 Syntax:
 
 ```xcm
-operand then operand
+FOO then BAR
 ```
+
+> Same as `FOO & BAR`.
 
 [Back to table](#operator-precedence)
 
@@ -113,12 +118,12 @@ There are three types of logical operators, as we will see below.
 
 #### Logical or
 
-The logical `or` operator is a binary operator used to evaluate a set of expressions and expect at least one to be `true`.
+The logical `or` operator is a binary operator used to evaluate a set of expressions and expect at least one of them to be `true`.
 
 Syntax:
 
 ```xcm
-operand or operand
+FOO or BAR
 ```
 
 > Note: `or` and `|` are interchangeable.
@@ -126,10 +131,10 @@ operand or operand
 Example:
 
 ```xcm
-token<100> T_XY as 'x' | 'y';
+token <0> T_FOO as FOO | BAR | BAZ;
 ```
 
-> Accept an occurrence of `'x'` or `'y'` during the expression evaluation.
+> Accept an occurrence of `FOO`, `BAR` or `BAZ` during the expression evaluation.
 
 [Back to table](#operator-precedence)
 
@@ -140,7 +145,7 @@ The logical `and` operator is a binary operator used to evaluate a set of expres
 Syntax:
 
 ```xcm
-operand and operand
+FOO and BAR
 ```
 
 > Note: `and` and `&` are interchangeable.
@@ -148,10 +153,10 @@ operand and operand
 Example:
 
 ```xcm
-token<100> T_XY as 'x' & 'y';
+token <0> T_FOO as FOO & BAR & BAZ;
 ```
 
-> Accept an occurrence of `'xy'` during the expression evaluation.
+> Accept an occurrence of `FOO`, `BAR` and `BAZ` during the expression evaluation.
 
 [Back to table](#operator-precedence)
 
@@ -162,16 +167,16 @@ The logical `not` operator is a unary operator used to evaluate an expression an
 Syntax:
 
 ```xcm
-not operand
+not FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as not 'x';
+token <0> T_FOO as not BAR;
 ```
 
-> Accept anything but `'x'` during the expression evaluation.
+> Accept anything but `BAR` during the expression evaluation.
 
 [Back to table](#operator-precedence)
 
@@ -179,43 +184,43 @@ token<100> T_X as not 'x';
 
 There are two types of control operators, as we will see below.
 
-#### Control repeat
+#### Repeat operator
 
-The control `repeat` operator is a unary operator used to evaluate an expression, and in case of success, try to evaluate once more whenever the last evaluation is `true`.
+The `repeat` operator is a unary operator used to evaluate an expression, and in case of success, try to evaluate once more whenever the last evaluation is `true`.
 
 Syntax:
 
 ```xcm
-repeat operand
+repeat FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as repeat 'x';
+token <0> T_FOO as repeat BAR;
 ```
 
-> Accept one or more occurrences of `'x'` during the expression evaluation.
+> Accept one or more occurrences of `BAR` during the expression evaluation.
 
 [Back to table](#operator-precedence)
 
-#### Control option
+#### Opt operator
 
 The option (`opt`) operator is a unary operator used to create an optional expression.
 
 Syntax:
 
 ```xcm
-opt operand
+opt FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_XY as 'x' & opt 'y';
+token <0> T_FOO as BAR & opt BAZ;
 ```
 
-> Accept an occurrence of `'x'` or `'xy'` during the expression evaluation.
+> Accept an occurrence of `BAR` and optionally `BAZ` during the expression evaluation.
 
 [Back to table](#operator-precedence)
 
@@ -230,28 +235,30 @@ The `append` operator is a unary operator used to append a new node in the AST a
 Syntax:
 
 ```xcm
-append operand
+append FOO
+append <identity> FOO
 ```
+
+When no identity is provided, the directive identity is used for the new node.
 
 Use `left`, `right` or `next` when you want to be more specific, the default direction is `right`.
 
 Syntax:
 
 ```xcm
-append left operand
-append right operand
-append next operand
+append left FOO
+append right FOO
+append next FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as 'x';
-
-node<200> N_X as append right T_X;
+token <0> T_FOO as FOO;
+node  <1> N_FOO as append <0> right T_FOO;
 ```
 
-> Append a new node as the right child of the active AST node when the `T_X` token is found.
+> Append a new node as the right child of the active AST node when `T_FOO` is found.
 
 [Back to table](#operator-precedence)
 
@@ -262,26 +269,28 @@ The `prepend` operator is a unary operator used to prepend a new node in the AST
 Syntax:
 
 ```xcm
-prepend operand
+prepend FOO
+prepend <identity> FOO
 ```
+
+> When no identity is provided, the directive identity is used for the new node.
 
 Use `left`, `right` or `next` when you want to be more specific, the default direction is `right`.
 
 ```xcm
-prepend left operand
-prepend right operand
-prepend next operand
+prepend left FOO
+prepend right FOO
+prepend next FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as 'x';
-
-node<200> N_X as prepend next T_X;
+token <0> T_FOO as FOO;
+node  <1> N_FOO as prepend <0> next T_FOO;
 ```
 
-> Prepend a new node as the next child of the active AST node when the `T_X` token is found.
+> Prepend a new node as the next child of the active AST node when `T_FOO` is found.
 
 [Back to table](#operator-precedence)
 
@@ -292,7 +301,7 @@ The `place` operator is a unary operator used to wrap an expression that generat
 Syntax:
 
 ```xcm
-place operand
+place FOO
 ```
 
 Use `left`, `right` or `next` when you want to be more specific, the default direction is `right`.
@@ -300,19 +309,18 @@ Use `left`, `right` or `next` when you want to be more specific, the default dir
 Syntax:
 
 ```xcm
-place left operand
-place right operand
-place next operand
+place left FOO
+place right FOO
+place next FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as 'x';
+token <0> T_FOO as FOO;
 
-alias node<200> N_X as append right T_X;
-
-node<201> N as place next N_X;
+alias node N_BAR as append <0> right T_FOO;
+node  <1>  N_FOO as place next N_BAR;
 ```
 
 > Place the generated node (that was expected to be an AST child on the right) as the next child of the active AST node, overwriting the `right` modifier in the `append` expression.
@@ -326,19 +334,22 @@ The `pivot` operator is a unary operator used to insert a new node in the AST af
 Syntax:
 
 ```xcm
-pivot operand
+pivot FOO
+pivot <identity> FOO
 ```
+
+> When no identity is provided, the directive identity is used for the new pivot node.
 
 Example:
 
 ```xcm
-alias node<200> N_X as append 'x';
-alias node<201> N_Z as append 'z';
+alias node N_FOO as append <0> FOO;
+alias node N_BAR as append <1> BAR;
 
-node<202> N_XYZ as N_X & pivot ('y' & N_Z);
+node <3> N_FOOBAR as N_FOO & pivot <2> (T_BAZ & N_BAR);
 ```
 
-> After evaluating `N_X` and `N_Z`, both generated nodes on the `left` and `right` of the pivot operator will be attached in the new pivot node when the evaluation of `T_Y` is `true`, and then, the pivot node is inserted in the AST.
+> After evaluating `N_FOO` and `N_BAR`, both generated nodes on the `left` and `right` of the pivot operator will be attached in the new pivot node when the evaluation of `T_BAZ` is `true`, and then, the pivot node is inserted in the AST.
 
 [Back to table](#operator-precedence)
 
@@ -346,48 +357,50 @@ node<202> N_XYZ as N_X & pivot ('y' & N_Z);
 
 There are some operators for managing how the generated symbols must be inserted in the symbol table, let's take a look at these operators.
 
-#### Symbol record
+#### Symbol operator
 
 The `symbol` operator is a unary operator used to insert a new symbol in the symbol table after evaluating its operand as `true`.
 
 Syntax:
 
 ```xcm
-symbol operand
+symbol FOO
+symbol <identity> FOO
 ```
+
+> When no identity is provided, the directive identity is used for the new symbol.
 
 Example:
 
 ```xcm
-token<100> T_X as 'x';
-
-node<200> N_X as symbol T_X;
+token <0> T_FOO as FOO;
+node  <0> N_FOO as symbol T_FOO;
 ```
 
-> Insert the `N_X` symbol in the symbol table when the `T_X` token is found.
+> Insert the `N_FOO` symbol in the symbol table when `T_FOO` is found.
 
 [Back to table](#operator-precedence)
 
-#### Symbol scope
+#### Scope operator
 
-The `scope` operator is a unary operator used to generate a sub symbol table, after the evaluation of its operand if the new sub symbol table remains empty, it will be discarded and not linked to the active symbol record.
+The `scope` operator is a unary operator used to generate a sub symbol table, if the new sub symbol table remains empty after the evaluation of its operand, it will be discarded and not linked to the active symbol record.
 
 Syntax:
 
 ```xcm
-scope operand
+scope FOO
 ```
 
 Example:
 
 ```xcm
-alias node<200> N_X as symbol 'x';
-alias node<201> N_Y as symbol 'y';
+alias node N_FOO as symbol <0> FOO;
+alias node N_BAR as symbol <1> BAR;
 
-node<202> N_XY as N_X & scope N_Y;
+node <0> N_FOOBAR as N_FOO & scope N_BAR;
 ```
 
-> Insert the `N_X` symbol in the current symbol table and the `N_Y` symbol in the new sub symbol table.
+> Insert the `N_FOO` symbol in the current symbol table and the `N_BAR` symbol in the new sub symbol table.
 
 [Back to table](#operator-precedence)
 
@@ -398,7 +411,7 @@ The `error` operator is a unary operator used to emit an error after evaluating 
 Syntax:
 
 ```xcm
-error<code> operand
+error <code> FOO
 ```
 
 > Note: `code` must be a number.
@@ -406,12 +419,11 @@ error<code> operand
 Example:
 
 ```xcm
-token<100> T_X as 'x';
-
-node<200> N_X as error<1000> T_X;
+token <0> T_FOO as FOO;
+node  <0> N_FOO as error<1000> T_FOO;
 ```
 
-> Emit an error with the code `1000` when the token `T_X` is found.
+> Emit an error with the code `1000` when `T_FOO` is found.
 
 [Back to table](#operator-precedence)
 
@@ -419,14 +431,14 @@ node<200> N_X as error<1000> T_X;
 
 There are two types of state operators, as we will see below.
 
-#### State set
+#### Set operator
 
-The `set` operator is a unary operator used to set a new state in the parser.
+The `set` operator is a unary operator used to set a new state in the parser, it's used together with the `has` operator for conditional parsing.
 
 Syntax:
 
 ```xcm
-set<state> operand
+set <state> FOO
 ```
 
 > Note: `state` must be a number.
@@ -434,21 +446,21 @@ set<state> operand
 Example:
 
 ```xcm
-token<100> T_X as set<1> 'x';
+token <0> T_FOO as set <99> FOO;
 ```
 
-> Set the state `1` when `'x'` is found.
+> Set the state `99` when `FOO` is found.
 
 [Back to table](#operator-precedence)
 
-#### State has
+#### Has operator
 
-The `has` operator is a unary operator used to check whether the parser has an expected state to enable the evaluation of its operand.
+The `has` operator is a unary operator used to check whether the parser has an expected state before enabling the evaluation of its operand.
 
 Syntax:
 
 ```xcm
-has<state> operand
+has <state> FOO
 ```
 
 > Note: `state` must be a number.
@@ -456,11 +468,11 @@ has<state> operand
 Example:
 
 ```xcm
-token<100> T_X as set<1> 'x';
-token<101> T_Y as has<1> 'y';
+token <0> T_FOO as set<99> FOO;
+token <1> T_BAR as has<99> BAR;
 ```
 
-> Look for `'y'` only when the state `1` is defined, and the state `1` is set only after finding `x` during the expression evaluation.
+> Look for `BAR` only when the state `99` is defined, and the state `99` is set only after finding `FOO` during the expression evaluation.
 
 [Back to table](#operator-precedence)
 
@@ -471,16 +483,16 @@ The `peek` operator is a unary operator used to test the next expression without
 Syntax:
 
 ```xcm
-peek operand
+peek FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as 'x' & peek 'y';
+token <0> T_FOO as FOO & peek BAR;
 ```
 
-> A token `T_X` will be generated for each occurrence of `'x'` that precedes `'y'`.
+> A token `T_FOO` will be generated for each occurrence of `FOO` that precedes `BAR`.
 
 [Back to table](#operator-precedence)
 
@@ -491,41 +503,41 @@ The `uncase` operator is a unary operator used for case-insensitive expressions.
 Syntax:
 
 ```xcm
-uncase operand
+uncase FOO
 ```
 
 Example:
 
 ```xcm
-token<100> T_X as uncase 'x';
+token <0> T_FOO as uncase FOO;
 ```
 
-> A token `T_X` will be generated for any occurrence of `'x'` or `'X'`.
+> A token `T_FOO` will be generated for any occurrence of `FOO` in a case-insensitive way.
 
 [Back to table](#operator-precedence)
 
-## Member access operator
+## Access operator
 
-The member access operator is a binary operator used to access a `map` entry.
+The access operator is a binary operator used to make references for `map` member entries.
 
 Syntax:
 
 ```xcm
-operand . operand
+FOO . BAR
 ```
 
 Example:
 
 ```xcm
-token<auto> T as map {
-  <100> X as 'x',
-  <101> Y as 'y'
+token <auto> T_FOOBAR as map {
+  <0> FOO as FOO,
+  <1> BAR as BAR
 };
 
-node<200> N_XY as T.X & repeat T.Y;
+node <0> N_FOOBAR as T_FOOBAR.FOO & repeat T_FOOBAR.BAR;
 ```
 
-> Accept an occurrence of `T.X` and one or more occurrences of `T.Y`.
+> Accept an occurrence of `T_FOOBAR.FOO` and one or more occurrences of `T_FOOBAR.BAR`.
 
 [Back to table](#operator-precedence)
 
@@ -536,16 +548,16 @@ The grouping operator controls the evaluation precedence in expressions.
 Syntax:
 
 ```xcm
-( expression )
+( FOOBAR )
 ```
 
 Example:
 
 ```xcm
-token<100> T_XYZ as 'x' & (repeat 'y' & 'z');
+token <0> T_FOOBAR as FOO & (repeat BAR & BAZ);
 ```
 
-> Accept an occurrence of `'x'` combined with one or more occurrences of `'yz'`.
+> Accept an occurrence of `FOO` combined with one or more occurrences of `BAR` and `BAZ`.
 
 [Back to table](#operator-precedence)
 
@@ -557,4 +569,4 @@ token<100> T_XYZ as 'x' & (repeat 'y' & 'z');
 
 ## License
 
-[MIT](https://balmante.eti.br)
+[MIT](../LICENSE)
