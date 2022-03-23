@@ -4,7 +4,6 @@ import * as Project from '../../core/project';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
-import * as Any from './any';
 import * as Range from './range';
 import * as Reference from './reference';
 import * as String from './string';
@@ -28,7 +27,6 @@ export const consume = (
   const node = parent.get(direction)!;
   switch (node.value) {
     case Parser.Nodes.Any:
-      Any.consume(project, direction, parent, state);
       break;
     case Parser.Nodes.Range:
       Range.consume(project, direction, parent, state);
