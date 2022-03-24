@@ -1,2 +1,2 @@
-// Import directives.
+// Import itself for cyclic importation error.
 import './module3';
