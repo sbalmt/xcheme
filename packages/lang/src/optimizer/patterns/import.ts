@@ -19,37 +19,63 @@ import { Errors } from '../../core/errors';
 const cache = new Cache.Context<string>();
 
 /**
- * Purge from the given record list all dependents that doesn't exists in the specified project context.
- * @param project Project context.
+ * Purge from the specified record list all the dependent records that's not in use.
  * @param records Record list.
+ * @param unused Unused record set.
  */
-const purge = (project: Project.Context, records: Core.Record[]): void => {
+const purge = (records: Core.Record[], unused: WeakSet<Core.Record>): void => {
   for (const record of records) {
-    record.data.dependents = record.data.dependents.filter((dependent: Core.Record) => {
-      return project.symbols.has(dependent.data.identifier);
-    });
-    purge(project, record.data.dependencies);
+    const { dependents, dependencies } = record.data;
+    record.data.dependents = dependents.filter((dependent: Core.Record) => !unused.has(dependent));
+    purge(dependencies, unused);
   }
 };
 
 /**
- * Import all directives from the given source to the specified project context.
+ * Collect all the records that's not in use from the specified record list.
+ * @param records Record list.
+ * @returns Returns the unused record set.
+ */
+const collect = (records: Core.Record[]): WeakSet<Core.Record> => {
+  const unused = new WeakSet<Core.Record>();
+  const cache = new WeakSet<Core.Record>();
+  const action = (records: Core.Record[]): void => {
+    for (const record of records) {
+      if (!cache.has(record)) {
+        const { dependents, dependencies } = record.data;
+        for (const dependent of dependents) {
+          if (!cache.has(dependent)) {
+            unused.add(dependent);
+          }
+        }
+        cache.add(record);
+        unused.delete(record);
+        action(dependencies);
+      }
+    }
+  };
+  action(records);
+  return unused;
+};
+
+/**
+ * Integrate all directives from the given source into the specified project context.
  * @param project Project context.
- * @param node Root node.
+ * @param table Root symbol table.
  * @param source Source records.
  * @returns Returns an array containing all imported record.
  */
-const integrate = (project: Project.Context, node: Core.Node, source: Symbols.Aggregator): Core.Record[] => {
+const integrate = (project: Project.Context, table: Core.Table, source: Symbols.Aggregator): Core.Record[] => {
   const list = [];
   for (const record of source) {
     const { identifier, exported } = record.data;
     if (exported) {
-      const current = node.table.find(identifier);
+      const current = table.find(identifier);
       if (current) {
-        project.addError(current.node!.fragment, Errors.DUPLICATE_IDENTIFIER);
+        project.addError(current.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
         list.push(record);
-        node.table.add(record);
+        table.add(record);
         project.symbols.add(record);
         record.data.exported = false;
         record.data.imported = true;
@@ -101,8 +127,9 @@ export const consume = (project: Project.Context, node: Core.Node): void => {
         });
         cache.add(project.coder, path);
         if (compile(extProject, extContext, content)) {
-          const records = integrate(project, node, extProject.symbols);
-          purge(project, records);
+          const records = integrate(project, node.table, extProject.symbols);
+          const removal = collect(records);
+          purge(records, removal);
         } else {
           project.addError(location.fragment, Errors.IMPORT_FAILURE);
           project.errors.push(...extProject.errors);
