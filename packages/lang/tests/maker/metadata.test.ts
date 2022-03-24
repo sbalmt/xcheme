@@ -215,3 +215,47 @@ test('Node with an imported dependency', () => {
   expect(imported.data.dependencies).toHaveLength(1);
   expect(imported.data.dependents).toHaveLength(1);
 });
+
+test('Directive importation purge', () => {
+  const project = Assert.parser(`
+    import './module4';`);
+
+  // Check the first token directive.
+  const token1 = project.symbols.get('EXPORTED_TOKEN1')!;
+  expect(token1).toBeDefined();
+  expect(token1.value).toBe(Lang.Parser.Symbols.Token);
+  expect(token1.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(token1.data.exported).toBeFalsy();
+  expect(token1.data.imported).toBeTruthy();
+  expect(token1.data.identity).toBe(1);
+  expect(token1.data.dependencies).toHaveLength(1);
+  expect(token1.data.dependents).toHaveLength(0);
+
+  // Check the dependency.
+  const [dependency] = token1.data.dependencies;
+  expect(dependency).toBeDefined();
+  expect(dependency.value).toBe(Lang.Parser.Symbols.AliasToken);
+  expect(dependency.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(dependency.data.exported).toBeFalsy();
+  expect(dependency.data.imported).toBeFalsy();
+  expect(dependency.data.identifier).toBe('ALIAS_TOKEN1');
+  expect(dependency.data.identity).toBeNaN();
+  expect(dependency.data.dependencies).toHaveLength(0);
+  expect(dependency.data.dependents).toHaveLength(2);
+
+  // Check the dependency dependents.
+  const [dependent1, dependent2] = dependency.data.dependents;
+
+  expect(dependent1).toBeDefined();
+  expect(dependent1.value).toBe(Lang.Parser.Symbols.AliasToken);
+  expect(dependent1.data.origin).toBe(Lang.Symbols.Origins.User);
+  expect(dependent1.data.exported).toBeFalsy();
+  expect(dependent1.data.imported).toBeFalsy();
+  expect(dependent1.data.identifier).toBe('ALIAS_TOKEN2');
+  expect(dependent1.data.identity).toBeNaN();
+  expect(dependent1.data.dependencies).toHaveLength(1);
+  expect(dependent1.data.dependents).toHaveLength(1);
+
+  expect(dependent2).toBeDefined();
+  expect(dependent2.data.identifier).toBe('EXPORTED_TOKEN1');
+});
