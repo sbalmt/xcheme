@@ -26,7 +26,7 @@ test("Output an 'OR' pattern optimized with a map", () => {
   );
 });
 
-test("Output an 'OR' pattern with a complex sequence", () => {
+test("Output multiple 'OR' patterns optimized with a map", () => {
   Assert.output(
     `
     skip repeat '-' | '+' | '@' & ('1' | '2') | 'A' | 'B';`,
@@ -43,6 +43,27 @@ test("Output an 'OR' pattern with a complex sequence", () => {
         /**/ `), ` +
         /**/ `new Core.ExpectUnitPattern('A'), ` +
         /**/ `new Core.ExpectUnitPattern('B')` +
+        `)`
+    }
+  );
+});
+
+test("Output an optimized 'OR' pattern in a 'NODE' directive", () => {
+  Assert.output(
+    `
+    token <100> TOKEN_A as 'a';
+    token <101> TOKEN_B as 'b';
+    node  <200> NODE    as TOKEN_A | TOKEN_B | TOKEN_B | TOKEN_A | TOKEN_B;`,
+    {
+      NODE:
+        `new Core.EmitNodePattern(200, 1, ` +
+        /**/ `new Core.MapFlowPattern(` +
+        /******/ `new Core.UnitRoute(100), ` +
+        /******/ `new Core.UnitRoute(101), ` +
+        /******/ `new Core.UnitRoute(101), ` +
+        /******/ `new Core.UnitRoute(100), ` +
+        /******/ `new Core.UnitRoute(101)` +
+        /**/ `)` +
         `)`
     }
   );
