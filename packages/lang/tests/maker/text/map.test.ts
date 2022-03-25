@@ -21,6 +21,26 @@ test("Output a 'MAP' pattern", () => {
   );
 });
 
+test("Output a 'MAP' pattern using multiple optimized nodes", () => {
+  Assert.output(
+    `
+    skip map {
+      'a' & append <50> 'b' & 'c'
+    };`,
+    {
+      '@SKIP0':
+        `new Core.MapFlowPattern(` +
+        /**/ `new Core.FlowRoute(` +
+        /******/ `new Core.ExpectFlowPattern(` +
+        /**********/ `new Core.AppendNodePattern(50, 1, 1, new Core.ExpectUnitPattern('b')` +
+        /******/ `), ` +
+        /******/ `new Core.ExpectUnitPattern('c')), ` +
+        /**/ `'a')` +
+        `)`
+    }
+  );
+});
+
 test("Output a 'MAP' pattern with compound patterns", () => {
   Assert.output(
     `
@@ -148,7 +168,7 @@ test("Output a 'MAP' pattern in an alias node directive", () => {
   );
 });
 
-test("Output a 'MAP' pattern in a node directive using map expressions", () => {
+test("Output a 'MAP' pattern in a node directive using access expressions", () => {
   Assert.output(
     `
     token <auto> TOKEN as map {

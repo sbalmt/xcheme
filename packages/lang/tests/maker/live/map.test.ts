@@ -14,6 +14,16 @@ test("Parse a 'MAP' pattern", () => {
   );
 });
 
+test("Parse a 'MAP' pattern using multiple optimized nodes", () => {
+  Assert.lexer(
+    'abc',
+    `
+    skip map {
+      'a' & append <50> 'b' & 'c'
+    };`
+  );
+});
+
 test("Parse a 'MAP' pattern with compound patterns", () => {
   Assert.lexer(
     'abcaccde',
@@ -83,7 +93,7 @@ test("Parse a 'MAP' pattern in a node directive", () => {
   Assert.nodes(context, [nodeA.data.identity, 1, 3], 3);
 });
 
-test("Parse a 'MAP' pattern in a node directive using map expressions", () => {
+test("Parse a 'MAP' pattern in a node directive using access expressions", () => {
   const { project, context } = Assert.parser(
     'acbc',
     `
