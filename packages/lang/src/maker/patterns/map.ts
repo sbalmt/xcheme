@@ -21,18 +21,17 @@ import * as Expression from './expression';
 const resolveUnits = (node: Core.Node): (string | number)[] => {
   if (node.value === Parser.Nodes.String) {
     return String.extract(node.fragment.data).split('');
-  }
-  if (node instanceof Nodes.Identity) {
+  } else if (node instanceof Nodes.Identity) {
     return [node.identity];
+  } else if (node instanceof Nodes.Sequence) {
+    if (node.type !== Parser.Nodes.String) {
+      return node.sequence.map((node) => (node as Nodes.Identity).identity);
+    }
+    const data = node.sequence.map((node) => String.extract(node.fragment.data));
+    return data.join('').split('');
+  } else {
+    throw new Exception('MAP entries must be instance of sequential or identified nodes.');
   }
-  if (!(node instanceof Nodes.Sequence)) {
-    throw new Exception('The MAP entry node must be an instance of a sequential node.');
-  }
-  if (node.type !== Parser.Nodes.String) {
-    return node.sequence.map((node) => (node as Nodes.Identity).identity);
-  }
-  const words = node.sequence.map((node) => String.extract(node.fragment.data));
-  return words.join('').split('');
 };
 
 /**
