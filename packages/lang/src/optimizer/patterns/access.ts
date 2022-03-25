@@ -47,11 +47,11 @@ const getRecord = (project: Project.Context, record: Core.Record, nodes: Core.No
  * Emit a new ACCESS node replacing the current one for an optimized one.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param identity Node identity.
+ * @param record Node record.
  */
-const emit = (direction: Core.Nodes, parent: Core.Node, identity: number): void => {
+const emit = (direction: Core.Nodes, parent: Core.Node, record: Core.Record): void => {
   const node = parent.get(direction)!;
-  const replacement = new Nodes.Reference(node, identity);
+  const replacement = new Nodes.Reference(node, record.data.identity);
   parent.set(direction, replacement);
 };
 
@@ -83,7 +83,7 @@ export const consume = (
       } else if (first.value === Parser.Symbols.AliasToken) {
         project.addError(first.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
       } else {
-        emit(direction, parent, record.data.identity);
+        emit(direction, parent, record);
       }
     }
   }
