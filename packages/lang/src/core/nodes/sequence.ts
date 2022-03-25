@@ -25,7 +25,14 @@ export default class Node extends Basic {
    */
   #getNodes(node: Core.Node): Core.Node[] {
     if (this.value === node.value) {
-      return [...this.#getNodes(node.left!), ...this.#getNodes(node.right!)];
+      if (!(node instanceof Node)) {
+        const result = [...this.#getNodes(node.left!), ...this.#getNodes(node.right!)];
+        node.set(Core.Nodes.Left, void 0);
+        node.set(Core.Nodes.Right, void 0);
+        node.set(Core.Nodes.Next, void 0);
+        return result;
+      }
+      return node.#sequence;
     }
     return [node];
   }
