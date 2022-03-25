@@ -10,6 +10,20 @@ import * as Symbols from '../core/symbols';
 const orderCounter = new Counter.Context();
 
 /**
+ * Context node.
+ */
+export type Node = {
+  /**
+   * Node direction.
+   */
+  direction: Core.Nodes;
+  /**
+   * Node parent.
+   */
+  parent: Core.Node;
+};
+
+/**
  * Context consumption state.
  */
 export type State = {

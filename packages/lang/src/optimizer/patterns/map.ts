@@ -13,36 +13,35 @@ import { Errors } from '../../core/errors';
 import * as Expression from './expression';
 
 /**
- * Get the route node based on the given expression node.
- * @param node Expression node.
- * @param parent Expression parent node.
- * @returns Returns the route node or undefined when there's no route.
+ * Get the corresponding route from a child node in the given parent.
+ * @param direction Child node direction.
+ * @param parent Parent node.
+ * @param ancestor Ancestor node.
+ * @returns Returns the corresponding route or undefined when there's no route.
  */
-const getRoute = (node: Core.Node, parent?: Core.Node): Core.Node | undefined => {
+const getRoute = (direction: Core.Nodes, parent: Core.Node, ancestor?: Context.Node): Core.Node | undefined => {
+  const node = parent.get(direction)!;
   if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
     if (node.value === Parser.Nodes.String || node instanceof Nodes.Identity || node instanceof Nodes.Sequence) {
-      if (parent) {
-        const right = parent.right!;
-        parent.set(Core.Nodes.Left, void 0);
-        parent.set(Core.Nodes.Right, void 0);
-        parent.swap(right);
+      if (ancestor && parent) {
+        ancestor.parent.set(ancestor.direction!, parent.right);
       }
       return node;
     }
     if (node.left) {
-      return getRoute(node.left, node);
+      return getRoute(Core.Nodes.Left, node, { direction, parent });
     }
   }
   return void 0;
 };
 
 /**
- * Emit a new member node replacing the current one for an optimized one.
+ * Emit an optimized member node replacing the current child node from the given parent.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param identity Node identity.
- * @param node Expression node.
+ * @param identity Member identity.
+ * @param member Member node.
  * @returns Returns true when the member node was emitted, false otherwise.
  */
 const emit = (
@@ -50,23 +49,24 @@ const emit = (
   direction: Core.Nodes,
   parent: Core.Node,
   identity: number,
-  node: Core.Node
+  member: Core.Node
 ): boolean => {
-  const route = getRoute(node);
-  if (!route) {
-    project.addError(parent.fragment, Errors.INVALID_MAP_ENTRY);
-    return false;
+  const route = getRoute(Core.Nodes.Right, member);
+  if (route) {
+    if (route.value === Parser.Nodes.String) {
+      Loose.collision(project, route.fragment.data, route);
+    }
+    const expression = member.right!;
+    const replacement = new Nodes.Member(expression, identity, route);
+    parent.set(direction, replacement);
+    return true;
   }
-  if (route.value === Parser.Nodes.String) {
-    Loose.collision(project, route.fragment.data, route);
-  }
-  const replacement = new Nodes.Member(node, identity, route);
-  parent.set(direction, replacement);
-  return true;
+  project.addError(parent.fragment, Errors.INVALID_MAP_ENTRY);
+  return false;
 };
 
 /**
- * Consume a child node from the AST on the given parent and optimize the map pattern.
+ * Consume a child node from the AST in the given parent and optimize the map pattern.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
@@ -88,7 +88,7 @@ export const consume = (
         ? Project.Context.identity.increment(project.coder, project.options.identity)
         : Core.BaseSource.Output;
       Expression.consume(project, Core.Nodes.Right, entry, state);
-      emit(project, Core.Nodes.Right, entry, identity, entry.right!);
+      emit(project, Core.Nodes.Right, entry, identity, entry);
     } else {
       if (state.type === Symbols.Types.Skip) {
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
@@ -110,7 +110,7 @@ export const consume = (
         record.data.dependencies.push(state.record);
         state.record.data.dependents.push(record);
         Expression.consume(project, Core.Nodes.Right, member, state);
-        if (emit(project, Core.Nodes.Right, entry, state.identity, member.right!)) {
+        if (emit(project, Core.Nodes.Right, entry, state.identity, member)) {
           project.symbols.add(state.record);
         }
         state.identity = identity;
