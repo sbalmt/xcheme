@@ -14,13 +14,13 @@ import * as Nodes from './nodes';
  * @returns Returns true in case of success, false otherwise.
  */
 export const parse = (
-  program: Core.Pattern,
+  program: Lang.Types.Pattern,
   tokens: Core.Token[],
-  context: Core.Context,
+  context: Lang.Types.Context,
   symbols: boolean,
   nodes: boolean
 ): boolean => {
-  const source = new Core.TokenSource(tokens, context);
+  const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
   Console.printLine('Parsing...');
   if (!program.consume(source)) {
     const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;

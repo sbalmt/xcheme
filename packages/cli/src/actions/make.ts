@@ -30,7 +30,7 @@ const globalOptions: Lang.Project.Options = {
  * @param node Input node.
  * @returns Returns true in case of success, false otherwise.
  */
-const optimize = (project: Lang.Project.Context, node: Core.Node): boolean => {
+const optimize = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => {
   Console.printLine('Optimizing...');
   if (Lang.Optimizer.consumeNodes(node, project)) {
     Console.clearLine();
@@ -46,7 +46,7 @@ const optimize = (project: Lang.Project.Context, node: Core.Node): boolean => {
  * @param node Input node.
  * @returns Returns true in case of success, false otherwise.
  */
-const make = (project: Lang.Project.Context, node: Core.Node): boolean => {
+const make = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => {
   Console.printLine('Making...');
   if (Lang.Maker.consumeNodes(node, project)) {
     Console.clearLine();
@@ -64,9 +64,9 @@ const make = (project: Lang.Project.Context, node: Core.Node): boolean => {
  * @returns Returns true in case of success, otherwise returns false.
  */
 const test = (project: Lang.Project.Context, source: string, state: Options.Debug): boolean => {
-  const context = new Core.Context('runner');
-  if (Lexer.tokenize(project.lexer as Core.Pattern, source, context, state.tokens!)) {
-    if (Parser.parse(project.parser as Core.Pattern, context.tokens, context, state.symbols!, state.nodes!)) {
+  const context = new Core.Context<Lang.Types.Metadata>('runner');
+  if (Lexer.tokenize(project.lexer as Lang.Types.Pattern, source, context, state.tokens!)) {
+    if (Parser.parse(project.parser as Lang.Types.Pattern, context.tokens, context, state.symbols!, state.nodes!)) {
       Console.printLine('Done!');
       return true;
     }
@@ -115,7 +115,7 @@ export const perform = (
   state: Options.Debug
 ): boolean => {
   const text = FS.readFileSync(source).toString();
-  const context = new Core.Context('maker');
+  const context = new Core.Context<Lang.Types.Metadata>('maker');
   initialize(source);
   if (Lexer.tokenize(Lang.Lexer, text, context, !run && state.tokens!)) {
     if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {

@@ -1,4 +1,4 @@
-import * as Core from '@xcheme/core';
+import * as Lang from '@xcheme/lang';
 
 import * as Console from './console';
 import * as Fragment from './fragment';
@@ -21,7 +21,7 @@ const getPadding = (depth: boolean[]): string => {
  * @param table Symbol table.
  * @param depth Depth states.
  */
-const printTable = (table: Core.Table, ...depth: boolean[]): void => {
+const printTable = (table: Lang.Types.Table, ...depth: boolean[]): void => {
   const padding = getPadding(depth);
   let index = 1;
   for (const record of table) {
@@ -42,7 +42,7 @@ const printTable = (table: Core.Table, ...depth: boolean[]): void => {
  * Print all the symbol for the given symbol table.
  * @param table Symbol table.
  */
-export const print = (table: Core.Table): void => {
+export const print = (table: Lang.Types.Table): void => {
   Console.printLine('Symbols:\n');
   Console.printLine('          Code Identifier');
   printTable(table);

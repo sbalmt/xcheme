@@ -1,4 +1,5 @@
 import * as Core from '@xcheme/core';
+import * as Lang from '@xcheme/lang';
 
 import * as Console from './console';
 import * as Fragment from './fragment';
@@ -39,7 +40,7 @@ const getPadding = (depth: boolean[]): string => {
  * @param parent Parent node.
  * @param depth Depth states.
  */
-const printTree = (direction: Core.Nodes, parent: Core.Node, ...depth: boolean[]): void => {
+const printTree = (direction: Core.Nodes, parent: Lang.Types.Node, ...depth: boolean[]): void => {
   const node = parent.get(direction)!;
   const padding = getPadding(depth);
   const children = depth.length > 0;
@@ -65,7 +66,7 @@ const printTree = (direction: Core.Nodes, parent: Core.Node, ...depth: boolean[]
  * Print the corresponding tree for the given node.
  * @param node Input node.
  */
-export const print = (node: Core.Node): void => {
+export const print = (node: Lang.Types.Node): void => {
   if (node.next) {
     Console.printLine('Nodes:\n');
     printTree(Core.Nodes.Next, node);
