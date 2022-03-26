@@ -10,7 +10,7 @@ export { default as Range } from './core/range';
 export { default as Pattern } from './rules/pattern';
 export { default as Route } from './rules/route';
 
-export { default as BaseSource } from './source/base';
+export { default as Source } from './source/base';
 export { default as TextSource } from './source/text';
 export { default as TokenSource } from './source/token';
 
