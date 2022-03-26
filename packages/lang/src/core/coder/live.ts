@@ -72,7 +72,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitTokenPattern(identity: string | number, ...patterns: Types.Pattern[]): Types.Pattern {
+  emitTokenPattern(identity: number, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitTokenPattern(identity, ...patterns);
   }
 
@@ -83,7 +83,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Types.Pattern[]): Types.Pattern {
+  emitNodePattern(identity: number, output: Core.Nodes, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitNodePattern(identity, output, ...patterns);
   }
 
@@ -93,7 +93,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitIdentityPattern(identity: string | number, ...patterns: Types.Pattern[]): Types.Pattern {
+  emitIdentityPattern(identity: number, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.UseValuePattern(identity, ...patterns);
   }
 
@@ -190,7 +190,7 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   emitAppendPattern(
-    identity: string | number,
+    identity: number,
     current: Core.Nodes,
     head: Types.Pattern,
     ...patterns: Types.Pattern[]
@@ -207,7 +207,7 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   emitPrependPattern(
-    identity: string | number,
+    identity: number,
     current: Core.Nodes,
     head: Types.Pattern,
     ...patterns: Types.Pattern[]
@@ -222,7 +222,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitPivotPattern(identity: string | number, pivot: Types.Pattern, ...patterns: Types.Pattern[]): Types.Pattern {
+  emitPivotPattern(identity: number, pivot: Types.Pattern, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.PivotNodePattern(identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
   }
 
@@ -233,7 +233,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitSymbolPattern(identity: string | number, symbol: Types.Pattern, ...patterns: Types.Pattern[]): Types.Pattern {
+  emitSymbolPattern(identity: number, symbol: Types.Pattern, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitSymbolPattern(identity, symbol, ...patterns);
   }
 

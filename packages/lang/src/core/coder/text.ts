@@ -131,7 +131,7 @@ export class Text extends Base {
    * @param patterns Token patterns.
    * @returns Returns the pattern.
    */
-  emitTokenPattern(identity: string | number, ...patterns: string[]): string {
+  emitTokenPattern(identity: number, ...patterns: string[]): string {
     return this.#getPattern('EmitTokenPattern', identity, ...patterns);
   }
 
@@ -142,7 +142,7 @@ export class Text extends Base {
    * @param patterns Node patterns.
    * @returns Returns the pattern.
    */
-  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: string[]): string {
+  emitNodePattern(identity: number, output: Core.Nodes, ...patterns: string[]): string {
     return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
   }
 
@@ -152,7 +152,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitIdentityPattern(identity: string | number, ...patterns: string[]): string {
+  emitIdentityPattern(identity: number, ...patterns: string[]): string {
     return this.#getPattern('UseValuePattern', identity, ...patterns);
   }
 
@@ -248,7 +248,7 @@ export class Text extends Base {
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  emitAppendPattern(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
+  emitAppendPattern(identity: number, current: Core.Nodes, head: string, ...patterns: string[]): string {
     return this.#getPattern('AppendNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
@@ -260,7 +260,7 @@ export class Text extends Base {
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  emitPrependPattern(identity: string | number, current: Core.Nodes, head: string, ...patterns: string[]): string {
+  emitPrependPattern(identity: number, current: Core.Nodes, head: string, ...patterns: string[]): string {
     return this.#getPattern('PrependNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
@@ -271,7 +271,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitPivotPattern(identity: string | number, pivot: string, ...patterns: string[]): string {
+  emitPivotPattern(identity: number, pivot: string, ...patterns: string[]): string {
     return this.#getPattern('PivotNodePattern', identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
   }
 
@@ -282,7 +282,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitSymbolPattern(identity: string | number, symbol: string, ...patterns: string[]): string {
+  emitSymbolPattern(identity: number, symbol: string, ...patterns: string[]): string {
     return this.#getPattern('EmitSymbolPattern', identity, symbol, ...patterns);
   }
 
