@@ -87,7 +87,7 @@ export const consume = (
     if (member.value !== Parser.Nodes.Identifier) {
       const identity = dynamic
         ? Project.Context.identity.increment(project.coder, project.options.identity)
-        : Core.BaseSource.Output;
+        : Core.Source.Output;
       Expression.consume(project, Core.Nodes.Right, entry, state);
       emit(project, Core.Nodes.Right, entry, identity, entry);
     } else {

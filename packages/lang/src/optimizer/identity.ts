@@ -10,7 +10,7 @@ import * as Core from '@xcheme/core';
 export const resolve = (node: Types.Node): number => {
   const value = node.fragment.data;
   if (value === 'auto') {
-    return Core.BaseSource.Output;
+    return Core.Source.Output;
   }
   const identity = parseInt(value);
   if (!isNaN(identity)) {

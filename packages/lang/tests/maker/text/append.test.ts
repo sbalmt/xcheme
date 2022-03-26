@@ -32,7 +32,7 @@ test("Output an 'APPEND' pattern with an auto identity", () => {
     skip append <auto> ALIAS;`,
     {
       '@SKIP0':
-        `new Core.AppendNodePattern(${Core.BaseSource.Output}, 1, 1, ` +
+        `new Core.AppendNodePattern(${Core.Source.Output}, 1, 1, ` +
         /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('@'))` +
         `)`
     }

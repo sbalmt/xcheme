@@ -32,7 +32,7 @@ test("Output a 'PREPEND' pattern with an auto identity", () => {
     skip prepend <auto> ALIAS;`,
     {
       '@SKIP0':
-        `new Core.PrependNodePattern(${Core.BaseSource.Output}, 1, 1, ` +
+        `new Core.PrependNodePattern(${Core.Source.Output}, 1, 1, ` +
         /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('@'))` +
         `)`
     }

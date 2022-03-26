@@ -8,9 +8,7 @@ test("Output a 'SYMBOL' pattern without a self identity", () => {
     token <50> TOKEN as symbol '@';`,
     {
       TOKEN:
-        `new Core.EmitTokenPattern(50, ` +
-        /**/ `new Core.EmitSymbolPattern(50, new Core.ExpectUnitPattern('@'))` +
-        `)`
+        `new Core.EmitTokenPattern(50, ` + /**/ `new Core.EmitSymbolPattern(50, new Core.ExpectUnitPattern('@'))` + `)`
     }
   );
 });
@@ -32,7 +30,7 @@ test("Output a 'SYMBOL' pattern with an auto identity", () => {
     skip symbol <auto> ALIAS;`,
     {
       '@SKIP0':
-        `new Core.EmitSymbolPattern(${Core.BaseSource.Output}, ` +
+        `new Core.EmitSymbolPattern(${Core.Source.Output}, ` +
         /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('@'))` +
         `)`
     }

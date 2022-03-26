@@ -85,7 +85,7 @@ test("Output a 'TOKEN' pattern with a whole token map reference", () => {
         /**/ `new Core.SetValueRoute(101, 'b')` +
         `)`,
       TOKEN:
-        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
         /**/ `new Core.ExpectFlowPattern(` +
         /******/ `new Core.MapFlowPattern(` +
         /**********/ `new Core.SetValueRoute(100, 'a'), ` +

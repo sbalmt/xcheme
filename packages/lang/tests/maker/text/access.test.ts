@@ -11,7 +11,7 @@ test("Output an 'ACCESS' pattern in a token map", () => {
     node <200> NODE as TOKEN.A;`,
     {
       TOKEN:
-        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(100, 'a')` +
         /**/ `)` +
@@ -34,7 +34,7 @@ test("Output an 'ACCESS' pattern in a nested token map", () => {
     node <201> NODE_AC as TOKEN.A.C;`,
     {
       TOKEN:
-        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.FlowRoute(` +
         /********/ `new Core.MapFlowPattern(` +

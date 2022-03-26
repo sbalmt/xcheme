@@ -34,7 +34,7 @@ export default class Node extends Basic {
    * Determines whether or not the identity is dynamic.
    */
   get dynamic(): boolean {
-    return this.#identity === Core.BaseSource.Output;
+    return this.#identity === Core.Source.Output;
   }
 
   /**

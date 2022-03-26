@@ -154,7 +154,7 @@ const rangeOperand = new Core.PlaceNodePattern(
  * General operands pattern.
  */
 const generalOperands = new Core.AppendNodePattern(
-  Core.BaseSource.Output,
+  Core.Source.Output,
   Core.Nodes.Right,
   Core.Nodes.Right,
   new Core.MapFlowPattern(
@@ -271,7 +271,7 @@ const aliasNode = new Core.SetValueRoute(
 const exportModifier = new Core.SetValueRoute(
   Nodes.Export,
   new Core.AppendNodePattern(
-    Core.BaseSource.Output,
+    Core.Source.Output,
     Core.Nodes.Right,
     Core.Nodes.Right,
     new Core.MapFlowPattern(
@@ -306,7 +306,7 @@ export const Program = new Core.ExpectFlowPattern(
   new Core.OptFlowPattern(
     new Core.RepeatFlowPattern(
       new Core.EmitNodePattern(
-        Core.BaseSource.Output,
+        Core.Source.Output,
         Core.Nodes.Right,
         new Core.MapFlowPattern(importModule, skip, token, node, aliasToken, aliasNode, exportModifier),
         new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)

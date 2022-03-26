@@ -98,7 +98,7 @@ test("Output a 'MAP' pattern in a token directive", () => {
     };`,
     {
       TOKEN:
-        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(100, 'a'), ` +
         /******/ `new Core.SetValueRoute(0, 'b'), ` +
@@ -138,7 +138,7 @@ test("Output a 'MAP' pattern in a node directive", () => {
     };`,
     {
       NODE:
-        `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
+        `new Core.EmitNodePattern(${Core.Source.Output}, 1, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(100, 0), ` +
         /******/ `new Core.SetValueRoute(1, 2), ` +
@@ -182,7 +182,7 @@ test("Output a 'MAP' pattern in a node directive using access expressions", () =
     };`,
     {
       TOKEN:
-        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(100, 'a'), ` +
         /******/ `new Core.SetValueRoute(101, 'b'), ` +
@@ -190,7 +190,7 @@ test("Output a 'MAP' pattern in a node directive using access expressions", () =
         /**/ `)` +
         `)`,
       NODE:
-        `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
+        `new Core.EmitNodePattern(${Core.Source.Output}, 1, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(200, 100, 102), ` +
         /******/ `new Core.SetValueRoute(0, 101, 102)` +

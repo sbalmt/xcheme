@@ -128,14 +128,14 @@ test("Output a 'NODE' pattern with token map entry references", () => {
     };`,
     {
       TOKEN:
-        `new Core.EmitTokenPattern(${Core.BaseSource.Output}, ` +
+        `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(100, 'a'), ` +
         /******/ `new Core.SetValueRoute(101, 'b')` +
         /**/ `)` +
         `)`,
       NODE:
-        `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
+        `new Core.EmitNodePattern(${Core.Source.Output}, 1, ` +
         /**/ `new Core.MapFlowPattern(` +
         /******/ `new Core.SetValueRoute(200, 100), ` +
         /******/ `new Core.SetValueRoute(201, 101)` +
@@ -160,7 +160,7 @@ test("Output a 'NODE' pattern with a whole node map reference", () => {
         /**/ `new Core.SetValueRoute(201, 1)` +
         `)`,
       NODE:
-        `new Core.EmitNodePattern(${Core.BaseSource.Output}, 1, ` +
+        `new Core.EmitNodePattern(${Core.Source.Output}, 1, ` +
         /**/ `new Core.ExpectFlowPattern(` +
         /******/ `new Core.MapFlowPattern(` +
         /**********/ `new Core.SetValueRoute(200, 0), ` +

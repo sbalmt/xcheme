@@ -3,7 +3,7 @@ import * as Core from '@xcheme/core';
 /**
  * Core source type.
  */
-export type Source = Core.BaseSource<Metadata>;
+export type Source = Core.Source<Metadata>;
 
 /**
  * Core context type.

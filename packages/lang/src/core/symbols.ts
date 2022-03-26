@@ -151,7 +151,7 @@ export const isAlias = (record: Types.Record): boolean => {
  * @returns Returns true when the record has a dynamic identity, false otherwise.
  */
 export const isDynamic = (record: Types.Record): boolean => {
-  return record.data.identity === Core.BaseSource.Output;
+  return record.data.identity === Core.Source.Output;
 };
 
 /**

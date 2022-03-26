@@ -32,7 +32,7 @@ test("Output a 'PIVOT' pattern with an auto identity", () => {
     skip pivot <auto> ALIAS;`,
     {
       '@SKIP0':
-        `new Core.PivotNodePattern(${Core.BaseSource.Output}, 1, 0, ` +
+        `new Core.PivotNodePattern(${Core.Source.Output}, 1, 0, ` +
         /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('@'))` +
         `)`
     }

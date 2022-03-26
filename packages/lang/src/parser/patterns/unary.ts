@@ -21,7 +21,7 @@ export default class Unary extends Core.Pattern<Types.Metadata> {
     this.#pattern = new Core.ExpectFlowPattern(
       new Core.OptFlowPattern(
         new Core.RepeatFlowPattern(
-          new Core.AppendNodePattern(Core.BaseSource.Output, Core.Nodes.Right, Core.Nodes.Right, operator)
+          new Core.AppendNodePattern(Core.Source.Output, Core.Nodes.Right, Core.Nodes.Right, operator)
         )
       ),
       expression

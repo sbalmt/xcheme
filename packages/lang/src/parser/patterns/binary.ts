@@ -22,7 +22,7 @@ export default class Binary extends Core.Pattern<Types.Metadata> {
       expression,
       new Core.OptFlowPattern(
         new Core.RepeatFlowPattern(
-          new Core.PivotNodePattern(Core.BaseSource.Output, Core.Nodes.Right, Core.Nodes.Left, operator, expression)
+          new Core.PivotNodePattern(Core.Source.Output, Core.Nodes.Right, Core.Nodes.Left, operator, expression)
         )
       )
     );

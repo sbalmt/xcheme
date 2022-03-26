@@ -121,6 +121,6 @@ test("Parse a 'MAP' pattern in a node directive using access expressions", () =>
   expect(nodeA).toBeDefined();
   expect(node).toBeDefined();
   expect(nodeA.data.identity).toBe(200);
-  expect(node.data.identity).toBe(Core.BaseSource.Output);
+  expect(node.data.identity).toBe(Core.Source.Output);
   Assert.nodes(context, [nodeA.data.identity, node.data.identity], 2);
 });
