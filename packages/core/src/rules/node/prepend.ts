@@ -21,7 +21,7 @@ export default class Prepend<R extends object> extends Pattern<R> {
   /**
    * Node value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Output node destination.
@@ -41,7 +41,7 @@ export default class Prepend<R extends object> extends Pattern<R> {
    * @param head Prepend head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, output: Nodes, current: Nodes, head: Pattern<R>, ...patterns: Pattern<R>[]) {
+  constructor(value: number, output: Nodes, current: Nodes, head: Pattern<R>, ...patterns: Pattern<R>[]) {
     super();
     this.#head = head;
     this.#target = new Expect<R>(...patterns);

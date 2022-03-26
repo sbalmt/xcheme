@@ -89,7 +89,7 @@ export default class Context<R extends object> {
    * @param fragment Error fragment.
    * @param value Error value.
    */
-  addError(fragment: Fragment, value: string | number): void {
+  addError(fragment: Fragment, value: number): void {
     this.#errors.push(new Error(fragment, value));
   }
 }

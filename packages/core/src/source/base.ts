@@ -29,7 +29,7 @@ type Output<R extends object> = {
   /**
    * Output value.
    */
-  value?: string | number;
+  value?: number;
 
   /**
    * Output node.

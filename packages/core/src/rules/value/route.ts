@@ -12,7 +12,7 @@ export default class Route<R extends object> extends Base<R> {
    * @param first Route pattern or first route unit.
    * @param units Route units.
    */
-  constructor(value: string | number, first: Pattern<R> | string | number, ...units: (string | number)[]) {
+  constructor(value: number, first: Pattern<R> | string | number, ...units: (string | number)[]) {
     if (first instanceof Pattern) {
       const [test, ...remaining] = units;
       super(new Set<R>(value, first), test, ...remaining);

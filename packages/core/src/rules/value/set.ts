@@ -14,14 +14,14 @@ export default class Set<R extends object> extends Pattern<R> {
   /**
    * Output value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Default constructor.
    * @param value New value.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, ...patterns: Pattern<R>[]) {
+  constructor(value: number, ...patterns: Pattern<R>[]) {
     super();
     this.#target = new Expect<R>(...patterns);
     this.#value = value;

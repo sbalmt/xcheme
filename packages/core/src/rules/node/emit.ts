@@ -16,7 +16,7 @@ export default class Emit<R extends object> extends Pattern<R> {
   /**
    * Token value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Output node destination.
@@ -29,7 +29,7 @@ export default class Emit<R extends object> extends Pattern<R> {
    * @param output Output node destination.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, output: Nodes, ...patterns: Pattern<R>[]) {
+  constructor(value: number, output: Nodes, ...patterns: Pattern<R>[]) {
     super();
     this.#target = new Expect<R>(...patterns);
     this.#value = value;

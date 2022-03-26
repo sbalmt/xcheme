@@ -19,14 +19,14 @@ export default class Error {
   /**
    * Error value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Default constructor.
    * @param fragment Error fragment.
    * @param value Error value.
    */
-  constructor(fragment: Fragment, value: string | number) {
+  constructor(fragment: Fragment, value: number) {
     this.#fragment = fragment;
     this.#value = value;
   }
@@ -41,7 +41,7 @@ export default class Error {
   /**
    * Get the error value.
    */
-  get value(): string | number {
+  get value(): number {
     return this.#value;
   }
 }

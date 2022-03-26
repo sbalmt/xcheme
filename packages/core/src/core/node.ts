@@ -45,7 +45,7 @@ export default class Node<R extends object> {
   /**
    * Node value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Node symbol table.
@@ -58,7 +58,7 @@ export default class Node<R extends object> {
    * @param value Node value.
    * @param table Node table.
    */
-  constructor(fragment: Fragment, value: string | number, table: Table<R>) {
+  constructor(fragment: Fragment, value: number, table: Table<R>) {
     this.#fragment = fragment;
     this.#table = table;
     this.#value = value;
@@ -74,7 +74,7 @@ export default class Node<R extends object> {
   /**
    * Get the node value.
    */
-  get value(): string | number {
+  get value(): number {
     return this.#value;
   }
 

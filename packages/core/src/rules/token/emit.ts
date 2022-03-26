@@ -15,14 +15,14 @@ export default class Emit<R extends object> extends Pattern<R> {
   /**
    * Token value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Default constructor.
    * @param value Token value.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, ...patterns: Pattern<R>[]) {
+  constructor(value: number, ...patterns: Pattern<R>[]) {
     super();
     this.#target = new Expect<R>(...patterns);
     this.#value = value;

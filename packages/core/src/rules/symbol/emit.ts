@@ -21,7 +21,7 @@ export default class Emit<R extends object> extends Pattern<R> {
   /**
    * Symbol value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Default constructor.
@@ -29,7 +29,7 @@ export default class Emit<R extends object> extends Pattern<R> {
    * @param test Symbol pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, test: Pattern<R>, ...patterns: Pattern<R>[]) {
+  constructor(value: number, test: Pattern<R>, ...patterns: Pattern<R>[]) {
     super();
     this.#test = test;
     this.#target = new Expect<R>(...patterns);

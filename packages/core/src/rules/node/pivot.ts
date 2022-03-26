@@ -21,7 +21,7 @@ export default class Pivot<R extends object> extends Pattern<R> {
   /**
    * Node value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Output node destination.
@@ -41,7 +41,7 @@ export default class Pivot<R extends object> extends Pattern<R> {
    * @param head Pivot head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, output: Nodes, current: Nodes, head: Pattern<R>, ...patterns: Pattern<R>[]) {
+  constructor(value: number, output: Nodes, current: Nodes, head: Pattern<R>, ...patterns: Pattern<R>[]) {
     super();
     if (current === output) {
       throw "Current and Output destinations can't have the same value.";

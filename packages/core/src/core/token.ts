@@ -12,14 +12,14 @@ export default class Token {
   /**
    * Token value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Default constructor.
    * @param fragment Token fragment.
    * @param value Token value.
    */
-  constructor(fragment: Fragment, value: string | number) {
+  constructor(fragment: Fragment, value: number) {
     this.#fragment = fragment;
     this.#value = value;
   }
@@ -34,7 +34,7 @@ export default class Token {
   /**
    * Get the token value.
    */
-  get value(): string | number {
+  get value(): number {
     return this.#value;
   }
 }

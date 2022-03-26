@@ -19,7 +19,7 @@ export default class Record<R extends object> {
   /**
    * Record value.
    */
-  #value: string | number;
+  #value: number;
 
   /**
    * Record node.
@@ -38,7 +38,7 @@ export default class Record<R extends object> {
    * @param node Record node.
    * @param link Record table link.
    */
-  constructor(fragment: Fragment, value: string | number, node?: Node<R>, link?: Table<R>) {
+  constructor(fragment: Fragment, value: number, node?: Node<R>, link?: Table<R>) {
     this.#fragment = fragment;
     this.#value = value;
     this.#node = node;
@@ -72,7 +72,7 @@ export default class Record<R extends object> {
   /**
    * Get the record value.
    */
-  get value() {
+  get value(): number {
     return this.#value;
   }
 
