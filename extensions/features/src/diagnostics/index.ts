@@ -25,7 +25,7 @@ export type Result = {
   /**
    * Source context.
    */
-  source: Core.Context;
+  source: Lang.Types.Context;
 };
 
 /**
@@ -45,11 +45,11 @@ const loadFile = (file: string): string | undefined => {
  * @param document Current document
  * @returns Returns the source context.
  */
-const getSource = (document: VSCode.TextDocument): Core.Context => {
+const getSource = (document: VSCode.TextDocument): Lang.Types.Context => {
   const begin = document.lineAt(0).range.start;
   const end = document.lineAt(document.lineCount - 1).range.end;
   const text = document.getText(new VSCode.Range(begin, end));
-  const source = new Core.Context(document.uri.path);
+  const source = new Core.Context<Lang.Types.Metadata>(document.uri.path);
   Lang.Lexer.consumeText(text, source);
   Lang.Parser.consumeTokens(source.tokens, source);
   return source;

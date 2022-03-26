@@ -94,7 +94,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param path Symbol table path.
    * @returns Returns the corresponding symbol table or undefined when the given path doesn't exists.
    */
-  #getSymbolTableFromPath(table: Core.Table, path: string[]): Core.Table | undefined {
+  #getSymbolTableFromPath(table: Lang.Types.Table, path: string[]): Lang.Types.Table | undefined {
     for (const name of path) {
       const record = table.get(name);
       if (!record || !record.link) {
@@ -110,7 +110,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param record Symbol record.
    * @returns Returns the corresponding completion item kind.
    */
-  #getItemKind(record: Core.Record): VSCode.CompletionItemKind {
+  #getItemKind(record: Lang.Types.Record): VSCode.CompletionItemKind {
     if (record.link) {
       return VSCode.CompletionItemKind.Class;
     } else {
@@ -155,11 +155,11 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param types Symbol types for filtering.
    * @returns Returns the completion items list.
    */
-  #getSymbolList(table: Core.Table, types: Lang.Parser.Symbols[]): VSCode.CompletionItem[] {
+  #getSymbolList(table: Lang.Types.Table, types: Lang.Parser.Symbols[]): VSCode.CompletionItem[] {
     const list = [];
     for (const name of table.names) {
       const record = table.get(name)!;
-      if (record.data.origin === Lang.Symbols.Origins.User && types.includes(record.value as Lang.Parser.Symbols)) {
+      if (record.data.origin === Lang.Types.Origins.User && types.includes(record.value as Lang.Parser.Symbols)) {
         const link = !!record.link;
         const item = Items.getItem(name, `Insert the ${name} reference.`, {
           kind: this.#getItemKind(record),
@@ -201,7 +201,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    */
   #getCompletionItems(
     document: VSCode.TextDocument,
-    table: Core.Table,
+    table: Lang.Types.Table,
     tokens: Core.Token[],
     offset: number
   ): CompletionItems | undefined {
