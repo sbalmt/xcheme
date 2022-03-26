@@ -4,6 +4,7 @@ import * as Parser from '../parser';
 import * as Coder from './coder/base';
 import * as Counter from './counter';
 import * as Symbols from './symbols';
+import * as Types from './types';
 
 import { Errors } from './errors';
 
@@ -74,7 +75,7 @@ export class Context {
    * @param types Record types.
    * @returns Returns an array containing all the corresponding records.
    */
-  #getRecordsByType(...types: Parser.Symbols[]): Core.Record[] {
+  #getRecordsByType(...types: Parser.Symbols[]): Types.Record[] {
     const list = [];
     for (const record of this.#symbols) {
       if (types.includes(record.value as Parser.Symbols)) {
@@ -90,10 +91,10 @@ export class Context {
    * @param types Record types.
    * @returns Returns an array containing all the corresponding records.
    */
-  #getFlattenRecordsByType(records: Core.Record[], ...types: Parser.Symbols[]): Core.Record[] {
-    const list: Core.Record[] = [];
-    const cache = new WeakSet<Core.Record>();
-    const action = (records: Core.Record[]): void => {
+  #getFlattenRecordsByType(records: Types.Record[], ...types: Parser.Symbols[]): Types.Record[] {
+    const list: Types.Record[] = [];
+    const cache = new WeakSet<Types.Record>();
+    const action = (records: Types.Record[]): void => {
       for (const record of records) {
         if (!cache.has(record)) {
           cache.add(record);
@@ -113,7 +114,7 @@ export class Context {
    * @param records Record list.
    * @returns Returns an array containing all the references.
    */
-  #getReferences(records: Core.Record[]): Coder.Reference[] {
+  #getReferences(records: Types.Record[]): Coder.Reference[] {
     return records
       .sort((a, b) => (a.data.order <= b.data.order ? -1 : 1))
       .map((record) => {
@@ -130,7 +131,7 @@ export class Context {
    * @param types Symbol types.
    * @returns Returns an array containing all the patterns.
    */
-  #getPatterns(records: Core.Record[], ...types: Symbols.Types[]): Coder.Pattern[] {
+  #getPatterns(records: Types.Record[], ...types: Types.Directives[]): Coder.Pattern[] {
     return records.map((current) => {
       if (Symbols.isReferencedBy(current, ...types)) {
         return this.#coder.emitReferencePattern(current);
@@ -204,29 +205,29 @@ export class Context {
   /**
    * Get the resulting lexer.
    */
-  get lexer(): string | Core.Pattern {
+  get lexer(): string | Types.Pattern {
     const records = this.#getRecordsByType(Parser.Symbols.Skip, Parser.Symbols.Token, Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Token, Parser.Symbols.AliasToken);
-    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Symbols.Types.Token));
+    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Token));
     const tokens = flatten.filter((record) => record.value === Parser.Symbols.Token);
     return this.#coder.getEntry('Lexer', this.#getReferences(references), [
-      ...this.#getPatterns(this.#getRecordsByType(Parser.Symbols.Skip), Symbols.Types.Token),
-      ...this.#getPatterns(tokens, Symbols.Types.Token)
+      ...this.#getPatterns(this.#getRecordsByType(Parser.Symbols.Skip), Types.Directives.Token),
+      ...this.#getPatterns(tokens, Types.Directives.Token)
     ]);
   }
 
   /**
    * Get the resulting parser.
    */
-  get parser(): string | Core.Pattern {
+  get parser(): string | Types.Pattern {
     const records = this.#getRecordsByType(Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Node, Parser.Symbols.AliasNode);
-    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Symbols.Types.Node));
+    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Node));
     const nodes = flatten.filter((record) => record.value === Parser.Symbols.Node);
     return this.#coder.getEntry(
       'Parser',
       this.#getReferences(references),
-      this.#getPatterns(nodes, Symbols.Types.Node)
+      this.#getPatterns(nodes, Types.Directives.Node)
     );
   }
 

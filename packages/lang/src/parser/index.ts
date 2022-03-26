@@ -1,3 +1,5 @@
+import type * as Types from '../core/types';
+
 import * as Core from '@xcheme/core';
 
 import { Errors } from '../core/errors';
@@ -7,13 +9,13 @@ export { Symbols } from './symbols';
 export { Nodes } from './nodes';
 
 /**
- * Consume the specified tokens and produce an AST for updating the given context.
+ * Consume the specified tokens and produce an AST in the given context.
  * @param tokens Input tokens.
  * @param context Input context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeTokens = (tokens: Core.Token[], context: Core.Context): boolean => {
-  const source = new Core.TokenSource(tokens, context);
+export const consumeTokens = (tokens: Core.Token[], context: Types.Context): boolean => {
+  const source = new Core.TokenSource<Types.Metadata>(tokens, context);
   if (!Program.consume(source)) {
     const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
     context.addError(fragment, Errors.UNEXPECTED_SYNTAX);
@@ -27,6 +29,6 @@ export const consumeTokens = (tokens: Core.Token[], context: Core.Context): bool
  * @param source Data source.
  * @returns Returns true when the source was consumed, otherwise returns false.
  */
-export const consume = (source: Core.BaseSource): boolean => {
+export const consume = (source: Types.Source): boolean => {
   return Program.consume(source);
 };

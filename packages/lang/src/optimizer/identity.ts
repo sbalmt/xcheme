@@ -1,3 +1,5 @@
+import type * as Types from '../core/types';
+
 import * as Core from '@xcheme/core';
 
 /**
@@ -5,7 +7,7 @@ import * as Core from '@xcheme/core';
  * @param node Input node.
  * @returns Returns the resolved identity number or NaN when the node doesn't have an identity.
  */
-export const resolve = (node: Core.Node): number => {
+export const resolve = (node: Types.Node): number => {
   const value = node.fragment.data;
   if (value === 'auto') {
     return Core.BaseSource.Output;
@@ -22,7 +24,7 @@ export const resolve = (node: Core.Node): number => {
  * @param node Input node.
  * @returns Returns the resolved identity number or NaN when the node doesn't have an identity.
  */
-export const consume = (node: Core.Node): number => {
+export const consume = (node: Types.Node): number => {
   if (node.left) {
     return resolve(node.left);
   }

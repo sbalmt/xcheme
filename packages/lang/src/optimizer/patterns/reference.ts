@@ -3,6 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -16,10 +17,11 @@ import { Exception } from '../../core/exception';
  * @param parent Parent node.
  * @param direction Node direction.
  */
-const upgrade = (project: Project.Context, record: Core.Record, parent: Core.Node, direction: Core.Nodes): void => {
+const upgrade = (project: Project.Context, record: Types.Record, parent: Types.Node, direction: Core.Nodes): void => {
   const node = parent.get(direction)!;
   if (!Symbols.isDynamic(record)) {
-    const replacement = new Nodes.Reference(node, record.data.identity);
+    const { identity } = record.data;
+    const replacement = new Nodes.Reference(node, identity);
     parent.set(direction, replacement);
   } else {
     project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
@@ -33,9 +35,9 @@ const upgrade = (project: Project.Context, record: Core.Record, parent: Core.Nod
  * @param record Reference record.
  * @param state Consumption state.
  */
-const connect = (project: Project.Context, identifier: string, record: Core.Record, state: Context.State): void => {
+const connect = (project: Project.Context, identifier: string, record: Types.Record, state: Context.State): void => {
   const current = state.record!;
-  if (record.data.dependencies) {
+  if (record.enriched) {
     current.data.dependencies.push(record);
     record.data.dependents.push(current);
   } else {
@@ -54,7 +56,7 @@ const connect = (project: Project.Context, identifier: string, record: Core.Reco
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveSkip = (project: Project.Context, node: Core.Node, record: Core.Record, state: Context.State): void => {
+const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   if (record.value === Parser.Symbols.AliasToken) {
     connect(project, node.fragment.data, record, state);
   } else if (record.value === Parser.Symbols.Token) {
@@ -76,7 +78,7 @@ const resolveSkip = (project: Project.Context, node: Core.Node, record: Core.Rec
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveToken = (project: Project.Context, node: Core.Node, record: Core.Record, state: Context.State): void => {
+const resolveToken = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   if (record.value === Parser.Symbols.Token || record.value === Parser.Symbols.AliasToken) {
     connect(project, node.fragment.data, record, state);
   } else if (record.value === Parser.Symbols.Node) {
@@ -100,8 +102,8 @@ const resolveToken = (project: Project.Context, node: Core.Node, record: Core.Re
 const resolveNode = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
-  record: Core.Record,
+  parent: Types.Node,
+  record: Types.Record,
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
@@ -110,7 +112,7 @@ const resolveNode = (
     connect(project, identifier, record, state);
   } else if (record.value === Parser.Symbols.Token) {
     connect(project, identifier, record, state);
-    if (record.data.name !== void 0) {
+    if (record.enriched) {
       upgrade(project, record, parent, direction);
     } else {
       project.symbols.listen(identifier, () => {
@@ -135,7 +137,7 @@ const resolveNode = (
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
@@ -144,13 +146,13 @@ export const consume = (
     project.addError(node.fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
     switch (state.type) {
-      case Symbols.Types.Skip:
+      case Types.Directives.Skip:
         resolveSkip(project, node, record, state);
         break;
-      case Symbols.Types.Token:
+      case Types.Directives.Token:
         resolveToken(project, node, record, state);
         break;
-      case Symbols.Types.Node:
+      case Types.Directives.Node:
         resolveNode(project, direction, parent, record, state);
         break;
       default:

@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
+import * as Types from '../../../core/types';
 import * as Parser from '../../../parser';
 import * as Identity from '../../identity';
 import * as Context from '../../context';
@@ -14,7 +15,7 @@ import * as Expression from '../expression';
  * @param parent Parent node.
  * @param identity Node identity.
  */
-const emit = (direction: Core.Nodes, parent: Core.Node, identity: number): void => {
+const emit = (direction: Core.Nodes, parent: Types.Node, identity: number): void => {
   const node = parent.get(direction)!;
   const replacement = new Nodes.Identity(node, identity);
   parent.set(direction, replacement);
@@ -30,7 +31,7 @@ const emit = (direction: Core.Nodes, parent: Core.Node, identity: number): void 
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;

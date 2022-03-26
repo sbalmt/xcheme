@@ -1,5 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import * as Types from '../types';
+
 import Basic from './basic';
 
 /**
@@ -16,7 +18,7 @@ export default class Node extends Basic {
    * @param node Original node.
    * @param identity Node identity.
    */
-  constructor(node: Core.Node, identity: number) {
+  constructor(node: Types.Node, identity: number) {
     super(node);
     this.#identity = identity;
   }

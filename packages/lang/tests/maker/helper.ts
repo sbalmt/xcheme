@@ -40,7 +40,7 @@ const printErrors = (errors: Core.Error[]): void => {
  */
 export const makeParser = (coder: Lang.Coder, text: string): Lang.Project.Context => {
   const project = new Lang.Project.Context('make', coder, { loadFileHook });
-  const context = new Core.Context('make');
+  const context = new Core.Context<Lang.Types.Metadata>('make');
   let status: boolean;
 
   // Consume input text.
@@ -79,7 +79,7 @@ export const makeParser = (coder: Lang.Coder, text: string): Lang.Project.Contex
  */
 export const makeError = (coder: Lang.Coder, text: string, errors: Lang.Errors[]): Lang.Project.Context => {
   const project = new Lang.Project.Context('make', coder, { loadFileHook });
-  const context = new Core.Context('make');
+  const context = new Core.Context<Lang.Types.Metadata>('make');
   let status: boolean;
 
   // Consume input text.
@@ -114,9 +114,9 @@ export const makeError = (coder: Lang.Coder, text: string, errors: Lang.Errors[]
  * @param context Lexer context.
  * @param text Input text.
  */
-export const testLexer = (project: Lang.Project.Context, context: Core.Context, text: string): void => {
-  const source = new Core.TextSource(text, context);
-  const lexer = project.lexer as Core.Pattern;
+export const testLexer = (project: Lang.Project.Context, context: Lang.Types.Context, text: string): void => {
+  const source = new Core.TextSource<Lang.Types.Metadata>(text, context);
+  const lexer = project.lexer as Lang.Types.Pattern;
 
   // Parse the given input text.
   const status = lexer.consume(source);
@@ -136,9 +136,9 @@ export const testLexer = (project: Lang.Project.Context, context: Core.Context, 
  * @param context Parser context.
  * @param tokens Input tokens.
  */
-export const testParser = (project: Lang.Project.Context, context: Core.Context, tokens: Core.Token[]): void => {
-  const source = new Core.TokenSource(tokens, context);
-  const parser = project.parser as Core.Pattern;
+export const testParser = (project: Lang.Project.Context, context: Lang.Types.Context, tokens: Core.Token[]): void => {
+  const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
+  const parser = project.parser as Lang.Types.Pattern;
 
   // Parse the given input tokens.
   const status = parser.consume(source);

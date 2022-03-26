@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../../core/project';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -21,7 +22,7 @@ import * as Generic from './generic';
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;

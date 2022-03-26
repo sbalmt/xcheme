@@ -1,9 +1,7 @@
-import * as Core from '@xcheme/core';
-
 import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
-import * as Symbols from '../../core/symbols';
+import * as Types from '../../core/types';
 import * as String from '../../core/string';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -18,7 +16,7 @@ import * as Expression from './expression';
  * @returns Returns an array containing all the entry units.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveUnits = (node: Core.Node): (string | number)[] => {
+const resolveUnits = (node: Types.Node): (string | number)[] => {
   if (node.value === Parser.Nodes.String) {
     return String.extract(node.fragment.data).split('');
   } else if (node instanceof Nodes.Identity) {
@@ -55,12 +53,12 @@ const resolveRoute = (
     state.dynamic = member.dynamic;
     const pattern = Expression.consume(project, member, state);
     state.dynamic = current;
-    if (member.dynamic || map.type === Symbols.Types.Skip) {
+    if (member.dynamic || map.type === Types.Directives.Skip) {
       return project.coder.getRoute(units, void 0, pattern);
     }
     return project.coder.getRoute(units, member.identity, pattern);
   }
-  if (member.dynamic || map.type === Symbols.Types.Skip) {
+  if (member.dynamic || map.type === Types.Directives.Skip) {
     return project.coder.getRoute(units, void 0);
   }
   return project.coder.getRoute(units, member.identity);
@@ -74,7 +72,11 @@ const resolveRoute = (
  * @returns Returns the resolved pattern or undefined when the map node has no entry members.
  * @throws Throws an exception when the given node isn't valid.
  */
-export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
+export const consume = (
+  project: Project.Context,
+  node: Types.Node,
+  state: Context.State
+): Coder.Pattern | undefined => {
   let entry = node.right!;
   const directive = state.directive;
   const routes = [];

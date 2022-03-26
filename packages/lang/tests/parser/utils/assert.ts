@@ -34,7 +34,7 @@ export type Tree = {
  * @param tree Tree structure.
  */
 export const tree = (code: string, tree: Tree): void => {
-  const context = new Core.Context('test');
+  const context = new Core.Context<Lang.Types.Metadata>('test');
   expect(Lang.Lexer.consumeText(code, context)).toBeTruthy();
   expect(Lang.Parser.consumeTokens(context.tokens, context)).toBeTruthy();
   expect(context.node.next).toBeDefined();
@@ -46,7 +46,7 @@ export const tree = (code: string, tree: Tree): void => {
  * @param node Input node.
  * @param tree Tree structure.
  */
-const match = (node: Core.Node, tree: Tree): void => {
+const match = (node: Lang.Types.Node, tree: Tree): void => {
   expect(node.value).toBe(tree.type);
   if (tree.value) {
     expect(node.fragment.data).toBe(tree.value);

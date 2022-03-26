@@ -1,4 +1,4 @@
-import * as Core from '@xcheme/core';
+import * as Types from '../types';
 
 import Identity from './identity';
 
@@ -9,7 +9,7 @@ export default class Node extends Identity {
   /**
    * Route node.
    */
-  #route: Core.Node;
+  #route: Types.Node;
 
   /**
    * Default constructor.
@@ -17,7 +17,7 @@ export default class Node extends Identity {
    * @param identity Member identity.
    * @param route Route node.
    */
-  constructor(node: Core.Node, identity: number, route: Core.Node) {
+  constructor(node: Types.Node, identity: number, route: Types.Node) {
     super(node, identity);
     this.#route = route;
   }
@@ -32,7 +32,7 @@ export default class Node extends Identity {
   /**
    * Get the member route.
    */
-  get route(): Core.Node {
+  get route(): Types.Node {
     return this.#route;
   }
 }

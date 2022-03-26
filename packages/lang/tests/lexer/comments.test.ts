@@ -1,9 +1,9 @@
 import * as Core from '@xcheme/core';
 
-import { Lexer } from '../../src/index';
+import { Types, Lexer } from '../../src/index';
 
 test('Consume expected comment', () => {
-  const context = new Core.Context('test');
+  const context = new Core.Context<Types.Metadata>('test');
   const text = '// This is a comment.';
 
   // Test the consumption.
@@ -15,7 +15,7 @@ test('Consume expected comment', () => {
 });
 
 test('Consume expected comment block', () => {
-  const context = new Core.Context('test');
+  const context = new Core.Context<Types.Metadata>('test');
   const text = '/* This is a comment. */';
 
   // Test the consumption.

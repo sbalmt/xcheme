@@ -1,6 +1,5 @@
-import * as Core from '@xcheme/core';
-
 import * as Project from '../../core/project';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -13,7 +12,7 @@ import { Errors } from '../../core/errors';
  * @param state Consumption state.
  * @returns Returns true when the given node was consumed, false otherwise.
  */
-export const consume = (project: Project.Context, node: Core.Node, state: Context.State): boolean => {
+export const consume = (project: Project.Context, node: Types.Node, state: Context.State): boolean => {
   const current = node.right!;
   if (current.value === Parser.Nodes.Identifier) {
     const identifier = current.fragment.data;

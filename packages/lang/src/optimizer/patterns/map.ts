@@ -3,6 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Identity from '../identity';
 import * as Context from '../context';
@@ -19,7 +20,7 @@ import * as Expression from './expression';
  * @param ancestor Ancestor node.
  * @returns Returns the corresponding route or undefined when there's no route.
  */
-const getRoute = (direction: Core.Nodes, parent: Core.Node, ancestor?: Context.Node): Core.Node | undefined => {
+const getRoute = (direction: Core.Nodes, parent: Types.Node, ancestor?: Context.Node): Types.Node | undefined => {
   const node = parent.get(direction)!;
   if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
     if (node.value === Parser.Nodes.String || node instanceof Nodes.Identity || node instanceof Nodes.Sequence) {
@@ -47,9 +48,9 @@ const getRoute = (direction: Core.Nodes, parent: Core.Node, ancestor?: Context.N
 const emit = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   identity: number,
-  member: Core.Node
+  member: Types.Node
 ): boolean => {
   const route = getRoute(Core.Nodes.Right, member);
   if (route) {
@@ -75,7 +76,7 @@ const emit = (
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   state: Context.State
 ): void => {
   let entry = parent.get(direction)!.right;
@@ -90,7 +91,7 @@ export const consume = (
       Expression.consume(project, Core.Nodes.Right, entry, state);
       emit(project, Core.Nodes.Right, entry, identity, entry);
     } else {
-      if (state.type === Symbols.Types.Skip) {
+      if (state.type === Types.Directives.Skip) {
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }

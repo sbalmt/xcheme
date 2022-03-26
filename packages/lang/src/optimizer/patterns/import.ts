@@ -5,6 +5,7 @@ import * as Core from '@xcheme/core';
 import * as String from '../../core/string';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
+import * as Types from '../../core/types';
 import * as Lexer from '../../lexer';
 import * as Parser from '../../parser';
 import * as Maker from '../../maker';
@@ -23,10 +24,10 @@ const cache = new Cache.Context<string>();
  * @param records Record list.
  * @param unused Unused record set.
  */
-const purge = (records: Core.Record[], unused: WeakSet<Core.Record>): void => {
+const purge = (records: Types.Record[], unused: WeakSet<Types.Record>): void => {
   for (const record of records) {
     const { dependents, dependencies } = record.data;
-    record.data.dependents = dependents.filter((dependent: Core.Record) => !unused.has(dependent));
+    record.data.dependents = dependents.filter((dependent: Types.Record) => !unused.has(dependent));
     purge(dependencies, unused);
   }
 };
@@ -36,10 +37,10 @@ const purge = (records: Core.Record[], unused: WeakSet<Core.Record>): void => {
  * @param records Record list.
  * @returns Returns the unused record set.
  */
-const collect = (records: Core.Record[]): WeakSet<Core.Record> => {
-  const unused = new WeakSet<Core.Record>();
-  const cache = new WeakSet<Core.Record>();
-  const action = (records: Core.Record[]): void => {
+const collect = (records: Types.Record[]): WeakSet<Types.Record> => {
+  const unused = new WeakSet<Types.Record>();
+  const cache = new WeakSet<Types.Record>();
+  const action = (records: Types.Record[]): void => {
     for (const record of records) {
       if (!cache.has(record)) {
         const { dependents, dependencies } = record.data;
@@ -65,7 +66,7 @@ const collect = (records: Core.Record[]): WeakSet<Core.Record> => {
  * @param source Source records.
  * @returns Returns an array containing all imported record.
  */
-const integrate = (project: Project.Context, table: Core.Table, source: Symbols.Aggregator): Core.Record[] => {
+const integrate = (project: Project.Context, table: Types.Table, source: Symbols.Aggregator): Types.Record[] => {
   const list = [];
   for (const record of source) {
     const { identifier, exported } = record.data;
@@ -92,7 +93,7 @@ const integrate = (project: Project.Context, table: Core.Table, source: Symbols.
  * @param content Source input.
  * @returns Returns true when the compilation was successful, false otherwise.
  */
-const compile = (project: Project.Context, context: Core.Context, content: string): boolean => {
+const compile = (project: Project.Context, context: Types.Context, content: string): boolean => {
   return (
     Lexer.consumeText(content, context) &&
     Parser.consumeTokens(context.tokens, context) &&
@@ -106,7 +107,7 @@ const compile = (project: Project.Context, context: Core.Context, content: strin
  * @param project Project context.
  * @param node Input node.
  */
-export const consume = (project: Project.Context, node: Core.Node): void => {
+export const consume = (project: Project.Context, node: Types.Node): void => {
   const location = node.right!;
   if (!project.options.loadFileHook) {
     project.addError(location.fragment, Errors.IMPORT_DISABLED);
@@ -120,7 +121,7 @@ export const consume = (project: Project.Context, node: Core.Node): void => {
       if (!content) {
         project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
       } else {
-        const extContext = new Core.Context(file);
+        const extContext = new Core.Context<Types.Metadata>(file);
         const extProject = new Project.Context(file, project.coder, {
           ...project.options,
           directory: Path.dirname(path)

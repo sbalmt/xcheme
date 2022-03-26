@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import { Lexer, Errors } from '../../src/index';
+import { Types, Lexer, Errors } from '../../src/index';
 
 const tokens = [
   // Operands
@@ -85,7 +85,7 @@ const tokens = [
 ];
 
 test('Consume expected tokens', () => {
-  const context = new Core.Context('test');
+  const context = new Core.Context<Types.Metadata>('test');
   const text = tokens.map((token) => token.name).join(' ');
 
   // Test the consumption.
@@ -104,7 +104,7 @@ test('Consume expected tokens', () => {
 });
 
 test('Consume unexpected token', () => {
-  const context = new Core.Context('test');
+  const context = new Core.Context<Types.Metadata>('test');
   const text = 'any @ any';
 
   // Test the consumption.
@@ -134,7 +134,7 @@ test('Consume unexpected token', () => {
 });
 
 test('Consume unexpected token (empty string)', () => {
-  const context = new Core.Context('test');
+  const context = new Core.Context<Types.Metadata>('test');
   const text = "token '' any";
 
   // Test the consumption.

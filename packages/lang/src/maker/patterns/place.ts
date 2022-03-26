@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Types from '../../core/types';
 import * as Context from '../context';
 
 import * as And from './and';
@@ -16,7 +17,7 @@ import * as And from './and';
  */
 export const consume = (
   project: Project.Context,
-  node: Core.Node,
+  node: Types.Node,
   state: Context.State,
   direction: Core.Nodes
 ): Coder.Pattern | undefined => {

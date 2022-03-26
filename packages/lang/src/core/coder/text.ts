@@ -1,7 +1,8 @@
 import * as Core from '@xcheme/core';
 
-import * as String from '../../core/string';
+import * as String from '../string';
 import * as Symbols from '../symbols';
+import * as Types from '../types';
 
 import { Base } from './base';
 
@@ -347,7 +348,7 @@ export class Text extends Base {
    * @param record Referenced record.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(record: Core.Record): string {
+  emitReferencePattern(record: Types.Record): string {
     const data = record.data;
     if (!data.pattern) {
       return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(data.name)}`);

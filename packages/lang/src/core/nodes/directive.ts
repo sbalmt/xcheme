@@ -1,6 +1,5 @@
-import * as Core from '@xcheme/core';
-
 import * as Symbols from '../symbols';
+import * as Types from '../types';
 
 import Identity from './identity';
 
@@ -11,14 +10,14 @@ export default class Node extends Identity {
   /**
    * Directive record.
    */
-  #record: Core.Record;
+  #record: Types.Record;
 
   /**
    * Default constructor.
    * @param node Original node.
    * @param record Symbol record.
    */
-  constructor(node: Core.Node, record: Core.Record) {
+  constructor(node: Types.Node, record: Types.Record) {
     super(node, record.data.identity);
     this.#record = record;
   }
@@ -33,8 +32,8 @@ export default class Node extends Identity {
   /**
    * Get the directive type.
    */
-  get type(): Symbols.Types {
-    return this.#record.data.type as Symbols.Types;
+  get type(): Types.Directives {
+    return this.#record.data.type;
   }
 
   /**

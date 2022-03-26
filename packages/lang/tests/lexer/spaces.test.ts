@@ -1,9 +1,9 @@
 import * as Core from '@xcheme/core';
 
-import { Lexer } from '../../src/index';
+import { Types, Lexer } from '../../src/index';
 
 test('Consume expected whites-spaces', () => {
-  const context = new Core.Context('test');
+  const context = new Core.Context<Types.Metadata>('test');
   const text = ' \t\v\r\n';
 
   // Test the consumption.

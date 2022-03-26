@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Project from '../core/project';
 import * as Counter from '../core/counter';
-import * as Symbols from '../core/symbols';
+import * as Types from '../core/types';
 
 /**
  * Global order counter.
@@ -20,7 +20,7 @@ export type Node = {
   /**
    * Node parent.
    */
-  parent: Core.Node;
+  parent: Types.Node;
 };
 
 /**
@@ -30,23 +30,23 @@ export type State = {
   /**
    * State type.
    */
-  type: Symbols.Types;
+  type: Types.Directives;
   /**
    * State origin.
    */
-  origin: Symbols.Origins;
+  origin: Types.Origins;
   /**
    * State identity.
    */
   identity: number;
   /**
-   * Anchor AST node.
+   * Anchor node.
    */
-  anchor: Core.Node;
+  anchor: Types.Node;
   /**
    * State record.
    */
-  record?: Core.Record;
+  record?: Types.Record;
 };
 
 /**
@@ -55,10 +55,10 @@ export type State = {
  * @param identity Initial identity.
  * @returns Returns the new state.
  */
-export const getNewState = (anchor: Core.Node, identity?: number): State => {
+export const getNewState = (anchor: Types.Node, identity?: number): State => {
   return {
-    type: Symbols.Types.Unknown,
-    origin: Symbols.Origins.User,
+    type: Types.Directives.Unknown,
+    origin: Types.Origins.User,
     identity: identity ?? NaN,
     anchor
   };
@@ -75,10 +75,10 @@ export const getNewState = (anchor: Core.Node, identity?: number): State => {
 export const setMetadata = (
   project: Project.Context,
   identifier: string,
-  record: Core.Record,
+  record: Types.Record,
   state: State
-): Core.Record => {
-  Object.assign<any, Symbols.Metadata>(record.data, {
+): Types.Record => {
+  record.enrich({
     type: state.type,
     origin: state.origin,
     order: orderCounter.increment(project.coder),

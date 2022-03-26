@@ -1,24 +1,28 @@
 import * as Core from '@xcheme/core';
 
+import * as Types from '../../core/types';
+
 /**
  * Prefixed unary expression pattern.
  */
-export default class Unary extends Core.Pattern {
+export default class Unary extends Core.Pattern<Types.Metadata> {
   /**
    * Unary pattern.
    */
-  #pattern: Core.Pattern;
+  #pattern: Types.Pattern;
 
   /**
    * Default constructor.
    * @param operator Unary operator pattern.
    * @param expression Expression pattern.
    */
-  constructor(operator: Core.Pattern, expression: Core.Pattern) {
+  constructor(operator: Types.Pattern, expression: Types.Pattern) {
     super();
     this.#pattern = new Core.ExpectFlowPattern(
       new Core.OptFlowPattern(
-        new Core.RepeatFlowPattern(new Core.AppendNodePattern(Core.BaseSource.Output, Core.Nodes.Right, Core.Nodes.Right, operator))
+        new Core.RepeatFlowPattern(
+          new Core.AppendNodePattern(Core.BaseSource.Output, Core.Nodes.Right, Core.Nodes.Right, operator)
+        )
       ),
       expression
     );
@@ -29,7 +33,7 @@ export default class Unary extends Core.Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Core.BaseSource): boolean {
+  consume(source: Types.Source): boolean {
     return this.#pattern.consume(source);
   }
 }

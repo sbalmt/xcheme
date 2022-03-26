@@ -1,3 +1,5 @@
+import type * as Types from '../core/types';
+
 import * as Core from '@xcheme/core';
 
 import { Errors } from '../core/errors';
@@ -6,13 +8,13 @@ import { Program } from './program';
 export { Tokens } from './tokens';
 
 /**
- * Consume the specified text and produce a list of tokens for updating the given context.
+ * Consume the specified text and produce a list of tokens in the given context.
  * @param text Input text.
  * @param context Input context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeText = (text: string, context: Core.Context): boolean => {
-  const source = new Core.TextSource(text, context);
+export const consumeText = (text: string, context: Types.Context): boolean => {
+  const source = new Core.TextSource<Types.Metadata>(text, context);
   if (!Program.consume(source)) {
     context.addError(source.fragment, Errors.UNEXPECTED_TOKEN);
     return false;
@@ -25,6 +27,6 @@ export const consumeText = (text: string, context: Core.Context): boolean => {
  * @param source Data source.
  * @returns Returns true when the source was consumed, otherwise returns false.
  */
-export const consume = (source: Core.BaseSource): boolean => {
+export const consume = (source: Types.Source): boolean => {
   return Program.consume(source);
 };

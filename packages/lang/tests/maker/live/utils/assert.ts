@@ -14,7 +14,7 @@ export type Result = {
   /**
    * Parser context.
    */
-  context: Core.Context;
+  context: Lang.Types.Context;
 };
 
 /**
@@ -25,7 +25,7 @@ export type Result = {
  */
 export const lexer = (text: string, code: string): Result => {
   const project = Helper.makeParser(new Lang.LiveCoder(), code);
-  const context = new Core.Context('test-lexer');
+  const context = new Core.Context<Lang.Types.Metadata>('test-lexer');
   Helper.testLexer(project, context, text);
   return { project, context };
 };
@@ -38,7 +38,7 @@ export const lexer = (text: string, code: string): Result => {
  */
 export const parser = (text: string, code: string): Result => {
   const project = Helper.makeParser(new Lang.LiveCoder(), code);
-  const context = new Core.Context('test-parser');
+  const context = new Core.Context<Lang.Types.Metadata>('test-parser');
   Helper.testLexer(project, context, text);
   Helper.testParser(project, context, context.tokens);
   return { project, context };
@@ -50,7 +50,7 @@ export const parser = (text: string, code: string): Result => {
  * @param identities Array of identifies.
  * @param total Expected number of tokens.
  */
-export const tokens = (context: Core.Context, identities: number[], total: number): void => {
+export const tokens = (context: Lang.Types.Context, identities: number[], total: number): void => {
   let count = 0;
   for (const token of context.tokens) {
     expect(identities).toContain(token.value);
@@ -65,7 +65,7 @@ export const tokens = (context: Core.Context, identities: number[], total: numbe
  * @param identities Array of identifies.
  * @param total Expected number of nodes.
  */
-export const nodes = (context: Core.Context, identities: number[], total: number): void => {
+export const nodes = (context: Lang.Types.Context, identities: number[], total: number): void => {
   let node = context.node;
   let count = 0;
   while ((node = node.next!)) {

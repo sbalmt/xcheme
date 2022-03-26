@@ -1,7 +1,6 @@
-import * as Core from '@xcheme/core';
-
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -14,7 +13,11 @@ import * as Expression from './expression';
  * @param state Consumption state.
  * @returns Returns the pattern or undefined when the node is invalid.
  */
-export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
+export const consume = (
+  project: Project.Context,
+  node: Types.Node,
+  state: Context.State
+): Coder.Pattern | undefined => {
   const test = Expression.consume(project, node.left!, state);
   if (test) {
     const content = node.right!;

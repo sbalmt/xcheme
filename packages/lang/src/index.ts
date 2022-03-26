@@ -6,6 +6,7 @@ export { Text as TextCoder } from './core/coder/text';
 
 export * as Project from './core/project';
 export * as Symbols from './core/symbols';
+export * as Types from './core/types';
 
 export * as Lexer from './lexer';
 export * as Parser from './parser';

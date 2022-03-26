@@ -1,3 +1,5 @@
+import type * as Types from '../core/types';
+
 import * as Core from '@xcheme/core';
 
 import * as Project from '../core/project';
@@ -20,7 +22,7 @@ import { Exception } from '../core/exception';
  * @param state Consumption state.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolve = (project: Project.Context, node: Core.Node, state: Context.State): void => {
+const resolve = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   state.identity = Identity.consume(node.right!);
   switch (node.value) {
     case Parser.Nodes.Token:
@@ -42,7 +44,7 @@ const resolve = (project: Project.Context, node: Core.Node, state: Context.State
  * @param project Project context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeNodes = (node: Core.Node, project: Project.Context): boolean => {
+export const consumeNodes = (node: Types.Node, project: Project.Context): boolean => {
   let current;
   while ((current = node.next)) {
     const state = Context.getNewState(node);

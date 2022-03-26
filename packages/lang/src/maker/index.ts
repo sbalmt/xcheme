@@ -1,7 +1,6 @@
-import * as Core from '@xcheme/core';
-
 import * as Nodes from '../core/nodes';
 import * as Project from '../core/project';
+import * as Types from '../core/types';
 import * as Parser from '../parser';
 
 import { Exception } from '../core/exception';
@@ -16,7 +15,7 @@ import * as Skip from './patterns/skip';
  * @param node Main node.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveMain = (project: Project.Context, node: Core.Node): void => {
+const resolveMain = (project: Project.Context, node: Types.Node): void => {
   const directive = node.right!;
   if (!(directive instanceof Nodes.Directive)) {
     throw new Exception('The node must be an instance of a directive node.');
@@ -46,7 +45,7 @@ const resolveMain = (project: Project.Context, node: Core.Node): void => {
  * @param node Skip node.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveSkip = (project: Project.Context, node: Core.Node): void => {
+const resolveSkip = (project: Project.Context, node: Types.Node): void => {
   if (!(node instanceof Nodes.Directive)) {
     throw new Exception('The SKIP node must be an instance of a directive nodes.');
   }
@@ -60,7 +59,7 @@ const resolveSkip = (project: Project.Context, node: Core.Node): void => {
  * @param project Project context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeNodes = (node: Core.Node, project: Project.Context): boolean => {
+export const consumeNodes = (node: Types.Node, project: Project.Context): boolean => {
   while ((node = node.next!)) {
     if (node.value === Parser.Nodes.Import) {
       // Just ignore for now...

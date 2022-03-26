@@ -1,16 +1,17 @@
 import * as Core from '@xcheme/core';
 
 import * as Parser from '../../parser';
+import * as Types from '../types';
 
 /**
  * Optimized basic node.
  */
-export default class Node extends Core.Node {
+export default class Node extends Core.Node<Types.Metadata> {
   /**
    * Default constructor.
    * @param node Original node.
    */
-  constructor(node: Core.Node) {
+  constructor(node: Types.Node) {
     super(node.fragment, node.value, node.table);
     this.set(Core.Nodes.Left, node.left);
     this.set(Core.Nodes.Right, node.right);

@@ -1,4 +1,6 @@
 import * as Core from '@xcheme/core';
+
+import * as Types from '../../core/types';
 import * as Lexer from '../../lexer';
 
 import { Symbols } from '../symbols';
@@ -7,11 +9,11 @@ import { Nodes } from '../nodes';
 /**
  * Directive pattern
  */
-export default class Directive extends Core.Pattern {
+export default class Directive extends Core.Pattern<Types.Metadata> {
   /**
    * Directive pattern.
    */
-  #pattern: Core.Pattern;
+  #pattern: Types.Pattern;
 
   /**
    * Default constructor.
@@ -19,7 +21,7 @@ export default class Directive extends Core.Pattern {
    * @param identity Identity pattern.
    * @param expression Expression pattern.
    */
-  constructor(symbol: Symbols, identity: Core.Pattern, expression: Core.Pattern) {
+  constructor(symbol: Symbols, identity: Types.Pattern, expression: Types.Pattern) {
     super();
     this.#pattern = new Core.ExpectFlowPattern(
       new Core.OptFlowPattern(identity),
@@ -43,7 +45,7 @@ export default class Directive extends Core.Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Core.BaseSource): boolean {
+  consume(source: Types.Source): boolean {
     return this.#pattern.consume(source);
   }
 }

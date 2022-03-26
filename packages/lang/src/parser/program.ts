@@ -1,3 +1,5 @@
+import type * as Types from '../core/types';
+
 import * as Core from '@xcheme/core';
 import * as Lexer from '../lexer';
 
@@ -92,7 +94,7 @@ const unaryOperators = new Core.MapFlowPattern(
 /**
  * Map members pattern.
  */
-const mapMembers: Core.Pattern = new Core.ExpectFlowPattern(
+const mapMembers: Types.Pattern = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
     Nodes.MapMember,
     Core.Nodes.Right,
@@ -200,7 +202,7 @@ const conditionExpression = new Core.OptFlowPattern(
 /**
  * Expression pattern.
  */
-const expression: Core.Pattern = new Core.ExpectFlowPattern(
+const expression: Types.Pattern = new Core.ExpectFlowPattern(
   new BinaryExpression(
     new Core.SetValuePattern(Nodes.Or, new Core.ChooseUnitPattern(Lexer.Tokens.Or, Lexer.Tokens.VerticalBar)),
     new BinaryExpression(

@@ -1,3 +1,5 @@
+import type * as Types from './types';
+
 import * as Core from '@xcheme/core';
 
 import { Symbols } from '../parser/symbols';
@@ -6,7 +8,7 @@ import { Exception } from './exception';
 /**
  * Event callback.
  */
-type EventCallback = (record: Core.Record) => void;
+type EventCallback = (record: Types.Record) => void;
 
 /**
  * Map of events.
@@ -19,80 +21,8 @@ type EventMap = {
  * Map of records.
  */
 type RecordMap = {
-  [identifier: string]: Core.Record;
+  [identifier: string]: Types.Record;
 };
-
-/**
- * Record metadata.
- */
-export type Metadata = {
-  /**
-   * Record type.
-   */
-  type: Types;
-  /**
-   * Record origin.
-   */
-  origin: Origins;
-  /**
-   * Record order.
-   */
-  order: number;
-  /**
-   * Record name.
-   */
-  name: string;
-  /**
-   * Record identifier.
-   */
-  identifier: string;
-  /**
-   * Record identity.
-   */
-  identity: number;
-  /**
-   * Record location.
-   */
-  location: string;
-  /**
-   * Determines whether or not the record is imported.
-   */
-  imported: boolean;
-  /**
-   * Determines whether or not the record is exported.
-   */
-  exported: boolean;
-  /**
-   * Array of dependencies.
-   */
-  dependencies: Core.Record[];
-  /**
-   * Array of dependents.
-   */
-  dependents: Core.Record[];
-  /**
-   * Record pattern.
-   */
-  pattern: Core.Pattern | string | undefined;
-};
-
-/**
- * Record types.
- */
-export const enum Types {
-  Unknown,
-  Skip,
-  Token,
-  Node
-}
-
-/**
- * Record origins.
- */
-export const enum Origins {
-  User,
-  Loose
-}
 
 /**
  * Symbol aggregator class.
@@ -119,7 +49,7 @@ export class Aggregator {
    * @returns Returns the corresponding record.
    * @throws Throws an exception when the given record wasn't found.
    */
-  #get(identifier: string): Core.Record {
+  #get(identifier: string): Types.Record {
     if (!this.has(identifier)) {
       throw new Exception(`A record named '${identifier}' doesn't exists.`);
     }
@@ -140,7 +70,7 @@ export class Aggregator {
    * @param identifier Record identifier.
    * @returns Returns the corresponding record or undefined when it doesn't exists.
    */
-  get(identifier: string): Core.Record | undefined {
+  get(identifier: string): Types.Record | undefined {
     return this.#records[identifier] ?? this.#links[identifier];
   }
 
@@ -150,7 +80,7 @@ export class Aggregator {
    * @throws Throws an error when the specified record already exists.
    * @returns Returns the added record.
    */
-  add(record: Core.Record): Core.Record {
+  add(record: Types.Record): Types.Record {
     const { identifier } = record.data;
     if (!identifier || this.has(identifier)) {
       throw new Exception(`A record named '${identifier}' can't be added.`);
@@ -173,7 +103,7 @@ export class Aggregator {
    * @throws Throws an error when the specified alias already exists or the given identifier doesn't exists.
    * @returns Returns the linked record.
    */
-  link(identifier: string, alias: string): Core.Record {
+  link(identifier: string, alias: string): Types.Record {
     if (this.has(identifier)) {
       throw new Exception(`An entry named '${identifier}' already exists.`);
     }
@@ -211,7 +141,7 @@ export class Aggregator {
  * @param record Symbol record.
  * @returns Returns true when the record is an alias, false otherwise.
  */
-export const isAlias = (record: Core.Record): boolean => {
+export const isAlias = (record: Types.Record): boolean => {
   return record.value === Symbols.AliasToken || record.value === Symbols.AliasNode;
 };
 
@@ -220,7 +150,7 @@ export const isAlias = (record: Core.Record): boolean => {
  * @param record Symbol record.
  * @returns Returns true when the record has a dynamic identity, false otherwise.
  */
-export const isDynamic = (record: Core.Record): boolean => {
+export const isDynamic = (record: Types.Record): boolean => {
   return record.data.identity === Core.BaseSource.Output;
 };
 
@@ -229,7 +159,7 @@ export const isDynamic = (record: Core.Record): boolean => {
  * @param record Symbol record.
  * @returns Returns true when the symbol identity is empty, false otherwise.
  */
-export const isEmpty = (record: Core.Record): boolean => {
+export const isEmpty = (record: Types.Record): boolean => {
   return Number.isNaN(record.data.identity);
 };
 
@@ -238,16 +168,17 @@ export const isEmpty = (record: Core.Record): boolean => {
  * @param record System record.
  * @param types Symbol types.
  * @returns Returns true when the record is referenced, false otherwise.
+ * @throws Throws an exception when the given error has no metadata.
  */
-export const isReferencedBy = (record: Core.Record, ...types: Types[]): boolean => {
+export const isReferencedBy = (record: Types.Record, ...types: Types.Directives[]): boolean => {
   const { order, dependents } = record.data;
   let counter = 0;
   for (const dependent of dependents) {
     if (counter > 1 || dependent === record) {
       return true;
     }
-    if (types.includes(dependent.data.type)) {
-      if (order > dependent.data.order) {
+    if (types.includes(dependent.data!.type)) {
+      if (order > dependent.data!.order) {
         return true;
       }
       counter++;

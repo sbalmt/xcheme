@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Project from '../../../core/project';
+import * as Types from '../../../core/types';
 import * as Context from '../../context';
 import * as Loose from '../../loose';
 import * as Nodes from '../../nodes';
@@ -18,7 +19,7 @@ import * as Expression from '../expression';
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   identifier: string,
   state: Context.State
 ): void => {

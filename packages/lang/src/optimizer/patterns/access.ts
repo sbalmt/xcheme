@@ -3,6 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -13,7 +14,7 @@ import { Errors } from '../../core/errors';
  * @param node Access node.
  * @returns Returns an array containing all the member nodes.
  */
-const getAllNodes = (node: Core.Node): Core.Node[] => {
+const getAllNodes = (node: Types.Node): Types.Node[] => {
   if (node.left && node.right) {
     return [...getAllNodes(node.left), ...getAllNodes(node.right!)];
   } else if (node.left) {
@@ -31,8 +32,8 @@ const getAllNodes = (node: Core.Node): Core.Node[] => {
  * @param nodes All members nodes.
  * @returns Returns the corresponding record or undefined when the path wasn't found.
  */
-const getRecord = (project: Project.Context, record: Core.Record, nodes: Core.Node[]): Core.Record | undefined => {
-  let member: Core.Record | undefined = record;
+const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.Node[]): Types.Record | undefined => {
+  let member: Types.Record | undefined = record;
   for (let index = 1; index < nodes.length; index++) {
     const node = nodes[index];
     if (!(member = member.link?.get(node.fragment.data))) {
@@ -49,9 +50,10 @@ const getRecord = (project: Project.Context, record: Core.Record, nodes: Core.No
  * @param parent Parent node.
  * @param record Node record.
  */
-const emit = (direction: Core.Nodes, parent: Core.Node, record: Core.Record): void => {
+const emit = (direction: Core.Nodes, parent: Types.Node, record: Types.Record): void => {
   const node = parent.get(direction)!;
-  const replacement = new Nodes.Reference(node, record.data.identity);
+  const { identity } = record.data;
+  const replacement = new Nodes.Reference(node, identity);
   parent.set(direction, replacement);
 };
 
@@ -65,7 +67,7 @@ const emit = (direction: Core.Nodes, parent: Core.Node, record: Core.Record): vo
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
@@ -76,7 +78,7 @@ export const consume = (
   } else {
     const record = getRecord(project, first, nodes);
     if (record) {
-      if (state.type !== Symbols.Types.Node || record.data.type === Symbols.Types.Node) {
+      if (state.type !== Types.Directives.Node || record.data.type === Types.Directives.Node) {
         project.addError(record.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
       } else if (Symbols.isDynamic(record)) {
         project.addError(record.fragment, Errors.INVALID_MAP_REFERENCE);

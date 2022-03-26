@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
-import * as Symbols from '../../../core/symbols';
+import * as Types from '../../../core/types';
 import * as Parser from '../../../parser';
 import * as Context from '../../context';
 
@@ -14,7 +14,7 @@ import * as Expression from '../expression';
  * @param operator Operator type.
  * @returns Returns true when the node is mergeable, false otherwise.
  */
-const canMergeUnits = (node: Core.Node, operator: Parser.Nodes): boolean => {
+const canMergeUnits = (node: Types.Node, operator: Parser.Nodes): boolean => {
   if (node.value === operator) {
     if (!(node instanceof Nodes.Sequence)) {
       return canMergeUnits(node.left!, operator) && canMergeUnits(node.right!, operator);
@@ -30,7 +30,7 @@ const canMergeUnits = (node: Core.Node, operator: Parser.Nodes): boolean => {
  * @param operator Operator type.
  * @returns Returns true when the node is mergeable, false otherwise.
  */
-const canMergeReferences = (node: Core.Node, operator: Parser.Nodes): boolean => {
+const canMergeReferences = (node: Types.Node, operator: Parser.Nodes): boolean => {
   if (node.value === operator) {
     if (!(node instanceof Nodes.Sequence)) {
       return canMergeReferences(node.left!, operator) && canMergeReferences(node.right!, operator);
@@ -46,7 +46,7 @@ const canMergeReferences = (node: Core.Node, operator: Parser.Nodes): boolean =>
  * @param parent Parent node.
  * @param type Node type.
  */
-const emit = (direction: Core.Nodes, parent: Core.Node, type: Parser.Nodes): void => {
+const emit = (direction: Core.Nodes, parent: Types.Node, type: Parser.Nodes): void => {
   const node = parent.get(direction)!;
   const replacement = new Nodes.Sequence(node, type);
   parent.set(direction, replacement);
@@ -63,7 +63,7 @@ const emit = (direction: Core.Nodes, parent: Core.Node, type: Parser.Nodes): voi
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   operator: Parser.Nodes,
   state: Context.State
 ): void => {
@@ -73,7 +73,7 @@ export const consume = (
   } else {
     Expression.consume(project, Core.Nodes.Left, node, state);
     Expression.consume(project, Core.Nodes.Right, node, state);
-    if (state.type !== Symbols.Types.Node) {
+    if (state.type !== Types.Directives.Node) {
       if (canMergeUnits(node, operator)) {
         emit(direction, parent, Parser.Nodes.String);
       }

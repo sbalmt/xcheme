@@ -1,9 +1,8 @@
-import * as Core from '@xcheme/core';
-
 import * as Nodes from '../core/nodes';
 import * as Coder from '../core/coder/base';
 import * as String from '../core/string';
 import * as Project from '../core/project';
+import * as Types from '../core/types';
 import * as Parser from '../parser';
 import * as Context from './context';
 
@@ -38,7 +37,7 @@ const split = (project: Project.Context, node: Nodes.Sequence, state: Context.St
  * @param state Consumption state.
  * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
-const traverse = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern[] | undefined => {
+const traverse = (project: Project.Context, node: Types.Node, state: Context.State): Coder.Pattern[] | undefined => {
   const left = resolve(project, node.left!, state);
   if (left) {
     const right = resolve(project, node.right!, state);
@@ -58,7 +57,7 @@ const traverse = (project: Project.Context, node: Core.Node, state: Context.Stat
  */
 export const resolve = (
   project: Project.Context,
-  node: Core.Node,
+  node: Types.Node,
   state: Context.State
 ): Coder.Pattern[] | undefined => {
   if (node.value === Parser.Nodes.And) {

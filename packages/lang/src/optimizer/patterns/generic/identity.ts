@@ -3,6 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
 import * as Symbols from '../../../core/symbols';
+import * as Types from '../../../core/types';
 import * as Parser from '../../../parser';
 import * as Identity from '../../identity';
 import * as Context from '../../context';
@@ -21,7 +22,7 @@ import { Errors } from '../../../core/errors';
 const emit = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   identity: number,
   state: Context.State
 ): void => {
@@ -30,7 +31,7 @@ const emit = (
   const replacement = new Nodes.Identity(node, identity);
   parent.set(direction, replacement);
   if (Symbols.isEmpty(record) && replacement.empty) {
-    if (record.data.type !== Symbols.Types.Skip) {
+    if (record.data.type !== Types.Directives.Skip) {
       project.addError(state.record!.fragment, Errors.UNDEFINED_IDENTITY);
     }
     project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
@@ -47,7 +48,7 @@ const emit = (
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;

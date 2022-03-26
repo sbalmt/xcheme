@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -38,7 +39,11 @@ import * as Peek from './peek';
  * @returns Returns the resolved pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern | undefined => {
+export const consume = (
+  project: Project.Context,
+  node: Types.Node,
+  state: Context.State
+): Coder.Pattern | undefined => {
   switch (node.value) {
     case Parser.Nodes.Reference:
       return Reference.consume(project, node, state);

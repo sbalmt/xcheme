@@ -3,6 +3,7 @@ import * as Core from '@xcheme/core';
 import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
+import * as Types from '../../core/types';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
@@ -16,7 +17,7 @@ import * as Expression from './expression';
  * @param parent Parent node.
  * @param state Consumption state.
  */
-const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node, state: Context.State): void => {
+const emit = (project: Project.Context, direction: Core.Nodes, parent: Types.Node, state: Context.State): void => {
   const node = parent.get(direction)!;
   const replacement = new Nodes.Directive(node, state.record!);
   parent.set(direction, replacement);
@@ -33,7 +34,7 @@ const emit = (project: Project.Context, direction: Core.Nodes, parent: Core.Node
 export const consume = (
   project: Project.Context,
   direction: Core.Nodes,
-  parent: Core.Node,
+  parent: Types.Node,
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
@@ -43,7 +44,7 @@ export const consume = (
   } else {
     const record = node.table.get(identifier)!;
     state.record = record;
-    state.type = Symbols.Types.Node;
+    state.type = Types.Directives.Node;
     Context.setMetadata(project, identifier, record, state);
     if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);

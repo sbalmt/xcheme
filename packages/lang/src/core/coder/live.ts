@@ -1,5 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import * as Types from '../types';
+
 import { Base } from './base';
 
 /**
@@ -13,7 +15,7 @@ type Reference = {
   /**
    * Reference pattern.
    */
-  pattern: Core.Pattern;
+  pattern: Types.Pattern;
 };
 
 /**
@@ -27,7 +29,7 @@ export class Live extends Base {
    * @param patterns Entry patterns.
    * @returns Returns the pattern.
    */
-  getEntry(identifier: string, references: Reference[], patterns: Core.Pattern[]): Core.Pattern {
+  getEntry(identifier: string, references: Reference[], patterns: Types.Pattern[]): Types.Pattern {
     return new Core.ExpectFlowPattern(
       new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))),
       new Core.EndFlowPattern()
@@ -41,7 +43,7 @@ export class Live extends Base {
    * @param pattern Optional route pattern.
    * @returns Returns the route.
    */
-  getRoute(path: (string | number)[], value?: number, pattern?: Core.Pattern): Core.Route {
+  getRoute(path: (string | number)[], value?: number, pattern?: Types.Pattern): Types.Route {
     const [test, ...remaining] = path;
     if (value) {
       if (pattern) {
@@ -60,7 +62,7 @@ export class Live extends Base {
    * @param routes Map routes.
    * @returns Returns the pattern.
    */
-  emitMapPattern(...routes: Core.Route[]): Core.Pattern {
+  emitMapPattern(...routes: Types.Route[]): Types.Pattern {
     return new Core.MapFlowPattern(...routes);
   }
 
@@ -70,7 +72,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitTokenPattern(identity: string | number, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitTokenPattern(identity: string | number, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitTokenPattern(identity, ...patterns);
   }
 
@@ -81,7 +83,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitNodePattern(identity, output, ...patterns);
   }
 
@@ -91,7 +93,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitIdentityPattern(identity: string | number, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitIdentityPattern(identity: string | number, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.UseValuePattern(identity, ...patterns);
   }
 
@@ -102,7 +104,7 @@ export class Live extends Base {
    * @param failure Failure pattern.
    * @returns Returns the pattern.
    */
-  emitConditionPattern(test: Core.Pattern, success: Core.Pattern, failure?: Core.Pattern): Core.Pattern {
+  emitConditionPattern(test: Types.Pattern, success: Types.Pattern, failure?: Types.Pattern): Types.Pattern {
     return new Core.ConditionFlowPattern(test, success, failure);
   }
 
@@ -111,7 +113,7 @@ export class Live extends Base {
    * @param patterns Possible patterns.
    * @returns Returns the pattern.
    */
-  emitChoosePattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitChoosePattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.ChooseFlowPattern(...patterns);
   }
 
@@ -120,7 +122,7 @@ export class Live extends Base {
    * @param units Possible units.
    * @returns Returns the pattern.
    */
-  emitChooseUnitsPattern(units: (string | number)[]): Core.Pattern {
+  emitChooseUnitsPattern(units: (string | number)[]): Types.Pattern {
     return new Core.ChooseUnitPattern(...units);
   }
 
@@ -129,7 +131,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitExpectPattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitExpectPattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.ExpectFlowPattern(...patterns);
   }
 
@@ -138,7 +140,7 @@ export class Live extends Base {
    * @param units Expected units.
    * @returns Returns the pattern.
    */
-  emitExpectUnitsPattern(units: (string | number)[]): Core.Pattern {
+  emitExpectUnitsPattern(units: (string | number)[]): Types.Pattern {
     return new Core.ExpectUnitPattern(...units);
   }
 
@@ -147,7 +149,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitNotPattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitNotPattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.NotFlowPattern(...patterns);
   }
 
@@ -156,7 +158,7 @@ export class Live extends Base {
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  emitOptPattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitOptPattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.OptFlowPattern(...patterns);
   }
 
@@ -165,7 +167,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitRepeatPattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitRepeatPattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.RepeatFlowPattern(...patterns);
   }
 
@@ -175,7 +177,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitPlacePattern(current: Core.Nodes, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitPlacePattern(current: Core.Nodes, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.PlaceNodePattern(current, ...patterns);
   }
 
@@ -190,9 +192,9 @@ export class Live extends Base {
   emitAppendPattern(
     identity: string | number,
     current: Core.Nodes,
-    head: Core.Pattern,
-    ...patterns: Core.Pattern[]
-  ): Core.Pattern {
+    head: Types.Pattern,
+    ...patterns: Types.Pattern[]
+  ): Types.Pattern {
     return new Core.AppendNodePattern(identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
@@ -207,9 +209,9 @@ export class Live extends Base {
   emitPrependPattern(
     identity: string | number,
     current: Core.Nodes,
-    head: Core.Pattern,
-    ...patterns: Core.Pattern[]
-  ): Core.Pattern {
+    head: Types.Pattern,
+    ...patterns: Types.Pattern[]
+  ): Types.Pattern {
     return new Core.PrependNodePattern(identity, Core.Nodes.Right, current, head, ...patterns);
   }
 
@@ -220,7 +222,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitPivotPattern(identity: string | number, pivot: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitPivotPattern(identity: string | number, pivot: Types.Pattern, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.PivotNodePattern(identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
   }
 
@@ -231,7 +233,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitSymbolPattern(identity: string | number, symbol: Core.Pattern, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitSymbolPattern(identity: string | number, symbol: Types.Pattern, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitSymbolPattern(identity, symbol, ...patterns);
   }
 
@@ -240,7 +242,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitScopePattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitScopePattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.ScopeSymbolPattern(...patterns);
   }
 
@@ -250,7 +252,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitErrorPattern(value: number, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitErrorPattern(value: number, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitErrorPattern(value, ...patterns);
   }
 
@@ -260,7 +262,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitHasPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitHasPattern(state: number, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.HasStatePattern(state, ...patterns);
   }
 
@@ -270,7 +272,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitSetPattern(state: number, ...patterns: Core.Pattern[]): Core.Pattern {
+  emitSetPattern(state: number, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.SetStatePattern(state, ...patterns);
   }
 
@@ -279,7 +281,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitUncasePattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitUncasePattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.UncaseTransformPattern(...patterns);
   }
 
@@ -288,7 +290,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitPeekPattern(...patterns: Core.Pattern[]): Core.Pattern {
+  emitPeekPattern(...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.PeekFlowPattern(...patterns);
   }
 
@@ -297,19 +299,19 @@ export class Live extends Base {
    * @param record Referenced record.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(record: Core.Record): Core.Pattern {
+  emitReferencePattern(record: Types.Record): Types.Pattern {
     const data = record.data;
     if (!data.pattern) {
-      return new Core.RunFlowPattern(() => data.pattern as Core.Pattern);
+      return new Core.RunFlowPattern(() => data.pattern as Types.Pattern);
     }
-    return data.pattern as Core.Pattern;
+    return data.pattern as Types.Pattern;
   }
 
   /**
    * Get a new any pattern.
    * @returns Returns the pattern.
    */
-  emitAnyPattern(): Core.Pattern {
+  emitAnyPattern(): Types.Pattern {
     return new Core.AnyUnitPattern();
   }
 
@@ -319,7 +321,7 @@ export class Live extends Base {
    * @param to To unit value.
    * @returns Returns the pattern.
    */
-  emitRangePattern(from: string | number, to: string | number): Core.Pattern {
+  emitRangePattern(from: string | number, to: string | number): Types.Pattern {
     return new Core.RangeUnitPattern(from, to);
   }
 }

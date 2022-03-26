@@ -1,16 +1,18 @@
 import * as Core from '@xcheme/core';
 
+import * as Types from '../types';
+
 import { Exception } from '../exception';
 
 /**
  * Pattern entry.
  */
-export type Pattern = string | Core.Pattern;
+export type Pattern = string | Types.Pattern;
 
 /**
  * Route entry.
  */
-export type Route = string | Core.Route;
+export type Route = string | Types.Route;
 
 /**
  * Reference entry type.
@@ -283,7 +285,7 @@ export class Base {
    * @param record Referenced record.
    * @returns Should return the pattern.
    */
-  emitReferencePattern(record: Core.Record): Pattern {
+  emitReferencePattern(record: Types.Record): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
 

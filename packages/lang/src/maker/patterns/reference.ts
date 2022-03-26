@@ -1,9 +1,8 @@
-import * as Core from '@xcheme/core';
-
 import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
+import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
@@ -16,8 +15,8 @@ import { Exception } from '../../core/exception';
  * @param state Consumption state.
  * @returns Returns the corresponding reference pattern.
  */
-const resolve = (project: Project.Context, record: Core.Record, state: Context.State): Coder.Pattern => {
-  const identity = record.data.identity;
+const resolve = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
+  const { identity } = record.data;
   const reference = project.coder.emitReferencePattern(record);
   if (state.dynamic && !Symbols.isEmpty(record) && !Symbols.isDynamic(record)) {
     return project.coder.emitIdentityPattern(identity, reference);
@@ -33,7 +32,7 @@ const resolve = (project: Project.Context, record: Core.Record, state: Context.S
  * @returns Returns the corresponding reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveSkip = (project: Project.Context, record: Core.Record, state: Context.State): Coder.Pattern => {
+const resolveSkip = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
   if (record.value !== Parser.Symbols.AliasToken) {
     throw new Exception('The SKIP directive can only accept alias token references.');
   }
@@ -48,7 +47,7 @@ const resolveSkip = (project: Project.Context, record: Core.Record, state: Conte
  * @returns Returns the corresponding reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveToken = (project: Project.Context, record: Core.Record, state: Context.State): Coder.Pattern => {
+const resolveToken = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
   if (record.value !== Parser.Symbols.Token && record.value !== Parser.Symbols.AliasToken) {
     throw new Exception('The TOKEN directive can only accept token and alias token references.');
   }
@@ -66,8 +65,8 @@ const resolveToken = (project: Project.Context, record: Core.Record, state: Cont
  */
 const resolveNode = (
   project: Project.Context,
-  node: Core.Node,
-  record: Core.Record,
+  node: Types.Node,
+  record: Types.Record,
   state: Context.State
 ): Coder.Pattern => {
   if (record.value !== Parser.Symbols.Node && record.value !== Parser.Symbols.AliasNode) {
@@ -87,7 +86,7 @@ const resolveNode = (
  * @returns Returns the resolved pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-export const consume = (project: Project.Context, node: Core.Node, state: Context.State): Coder.Pattern => {
+export const consume = (project: Project.Context, node: Types.Node, state: Context.State): Coder.Pattern => {
   const identifier = node.fragment.data;
   const record = node.table.find(identifier);
   if (!record) {
@@ -95,11 +94,11 @@ export const consume = (project: Project.Context, node: Core.Node, state: Contex
   }
   const directive = state.directive;
   switch (directive.type) {
-    case Symbols.Types.Skip:
+    case Types.Directives.Skip:
       return resolveSkip(project, record, state);
-    case Symbols.Types.Token:
+    case Types.Directives.Token:
       return resolveToken(project, record, state);
-    case Symbols.Types.Node:
+    case Types.Directives.Node:
       return resolveNode(project, node, record, state);
     default:
       throw new Exception(`Unsupported directive type (${directive.type}).`);
