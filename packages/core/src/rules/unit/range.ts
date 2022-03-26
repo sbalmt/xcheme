@@ -6,7 +6,7 @@ import Uncase from '../transform/uncase';
 /**
  * Consume one unit that is in the range accepted by the pattern.
  */
-export default class Range extends Pattern {
+export default class Range<R extends object> extends Pattern<R> {
   /**
    * Beginning of the boundary unit.
    */
@@ -33,7 +33,7 @@ export default class Range extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     if (source.length > 0) {
       const unit = Uncase.transform(source.value);
       if (unit >= this.#begin && unit <= this.#end) {

@@ -10,7 +10,7 @@ import Table from '../core/table';
 /**
  * Source output structure.
  */
-type Output = {
+type Output<R extends object> = {
   /**
    * Output state.
    */
@@ -19,12 +19,12 @@ type Output = {
   /**
    * Output table.
    */
-  table: Table;
+  table: Table<R>;
 
   /**
    * Record link table.
    */
-  link?: Table;
+  link?: Table<R>;
 
   /**
    * Output value.
@@ -34,27 +34,27 @@ type Output = {
   /**
    * Output node.
    */
-  node?: Node;
+  node?: Node<R>;
 };
 
 /**
  * Base of any data source for the analysis process.
  */
-export default class Base {
+export default class Base<R extends object> {
   /**
    * Source context.
    */
-  #context: Context;
+  #context: Context<R>;
 
   /**
    * Current symbol table manager.
    */
-  #table: Table;
+  #table: Table<R>;
 
   /**
    * Current source output.
    */
-  #output: Output;
+  #output: Output<R>;
 
   /**
    * Magic value for getting the current output value from the current source.
@@ -67,7 +67,7 @@ export default class Base {
    * Default constructor.
    * @param context Source context.
    */
-  constructor(context: Context) {
+  constructor(context: Context<R>) {
     this.#context = context;
     this.#table = context.table;
     this.#output = {
@@ -86,7 +86,7 @@ export default class Base {
   /**
    * Get the current source output.
    */
-  get output(): Output {
+  get output(): Output<R> {
     return this.#output;
   }
 
@@ -151,7 +151,7 @@ export default class Base {
    * @param product Input product.
    * @throws Throws an error when the given product isn't supported.
    */
-  emit(product: Error | Token | Node | Record): void {
+  emit(product: Error | Token | Node<R> | Record<R>): void {
     if (product instanceof Error) {
       this.#context.errors.push(product);
     } else if (product instanceof Token) {

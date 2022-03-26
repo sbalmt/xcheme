@@ -4,18 +4,18 @@ import Record from './record';
 /**
  * Internal record map.
  */
-type Records = {
-  [name: string]: Record;
+type Records<R extends object> = {
+  [name: string]: Record<R>;
 };
 
 /**
  * A symbol table for storing symbol records generated during the analysis process.
  */
-export default class Table {
+export default class Table<R extends object> {
   /**
    * Table of records.
    */
-  #records: Records = {};
+  #records: Records<R> = {};
 
   /**
    * Table length.
@@ -25,13 +25,13 @@ export default class Table {
   /**
    * Parent table.
    */
-  #parent: Table | undefined;
+  #parent: Table<R> | undefined;
 
   /**
    * Default constructor.
    * @param parent Parent table.
    */
-  constructor(parent?: Table) {
+  constructor(parent?: Table<R>) {
     this.#parent = parent;
   }
 
@@ -52,7 +52,7 @@ export default class Table {
   /**
    * Get the parent table.
    */
-  get parent(): Table | undefined {
+  get parent(): Table<R> | undefined {
     return this.#parent;
   }
 
@@ -70,7 +70,7 @@ export default class Table {
    * @param name Symbol record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
-  get(name: Fragment | string): Record | undefined {
+  get(name: Fragment | string): Record<R> | undefined {
     return this.#records[name instanceof Fragment ? name.data : name];
   }
 
@@ -80,7 +80,7 @@ export default class Table {
    * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
    * @returns Returns the given symbol record.
    */
-  add(record: Record): Record {
+  add(record: Record<R>): Record<R> {
     const name = record.fragment.data;
     if (this.#records[name]) {
       throw 'Unable to add records with duplicate name.';
@@ -95,7 +95,7 @@ export default class Table {
    * @param name Symbol record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
-  find(name: Fragment | string): Record | undefined {
+  find(name: Fragment | string): Record<R> | undefined {
     const record = this.get(name);
     if (!record && this.#parent) {
       return this.#parent.find(name);

@@ -5,11 +5,11 @@ import Pattern from '../pattern';
 /**
  * Change the current output value and Consume all the given patterns.
  */
-export default class Use extends Pattern {
+export default class Use<R extends object> extends Pattern<R> {
   /**
    * Target pattern.
    */
-  #target: Pattern;
+  #target: Pattern<R>;
 
   /**
    * Output value.
@@ -21,7 +21,7 @@ export default class Use extends Pattern {
    * @param value New value.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, ...patterns: Pattern[]) {
+  constructor(value: string | number, ...patterns: Pattern<R>[]) {
     super();
     this.#target = new Expect(...patterns);
     this.#value = value;
@@ -32,7 +32,7 @@ export default class Use extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     source.output.value = this.#value;
     return this.#target.consume(source);
   }

@@ -19,7 +19,7 @@ type State = {
 /**
  * Data source for processing tokens during the analysis.
  */
-export default class TokenSource extends Base {
+export default class TokenSource<R extends object> extends Base<R> {
   /**
    * Source data.
    */
@@ -45,7 +45,7 @@ export default class TokenSource extends Base {
    * @param data Source data.
    * @param context Source context.
    */
-  constructor(data: Token[], context: Context) {
+  constructor(data: Token[], context: Context<R>) {
     super(context);
     this.#data = data;
   }

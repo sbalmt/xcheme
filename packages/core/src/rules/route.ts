@@ -3,11 +3,11 @@ import type Pattern from './pattern';
 /**
  * Base of any route for using together with map patterns.
  */
-export default class Route {
+export default class Route<R extends object> {
   /**
    * Route pattern.
    */
-  #pattern: Pattern | null;
+  #pattern: Pattern<R> | null;
 
   /**
    * Route units.
@@ -20,7 +20,7 @@ export default class Route {
    * @param first First route unit.
    * @param units Remaining route units.
    */
-  constructor(pattern: Pattern | null, first: string | number, ...units: (string | number)[]) {
+  constructor(pattern: Pattern<R> | null, first: string | number, ...units: (string | number)[]) {
     this.#pattern = pattern;
     this.#units = [first, ...units];
   }
@@ -28,7 +28,7 @@ export default class Route {
   /**
    * Get the route pattern.
    */
-  get pattern(): Pattern | null {
+  get pattern(): Pattern<R> | null {
     return this.#pattern;
   }
 

@@ -7,7 +7,7 @@ import Uncase from '../transform/uncase';
 /**
  * Internal map node.
  */
-type Node = {
+type Node<R extends object> = {
   /**
    * Node value.
    */
@@ -15,29 +15,29 @@ type Node = {
   /**
    * Node pattern.
    */
-  pattern?: Pattern | null;
+  pattern?: Pattern<R> | null;
   /**
    * Left child node.
    */
-  left?: Node;
+  left?: Node<R>;
   /**
    * Right child node.
    */
-  right?: Node;
+  right?: Node<R>;
   /**
    * Next child node.
    */
-  next?: Node;
+  next?: Node<R>;
 };
 
 /**
  * Consume the first route that match in the list of routes given for this pattern.
  */
-export default class Map extends Pattern {
+export default class Map<R extends object> extends Pattern<R> {
   /**
    * Root node.
    */
-  #root: Node | undefined;
+  #root: Node<R> | undefined;
 
   /**
    * Compare the given inputs and returns the difference between both of them.
@@ -58,9 +58,9 @@ export default class Map extends Pattern {
    * @param units Input units.
    * @returns Returns the corresponding node or undefined when it wasn't found.
    */
-  #getNode(units: (string | number)[]): Node | undefined {
+  #getNode(units: (string | number)[]): Node<R> | undefined {
     let current = this.#root;
-    let previous: Node | undefined = void 0;
+    let previous: Node<R> | undefined = void 0;
     for (let index = 0; index < units.length; ) {
       if (!current) {
         return void 0;
@@ -85,7 +85,7 @@ export default class Map extends Pattern {
    * @param units Input units.
    * @returns Returns the terminal node or undefined when the given units are empty.
    */
-  #setNode(units: (string | number)[]): Node {
+  #setNode(units: (string | number)[]): Node<R> {
     let current = this.#root;
     let previous = current;
     let selected = current;
@@ -132,7 +132,7 @@ export default class Map extends Pattern {
    * @param current Current node.
    * @returns Returns the corresponding node or undefined when it wasn't found.
    */
-  #findNode(source: Base, current: Node | undefined): Node | undefined {
+  #findNode(source: Base<R>, current: Node<R> | undefined): Node<R> | undefined {
     source.save();
     while (current && source.length > 0) {
       const unit = Uncase.transform(source.value);
@@ -160,7 +160,7 @@ export default class Map extends Pattern {
    * @param source Data source.
    * @returns Returns the consumption node or undefined when the given source doesn't match any route.
    */
-  #getLongestConsumptionNode(source: Base): Node | undefined {
+  #getLongestConsumptionNode(source: Base<R>): Node<R> | undefined {
     let current = this.#root;
     let longest;
     while ((current = this.#findNode(source, current))) {
@@ -175,7 +175,7 @@ export default class Map extends Pattern {
    * Default constructor.
    * @param routes List of routes.
    */
-  constructor(...routes: Route[]) {
+  constructor(...routes: Route<R>[]) {
     super();
     for (const route of routes) {
       const node = this.#getNode(route.units) ?? this.#setNode(route.units);
@@ -188,7 +188,7 @@ export default class Map extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     const node = this.#getLongestConsumptionNode(source);
     if (node) {
       if (node.pattern) {

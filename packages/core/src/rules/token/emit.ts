@@ -6,11 +6,11 @@ import Pattern from '../pattern';
 /**
  * Consume all the given patterns and, in case of success, it will emit a new token into the current token list.
  */
-export default class Emit extends Pattern {
+export default class Emit<R extends object> extends Pattern<R> {
   /**
    * Target pattern.
    */
-  #target: Pattern;
+  #target: Pattern<R>;
 
   /**
    * Token value.
@@ -22,9 +22,9 @@ export default class Emit extends Pattern {
    * @param value Token value.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, ...patterns: Pattern[]) {
+  constructor(value: string | number, ...patterns: Pattern<R>[]) {
     super();
-    this.#target = new Expect(...patterns);
+    this.#target = new Expect<R>(...patterns);
     this.#value = value;
   }
 
@@ -33,7 +33,7 @@ export default class Emit extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     source.save();
     const status = this.#target.consume(source);
     if (status) {

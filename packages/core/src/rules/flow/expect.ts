@@ -5,17 +5,17 @@ import Pattern from '../pattern';
 /**
  * Consume all patterns that are expected by this pattern.
  */
-export default class Expect extends Pattern {
+export default class Expect<R extends object> extends Pattern<R> {
   /**
    * Target patterns.
    */
-  #targets: Pattern[];
+  #targets: Pattern<R>[];
 
   /**
    * Default constructor.
    * @param patterns Sequence of patterns.
    */
-  constructor(...patterns: Pattern[]) {
+  constructor(...patterns: Pattern<R>[]) {
     super();
     this.#targets = patterns;
   }
@@ -25,7 +25,7 @@ export default class Expect extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     for (const target of this.#targets) {
       if (!target.consume(source)) {
         return false;

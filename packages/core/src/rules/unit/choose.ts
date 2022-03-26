@@ -6,7 +6,7 @@ import Uncase from '../transform/uncase';
 /**
  * Consume one unit that is between all the acceptable units in the pattern.
  */
-export default class Choose extends Pattern {
+export default class Choose<R extends object> extends Pattern<R> {
   /**
    * Set of units.
    */
@@ -26,7 +26,7 @@ export default class Choose extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     if (source.length > 0) {
       const unit = Uncase.transform(source.value);
       if (this.#units.has(unit)) {

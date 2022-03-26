@@ -3,7 +3,7 @@ import Base from '../route';
 /**
  * Produce a route to consume units.
  */
-export default class Route extends Base {
+export default class Route<R extends object> extends Base<R> {
   /**
    * Default constructor.
    * @param first First route unit.

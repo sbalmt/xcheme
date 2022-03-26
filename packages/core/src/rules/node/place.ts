@@ -8,11 +8,11 @@ import Expect from '../flow/expect';
  * Consume all the given patterns and, in case of success,
  * it places the resulting node into the source output node.
  */
-export default class Place extends Pattern {
+export default class Place<R extends object> extends Pattern<R> {
   /**
    * Target pattern.
    */
-  #target: Pattern;
+  #target: Pattern<R>;
 
   /**
    * Child node destination.
@@ -24,9 +24,9 @@ export default class Place extends Pattern {
    * @param current Child destination in the current node.
    * @param patterns Sequence of patterns.
    */
-  constructor(current: Nodes, ...patterns: Pattern[]) {
+  constructor(current: Nodes, ...patterns: Pattern<R>[]) {
     super();
-    this.#target = new Expect(...patterns);
+    this.#target = new Expect<R>(...patterns);
     this.#current = current;
   }
 
@@ -35,7 +35,7 @@ export default class Place extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     const output = source.output;
     let current = output.node;
     output.node = void 0;

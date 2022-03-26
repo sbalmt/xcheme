@@ -2,12 +2,21 @@ import type Fragment from './fragment';
 import type Table from './table';
 
 /**
- * Internal nodes structure.
+ * Internal children nodes.
  */
-type AllNodes = {
-  [Nodes.Left]?: Node;
-  [Nodes.Right]?: Node;
-  [Nodes.Next]?: Node;
+type Children<R extends object> = {
+  /**
+   * Left child node.
+   */
+  [Nodes.Left]?: Node<R>;
+  /**
+   * Right child node.
+   */
+  [Nodes.Right]?: Node<R>;
+  /**
+   * Next child node.
+   */
+  [Nodes.Next]?: Node<R>;
 };
 
 /**
@@ -22,11 +31,11 @@ export const enum Nodes {
 /**
  * A node product to compose the AST generated in the analysis process.
  */
-export default class Node {
+export default class Node<R extends object> {
   /**
    * Node children.
    */
-  #children: AllNodes = {};
+  #children: Children<R> = {};
 
   /**
    * Node fragment.
@@ -41,7 +50,7 @@ export default class Node {
   /**
    * Node symbol table.
    */
-  #table: Table;
+  #table: Table<R>;
 
   /**
    * Default constructor
@@ -49,7 +58,7 @@ export default class Node {
    * @param value Node value.
    * @param table Node table.
    */
-  constructor(fragment: Fragment, value: string | number, table: Table) {
+  constructor(fragment: Fragment, value: string | number, table: Table<R>) {
     this.#fragment = fragment;
     this.#table = table;
     this.#value = value;
@@ -72,28 +81,28 @@ export default class Node {
   /**
    * Get the symbol table associated to the node.
    */
-  get table(): Table {
+  get table(): Table<R> {
     return this.#table;
   }
 
   /**
    * Get the child node on the left.
    */
-  get left(): Node | undefined {
+  get left(): Node<R> | undefined {
     return this.#children[Nodes.Left];
   }
 
   /**
    * Get the child node on the right.
    */
-  get right(): Node | undefined {
+  get right(): Node<R> | undefined {
     return this.#children[Nodes.Right];
   }
 
   /**
    * Get the child node on the next.
    */
-  get next(): Node | undefined {
+  get next(): Node<R> | undefined {
     return this.#children[Nodes.Next];
   }
 
@@ -101,7 +110,7 @@ export default class Node {
    * Swap all the currently node properties by all properties from the given one.
    * @param node Input node.
    */
-  swap(node: Node): void {
+  swap(node: Node<R>): void {
     [this.#children, node.#children] = [node.#children, this.#children];
     [this.#fragment, node.#fragment] = [node.#fragment, this.#fragment];
     [this.#table, node.#table] = [node.#table, this.#table];
@@ -113,7 +122,7 @@ export default class Node {
    * @param child Child node direction.
    * @returns Return the corresponding child node.
    */
-  get(child: Nodes): Node | undefined {
+  get(child: Nodes): Node<R> | undefined {
     return this.#children[child];
   }
 
@@ -122,7 +131,7 @@ export default class Node {
    * @param child Child node direction.
    * @param node New child node.
    */
-  set(child: Nodes, node: Node | undefined): void {
+  set(child: Nodes, node: Node<R> | undefined): void {
     this.#children[child] = node;
   }
 
@@ -131,8 +140,8 @@ export default class Node {
    * @param child Child node direction.
    * @returns Returns the corresponding child node.
    */
-  lowest(child: Nodes): Node | undefined {
-    let current: Node | undefined = this;
+  lowest(child: Nodes): Node<R> | undefined {
+    let current: Node<R> | undefined = this;
     let node;
     while ((current = current.get(child))) {
       node = current;
@@ -144,7 +153,7 @@ export default class Node {
    * Iterable generator.
    */
   *[Symbol.iterator]() {
-    let node: Node | undefined = this;
+    let node: Node<R> | undefined = this;
     do {
       yield node;
       node = node.next;

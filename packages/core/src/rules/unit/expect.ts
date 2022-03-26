@@ -6,7 +6,7 @@ import Uncase from '../transform/uncase';
 /**
  * Consume all the units that are expected by the pattern.
  */
-export default class Expect extends Pattern {
+export default class Expect<R extends object> extends Pattern<R> {
   /**
    * Array of units.
    */
@@ -26,7 +26,7 @@ export default class Expect extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     for (const unit of this.#units) {
       if (source.length === 0 || unit !== Uncase.transform(source.value)) {
         return false;

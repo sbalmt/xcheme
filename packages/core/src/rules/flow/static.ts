@@ -5,7 +5,7 @@ import Pattern from '../pattern';
 /**
  * Doesn't consume anything and returns the static state given for this pattern.
  */
-export default class Static extends Pattern {
+export default class Static<R extends object> extends Pattern<R> {
   /**
    * Static value.
    */
@@ -25,7 +25,7 @@ export default class Static extends Pattern {
    * @param source Data source.
    * @returns Returns the static result.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     return this.#value;
   }
 }

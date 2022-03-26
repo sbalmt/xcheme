@@ -5,11 +5,11 @@ import Pattern from '../pattern';
 /**
  * Consume all the given patterns when the specified state value is defined.
  */
-export default class Has extends Pattern {
+export default class Has<R extends object> extends Pattern<R> {
   /**
    * Target pattern.
    */
-  #target: Pattern;
+  #target: Pattern<R>;
 
   /**
    * State value.
@@ -21,9 +21,9 @@ export default class Has extends Pattern {
    * @param value State value.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, ...patterns: Pattern[]) {
+  constructor(value: number, ...patterns: Pattern<R>[]) {
     super();
-    this.#target = new Expect(...patterns);
+    this.#target = new Expect<R>(...patterns);
     this.#value = value;
   }
 
@@ -32,7 +32,7 @@ export default class Has extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     if (source.output.state === this.#value) {
       return this.#target.consume(source);
     }

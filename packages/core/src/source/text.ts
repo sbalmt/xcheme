@@ -28,7 +28,7 @@ type State = {
 /**
  * Data source for processing texts during the analysis process.
  */
-export default class Text extends Base {
+export default class Text<R extends object> extends Base<R> {
   /**
    * Source data.
    */
@@ -54,7 +54,7 @@ export default class Text extends Base {
    * @param data Source data.
    * @param context Source context.
    */
-  constructor(data: string, context: Context) {
+  constructor(data: string, context: Context<R>) {
     super(context);
     this.#data = data;
   }

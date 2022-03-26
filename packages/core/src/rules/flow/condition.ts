@@ -7,21 +7,21 @@ import Try from './try';
  * Consume the test pattern and, in case of success, it also consumes the success pattern.
  * Otherwise, it will consume the failure pattern (when specified).
  */
-export default class Condition extends Pattern {
+export default class Condition<R extends object> extends Pattern<R> {
   /**
    * Test pattern.
    */
-  #test: Pattern;
+  #test: Pattern<R>;
 
   /**
    * Success pattern.
    */
-  #success: Pattern;
+  #success: Pattern<R>;
 
   /**
    * Failure pattern.
    */
-  #failure?: Pattern;
+  #failure?: Pattern<R>;
 
   /**
    * Default constructor.
@@ -29,9 +29,9 @@ export default class Condition extends Pattern {
    * @param success Success pattern.
    * @param failure Failure pattern.
    */
-  constructor(test: Pattern, success: Pattern, failure?: Pattern) {
+  constructor(test: Pattern<R>, success: Pattern<R>, failure?: Pattern<R>) {
     super();
-    this.#test = new Try(test);
+    this.#test = new Try<R>(test);
     this.#success = success;
     this.#failure = failure;
   }
@@ -41,7 +41,7 @@ export default class Condition extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     if (this.#test.consume(source)) {
       return this.#success.consume(source);
     } else if (this.#failure) {

@@ -6,19 +6,19 @@ import Try from './try';
 /**
  * Consume all the given patterns and invert the consumption state.
  */
-export default class Not extends Pattern {
+export default class Not<R extends object> extends Pattern<R> {
   /**
    * Target pattern.
    */
-  #target: Pattern;
+  #target: Pattern<R>;
 
   /**
    * Default constructor.
    * @param patterns Sequence of patterns.
    */
-  constructor(...patterns: Pattern[]) {
+  constructor(...patterns: Pattern<R>[]) {
     super();
-    this.#target = new Try(...patterns);
+    this.#target = new Try<R>(...patterns);
   }
 
   /**
@@ -26,7 +26,7 @@ export default class Not extends Pattern {
    * @param source Data source.
    * @returns Returns the inverted consumption state.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     if (source.length > 0) {
       return !this.#target.consume(source);
     }

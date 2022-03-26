@@ -7,16 +7,16 @@ import Error, { Errors } from '../../core/error';
 /**
  * Consume all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
  */
-export default class Emit extends Pattern {
+export default class Emit<R extends object> extends Pattern<R> {
   /**
    * Test pattern.
    */
-  #test: Pattern;
+  #test: Pattern<R>;
 
   /**
    * Target pattern.
    */
-  #target: Pattern;
+  #target: Pattern<R>;
 
   /**
    * Symbol value.
@@ -29,10 +29,10 @@ export default class Emit extends Pattern {
    * @param test Symbol pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, test: Pattern, ...patterns: Pattern[]) {
+  constructor(value: string | number, test: Pattern<R>, ...patterns: Pattern<R>[]) {
     super();
     this.#test = test;
-    this.#target = new Expect(...patterns);
+    this.#target = new Expect<R>(...patterns);
     this.#value = value;
   }
 
@@ -41,7 +41,7 @@ export default class Emit extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     source.save();
     let status = this.#test.consume(source);
     if (status) {
@@ -53,7 +53,7 @@ export default class Emit extends Pattern {
           source.emit(error);
         } else {
           const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-          const record = new Record(fragment, result, node, source.output.link);
+          const record = new Record<R>(fragment, result, node, source.output.link);
           source.output.link = void 0;
           source.emit(record);
         }

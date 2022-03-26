@@ -6,19 +6,19 @@ import Try from './try';
 /**
  * Consume the first matching pattern in the list of patterns.
  */
-export default class Choose extends Pattern {
+export default class Choose<R extends object> extends Pattern<R> {
   /**
    * List of target patterns.
    */
-  #targets: Pattern[];
+  #targets: Pattern<R>[];
 
   /**
    * Default constructor.
    * @param patterns List of patterns.
    */
-  constructor(...patterns: Pattern[]) {
+  constructor(...patterns: Pattern<R>[]) {
     super();
-    this.#targets = patterns.map((pattern) => new Try(pattern));
+    this.#targets = patterns.map((pattern) => new Try<R>(pattern));
   }
 
   /**
@@ -26,7 +26,7 @@ export default class Choose extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     for (const target of this.#targets) {
       if (target.consume(source)) {
         return true;

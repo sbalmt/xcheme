@@ -11,7 +11,7 @@ import Node from './node';
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
  * nodes from the current consumption.
  */
-export default class Context {
+export default class Context<R extends object> {
   /**
    * Context errors.
    */
@@ -25,12 +25,12 @@ export default class Context {
   /**
    * Context symbol table.
    */
-  #table = new Table();
+  #table = new Table<R>();
 
   /**
    * Context main node.
    */
-  #node: Node;
+  #node: Node<R>;
 
   /**
    * Context name.
@@ -45,7 +45,7 @@ export default class Context {
     const range = new Range(0, 0);
     const location = new Location(name, range, range);
     const fragment = new Fragment('', 0, 0, location);
-    this.#node = new Node(fragment, 0x00, this.#table);
+    this.#node = new Node<R>(fragment, 0x00, this.#table);
     this.#name = name;
   }
 
@@ -66,14 +66,14 @@ export default class Context {
   /**
    * Get the symbol table.
    */
-  get table(): Table {
+  get table(): Table<R> {
     return this.#table;
   }
 
   /**
    * Get the root node.
    */
-  get node(): Node {
+  get node(): Node<R> {
     return this.#node;
   }
 

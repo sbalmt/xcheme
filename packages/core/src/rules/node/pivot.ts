@@ -7,16 +7,16 @@ import Pattern from '../pattern';
  * Consume all the given patterns in this pattern and, in case of success,
  * it creates a new node in the source output and pivot current ones.
  */
-export default class Pivot extends Pattern {
+export default class Pivot<R extends object> extends Pattern<R> {
   /**
    * Head pattern.
    */
-  #head: Pattern;
+  #head: Pattern<R>;
 
   /**
    * Target pattern.
    */
-  #target: Pattern;
+  #target: Pattern<R>;
 
   /**
    * Node value.
@@ -41,13 +41,13 @@ export default class Pivot extends Pattern {
    * @param head Pivot head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: string | number, output: Nodes, current: Nodes, head: Pattern, ...patterns: Pattern[]) {
+  constructor(value: string | number, output: Nodes, current: Nodes, head: Pattern<R>, ...patterns: Pattern<R>[]) {
     super();
     if (current === output) {
       throw "Current and Output destinations can't have the same value.";
     }
     this.#head = head;
-    this.#target = new Expect(...patterns);
+    this.#target = new Expect<R>(...patterns);
     this.#value = value;
     this.#output = output;
     this.#current = current;
@@ -58,7 +58,7 @@ export default class Pivot extends Pattern {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base): boolean {
+  consume(source: Base<R>): boolean {
     source.save();
     let status = this.#head.consume(source);
     if (status) {
@@ -71,7 +71,7 @@ export default class Pivot extends Pattern {
         output.node = current;
       } else {
         const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-        const child = new Node(fragment, result, table);
+        const child = new Node<R>(fragment, result, table);
         child.set(this.#output, output.node);
         child.set(this.#current, current);
         output.node = child;
