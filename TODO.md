@@ -3,8 +3,7 @@
 - **Library**
 
   - Add support for getting all the next possible tokens.
-  - Use context node type for direction and parent pair parameters.
-  - Add template type support for core node data.
+  - Improve and split coder classes.
 
 - **Runtime**
 
