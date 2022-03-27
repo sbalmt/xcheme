@@ -1,13 +1,14 @@
+import type * as Metadata from '../core/metadata';
 import type Pattern from './pattern';
 
 /**
  * Base of any route for using together with map patterns.
  */
-export default class Route<R extends object> {
+export default class Route<T extends Metadata.Types> {
   /**
    * Route pattern.
    */
-  #pattern: Pattern<R> | null;
+  #pattern: Pattern<T> | null;
 
   /**
    * Route units.
@@ -20,7 +21,7 @@ export default class Route<R extends object> {
    * @param first First route unit.
    * @param units Remaining route units.
    */
-  constructor(pattern: Pattern<R> | null, first: string | number, ...units: (string | number)[]) {
+  constructor(pattern: Pattern<T> | null, first: string | number, ...units: (string | number)[]) {
     this.#pattern = pattern;
     this.#units = [first, ...units];
   }
@@ -28,7 +29,7 @@ export default class Route<R extends object> {
   /**
    * Get the route pattern.
    */
-  get pattern(): Pattern<R> | null {
+  get pattern(): Pattern<T> | null {
     return this.#pattern;
   }
 

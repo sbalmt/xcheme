@@ -1,3 +1,5 @@
+import type * as Metadata from '../../core/metadata';
+
 import Base from '../../source/base';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
@@ -5,19 +7,19 @@ import Pattern from '../pattern';
 /**
  * Consumes all the given patterns with the uncase transformation.
  */
-export default class Uncase<R extends object> extends Pattern<R> {
+export default class Uncase<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Target pattern.
    */
-  #target: Pattern<R>;
+  #target: Pattern<T>;
 
   /**
    * Default constructor.
    * @param patterns Sequence of patterns.
    */
-  constructor(...patterns: Pattern<R>[]) {
+  constructor(...patterns: Pattern<T>[]) {
     super();
-    this.#target = new Expect<R>(...patterns);
+    this.#target = new Expect<T>(...patterns);
   }
 
   /**
@@ -25,7 +27,7 @@ export default class Uncase<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     const current = Uncase.#state;
     Uncase.#state = true;
     const result = this.#target.consume(source);

@@ -1,3 +1,4 @@
+import type * as Metadata from '../../core/metadata';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -5,17 +6,17 @@ import Pattern from '../pattern';
 /**
  * Consume the pattern object returned by the callback given for this pattern.
  */
-export default class Run<R extends object> extends Pattern<R> {
+export default class Run<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Callback for the pattern.
    */
-  #callback: () => Pattern<R>;
+  #callback: () => Pattern<T>;
 
   /**
    * Default constructor.
    * @param callback Callback for the pattern.
    */
-  constructor(callback: () => Pattern<R>) {
+  constructor(callback: () => Pattern<T>) {
     super();
     this.#callback = callback;
   }
@@ -25,7 +26,7 @@ export default class Run<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     return this.#callback().consume(source);
   }
 }

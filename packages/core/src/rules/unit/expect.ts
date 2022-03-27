@@ -1,3 +1,4 @@
+import type * as Metadata from '../../core/metadata';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -6,7 +7,7 @@ import Uncase from '../transform/uncase';
 /**
  * Consume all the units that are expected by the pattern.
  */
-export default class Expect<R extends object> extends Pattern<R> {
+export default class Expect<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Array of units.
    */
@@ -26,7 +27,7 @@ export default class Expect<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     for (const unit of this.#units) {
       if (source.length === 0 || unit !== Uncase.transform(source.value)) {
         return false;

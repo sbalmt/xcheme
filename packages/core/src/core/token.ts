@@ -1,9 +1,11 @@
 import type Fragment from './fragment';
 
+import * as Metadata from './metadata';
+
 /**
  * A token product to compose the token list generated in the analysis process.
  */
-export default class Token {
+export default class Token<T extends Metadata.Types> extends Metadata.Container<Metadata.Token<T>> {
   /**
    * Token fragment.
    */
@@ -20,6 +22,7 @@ export default class Token {
    * @param value Token value.
    */
   constructor(fragment: Fragment, value: number) {
+    super();
     this.#fragment = fragment;
     this.#value = value;
   }

@@ -1,3 +1,4 @@
+import type * as Metadata from '../../core/metadata';
 import type Base from '../../source/base';
 import type { Nodes } from '../../core/node';
 
@@ -8,11 +9,11 @@ import Expect from '../flow/expect';
  * Consume all the given patterns and, in case of success,
  * it places the resulting node into the source output node.
  */
-export default class Place<R extends object> extends Pattern<R> {
+export default class Place<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Target pattern.
    */
-  #target: Pattern<R>;
+  #target: Pattern<T>;
 
   /**
    * Child node destination.
@@ -24,9 +25,9 @@ export default class Place<R extends object> extends Pattern<R> {
    * @param current Child destination in the current node.
    * @param patterns Sequence of patterns.
    */
-  constructor(current: Nodes, ...patterns: Pattern<R>[]) {
+  constructor(current: Nodes, ...patterns: Pattern<T>[]) {
     super();
-    this.#target = new Expect<R>(...patterns);
+    this.#target = new Expect<T>(...patterns);
     this.#current = current;
   }
 
@@ -35,7 +36,7 @@ export default class Place<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     const output = source.output;
     let current = output.node;
     output.node = void 0;

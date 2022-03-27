@@ -1,3 +1,4 @@
+import type * as Metadata from '../../core/metadata';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -5,17 +6,17 @@ import Pattern from '../pattern';
 /**
  * Consume all patterns that are expected by this pattern.
  */
-export default class Expect<R extends object> extends Pattern<R> {
+export default class Expect<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Target patterns.
    */
-  #targets: Pattern<R>[];
+  #targets: Pattern<T>[];
 
   /**
    * Default constructor.
    * @param patterns Sequence of patterns.
    */
-  constructor(...patterns: Pattern<R>[]) {
+  constructor(...patterns: Pattern<T>[]) {
     super();
     this.#targets = patterns;
   }
@@ -25,7 +26,7 @@ export default class Expect<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     for (const target of this.#targets) {
       if (!target.consume(source)) {
         return false;

@@ -1,3 +1,4 @@
+import type * as Metadata from '../../core/metadata';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -6,7 +7,7 @@ import Uncase from '../transform/uncase';
 /**
  * Consume one unit that is in the range accepted by the pattern.
  */
-export default class Range<R extends object> extends Pattern<R> {
+export default class Range<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Beginning of the boundary unit.
    */
@@ -33,7 +34,7 @@ export default class Range<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     if (source.length > 0) {
       const unit = Uncase.transform(source.value);
       if (unit >= this.#begin && unit <= this.#end) {

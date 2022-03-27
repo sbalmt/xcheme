@@ -2,15 +2,12 @@ import type Fragment from './fragment';
 import type Table from './table';
 import type Node from './node';
 
+import * as Metadata from './metadata';
+
 /**
  * A symbol record generated during the analysis process to be stored into the symbol table.
  */
-export default class Record<R extends object> {
-  /**
-   * Record metadata.
-   */
-  #data: R | undefined;
-
+export default class Record<T extends Metadata.Types> extends Metadata.Container<Metadata.Record<T>> {
   /**
    * Record fragment.
    */
@@ -24,12 +21,12 @@ export default class Record<R extends object> {
   /**
    * Record node.
    */
-  #node: Node<R> | undefined;
+  #node: Node<T> | undefined;
 
   /**
    * Record table link.
    */
-  #link: Table<R> | undefined;
+  #link: Table<T> | undefined;
 
   /**
    * Default constructor.
@@ -38,28 +35,12 @@ export default class Record<R extends object> {
    * @param node Record node.
    * @param link Record table link.
    */
-  constructor(fragment: Fragment, value: number, node?: Node<R>, link?: Table<R>) {
+  constructor(fragment: Fragment, value: number, node?: Node<T>, link?: Table<T>) {
+    super();
     this.#fragment = fragment;
     this.#value = value;
     this.#node = node;
     this.#link = link;
-  }
-
-  /**
-   * Get whether or not the record is enriched.
-   */
-  get enriched(): boolean {
-    return !!this.#data;
-  }
-
-  /**
-   * Get the record metadata.
-   */
-  get data(): R {
-    if (!this.#data) {
-      throw `Record '${this.fragment.data}' isn't enriched.`;
-    }
-    return this.#data;
   }
 
   /**
@@ -79,26 +60,14 @@ export default class Record<R extends object> {
   /**
    * Get the record node.
    */
-  get node(): Node<R> | undefined {
+  get node(): Node<T> | undefined {
     return this.#node;
   }
 
   /**
    * Get the record table link.
    */
-  get link(): Table<R> | undefined {
+  get link(): Table<T> | undefined {
     return this.#link;
-  }
-
-  /**
-   * Initialize the record metadata.
-   * @param data Record metadata.
-   * @throws Throws an exception when the record is already enriched.
-   */
-  enrich(data: R): void {
-    if (this.#data) {
-      throw `Record '${this.fragment.data}' is already enriched.`;
-    }
-    this.#data = data;
   }
 }

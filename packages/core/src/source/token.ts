@@ -1,3 +1,4 @@
+import type * as Metadata from '../core/metadata';
 import type Context from '../core/context';
 
 import Token from '../core/token';
@@ -19,11 +20,11 @@ type State = {
 /**
  * Data source for processing tokens during the analysis.
  */
-export default class TokenSource<R extends object> extends Base<R> {
+export default class TokenSource<T extends Metadata.Types> extends Base<T> {
   /**
    * Source data.
    */
-  #data: Token[];
+  #data: Token<T>[];
 
   /**
    * Source states.
@@ -45,7 +46,7 @@ export default class TokenSource<R extends object> extends Base<R> {
    * @param data Source data.
    * @param context Source context.
    */
-  constructor(data: Token[], context: Context<R>) {
+  constructor(data: Token<T>[], context: Context<T>) {
     super(context);
     this.#data = data;
   }

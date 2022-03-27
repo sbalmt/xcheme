@@ -1,3 +1,4 @@
+import type * as Metadata from './metadata';
 import type Token from './token';
 
 import Error from './error';
@@ -11,7 +12,7 @@ import Node from './node';
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
  * nodes from the current consumption.
  */
-export default class Context<R extends object> {
+export default class Context<T extends Metadata.Types> {
   /**
    * Context errors.
    */
@@ -20,17 +21,17 @@ export default class Context<R extends object> {
   /**
    * Context tokens.
    */
-  #tokens: Token[] = [];
+  #tokens: Token<T>[] = [];
 
   /**
    * Context symbol table.
    */
-  #table = new Table<R>();
+  #table = new Table<T>();
 
   /**
    * Context main node.
    */
-  #node: Node<R>;
+  #node: Node<T>;
 
   /**
    * Context name.
@@ -45,7 +46,7 @@ export default class Context<R extends object> {
     const range = new Range(0, 0);
     const location = new Location(name, range, range);
     const fragment = new Fragment('', 0, 0, location);
-    this.#node = new Node<R>(fragment, 0x00, this.#table);
+    this.#node = new Node<T>(fragment, 0x00, this.#table);
     this.#name = name;
   }
 
@@ -59,21 +60,21 @@ export default class Context<R extends object> {
   /**
    * Get the token list.
    */
-  get tokens(): Token[] {
+  get tokens(): Token<T>[] {
     return this.#tokens;
   }
 
   /**
    * Get the symbol table.
    */
-  get table(): Table<R> {
+  get table(): Table<T> {
     return this.#table;
   }
 
   /**
    * Get the root node.
    */
-  get node(): Node<R> {
+  get node(): Node<T> {
     return this.#node;
   }
 

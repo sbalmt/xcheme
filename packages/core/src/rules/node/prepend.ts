@@ -1,3 +1,5 @@
+import type * as Metadata from '../../core/metadata';
+
 import Base from '../../source/base';
 import Node, { Nodes } from '../../core/node';
 import Expect from '../flow/expect';
@@ -7,16 +9,16 @@ import Pattern from '../pattern';
  * Consume all the given patterns in this pattern and, in case of success,
  * it prepends a new node in the source output node.
  */
-export default class Prepend<R extends object> extends Pattern<R> {
+export default class Prepend<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Head pattern.
    */
-  #head: Pattern<R>;
+  #head: Pattern<T>;
 
   /**
    * Target pattern.
    */
-  #target: Pattern<R>;
+  #target: Pattern<T>;
 
   /**
    * Node value.
@@ -41,10 +43,10 @@ export default class Prepend<R extends object> extends Pattern<R> {
    * @param head Prepend head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, output: Nodes, current: Nodes, head: Pattern<R>, ...patterns: Pattern<R>[]) {
+  constructor(value: number, output: Nodes, current: Nodes, head: Pattern<T>, ...patterns: Pattern<T>[]) {
     super();
     this.#head = head;
-    this.#target = new Expect<R>(...patterns);
+    this.#target = new Expect<T>(...patterns);
     this.#value = value;
     this.#output = output;
     this.#current = current;
@@ -55,7 +57,7 @@ export default class Prepend<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     source.save();
     const output = source.output;
     let current = output.node;
@@ -66,7 +68,7 @@ export default class Prepend<R extends object> extends Pattern<R> {
       if ((status = this.#target.consume(source))) {
         const { table, value } = output;
         const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-        const child = new Node<R>(fragment, result, table);
+        const child = new Node<T>(fragment, result, table);
         child.set(this.#output, output.node);
         if (current) {
           const parent = child.lowest(this.#current) ?? child;

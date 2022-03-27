@@ -1,3 +1,5 @@
+import type * as Metadata from '../../core/metadata';
+
 import Base from '../../source/base';
 import Error from '../../core/error';
 import Expect from '../flow/expect';
@@ -6,11 +8,11 @@ import Pattern from '../pattern';
 /**
  * Consume all the given patterns and, in case of success, it will emit a new error into the current error list.
  */
-export default class Emit<R extends object> extends Pattern<R> {
+export default class Emit<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Target pattern.
    */
-  #target: Pattern<R>;
+  #target: Pattern<T>;
 
   /**
    * Error value.
@@ -22,9 +24,9 @@ export default class Emit<R extends object> extends Pattern<R> {
    * @param value Error value.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, ...patterns: Pattern<R>[]) {
+  constructor(value: number, ...patterns: Pattern<T>[]) {
     super();
-    this.#target = new Expect<R>(...patterns);
+    this.#target = new Expect<T>(...patterns);
     this.#value = value;
   }
 
@@ -33,7 +35,7 @@ export default class Emit<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     source.save();
     const status = this.#target.consume(source);
     if (status) {

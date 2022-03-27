@@ -1,3 +1,4 @@
+import type * as Metadata from '../../core/metadata';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -7,25 +8,25 @@ import Try from './try';
 /**
  * Consume all the given patterns in this pattern and, in case of success, retry the consumption.
  */
-export default class Repeat<R extends object> extends Pattern<R> {
+export default class Repeat<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Target pattern.
    */
-  #target: Pattern<R>;
+  #target: Pattern<T>;
 
   /**
    * Triable pattern.
    */
-  #triable: Pattern<R>;
+  #triable: Pattern<T>;
 
   /**
    * Default constructor.
    * @param patterns Sequence of patterns.
    */
-  constructor(...patterns: Pattern<R>[]) {
+  constructor(...patterns: Pattern<T>[]) {
     super();
-    this.#target = new Expect<R>(...patterns);
-    this.#triable = new Try<R>(this.#target);
+    this.#target = new Expect<T>(...patterns);
+    this.#triable = new Try<T>(this.#target);
   }
 
   /**
@@ -33,7 +34,7 @@ export default class Repeat<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     if (this.#target.consume(source)) {
       while (this.#triable.consume(source));
       return true;

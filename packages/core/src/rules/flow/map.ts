@@ -1,3 +1,4 @@
+import type * as Metadata from '../../core/metadata';
 import type Base from '../../source/base';
 import type Route from '../route';
 
@@ -7,7 +8,7 @@ import Uncase from '../transform/uncase';
 /**
  * Internal map node.
  */
-type Node<R extends object> = {
+type Node<T extends Metadata.Types> = {
   /**
    * Node value.
    */
@@ -15,29 +16,29 @@ type Node<R extends object> = {
   /**
    * Node pattern.
    */
-  pattern?: Pattern<R> | null;
+  pattern?: Pattern<T> | null;
   /**
    * Left child node.
    */
-  left?: Node<R>;
+  left?: Node<T>;
   /**
    * Right child node.
    */
-  right?: Node<R>;
+  right?: Node<T>;
   /**
    * Next child node.
    */
-  next?: Node<R>;
+  next?: Node<T>;
 };
 
 /**
  * Consume the first route that match in the list of routes given for this pattern.
  */
-export default class Map<R extends object> extends Pattern<R> {
+export default class Map<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Root node.
    */
-  #root: Node<R> | undefined;
+  #root: Node<T> | undefined;
 
   /**
    * Compare the given inputs and returns the difference between both of them.
@@ -58,9 +59,9 @@ export default class Map<R extends object> extends Pattern<R> {
    * @param units Input units.
    * @returns Returns the corresponding node or undefined when it wasn't found.
    */
-  #getNode(units: (string | number)[]): Node<R> | undefined {
+  #getNode(units: (string | number)[]): Node<T> | undefined {
     let current = this.#root;
-    let previous: Node<R> | undefined = void 0;
+    let previous: Node<T> | undefined = void 0;
     for (let index = 0; index < units.length; ) {
       if (!current) {
         return void 0;
@@ -85,7 +86,7 @@ export default class Map<R extends object> extends Pattern<R> {
    * @param units Input units.
    * @returns Returns the terminal node or undefined when the given units are empty.
    */
-  #setNode(units: (string | number)[]): Node<R> {
+  #setNode(units: (string | number)[]): Node<T> {
     let current = this.#root;
     let previous = current;
     let selected = current;
@@ -132,7 +133,7 @@ export default class Map<R extends object> extends Pattern<R> {
    * @param current Current node.
    * @returns Returns the corresponding node or undefined when it wasn't found.
    */
-  #findNode(source: Base<R>, current: Node<R> | undefined): Node<R> | undefined {
+  #findNode(source: Base<T>, current: Node<T> | undefined): Node<T> | undefined {
     source.save();
     while (current && source.length > 0) {
       const unit = Uncase.transform(source.value);
@@ -160,7 +161,7 @@ export default class Map<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns the consumption node or undefined when the given source doesn't match any route.
    */
-  #getLongestConsumptionNode(source: Base<R>): Node<R> | undefined {
+  #getLongestConsumptionNode(source: Base<T>): Node<T> | undefined {
     let current = this.#root;
     let longest;
     while ((current = this.#findNode(source, current))) {
@@ -175,7 +176,7 @@ export default class Map<R extends object> extends Pattern<R> {
    * Default constructor.
    * @param routes List of routes.
    */
-  constructor(...routes: Route<R>[]) {
+  constructor(...routes: Route<T>[]) {
     super();
     for (const route of routes) {
       const node = this.#getNode(route.units) ?? this.#setNode(route.units);
@@ -188,7 +189,7 @@ export default class Map<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     const node = this.#getLongestConsumptionNode(source);
     if (node) {
       if (node.pattern) {

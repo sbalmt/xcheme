@@ -1,3 +1,4 @@
+import type * as Metadata from '../core/metadata';
 import type Context from '../core/context';
 
 import Fragment from '../core/fragment';
@@ -28,7 +29,7 @@ type State = {
 /**
  * Data source for processing texts during the analysis process.
  */
-export default class Text<R extends object> extends Base<R> {
+export default class Text<T extends Metadata.Types> extends Base<T> {
   /**
    * Source data.
    */
@@ -54,7 +55,7 @@ export default class Text<R extends object> extends Base<R> {
    * @param data Source data.
    * @param context Source context.
    */
-  constructor(data: string, context: Context<R>) {
+  constructor(data: string, context: Context<T>) {
     super(context);
     this.#data = data;
   }

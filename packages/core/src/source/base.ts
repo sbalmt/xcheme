@@ -1,3 +1,4 @@
+import type * as Metadata from '../core/metadata';
 import type Context from '../core/context';
 import type Fragment from '../core/fragment';
 
@@ -10,7 +11,7 @@ import Table from '../core/table';
 /**
  * Source output structure.
  */
-type Output<R extends object> = {
+type Output<T extends Metadata.Types> = {
   /**
    * Output state.
    */
@@ -19,12 +20,12 @@ type Output<R extends object> = {
   /**
    * Output table.
    */
-  table: Table<R>;
+  table: Table<T>;
 
   /**
    * Record link table.
    */
-  link?: Table<R>;
+  link?: Table<T>;
 
   /**
    * Output value.
@@ -34,27 +35,27 @@ type Output<R extends object> = {
   /**
    * Output node.
    */
-  node?: Node<R>;
+  node?: Node<T>;
 };
 
 /**
  * Base of any data source for the analysis process.
  */
-export default class Base<R extends object> {
+export default class Base<T extends Metadata.Types> {
   /**
    * Source context.
    */
-  #context: Context<R>;
+  #context: Context<T>;
 
   /**
    * Current symbol table manager.
    */
-  #table: Table<R>;
+  #table: Table<T>;
 
   /**
    * Current source output.
    */
-  #output: Output<R>;
+  #output: Output<T>;
 
   /**
    * Magic value for getting the current output value from the current source.
@@ -67,7 +68,7 @@ export default class Base<R extends object> {
    * Default constructor.
    * @param context Source context.
    */
-  constructor(context: Context<R>) {
+  constructor(context: Context<T>) {
     this.#context = context;
     this.#table = context.table;
     this.#output = {
@@ -86,7 +87,7 @@ export default class Base<R extends object> {
   /**
    * Get the current source output.
    */
-  get output(): Output<R> {
+  get output(): Output<T> {
     return this.#output;
   }
 
@@ -151,7 +152,7 @@ export default class Base<R extends object> {
    * @param product Input product.
    * @throws Throws an error when the given product isn't supported.
    */
-  emit(product: Error | Token | Node<R> | Record<R>): void {
+  emit(product: Error | Token<T> | Node<T> | Record<T>): void {
     if (product instanceof Error) {
       this.#context.errors.push(product);
     } else if (product instanceof Token) {

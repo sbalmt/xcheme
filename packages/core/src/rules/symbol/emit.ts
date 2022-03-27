@@ -1,3 +1,5 @@
+import type * as Metadata from '../../core/metadata';
+
 import Base from '../../source/base';
 import Record from '../../core/record';
 import Pattern from '../pattern';
@@ -7,16 +9,16 @@ import Error, { Errors } from '../../core/error';
 /**
  * Consume all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
  */
-export default class Emit<R extends object> extends Pattern<R> {
+export default class Emit<T extends Metadata.Types> extends Pattern<T> {
   /**
    * Test pattern.
    */
-  #test: Pattern<R>;
+  #test: Pattern<T>;
 
   /**
    * Target pattern.
    */
-  #target: Pattern<R>;
+  #target: Pattern<T>;
 
   /**
    * Symbol value.
@@ -29,10 +31,10 @@ export default class Emit<R extends object> extends Pattern<R> {
    * @param test Symbol pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, test: Pattern<R>, ...patterns: Pattern<R>[]) {
+  constructor(value: number, test: Pattern<T>, ...patterns: Pattern<T>[]) {
     super();
     this.#test = test;
-    this.#target = new Expect<R>(...patterns);
+    this.#target = new Expect<T>(...patterns);
     this.#value = value;
   }
 
@@ -41,7 +43,7 @@ export default class Emit<R extends object> extends Pattern<R> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<R>): boolean {
+  consume(source: Base<T>): boolean {
     source.save();
     let status = this.#test.consume(source);
     if (status) {
@@ -53,7 +55,7 @@ export default class Emit<R extends object> extends Pattern<R> {
           source.emit(error);
         } else {
           const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-          const record = new Record<R>(fragment, result, node, source.output.link);
+          const record = new Record<T>(fragment, result, node, source.output.link);
           source.output.link = void 0;
           source.emit(record);
         }

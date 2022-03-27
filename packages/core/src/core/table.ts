@@ -1,21 +1,23 @@
+import type * as Metadata from './metadata';
+
 import Fragment from './fragment';
 import Record from './record';
 
 /**
  * Internal record map.
  */
-type Records<R extends object> = {
-  [name: string]: Record<R>;
+type RecordMap<T extends Metadata.Types> = {
+  [name: string]: Record<T>;
 };
 
 /**
  * A symbol table for storing symbol records generated during the analysis process.
  */
-export default class Table<R extends object> {
+export default class Table<T extends Metadata.Types> {
   /**
-   * Table of records.
+   * Map of records.
    */
-  #records: Records<R> = {};
+  #records: RecordMap<T> = {};
 
   /**
    * Table length.
@@ -25,13 +27,13 @@ export default class Table<R extends object> {
   /**
    * Parent table.
    */
-  #parent: Table<R> | undefined;
+  #parent: Table<T> | undefined;
 
   /**
    * Default constructor.
    * @param parent Parent table.
    */
-  constructor(parent?: Table<R>) {
+  constructor(parent?: Table<T>) {
     this.#parent = parent;
   }
 
@@ -52,7 +54,7 @@ export default class Table<R extends object> {
   /**
    * Get the parent table.
    */
-  get parent(): Table<R> | undefined {
+  get parent(): Table<T> | undefined {
     return this.#parent;
   }
 
@@ -70,7 +72,7 @@ export default class Table<R extends object> {
    * @param name Symbol record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
-  get(name: Fragment | string): Record<R> | undefined {
+  get(name: Fragment | string): Record<T> | undefined {
     return this.#records[name instanceof Fragment ? name.data : name];
   }
 
@@ -80,7 +82,7 @@ export default class Table<R extends object> {
    * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
    * @returns Returns the given symbol record.
    */
-  add(record: Record<R>): Record<R> {
+  add(record: Record<T>): Record<T> {
     const name = record.fragment.data;
     if (this.#records[name]) {
       throw 'Unable to add records with duplicate name.';
@@ -95,7 +97,7 @@ export default class Table<R extends object> {
    * @param name Symbol record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
-  find(name: Fragment | string): Record<R> | undefined {
+  find(name: Fragment | string): Record<T> | undefined {
     const record = this.get(name);
     if (!record && this.#parent) {
       return this.#parent.find(name);
