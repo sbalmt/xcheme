@@ -16,6 +16,11 @@ export type Context = Core.Context<Metadata>;
 export type Table = Core.Table<Metadata>;
 
 /**
+ * Core token type.
+ */
+export type Token = Core.Token<Metadata>;
+
+/**
  * Core node type.
  */
 export type Node = Core.Node<Metadata>;
@@ -36,57 +41,70 @@ export type Pattern = Core.Pattern<Metadata>;
 export type Route = Core.Route<Metadata>;
 
 /**
- * Record metadata.
+ * Core metadata type.
  */
 export type Metadata = {
   /**
-   * Record type.
+   * Token metadata.
    */
-  type: Directives;
+  token: never;
   /**
-   * Record origin.
+   * Node metadata.
    */
-  origin: Origins;
+  node: never;
   /**
-   * Record order.
+   * Record metadata.
    */
-  order: number;
-  /**
-   * Record name.
-   */
-  name: string;
-  /**
-   * Record identifier.
-   */
-  identifier: string;
-  /**
-   * Record identity.
-   */
-  identity: number;
-  /**
-   * Record location.
-   */
-  location: string;
-  /**
-   * Determines whether or not the record is imported.
-   */
-  imported: boolean;
-  /**
-   * Determines whether or not the record is exported.
-   */
-  exported: boolean;
-  /**
-   * Array of dependencies.
-   */
-  dependencies: Record[];
-  /**
-   * Array of dependents.
-   */
-  dependents: Record[];
-  /**
-   * Record pattern.
-   */
-  pattern: Pattern | string | undefined;
+  record: {
+    /**
+     * Record type.
+     */
+    type: Directives;
+    /**
+     * Record origin.
+     */
+    origin: Origins;
+    /**
+     * Record order.
+     */
+    order: number;
+    /**
+     * Record name.
+     */
+    name: string;
+    /**
+     * Record identifier.
+     */
+    identifier: string;
+    /**
+     * Record identity.
+     */
+    identity: number;
+    /**
+     * Record location.
+     */
+    location: string;
+    /**
+     * Determines whether or not the record is imported.
+     */
+    imported: boolean;
+    /**
+     * Determines whether or not the record is exported.
+     */
+    exported: boolean;
+    /**
+     * Array of dependencies.
+     */
+    dependencies: Record[];
+    /**
+     * Array of dependents.
+     */
+    dependents: Record[];
+    /**
+     * Record pattern.
+     */
+    pattern: Pattern | string | undefined;
+  };
 };
 
 /**

@@ -1,7 +1,6 @@
 import * as VSCode from 'vscode';
 import * as Path from 'path';
 
-import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
 import * as Utils from '../utils';
@@ -28,7 +27,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
    */
-  #isIdentity(tokens: Core.Token[], offset: number): boolean {
+  #isIdentity(tokens: Lang.Types.Token[], offset: number): boolean {
     const value = tokens[offset]?.value;
     return (
       (value === Lang.Lexer.Tokens.Number || value === Lang.Lexer.Tokens.Auto) &&
@@ -42,7 +41,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
    */
-  #isIdentifier(tokens: Core.Token[], offset: number): boolean {
+  #isIdentifier(tokens: Lang.Types.Token[], offset: number): boolean {
     const value = tokens[offset]?.value;
     return (
       (value === Lang.Lexer.Tokens.CloseChevron && this.#isIdentity(tokens, offset - 1)) ||
@@ -57,7 +56,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Token offset.
    * @returns Returns the corresponding filters.
    */
-  #getSymbolFilters(tokens: Core.Token[], offset: number): Lang.Parser.Symbols[] {
+  #getSymbolFilters(tokens: Lang.Types.Token[], offset: number): Lang.Parser.Symbols[] {
     while (offset >= 0) {
       switch (tokens[offset--].value) {
         case Lang.Lexer.Tokens.Skip:
@@ -77,7 +76,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Token offset.
    * @returns Returns an array containing all records for the corresponding path.
    */
-  #getSymbolTablePath(tokens: Core.Token[], offset: number): string[] {
+  #getSymbolTablePath(tokens: Lang.Types.Token[], offset: number): string[] {
     const records = [];
     do {
       const token = tokens[offset--];
@@ -178,7 +177,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param position Offset position.
    * @returns Returns the best token offset.
    */
-  #findBestOffset(tokens: Core.Token[], position: number): number {
+  #findBestOffset(tokens: Lang.Types.Token[], position: number): number {
     let best = -1;
     for (let index = 0; index < tokens.length; ++index) {
       const token = tokens[index];
@@ -202,7 +201,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   #getCompletionItems(
     document: VSCode.TextDocument,
     table: Lang.Types.Table,
-    tokens: Core.Token[],
+    tokens: Lang.Types.Token[],
     offset: number
   ): CompletionItems | undefined {
     if (offset > -1) {

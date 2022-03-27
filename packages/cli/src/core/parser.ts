@@ -15,7 +15,7 @@ import * as Nodes from './nodes';
  */
 export const parse = (
   program: Lang.Types.Pattern,
-  tokens: Core.Token[],
+  tokens: Lang.Types.Token[],
   context: Lang.Types.Context,
   symbols: boolean,
   nodes: boolean

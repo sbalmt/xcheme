@@ -14,7 +14,7 @@ export { Nodes } from './nodes';
  * @param context Input context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeTokens = (tokens: Core.Token[], context: Types.Context): boolean => {
+export const consumeTokens = (tokens: Types.Token[], context: Types.Context): boolean => {
   const source = new Core.TokenSource<Types.Metadata>(tokens, context);
   if (!Program.consume(source)) {
     const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;

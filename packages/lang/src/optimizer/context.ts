@@ -78,7 +78,7 @@ export const setMetadata = (
   record: Types.Record,
   state: State
 ): Types.Record => {
-  record.enrich({
+  record.assign({
     type: state.type,
     origin: state.origin,
     order: orderCounter.increment(project.coder),

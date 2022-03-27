@@ -1,4 +1,4 @@
-import * as Core from '@xcheme/core';
+import * as Lang from '@xcheme/lang';
 
 import * as Console from './console';
 import * as Fragment from './fragment';
@@ -7,7 +7,7 @@ import * as Fragment from './fragment';
  * Print a list for the given tokens.
  * @param tokens Input tokens.
  */
-export const print = (tokens: Core.Token[]): void => {
+export const print = (tokens: Lang.Types.Token[]): void => {
   Console.printLine('Tokens:\n');
   Console.printLine('          Code Fragment');
   for (const token of tokens) {

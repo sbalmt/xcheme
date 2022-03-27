@@ -136,7 +136,11 @@ export const testLexer = (project: Lang.Project.Context, context: Lang.Types.Con
  * @param context Parser context.
  * @param tokens Input tokens.
  */
-export const testParser = (project: Lang.Project.Context, context: Lang.Types.Context, tokens: Core.Token[]): void => {
+export const testParser = (
+  project: Lang.Project.Context,
+  context: Lang.Types.Context,
+  tokens: Lang.Types.Token[]
+): void => {
   const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
   const parser = project.parser as Lang.Types.Pattern;
 

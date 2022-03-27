@@ -37,7 +37,7 @@ const upgrade = (project: Project.Context, record: Types.Record, parent: Types.N
  */
 const connect = (project: Project.Context, identifier: string, record: Types.Record, state: Context.State): void => {
   const current = state.record!;
-  if (record.enriched) {
+  if (record.assigned) {
     current.data.dependencies.push(record);
     record.data.dependents.push(current);
   } else {
@@ -112,7 +112,7 @@ const resolveNode = (
     connect(project, identifier, record, state);
   } else if (record.value === Parser.Symbols.Token) {
     connect(project, identifier, record, state);
-    if (record.enriched) {
+    if (record.assigned) {
       upgrade(project, record, parent, direction);
     } else {
       project.symbols.listen(identifier, () => {
