@@ -38,7 +38,7 @@ export default class Table<T extends Metadata.Types> {
   }
 
   /**
-   * Get all the record names in the table.
+   * Get all record names in the table.
    */
   get names(): string[] {
     return Object.keys(this.#records);
@@ -59,17 +59,17 @@ export default class Table<T extends Metadata.Types> {
   }
 
   /**
-   * Check whether or not there's a symbol record for the given name.
+   * Check whether or not there's a record for the given name.
    * @param name Symbol record name.
-   * @returns Returns true when the symbol record already exists, false otherwise.
+   * @returns Returns true when the record already exists, false otherwise.
    */
   has(name: Fragment | string): boolean {
     return this.get(name) !== void 0;
   }
 
   /**
-   * Get the symbol record that corresponds to the specified name.
-   * @param name Symbol record name.
+   * Get the record that corresponds to the specified name.
+   * @param name Record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
   get(name: Fragment | string): Record<T> | undefined {
@@ -77,10 +77,10 @@ export default class Table<T extends Metadata.Types> {
   }
 
   /**
-   * Add a new symbol record into the symbol table.
+   * Add a new record into the table.
    * @param record Symbol record.
-   * @throw Throws an error when a symbol record with the same name (fragment data) already exists.
-   * @returns Returns the given symbol record.
+   * @throw Throws an error when a record with the same name (fragment data) already exists.
+   * @returns Returns the given record.
    */
   add(record: Record<T>): Record<T> {
     const name = record.fragment.data;
@@ -93,8 +93,8 @@ export default class Table<T extends Metadata.Types> {
   }
 
   /**
-   * Find for a symbol record that corresponds to the specified name in all symbol tables.
-   * @param name Symbol record name.
+   * Find for a record that corresponds to the specified name in the current and all parent tables.
+   * @param name Record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
   find(name: Fragment | string): Record<T> | undefined {
@@ -103,6 +103,16 @@ export default class Table<T extends Metadata.Types> {
       return this.#parent.find(name);
     }
     return record;
+  }
+
+  /**
+   * Add all records from the given table into the table.
+   * @param table Another table.
+   */
+  assign(table: Table<T>): void {
+    for (const record of table) {
+      this.add(record);
+    }
   }
 
   /**

@@ -28,7 +28,12 @@ export default class Scope<T extends Metadata.Types> extends Pattern<T> {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Base<T>): boolean {
+    const link = source.output.link;
     source.expand();
+    if (link) {
+      source.output.table.assign(link);
+      source.output.link = void 0;
+    }
     const status = this.#target.consume(source);
     source.collapse();
     return status;

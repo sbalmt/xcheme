@@ -53,7 +53,7 @@ export default class Base<T extends Metadata.Types> {
   #table: Table<T>;
 
   /**
-   * Current source output.
+   * Current output.
    */
   #output: Output<T>;
 
@@ -181,7 +181,7 @@ export default class Base<T extends Metadata.Types> {
    */
   collapse(): void {
     if (!this.#table.parent) {
-      throw "There's no parent symbol table to collapse.";
+      throw "There's no table to collapse.";
     }
     if (this.#table.length > 0) {
       this.#output.link = this.#table;

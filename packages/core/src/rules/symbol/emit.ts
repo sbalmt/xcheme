@@ -45,21 +45,31 @@ export default class Emit<T extends Metadata.Types> extends Pattern<T> {
    */
   consume(source: Base<T>): boolean {
     source.save();
+    let link = source.output.link;
+    source.output.link = void 0;
     let status = this.#test.consume(source);
     if (status) {
       const { node, table, value } = source.output;
       const fragment = source.fragment;
       if ((status = this.#target.consume(source))) {
+        if (link && source.output.link) {
+          link.assign(source.output.link);
+        } else if (source.output.link) {
+          link = source.output.link;
+        }
         if (table.has(fragment)) {
           const error = new Error(fragment, Errors.DUPLICATE_IDENTIFIER);
           source.emit(error);
         } else {
           const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-          const record = new Record<T>(fragment, result, node, source.output.link);
+          const record = new Record<T>(fragment, result, node, link);
           source.output.link = void 0;
           source.emit(record);
         }
       }
+    }
+    if (!status) {
+      source.output.link = link;
     }
     source.discard();
     return status;

@@ -229,7 +229,7 @@ test('Open/Close symbol table', () => {
   expect(table.names).toHaveLength(0);
 
   // Test no more symbol tabes to close.
-  expect(() => source.collapse()).toThrow("There's no parent symbol table to collapse.");
+  expect(() => source.collapse()).toThrow("There's no table to collapse.");
 });
 
 test('Emit token', () => {
