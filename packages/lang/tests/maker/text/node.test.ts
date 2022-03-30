@@ -8,6 +8,7 @@ test("Output a 'NODE' pattern with zero identity", () => {
     token <100> TOKEN as 'a';
     node  <0>   NODE  as TOKEN;`,
     {
+      TOKEN: `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('a'))`,
       NODE: `new Core.EmitNodePattern(0, 1, new Core.ExpectUnitPattern(100))`
     }
   );
@@ -64,6 +65,7 @@ test("Output a 'NODE' pattern with a token reference", () => {
     token <100> TOKEN as '@';
     node  <200> NODE  as TOKEN;`,
     {
+      TOKEN: `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('@'))`,
       NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(100))`
     }
   );
@@ -75,6 +77,7 @@ test("Output a 'NODE' pattern with an alias node reference", () => {
     alias node ALIAS as '@';
     node <200> NODE  as ALIAS;`,
     {
+      ALIAS: `new Core.ExpectUnitPattern(0)`,
       NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(0))`
     }
   );
