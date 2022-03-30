@@ -112,6 +112,9 @@ export default class Table<T extends Metadata.Types> {
   assign(table: Table<T>): void {
     for (const record of table) {
       this.add(record);
+      if (record.link) {
+        record.link.#parent = this;
+      }
     }
   }
 
