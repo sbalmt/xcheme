@@ -69,4 +69,12 @@ export class Container<T> {
     }
     this.#data = data;
   }
+
+  /**
+   * Swap the current container data by the data in the given container.
+   * @param container Input container.
+   */
+  swap(container: Container<T>): void {
+    [this.#data, container.#data] = [container.#data, this.#data];
+  }
 }

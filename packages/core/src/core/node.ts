@@ -110,10 +110,11 @@ export default class Node<T extends Metadata.Types> extends Metadata.Container<M
   }
 
   /**
-   * Swap all the currently node properties by all properties from the given one.
+   * Swap all the node properties by all properties in the given node.
    * @param node Input node.
    */
   swap(node: Node<T>): void {
+    super.swap(node);
     [this.#children, node.#children] = [node.#children, this.#children];
     [this.#fragment, node.#fragment] = [node.#fragment, this.#fragment];
     [this.#table, node.#table] = [node.#table, this.#table];
