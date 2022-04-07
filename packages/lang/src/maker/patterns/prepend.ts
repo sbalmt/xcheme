@@ -4,11 +4,11 @@ import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Types from '../../core/types';
-import * as Parser from '../../parser';
-import * as Splitter from '../splitter';
 import * as Context from '../context';
 
 import { Exception } from '../../core/exception';
+
+import * as Generic from './generic';
 
 /**
  * Consume the given node resolving the 'PREPEND' pattern.
@@ -27,11 +27,7 @@ export const consume = (
   if (!(node instanceof Nodes.Identity)) {
     throw new Exception('The PREPEND node must be an instance of an identified node.');
   }
-  const current = state.dynamic;
-  state.dynamic = node.dynamic;
-  const expression = (node.right!.value === Parser.Nodes.Identity ? node.right!.right : node.right)!;
-  const patterns = Splitter.resolve(project, expression, state);
-  state.dynamic = current;
+  const patterns = Generic.Identity.consume(project, node, state);
   if (patterns) {
     const [test, ...remaining] = patterns;
     return project.coder.emitPrependPattern(node.identity, direction, test, ...remaining);

@@ -5,6 +5,7 @@ import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
+import * as Identity from '../identity';
 import * as Context from '../context';
 import * as Loose from '../loose';
 
@@ -50,25 +51,31 @@ export const consume = (
     const record = node.table.get(identifier)!;
     state.record = record;
     state.type = Types.Directives.Token;
+    state.template = Symbols.isTemplate(record);
+    state.identity = Identity.consume(project, node.left, state);
     Context.setMetadata(project, identifier, record, state);
     if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
-    } else if (expression.value === Parser.Nodes.String) {
-      String.consume(project, Core.Nodes.Right, node, state);
-      const word = expression.fragment.data;
-      if (!Loose.collision(project, word, expression)) {
+    } else if (!state.template) {
+      if (expression.value === Parser.Nodes.String) {
+        String.consume(project, Core.Nodes.Right, node, state);
+        const word = expression.fragment.data;
+        if (!Loose.collision(project, word, expression)) {
+          emit(project, direction, parent, state);
+          project.symbols.link(word, identifier);
+        }
+      } else if (expression.value === Parser.Nodes.Range) {
+        Range.consume(project, Core.Nodes.Right, node, state);
+        const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
+        if (!Loose.collision(project, range, expression)) {
+          emit(project, direction, parent, state);
+          project.symbols.link(range, identifier);
+        }
+      } else {
+        Expression.consume(project, Core.Nodes.Right, node, state);
         emit(project, direction, parent, state);
-        project.symbols.link(word, identifier);
-      }
-    } else if (expression.value === Parser.Nodes.Range) {
-      Range.consume(project, Core.Nodes.Right, node, state);
-      const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
-      if (!Loose.collision(project, range, expression)) {
-        emit(project, direction, parent, state);
-        project.symbols.link(range, identifier);
       }
     } else {
-      Expression.consume(project, Core.Nodes.Right, node, state);
       emit(project, direction, parent, state);
     }
   }

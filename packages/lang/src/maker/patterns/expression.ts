@@ -107,6 +107,6 @@ export const consume = (
     case Parser.Nodes.Peek:
       return Peek.consume(project, node, state);
     default:
-      throw new Exception(`Invalid expression type (${node.value}).`);
+      throw new Exception(`Invalid expression: ${node.fragment.data} (${node.value}).`);
   }
 };

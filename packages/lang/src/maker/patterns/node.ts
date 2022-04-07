@@ -12,13 +12,15 @@ import * as Expression from './expression';
  */
 export const consume = (project: Project.Context, state: Context.State): void => {
   const directive = state.directive;
-  const expression = Expression.consume(project, directive.right!, state);
-  if (expression) {
-    const record = project.symbols.get(directive.identifier)!;
-    if (!directive.alias) {
-      record.data.pattern = project.coder.emitNodePattern(directive.identity, Core.Nodes.Right, expression);
-    } else {
-      record.data.pattern = expression;
+  if (!directive.template) {
+    const expression = Expression.consume(project, directive.right!, state);
+    if (expression) {
+      const record = project.symbols.get(directive.identifier)!;
+      if (!directive.alias) {
+        record.data.pattern = project.coder.emitNodePattern(directive.identity, Core.Nodes.Right, expression);
+      } else {
+        record.data.pattern = expression;
+      }
     }
   }
 };

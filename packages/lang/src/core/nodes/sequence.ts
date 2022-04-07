@@ -17,7 +17,7 @@ export default class Node extends Basic {
   /**
    * Sequence nodes.
    */
-  #sequence: Types.Node[];
+  #nodes: Types.Node[];
 
   /**
    * Get all nodes from the specified node in a sequence.
@@ -33,7 +33,7 @@ export default class Node extends Basic {
         node.set(Core.Nodes.Next, void 0);
         return result;
       }
-      return node.#sequence;
+      return node.#nodes;
     }
     return [node];
   }
@@ -46,7 +46,7 @@ export default class Node extends Basic {
   constructor(node: Types.Node, type: Parser.Nodes) {
     super(node);
     this.#type = type;
-    this.#sequence = this.#getNodes(node);
+    this.#nodes = this.#getNodes(node);
     this.set(Core.Nodes.Left, void 0);
     this.set(Core.Nodes.Right, void 0);
     this.set(Core.Nodes.Next, void 0);
@@ -60,9 +60,9 @@ export default class Node extends Basic {
   }
 
   /**
-   * Get the nodes sequence.
+   * Get the sequence nodes.
    */
   get sequence(): Types.Node[] {
-    return this.#sequence;
+    return this.#nodes;
   }
 }

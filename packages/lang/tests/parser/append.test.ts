@@ -15,7 +15,7 @@ test("Consume an expected 'APPEND' pattern with an identity", () => {
   Assert.tree(
     `
     skip append <1> REF;`,
-    Helper.withIdentity(Lang.Parser.Nodes.Append, 'REF', '1')
+    Helper.identity(Lang.Parser.Nodes.Append, 'REF', '1')
   );
 });
 
@@ -23,7 +23,7 @@ test("Consume an expected 'APPEND' pattern with an auto identity", () => {
   Assert.tree(
     `
     skip append <auto> REF;`,
-    Helper.withIdentity(Lang.Parser.Nodes.Append, 'REF', 'auto')
+    Helper.identity(Lang.Parser.Nodes.Append, 'REF', 'auto')
   );
 });
 
@@ -39,7 +39,7 @@ test("Consume an expected 'APPEND LEFT' pattern ith an identity", () => {
   Assert.tree(
     `
     skip append <1> left REF_LEFT;`,
-    Helper.withIdentity(Lang.Parser.Nodes.AppendLeft, 'REF_LEFT', '1')
+    Helper.identity(Lang.Parser.Nodes.AppendLeft, 'REF_LEFT', '1')
   );
 });
 
@@ -55,7 +55,7 @@ test("Consume an expected 'APPEND RIGHT' pattern with an identity", () => {
   Assert.tree(
     `
     skip append <1> right REF_RIGHT;`,
-    Helper.withIdentity(Lang.Parser.Nodes.AppendRight, 'REF_RIGHT', '1')
+    Helper.identity(Lang.Parser.Nodes.AppendRight, 'REF_RIGHT', '1')
   );
 });
 
@@ -71,6 +71,6 @@ test("Consume an expected 'APPEND NEXT' pattern with an identity", () => {
   Assert.tree(
     `
     skip append <1> next REF_NEXT;`,
-    Helper.withIdentity(Lang.Parser.Nodes.AppendNext, 'REF_NEXT', '1')
+    Helper.identity(Lang.Parser.Nodes.AppendNext, 'REF_NEXT', '1')
   );
 });

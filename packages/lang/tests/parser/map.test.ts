@@ -6,10 +6,10 @@ test("Consume an expected 'MAP' pattern", () => {
   Assert.tree(
     `
     skip map {
-      <1> A as 'a',
-          B as 'b',
-               'c',
-               D
+      <50> A as 'a',
+           B as 'b',
+                'c',
+                D
     };`,
     {
       type: Lang.Parser.Nodes.Skip,
@@ -21,8 +21,11 @@ test("Consume an expected 'MAP' pattern", () => {
             type: Lang.Parser.Nodes.Identifier,
             value: 'A',
             left: {
-              type: Lang.Parser.Nodes.Identity,
-              value: '1'
+              type: Lang.Parser.Nodes.Arguments,
+              left: {
+                type: Lang.Parser.Nodes.Identity,
+                value: '50'
+              }
             },
             right: {
               type: Lang.Parser.Nodes.String,

@@ -6,7 +6,7 @@ import * as Context from '../context';
 
 import { Exception } from '../../core/exception';
 
-import * as And from './and';
+import * as Generic from './generic';
 
 /**
  * Consume the given node resolving the 'HAS' pattern.
@@ -23,8 +23,7 @@ export const consume = (
   if (!(node instanceof Nodes.Identity)) {
     throw new Exception('The HAS node must be an instance of an identified node.');
   }
-  const expression = node.right!;
-  const patterns = And.resolve(project, expression.right!, state);
+  const patterns = Generic.State.consume(project, node, state);
   if (patterns) {
     return project.coder.emitHasPattern(node.identity, ...patterns);
   }

@@ -18,7 +18,7 @@ import * as Skip from './patterns/skip';
 const resolveMain = (project: Project.Context, node: Types.Node): void => {
   const directive = node.right!;
   if (!(directive instanceof Nodes.Directive)) {
-    throw new Exception('The node must be an instance of a directive node.');
+    throw new Exception('The TOKEN or NODE node must be an instance of a directive.');
   }
   const state = { directive, dynamic: directive.dynamic };
   switch (node.value) {
@@ -47,7 +47,7 @@ const resolveMain = (project: Project.Context, node: Types.Node): void => {
  */
 const resolveSkip = (project: Project.Context, node: Types.Node): void => {
   if (!(node instanceof Nodes.Directive)) {
-    throw new Exception('The SKIP node must be an instance of a directive nodes.');
+    throw new Exception('The SKIP node must be an instance of a directive.');
   }
   const state = { directive: node, dynamic: false };
   Skip.consume(project, state);

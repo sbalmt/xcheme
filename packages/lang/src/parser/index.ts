@@ -1,6 +1,6 @@
-import type * as Types from '../core/types';
-
 import * as Core from '@xcheme/core';
+
+import type * as Types from '../core/types';
 
 import { Errors } from '../core/errors';
 import { Program } from './program';

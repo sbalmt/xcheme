@@ -1,10 +1,10 @@
-import type * as Types from '../core/types';
-
 import * as Core from '@xcheme/core';
 
+import type * as Types from '../core/types';
+
+import * as Nodes from '../core/nodes';
 import * as Project from '../core/project';
 import * as Parser from '../parser';
-import * as Identity from './identity';
 import * as Context from './context';
 
 import * as Import from './patterns/import';
@@ -23,7 +23,6 @@ import { Exception } from '../core/exception';
  * @throws Throws an exception when the given node isn't valid.
  */
 const resolve = (project: Project.Context, node: Types.Node, state: Context.State): void => {
-  state.identity = Identity.consume(node.right!);
   switch (node.value) {
     case Parser.Nodes.Token:
     case Parser.Nodes.AliasToken:
@@ -48,21 +47,23 @@ export const consumeNodes = (node: Types.Node, project: Project.Context): boolea
   let current;
   while ((current = node.next)) {
     const state = Context.getNewState(node);
-    switch (current.value) {
-      case Parser.Nodes.Import:
-        Import.consume(project, current);
-        break;
-      case Parser.Nodes.Export:
-        if (!Export.consume(project, current, state)) {
-          resolve(project, current.right!, state);
-          state.record!.data.exported = true;
-        }
-        break;
-      case Parser.Nodes.Skip:
-        Skip.consume(project, Core.Nodes.Next, node, state);
-        break;
-      default:
-        resolve(project, current, state);
+    if (!(current.right instanceof Nodes.Directive)) {
+      switch (current.value) {
+        case Parser.Nodes.Import:
+          Import.consume(project, current);
+          break;
+        case Parser.Nodes.Export:
+          if (!Export.consume(project, current, state)) {
+            resolve(project, current.right!, state);
+            state.record!.data.exported = true;
+          }
+          break;
+        case Parser.Nodes.Skip:
+          Skip.consume(project, Core.Nodes.Next, node, state);
+          break;
+        default:
+          resolve(project, current, state);
+      }
     }
     node = state.anchor.next!;
   }

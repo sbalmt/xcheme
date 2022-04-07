@@ -40,6 +40,27 @@ test("Parse a 'TOKEN' pattern with an alias token reference", () => {
   Assert.tokens(context, [token.data.identity], 3);
 });
 
+test("Parse a 'TOKEN' pattern with a template token reference", () => {
+  const { project, context } = Assert.lexer(
+    '@@@',
+    `
+    alias <X, Y>
+    token <X> TEMPLATE as repeat Y;
+
+    alias token ALIAS as '@';
+    token <100> TOKEN as TEMPLATE <50, ALIAS>;`
+  );
+  // Assert templates.
+  const template = project.symbols.get('@TEMPLATE:50:ALIAS')!;
+  expect(template).toBeDefined();
+  expect(template.data.identity).toBe(50);
+  // Assert tokens.
+  const token = project.symbols.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.data.identity).toBe(100);
+  Assert.tokens(context, [token.data.identity], 1);
+});
+
 test("Parse a 'TOKEN' pattern with a reference to itself", () => {
   const { project, context } = Assert.lexer(
     '@@@',
@@ -65,6 +86,26 @@ test("Parse a 'TOKEN' pattern with an alias token that has a reference to itself
   expect(token).toBeDefined();
   expect(token.data.identity).toBe(100);
   Assert.tokens(context, [token.data.identity], 1);
+});
+
+test("Parse a 'TOKEN' pattern with a template token that has a reference to itself", () => {
+  const { project, context } = Assert.lexer(
+    'foofoo',
+    `
+    alias <X>
+    token TEMPLATE as 'foo' & opt X;
+
+    token <100> TOKEN as TEMPLATE <TOKEN>;`
+  );
+  // Assert templates.
+  const template = project.symbols.get('@TEMPLATE:TOKEN')!;
+  expect(template).toBeDefined();
+  expect(template.data.identity).toBeNaN();
+  // Assert tokens.
+  const token = project.symbols.get('TOKEN')!;
+  expect(token).toBeDefined();
+  expect(token.data.identity).toBe(100);
+  Assert.tokens(context, [token.data.identity], 2);
 });
 
 test("Parse a 'TOKEN' pattern with a whole token map reference", () => {

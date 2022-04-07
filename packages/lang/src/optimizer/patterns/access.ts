@@ -46,15 +46,66 @@ const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.
 
 /**
  * Emit a new ACCESS node replacing the current one for an optimized one.
+ * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param record Node record.
+ * @param source Source record.
+ * @param target Target record.
+ * @param state Consumption state.
  */
-const emit = (direction: Core.Nodes, parent: Types.Node, record: Types.Record): void => {
-  const node = parent.get(direction)!;
-  const { identity } = record.data;
-  const replacement = new Nodes.Reference(node, identity);
-  parent.set(direction, replacement);
+const upgrade = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Types.Node,
+  source: Types.Record,
+  target: Types.Record,
+  state: Context.State
+): void => {
+  if (state.type !== Types.Directives.Node || target.data.type === Types.Directives.Node) {
+    project.addError(target.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+  } else if (Symbols.isDynamic(target)) {
+    project.addError(target.fragment, Errors.INVALID_MAP_REFERENCE);
+  } else if (source.value === Parser.Symbols.AliasToken) {
+    project.addError(source.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+  } else {
+    const node = parent.get(direction)!;
+    const { identity } = target.data;
+    const replacement = new Nodes.Reference(node, identity);
+    parent.set(direction, replacement);
+  }
+};
+
+/**
+ * Find and connect the corresponding reference for the specified record.
+ * @param project Project context.
+ * @param identifier Reference identifier.
+ * @param record Reference record.
+ * @param state Consumption state.
+ */
+const connect = (project: Project.Context, identifier: string, record: Types.Record, state: Context.State): void => {
+  const current = state.record!;
+  if (record.assigned) {
+    current.data.dependencies.push(record);
+    record.data.dependents.push(current);
+  } else {
+    project.symbols.listen(identifier, () => {
+      current.data.dependencies.push(record);
+      record.data.dependents.push(current);
+    });
+  }
+};
+
+/**
+ * Get an identifier from the given nodes.
+ * @param nodes Node list.
+ * @returns Returns the identifier.
+ */
+const getIdentifier = (nodes: Types.Node[]): string => {
+  const parts = [];
+  for (const node of nodes) {
+    parts.push(node.fragment.data);
+  }
+  return parts.join('@');
 };
 
 /**
@@ -78,14 +129,14 @@ export const consume = (
   } else {
     const record = getRecord(project, first, nodes);
     if (record) {
-      if (state.type !== Types.Directives.Node || record.data.type === Types.Directives.Node) {
-        project.addError(record.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-      } else if (Symbols.isDynamic(record)) {
-        project.addError(record.fragment, Errors.INVALID_MAP_REFERENCE);
-      } else if (first.value === Parser.Symbols.AliasToken) {
-        project.addError(first.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+      const identifier = getIdentifier(nodes);
+      connect(project, identifier, first, state);
+      if (record.assigned) {
+        upgrade(project, direction, parent, first, record, state);
       } else {
-        emit(direction, parent, record);
+        project.symbols.listen(identifier, () => {
+          upgrade(project, direction, parent, first, record, state);
+        });
       }
     }
   }

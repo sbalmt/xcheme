@@ -7,6 +7,6 @@ test("Consume an expected 'SET' pattern", () => {
   Assert.tree(
     `
     skip set <1> REF;`,
-    Helper.withState(Lang.Parser.Nodes.Set, 'REF', '1')
+    Helper.identity(Lang.Parser.Nodes.Set, 'REF', '1')
   );
 });

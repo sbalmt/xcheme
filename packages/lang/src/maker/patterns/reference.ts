@@ -34,7 +34,7 @@ const resolve = (project: Project.Context, record: Types.Record, state: Context.
  */
 const resolveSkip = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
   if (record.value !== Parser.Symbols.AliasToken) {
-    throw new Exception('The SKIP directive can only accept alias token references.');
+    throw new Exception('The SKIP directive can only accept ALIAS TOKEN references.');
   }
   return resolve(project, record, state);
 };
@@ -49,7 +49,7 @@ const resolveSkip = (project: Project.Context, record: Types.Record, state: Cont
  */
 const resolveToken = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
   if (record.value !== Parser.Symbols.Token && record.value !== Parser.Symbols.AliasToken) {
-    throw new Exception('The TOKEN directive can only accept token and alias token references.');
+    throw new Exception('The TOKEN directive can only accept TOKEN and ALIAS TOKEN references.');
   }
   return resolve(project, record, state);
 };
@@ -71,7 +71,7 @@ const resolveNode = (
 ): Coder.Pattern => {
   if (record.value !== Parser.Symbols.Node && record.value !== Parser.Symbols.AliasNode) {
     if (!(node instanceof Nodes.Identity)) {
-      throw new Exception('The NODE directive can only accept token, node and alias node references.');
+      throw new Exception('The NODE directive can only accept TOKEN, NODE and ALIAS NODE references.');
     }
     return project.coder.emitExpectUnitsPattern([node.identity]);
   }
@@ -90,7 +90,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   const identifier = node.fragment.data;
   const record = node.table.find(identifier);
   if (!record) {
-    throw new Exception(`The referenced node (${identifier}) doesn't exists.`);
+    throw new Exception(`Reference node '${identifier}' doesn't exists.`);
   }
   const directive = state.directive;
   switch (directive.type) {

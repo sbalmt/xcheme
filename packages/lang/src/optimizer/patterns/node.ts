@@ -4,6 +4,7 @@ import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
+import * as Identity from '../identity';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';
@@ -45,11 +46,15 @@ export const consume = (
     const record = node.table.get(identifier)!;
     state.record = record;
     state.type = Types.Directives.Node;
+    state.template = Symbols.isTemplate(record);
+    state.identity = Identity.consume(project, node.left, state);
     Context.setMetadata(project, identifier, record, state);
     if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
-    } else {
+    } else if (!state.template) {
       Expression.consume(project, Core.Nodes.Right, node, state);
+      emit(project, direction, parent, state);
+    } else {
       emit(project, direction, parent, state);
     }
   }

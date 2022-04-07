@@ -9,7 +9,7 @@ test("Symbol without an identity in a 'SKIP' directive", () => {
   );
 });
 
-test('Symbol without an identity', () => {
+test("Symbol without an identity in an 'ALIAS TOKEN' directive", () => {
   Assert.error(
     [Lang.Errors.UNDEFINED_IDENTITY, Lang.Errors.UNDEFINED_IDENTITY],
     `
@@ -24,5 +24,21 @@ test("Symbol without an identity in a 'MAP' operand", () => {
     alias token ALIAS as map {
       ENTRY as 'a' & symbol 'b'
     };`
+  );
+});
+
+test('Symbol with an unexpected argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_ARGUMENT, Lang.Errors.UNDEFINED_IDENTITY],
+    `
+    skip symbol <X> 'a';`
+  );
+});
+
+test('Symbol with an unexpected extra argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
+    `
+    skip symbol <100, auto> 'a';`
   );
 });

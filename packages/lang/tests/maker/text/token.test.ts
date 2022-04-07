@@ -34,6 +34,40 @@ test("Output a 'TOKEN' pattern with an alias token reference", () => {
   );
 });
 
+test("Output a 'TOKEN' pattern with a template token reference", () => {
+  Assert.output(
+    `
+    alias <X, Y>
+    token TEMPLATE as set<X> repeat Y;
+
+    alias token ALIAS as 'foo';
+    token <100> TOKEN as TEMPLATE <50, ALIAS>;`,
+    {
+      TEMPLATE: void 0,
+      '@TEMPLATE:50:ALIAS': `new Core.SetStatePattern(50, new Core.RepeatFlowPattern(L0_ALIAS))`,
+      ALIAS: `new Core.ExpectUnitPattern('f', 'o', 'o')`,
+      TOKEN: `new Core.EmitTokenPattern(100, new Core.SetStatePattern(50, new Core.RepeatFlowPattern(L0_ALIAS)))`
+    }
+  );
+});
+
+test("Output a 'TOKEN' pattern with multiple template token references", () => {
+  Assert.output(
+    `
+    alias <X>
+    token TEMPLATE as set <X> 'foo';
+
+    token <100> TOKEN_1 as TEMPLATE <50>;
+    token <101> TOKEN_2 as TEMPLATE <50>;`,
+    {
+      TEMPLATE: void 0,
+      '@TEMPLATE:50': `new Core.SetStatePattern(50, new Core.ExpectUnitPattern('f', 'o', 'o'))`,
+      TOKEN_1: `new Core.EmitTokenPattern(100, L0_TEMPLATE_50)`,
+      TOKEN_2: `new Core.EmitTokenPattern(101, L0_TEMPLATE_50)`
+    }
+  );
+});
+
 test("Output a 'TOKEN' pattern with a reference to itself", () => {
   Assert.output(
     `
@@ -66,6 +100,24 @@ test("Output a 'TOKEN' pattern with an alias token that has a reference to itsel
         /**/ `)` +
         `)`,
       TOKEN: `new Core.EmitTokenPattern(100, L0_ALIAS)`
+    }
+  );
+});
+
+test("Output a 'TOKEN' pattern with a template token that has a reference to itself", () => {
+  Assert.output(
+    `
+    alias <X>
+    token TEMPLATE as 'foo' & opt X;
+
+    token <100> TOKEN as TEMPLATE <TOKEN>;`,
+    {
+      TEMPLATE: void 0,
+      '@TEMPLATE:TOKEN':
+        `new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('f', 'o', 'o'), ` +
+        /**/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => L0_TOKEN))` +
+        `)`,
+      TOKEN: `new Core.EmitTokenPattern(100, L0_TEMPLATE_TOKEN)`
     }
   );
 });

@@ -9,6 +9,55 @@ test('Node without an identity', () => {
   );
 });
 
+test('Node with an unexpected argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_ARGUMENT, Lang.Errors.UNDEFINED_IDENTITY],
+    `
+    node <X> NODE as 'a';`
+  );
+});
+
+test('Node with an unexpected extra argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
+    `
+    node <100, auto> NODE as 'a';`
+  );
+});
+
+test('Node with an alias node template without arguments', () => {
+  Assert.error(
+    [Lang.Errors.ARGUMENTS_MISSING],
+    `
+    alias <X>
+    node TEMPLATE as opt X;
+
+    node <200> NODE as TEMPLATE;`
+  );
+});
+
+test('Node with an alias node template missing arguments', () => {
+  Assert.error(
+    [Lang.Errors.ARGUMENTS_MISSING],
+    `
+    alias <X, Y>
+    node <X> TEMPLATE as opt Y;
+
+    node <200> NODE as TEMPLATE <50>;`
+  );
+});
+
+test('Node with an alias node template using extra arguments', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
+    `
+    alias <X>
+    node TEMPLATE as set <X> 'foo';
+
+    node <100> NODE as TEMPLATE <50, NODE>;`
+  );
+});
+
 test('Node with a duplicate identifier', () => {
   Assert.error(
     [Lang.Errors.DUPLICATE_IDENTIFIER],

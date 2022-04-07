@@ -1,6 +1,8 @@
+import * as Core from '@xcheme/core';
+
 import type * as Types from './types';
 
-import * as Core from '@xcheme/core';
+import * as Parser from '../parser';
 
 import { Symbols } from '../parser/symbols';
 import { Exception } from './exception';
@@ -146,6 +148,22 @@ export const isAlias = (record: Types.Record): boolean => {
 };
 
 /**
+ * Determines whether or not the given record is a template.
+ * @param record Symbol record.
+ * @returns Returns true when the record is a template, false otherwise.
+ */
+export const isTemplate = (record: Types.Record): boolean => {
+  if (record.link) {
+    for (const current of record.link) {
+      if (current.value === Parser.Symbols.AliasParameter) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+/**
  * Determines whether or not the given record has a dynamic identity.
  * @param record Symbol record.
  * @returns Returns true when the record has a dynamic identity, false otherwise.
@@ -171,14 +189,14 @@ export const isEmpty = (record: Types.Record): boolean => {
  * @throws Throws an exception when the given error has no metadata.
  */
 export const isReferencedBy = (record: Types.Record, ...types: Types.Directives[]): boolean => {
-  const { order, dependents } = record.data;
+  const { order, dependents, dependencies } = record.data;
   let counter = 0;
   for (const dependent of dependents) {
-    if (counter > 1 || dependent === record) {
+    if (counter > 1 || dependent === record || dependencies.includes(dependent)) {
       return true;
     }
-    if (types.includes(dependent.data!.type)) {
-      if (order > dependent.data!.order) {
+    if (types.includes(dependent.data.type)) {
+      if (order > dependent.data.order) {
         return true;
       }
       counter++;

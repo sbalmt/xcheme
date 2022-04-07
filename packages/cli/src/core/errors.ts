@@ -10,7 +10,8 @@ const errorMessages = {
   [Lang.Errors.DUPLICATE_IDENTIFIER]: "Duplicate identifier '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNEXPECTED_TOKEN]: "Unexpected token '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNEXPECTED_SYNTAX]: "Unexpected syntax '{0}' at line {1}, column {2}.",
-  [Lang.Errors.UNEXPECTED_NODE]: "Unexpected node '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNEXPECTED_ARGUMENT]: "Unexpected argument '{0}' at line {1}, column {2}.",
+  [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT]: "Unexpected extra argument '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNSUPPORTED_NODE]: "Unsupported node '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNSUPPORTED_IDENTITY]: "Unsupported identity '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNDEFINED_IDENTIFIER]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}.",
@@ -29,11 +30,14 @@ const errorMessages = {
   [Lang.Errors.INVALID_MAP_ENTRY_REFERENCE]: "Map entries cannot be referenced here, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_MAP_ENTRY]: "Map entries must start with a token or string, '{0}' at line {1}, column {2}.",
   [Lang.Errors.INVALID_EXPORT]: "Exportation of '{0}' is invalid at line {1}, column {2}.",
+  [Lang.Errors.INVALID_AUTO_IDENTITY]: "Invalid auto identity at line {1}, column {2}.",
+  [Lang.Errors.INVALID_ARGUMENT]: "Invalid argument '{0}' at line {1}, column {2}.",
+  [Lang.Errors.ARGUMENTS_MISSING]: "Arguments missing at line {1}, column {2}.",
   [Lang.Errors.TOKEN_COLLISION]: "Multiple tokens with the same expression, '{0}' at line {1}, column {2}.",
   [Lang.Errors.IMPORT_DISABLED]: 'Import feature disabled, {0} at line {1}, column {2}.',
   [Lang.Errors.IMPORT_NOT_FOUND]: "File doesn't found, {0} at line {1}, column {2}.",
   [Lang.Errors.IMPORT_FAILURE]: 'Failed to compile, {0} at line {1}, column {2}.',
-  [Lang.Errors.IMPORT_CYCLIC]: 'Cyclic import error , {0} at line {1}, column {2}.'
+  [Lang.Errors.IMPORT_CYCLIC]: 'Cyclic import error , {0} at line {1}, column {2}.',
 };
 
 /**

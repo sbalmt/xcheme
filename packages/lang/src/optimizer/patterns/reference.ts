@@ -10,14 +10,39 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 import { Exception } from '../../core/exception';
 
+import * as Generic from '../patterns/generic';
+
+/**
+ * Process the corresponding template for the given record.
+ * @param project Project context.
+ * @param direction Node direction.
+ * @param parent Parent node.
+ * @param record Reference record.
+ * @param state Consumption state.
+ */
+const template = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Types.Node,
+  record: Types.Record,
+  state: Context.State
+): void => {
+  const node = parent.get(direction)!;
+  if (record.data.template) {
+    Generic.Template.consume(project, direction, parent, record, state);
+    record = node.table.get(node.fragment.data)!;
+  }
+  connect(project, node.fragment.data, record, state);
+};
+
 /**
  * Update the specified node for an optimized one after resolving its reference.
  * @param project Project context.
- * @param record Reference record.
- * @param parent Parent node.
  * @param direction Node direction.
+ * @param parent Parent node.
+ * @param record Reference record.
  */
-const upgrade = (project: Project.Context, record: Types.Record, parent: Types.Node, direction: Core.Nodes): void => {
+const upgrade = (project: Project.Context, direction: Core.Nodes, parent: Types.Node, record: Types.Record): void => {
   const node = parent.get(direction)!;
   if (!Symbols.isDynamic(record)) {
     const { identity } = record.data;
@@ -74,13 +99,30 @@ const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.R
  * Resolve and validate the corresponding reference for the specified record and node in a 'TOKEN' directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
- * @param node Input node.
+ * @param direction Node direction.
+ * @param parent Parent node.
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveToken = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
-  if (record.value === Parser.Symbols.Token || record.value === Parser.Symbols.AliasToken) {
-    connect(project, node.fragment.data, record, state);
+const resolveToken = (
+  project: Project.Context,
+  direction: Core.Nodes,
+  parent: Types.Node,
+  record: Types.Record,
+  state: Context.State
+): void => {
+  const node = parent.get(direction)!;
+  const identifier = node.fragment.data;
+  if (record.value === Parser.Symbols.Token) {
+    connect(project, identifier, record, state);
+  } else if (record.value === Parser.Symbols.AliasToken) {
+    if (record.assigned) {
+      template(project, direction, parent, record, state);
+    } else {
+      project.symbols.listen(identifier, () => {
+        template(project, direction, parent, record, state);
+      });
+    }
   } else if (record.value === Parser.Symbols.Node) {
     project.addError(node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -96,7 +138,7 @@ const resolveToken = (project: Project.Context, node: Types.Node, record: Types.
  * @param project Project context.
  * @param direction Child node direction.
  * @param parent Parent node.
- * @param record Referenced record.
+ * @param record Reference record.
  * @param state Consumption state.
  */
 const resolveNode = (
@@ -108,15 +150,23 @@ const resolveNode = (
 ): void => {
   const node = parent.get(direction)!;
   const identifier = node.fragment.data;
-  if (record.value === Parser.Symbols.Node || record.value === Parser.Symbols.AliasNode) {
+  if (record.value === Parser.Symbols.Node) {
     connect(project, identifier, record, state);
+  } else if (record.value === Parser.Symbols.AliasNode) {
+    if (record.assigned) {
+      template(project, direction, parent, record, state);
+    } else {
+      project.symbols.listen(identifier, () => {
+        template(project, direction, parent, record, state);
+      });
+    }
   } else if (record.value === Parser.Symbols.Token) {
     connect(project, identifier, record, state);
     if (record.assigned) {
-      upgrade(project, record, parent, direction);
+      upgrade(project, direction, parent, record);
     } else {
       project.symbols.listen(identifier, () => {
-        upgrade(project, record, parent, direction);
+        upgrade(project, direction, parent, record);
       });
     }
   } else if (record.value === Parser.Symbols.AliasToken) {
@@ -141,7 +191,8 @@ export const consume = (
   state: Context.State
 ): void => {
   const node = parent.get(direction)!;
-  const record = node.table.find(node.fragment.data);
+  const identifier = node.fragment.data;
+  const record = node.table.find(identifier);
   if (!record) {
     project.addError(node.fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
@@ -150,7 +201,7 @@ export const consume = (
         resolveSkip(project, node, record, state);
         break;
       case Types.Directives.Token:
-        resolveToken(project, node, record, state);
+        resolveToken(project, direction, parent, record, state);
         break;
       case Types.Directives.Node:
         resolveNode(project, direction, parent, record, state);

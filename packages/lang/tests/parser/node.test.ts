@@ -23,15 +23,18 @@ test("Consume an expected 'NODE' pattern", () => {
 test("Consume an expected 'NODE' pattern with an identity", () => {
   Assert.tree(
     `
-    node <2020> NODE as REF;`,
+    node <200> NODE as REF;`,
     {
       type: Lang.Parser.Nodes.Node,
       right: {
         type: Lang.Parser.Nodes.Identifier,
         value: 'NODE',
         left: {
-          type: Lang.Parser.Nodes.Identity,
-          value: '2020'
+          type: Lang.Parser.Nodes.Arguments,
+          left: {
+            type: Lang.Parser.Nodes.Identity,
+            value: '200'
+          }
         },
         right: {
           type: Lang.Parser.Nodes.Reference,
@@ -63,15 +66,18 @@ test("Consume an expected 'ALIAS NODE' pattern", () => {
 test("Consume an expected 'ALIAS NODE' pattern with an identity", () => {
   Assert.tree(
     `
-    alias node <2020> ALIAS as REF;`,
+    alias node <200> ALIAS as REF;`,
     {
       type: Lang.Parser.Nodes.AliasNode,
       right: {
         type: Lang.Parser.Nodes.Identifier,
         value: 'ALIAS',
         left: {
-          type: Lang.Parser.Nodes.Identity,
-          value: '2020'
+          type: Lang.Parser.Nodes.Arguments,
+          left: {
+            type: Lang.Parser.Nodes.Identity,
+            value: '200'
+          }
         },
         right: {
           type: Lang.Parser.Nodes.Reference,

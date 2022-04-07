@@ -5,7 +5,7 @@ import * as Helper from '../../helper';
  * Assert output.
  */
 type OutputMap = {
-  [identifier: string]: string;
+  [identifier: string]: string | undefined;
 };
 
 /**

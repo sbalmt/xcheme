@@ -23,6 +23,20 @@ export default class Node extends Identity {
   }
 
   /**
+   * Get the directive order.
+   */
+  get order(): number {
+    return this.#record.data.order;
+  }
+
+  /**
+   * Determines whether or not the directive is a template.
+   */
+  get template(): boolean {
+    return this.#record.data.template;
+  }
+
+  /**
    * Get the directive identifier.
    */
   get identifier(): string {

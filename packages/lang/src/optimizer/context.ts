@@ -40,6 +40,10 @@ export type State = {
    */
   identity: number;
   /**
+   * Determines whether or not the consumption is for a template.
+   */
+  template: boolean;
+  /**
    * Anchor node.
    */
   anchor: Types.Node;
@@ -60,6 +64,7 @@ export const getNewState = (anchor: Types.Node, identity?: number): State => {
     type: Types.Directives.Unknown,
     origin: Types.Origins.User,
     identity: identity ?? NaN,
+    template: false,
     anchor
   };
 };
@@ -83,7 +88,8 @@ export const setMetadata = (
     origin: state.origin,
     order: orderCounter.increment(project.coder),
     name: `L${project.id}:${identifier}`,
-    identifier,
+    template: state.template,
+    identifier: identifier,
     identity: state.identity,
     location: project.name,
     imported: false,

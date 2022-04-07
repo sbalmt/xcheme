@@ -1,6 +1,7 @@
+import * as Core from '@xcheme/core';
+
 import type * as Types from '../core/types';
 
-import * as Core from '@xcheme/core';
 import * as Lexer from '../lexer';
 
 import UnaryExpression from './patterns/unary';
@@ -11,59 +12,66 @@ import { Symbols } from './symbols';
 import { Nodes } from './nodes';
 
 /**
- * Identity pattern.
+ * Argument list pattern.
  */
-const identity = new Core.ExpectFlowPattern(
-  new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
+const argumentList: Types.Pattern = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
-    Nodes.Identity,
-    Core.Nodes.Left,
+    Core.Source.Output,
     Core.Nodes.Right,
-    new Core.ChooseUnitPattern(Lexer.Tokens.Number, Lexer.Tokens.Auto),
-    new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
-  )
-);
-
-/**
- * State pattern.
- */
-const state = new Core.ExpectFlowPattern(
-  new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
-  new Core.AppendNodePattern(
-    Nodes.State,
-    Core.Nodes.Left,
-    Core.Nodes.Right,
-    new Core.ExpectUnitPattern(Lexer.Tokens.Number),
-    new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
-  )
-);
-
-/**
- * Append pattern.
- */
-const appendPattern = new Core.UseValuePattern(
-  Nodes.Append,
-  new Core.OptFlowPattern(identity),
-  new Core.OptFlowPattern(
+    Core.Nodes.Next,
     new Core.MapFlowPattern(
-      new Core.SetValueRoute(Nodes.AppendLeft, Lexer.Tokens.Left),
-      new Core.SetValueRoute(Nodes.AppendRight, Lexer.Tokens.Right),
-      new Core.SetValueRoute(Nodes.AppendNext, Lexer.Tokens.Next)
+      new Core.SetValueRoute(Nodes.Identity, Lexer.Tokens.Auto),
+      new Core.SetValueRoute(Nodes.Identity, Lexer.Tokens.Number),
+      new Core.SetValueRoute(Nodes.Reference, Lexer.Tokens.Identifier)
+    )
+  ),
+  new Core.OptFlowPattern(new Core.ExpectUnitPattern(Lexer.Tokens.Comma), new Core.RunFlowPattern(() => argumentList))
+);
+
+/**
+ * Argument expression pattern.
+ */
+const argumentExpression = new Core.AppendNodePattern(
+  Nodes.Arguments,
+  Core.Nodes.Left,
+  Core.Nodes.Left,
+  new Core.ExpectFlowPattern(
+    new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
+    argumentList,
+    new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
+  )
+);
+
+/**
+ * Append operator pattern.
+ */
+const appendOperator = new Core.ExpectFlowPattern(
+  new Core.OptFlowPattern(argumentExpression),
+  new Core.UseValuePattern(
+    Nodes.Append,
+    new Core.OptFlowPattern(
+      new Core.MapFlowPattern(
+        new Core.SetValueRoute(Nodes.AppendLeft, Lexer.Tokens.Left),
+        new Core.SetValueRoute(Nodes.AppendRight, Lexer.Tokens.Right),
+        new Core.SetValueRoute(Nodes.AppendNext, Lexer.Tokens.Next)
+      )
     )
   )
 );
 
 /**
- * Prepend pattern.
+ * Prepend operator patten.
  */
-const prependPattern = new Core.UseValuePattern(
-  Nodes.Prepend,
-  new Core.OptFlowPattern(identity),
-  new Core.OptFlowPattern(
-    new Core.MapFlowPattern(
-      new Core.SetValueRoute(Nodes.PrependLeft, Lexer.Tokens.Left),
-      new Core.SetValueRoute(Nodes.PrependRight, Lexer.Tokens.Right),
-      new Core.SetValueRoute(Nodes.PrependNext, Lexer.Tokens.Next)
+const prependOperator = new Core.ExpectFlowPattern(
+  new Core.OptFlowPattern(argumentExpression),
+  new Core.UseValuePattern(
+    Nodes.Prepend,
+    new Core.OptFlowPattern(
+      new Core.MapFlowPattern(
+        new Core.SetValueRoute(Nodes.PrependLeft, Lexer.Tokens.Left),
+        new Core.SetValueRoute(Nodes.PrependRight, Lexer.Tokens.Right),
+        new Core.SetValueRoute(Nodes.PrependNext, Lexer.Tokens.Next)
+      )
     )
   )
 );
@@ -79,32 +87,32 @@ const unaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.PlaceRight, Lexer.Tokens.Place, Lexer.Tokens.Right),
   new Core.SetValueRoute(Nodes.PlaceNext, Lexer.Tokens.Place, Lexer.Tokens.Next),
   new Core.SetValueRoute(Nodes.Place, Lexer.Tokens.Place),
-  new Core.FlowRoute(appendPattern, Lexer.Tokens.Append),
-  new Core.FlowRoute(prependPattern, Lexer.Tokens.Prepend),
-  new Core.SetValueRoute(Nodes.Pivot, new Core.OptFlowPattern(identity), Lexer.Tokens.Pivot),
-  new Core.SetValueRoute(Nodes.Symbol, new Core.OptFlowPattern(identity), Lexer.Tokens.Symbol),
+  new Core.FlowRoute(appendOperator, Lexer.Tokens.Append),
+  new Core.FlowRoute(prependOperator, Lexer.Tokens.Prepend),
+  new Core.SetValueRoute(Nodes.Pivot, new Core.OptFlowPattern(argumentExpression), Lexer.Tokens.Pivot),
+  new Core.SetValueRoute(Nodes.Symbol, new Core.OptFlowPattern(argumentExpression), Lexer.Tokens.Symbol),
   new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
-  new Core.SetValueRoute(Nodes.Error, state, Lexer.Tokens.Error),
-  new Core.SetValueRoute(Nodes.Has, state, Lexer.Tokens.Has),
-  new Core.SetValueRoute(Nodes.Set, state, Lexer.Tokens.Set),
+  new Core.SetValueRoute(Nodes.Error, argumentExpression, Lexer.Tokens.Error),
+  new Core.SetValueRoute(Nodes.Has, argumentExpression, Lexer.Tokens.Has),
+  new Core.SetValueRoute(Nodes.Set, argumentExpression, Lexer.Tokens.Set),
   new Core.SetValueRoute(Nodes.Uncase, Lexer.Tokens.Uncase),
   new Core.SetValueRoute(Nodes.Peek, Lexer.Tokens.Peek)
 );
 
 /**
- * Map members pattern.
+ * Map member list pattern.
  */
-const mapMembers: Types.Pattern = new Core.ExpectFlowPattern(
+const mapMemberList: Types.Pattern = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
     Nodes.MapMember,
     Core.Nodes.Right,
     Core.Nodes.Next,
     new Core.ChooseFlowPattern(
-      new DirectiveExpression(Symbols.MapMember, identity, new Core.RunFlowPattern(() => expression)),
+      new DirectiveExpression(Symbols.MapMember, argumentExpression, new Core.RunFlowPattern(() => expression)),
       new Core.RunFlowPattern(() => expression)
     )
   ),
-  new Core.OptFlowPattern(new Core.ExpectUnitPattern(Lexer.Tokens.Comma), new Core.RunFlowPattern(() => mapMembers))
+  new Core.OptFlowPattern(new Core.ExpectUnitPattern(Lexer.Tokens.Comma), new Core.RunFlowPattern(() => mapMemberList))
 );
 
 /**
@@ -118,7 +126,7 @@ const mapOperand = new Core.ScopeSymbolPattern(
     Core.Nodes.Right,
     new Core.ExpectFlowPattern(
       new Core.ExpectUnitPattern(Lexer.Tokens.OpenBraces),
-      new Core.OptFlowPattern(mapMembers),
+      new Core.OptFlowPattern(mapMemberList),
       new Core.ExpectUnitPattern(Lexer.Tokens.CloseBraces)
     )
   )
@@ -151,6 +159,17 @@ const rangeOperand = new Core.PlaceNodePattern(
 );
 
 /**
+ * Reference operand pattern.
+ */
+const referenceOperand = new Core.AppendNodePattern(
+  Nodes.Reference,
+  Core.Nodes.Right,
+  Core.Nodes.Right,
+  new Core.ExpectUnitPattern(Lexer.Tokens.Identifier),
+  new Core.OptFlowPattern(argumentExpression)
+);
+
+/**
  * General operands pattern.
  */
 const generalOperands = new Core.AppendNodePattern(
@@ -160,8 +179,7 @@ const generalOperands = new Core.AppendNodePattern(
   new Core.MapFlowPattern(
     new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Any),
     new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Asterisk),
-    new Core.SetValueRoute(Nodes.String, Lexer.Tokens.String),
-    new Core.SetValueRoute(Nodes.Reference, Lexer.Tokens.Identifier)
+    new Core.SetValueRoute(Nodes.String, Lexer.Tokens.String)
   )
 );
 
@@ -213,7 +231,7 @@ const expression: Types.Pattern = new Core.ExpectFlowPattern(
           Core.Nodes.Right,
           new BinaryExpression(
             new Core.SetValuePattern(Nodes.Access, new Core.ExpectUnitPattern(Lexer.Tokens.Period)),
-            new Core.ChooseFlowPattern(mapOperand, rangeOperand, generalOperands, groupExpression)
+            new Core.ChooseFlowPattern(mapOperand, rangeOperand, referenceOperand, generalOperands, groupExpression)
           )
         )
       )
@@ -232,7 +250,7 @@ const skip = new Core.SetValueRoute(Nodes.Skip, expression, Lexer.Tokens.Skip);
  */
 const token = new Core.SetValueRoute(
   Nodes.Token,
-  new DirectiveExpression(Symbols.Token, identity, expression),
+  new DirectiveExpression(Symbols.Token, argumentExpression, expression),
   Lexer.Tokens.Token
 );
 
@@ -241,46 +259,59 @@ const token = new Core.SetValueRoute(
  */
 const node = new Core.SetValueRoute(
   Nodes.Node,
-  new DirectiveExpression(Symbols.Node, identity, expression),
+  new DirectiveExpression(Symbols.Node, argumentExpression, expression),
   Lexer.Tokens.Node
 );
 
 /**
- * Alias token directive route.
+ * Alias parameters list pattern.
  */
-const aliasToken = new Core.SetValueRoute(
-  Nodes.AliasToken,
-  new DirectiveExpression(Symbols.AliasToken, identity, expression),
-  Lexer.Tokens.Alias,
-  Lexer.Tokens.Token
+const aliasParameterList: Types.Pattern = new Core.ExpectFlowPattern(
+  new Core.EmitSymbolPattern(Symbols.AliasParameter, new Core.ExpectUnitPattern(Lexer.Tokens.Identifier)),
+  new Core.OptFlowPattern(
+    new Core.ExpectUnitPattern(Lexer.Tokens.Comma),
+    new Core.RunFlowPattern(() => aliasParameterList)
+  )
 );
 
 /**
- * Alias node directive route.
+ * Alias directives route.
  */
-const aliasNode = new Core.SetValueRoute(
-  Nodes.AliasNode,
-  new DirectiveExpression(Symbols.AliasNode, identity, expression),
-  Lexer.Tokens.Alias,
-  Lexer.Tokens.Node
+const aliases = new Core.FlowRoute(
+  new Core.ExpectFlowPattern(
+    new Core.OptFlowPattern(
+      new Core.ScopeSymbolPattern(
+        new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
+        aliasParameterList,
+        new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
+      )
+    ),
+    new Core.MapFlowPattern(
+      new Core.SetValueRoute(
+        Nodes.AliasToken,
+        new DirectiveExpression(Symbols.AliasToken, argumentExpression, expression),
+        Lexer.Tokens.Token
+      ),
+      new Core.SetValueRoute(
+        Nodes.AliasNode,
+        new DirectiveExpression(Symbols.AliasNode, argumentExpression, expression),
+        Lexer.Tokens.Node
+      )
+    )
+  ),
+  Lexer.Tokens.Alias
 );
 
 /**
  * Export modifier route.
  */
-const exportModifier = new Core.SetValueRoute(
+const exporter = new Core.SetValueRoute(
   Nodes.Export,
   new Core.AppendNodePattern(
     Core.Source.Output,
     Core.Nodes.Right,
     Core.Nodes.Right,
-    new Core.MapFlowPattern(
-      token,
-      node,
-      aliasToken,
-      aliasNode,
-      new Core.SetValueRoute(Nodes.Identifier, Lexer.Tokens.Identifier)
-    )
+    new Core.MapFlowPattern(token, node, aliases, new Core.SetValueRoute(Nodes.Identifier, Lexer.Tokens.Identifier))
   ),
   Lexer.Tokens.Export
 );
@@ -288,7 +319,7 @@ const exportModifier = new Core.SetValueRoute(
 /**
  * Import module route.
  */
-const importModule = new Core.SetValueRoute(
+const importer = new Core.SetValueRoute(
   Nodes.Import,
   new Core.AppendNodePattern(
     Nodes.String,
@@ -308,7 +339,7 @@ export const Program = new Core.ExpectFlowPattern(
       new Core.EmitNodePattern(
         Core.Source.Output,
         Core.Nodes.Right,
-        new Core.MapFlowPattern(importModule, skip, token, node, aliasToken, aliasNode, exportModifier),
+        new Core.MapFlowPattern(skip, token, node, aliases, exporter, importer),
         new Core.ExpectUnitPattern(Lexer.Tokens.Semicolon)
       )
     )

@@ -15,7 +15,7 @@ test("Consume an expected 'SYMBOL' pattern with an identity", () => {
   Assert.tree(
     `
     skip symbol <1> REF;`,
-    Helper.withIdentity(Lang.Parser.Nodes.Symbol, 'REF', '1')
+    Helper.identity(Lang.Parser.Nodes.Symbol, 'REF', '1')
   );
 });
 
@@ -23,6 +23,6 @@ test("Consume an expected 'SYMBOL' pattern with an auto identity", () => {
   Assert.tree(
     `
     skip symbol <auto> REF;`,
-    Helper.withIdentity(Lang.Parser.Nodes.Symbol, 'REF', 'auto')
+    Helper.identity(Lang.Parser.Nodes.Symbol, 'REF', 'auto')
   );
 });

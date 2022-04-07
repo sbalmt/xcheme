@@ -73,6 +73,10 @@ export type Metadata = {
      */
     name: string;
     /**
+     * Determines whether or not the record is a template.
+     */
+    template: boolean;
+    /**
      * Record identifier.
      */
     identifier: string;

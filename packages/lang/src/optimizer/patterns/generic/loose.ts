@@ -4,7 +4,7 @@ import * as Project from '../../../core/project';
 import * as Types from '../../../core/types';
 import * as Context from '../../context';
 import * as Loose from '../../loose';
-import * as Nodes from '../../nodes';
+import * as Tree from '../../tree';
 
 import * as Expression from '../expression';
 
@@ -25,7 +25,7 @@ export const consume = (
 ): void => {
   const node = parent.get(direction)!;
   const record = Loose.resolve(project, identifier, node, state);
-  const reference = Nodes.getReference(record.data.identifier, node.table, node.fragment.location);
+  const reference = Tree.getReference(record.data.identifier, node.table, node.fragment.location);
   parent.set(direction, reference);
   Expression.consume(project, direction, parent, state);
 };

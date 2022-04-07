@@ -7,5 +7,6 @@ export const enum Symbols {
   Node,
   AliasToken,
   AliasNode,
+  AliasParameter,
   MapMember
 }

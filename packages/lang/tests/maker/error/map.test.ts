@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test('Map with a duplicate entry identifier', () => {
+test('Dynamic map with a duplicate entry identifier', () => {
   Assert.error(
     [Lang.Errors.DUPLICATE_IDENTIFIER],
     `
@@ -12,7 +12,7 @@ test('Map with a duplicate entry identifier', () => {
   );
 });
 
-test('Dynamic map without an <auto> identity', () => {
+test('Dynamic map without an auto identity', () => {
   Assert.error(
     [Lang.Errors.UNDEFINED_AUTO_IDENTITY, Lang.Errors.UNSUPPORTED_IDENTITY],
     `
@@ -22,7 +22,27 @@ test('Dynamic map without an <auto> identity', () => {
   );
 });
 
-test('Skip with an identified map', () => {
+test('Dynamic map with an unexpected argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_ARGUMENT],
+    `
+    token <auto> TOKEN as map {
+      <X> A as 'a'
+    };`
+  );
+});
+
+test('Dynamic map with an unexpected extra argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
+    `
+    token <auto> TOKEN as map {
+      <0, X> A as 'a'
+    };`
+  );
+});
+
+test('Skip with a dynamic map', () => {
   Assert.error(
     [Lang.Errors.UNSUPPORTED_IDENTITY],
     `

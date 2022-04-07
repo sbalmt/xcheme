@@ -2,12 +2,13 @@ import * as Core from '@xcheme/core';
 
 import * as Project from '../core/project';
 import * as Types from '../core/types';
+import * as Parser from '../parser';
 
 import { Errors } from '../core/errors';
 
 import * as Token from './patterns/token';
 import * as Context from './context';
-import * as Nodes from './nodes';
+import * as Tree from './tree';
 
 /**
  * Emit a new loose token and returns its corresponding record.
@@ -18,7 +19,13 @@ import * as Nodes from './nodes';
  */
 const emit = (project: Project.Context, node: Types.Node, state: Context.State): Types.Record => {
   const identity = Project.Context.identity.increment(project.coder, project.options.identity);
-  const token = Nodes.getToken(`@REF${identity}`, node.table, node.fragment.location, node);
+  const identifier = `@REF${identity}`;
+  const token = Tree.getDirective(
+    Parser.Nodes.Token,
+    node.table,
+    Tree.getIdentifier(Parser.Nodes.Token, identifier, identity, node.table, node.fragment.location),
+    node
+  );
   const temp = Context.getNewState(state.anchor, identity);
   temp.origin = Types.Origins.Loose;
   Token.consume(project, Core.Nodes.Right, token, temp);

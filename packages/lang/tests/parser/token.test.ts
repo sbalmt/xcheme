@@ -23,15 +23,18 @@ test("Consume an expected 'TOKEN' pattern", () => {
 test("Consume an expected 'TOKEN' pattern with an identity", () => {
   Assert.tree(
     `
-    token <1010> TOKEN as REF;`,
+    token <100> TOKEN as REF;`,
     {
       type: Lang.Parser.Nodes.Token,
       right: {
         type: Lang.Parser.Nodes.Identifier,
         value: 'TOKEN',
         left: {
-          type: Lang.Parser.Nodes.Identity,
-          value: '1010'
+          type: Lang.Parser.Nodes.Arguments,
+          left: {
+            type: Lang.Parser.Nodes.Identity,
+            value: '100'
+          }
         },
         right: {
           type: Lang.Parser.Nodes.Reference,
@@ -63,15 +66,18 @@ test("Consume an expected 'ALIAS TOKEN' pattern", () => {
 test("Consume an expected 'ALIAS TOKEN' pattern with an identity", () => {
   Assert.tree(
     `
-    alias token <1010> ALIAS as REF;`,
+    alias token <100> ALIAS as REF;`,
     {
       type: Lang.Parser.Nodes.AliasToken,
       right: {
         type: Lang.Parser.Nodes.Identifier,
         value: 'ALIAS',
         left: {
-          type: Lang.Parser.Nodes.Identity,
-          value: '1010'
+          type: Lang.Parser.Nodes.Arguments,
+          left: {
+            type: Lang.Parser.Nodes.Identity,
+            value: '100'
+          }
         },
         right: {
           type: Lang.Parser.Nodes.Reference,

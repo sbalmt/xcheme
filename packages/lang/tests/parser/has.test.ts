@@ -7,6 +7,6 @@ test("Consume an expected 'HAS' pattern", () => {
   Assert.tree(
     `
     skip has <1> REF;`,
-    Helper.withState(Lang.Parser.Nodes.Has, 'REF', '1')
+    Helper.identity(Lang.Parser.Nodes.Has, 'REF', '1')
   );
 });

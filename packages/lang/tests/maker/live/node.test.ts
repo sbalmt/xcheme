@@ -116,6 +116,51 @@ test("Parse a 'NODE' pattern with an alias node reference", () => {
   Assert.nodes(context, [node.data.identity], 3);
 });
 
+test("Parse a 'NODE' pattern with a template node reference", () => {
+  const { project, context } = Assert.parser(
+    'foofoo',
+    `
+    alias <X, Y>
+    node <X> TEMPLATE as repeat Y;
+
+    token <100> TOKEN as 'foo';
+    node  <200> NODE  as TEMPLATE <50, TOKEN>;`
+  );
+  // Assert templates.
+  const template = project.symbols.get('@TEMPLATE:50:TOKEN')!;
+  expect(template).toBeDefined();
+  expect(template.data.identity).toBe(50);
+  // Assert nodes.
+  const node = project.symbols.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.data.identity).toBe(200);
+  Assert.nodes(context, [node.data.identity], 1);
+});
+
+test("Parse a 'NODE' pattern with multiple template node references", () => {
+  const { project, context } = Assert.parser(
+    'foofoo',
+    `
+    alias <X>
+    node TEMPLATE as set <X> 'foo';
+
+    node <200> NODE_1 as TEMPLATE <50>;
+    node <201> NODE_2 as TEMPLATE <50>;`
+  );
+  // Assert templates.
+  const template = project.symbols.get('@TEMPLATE:50')!;
+  expect(template).toBeDefined();
+  expect(template.data.identity).toBeNaN();
+  // Assert nodes.
+  const node1 = project.symbols.get('NODE_1')!;
+  const node2 = project.symbols.get('NODE_2')!;
+  expect(node1).toBeDefined();
+  expect(node2).toBeDefined();
+  expect(node1.data.identity).toBe(200);
+  expect(node2.data.identity).toBe(201);
+  Assert.nodes(context, [node1.data.identity], 2);
+});
+
 test("Parse a 'NODE' pattern with a reference to itself", () => {
   const { project, context } = Assert.parser(
     '@@@',
@@ -151,6 +196,26 @@ test("Parse a 'NODE' pattern with an alias node that has a reference to itself",
   expect(node).toBeDefined();
   expect(node.data.identity).toBe(200);
   Assert.nodes(context, [node.data.identity], 1);
+});
+
+test("Parse a 'NODE' pattern with a template node that has a reference to itself", () => {
+  const { project, context } = Assert.parser(
+    'foofoo',
+    `
+    alias <X>
+    node TEMPLATE as 'foo' & opt X;
+
+    node <200> NODE as TEMPLATE <NODE>;`
+  );
+  // Assert templates.
+  const template = project.symbols.get('@TEMPLATE:NODE')!;
+  expect(template).toBeDefined();
+  expect(template.data.identity).toBeNaN();
+  // Assert nodes.
+  const node = project.symbols.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.data.identity).toBe(200);
+  Assert.nodes(context, [node.data.identity], 2);
 });
 
 test("Parse a 'NODE' pattern with token map entry references", () => {

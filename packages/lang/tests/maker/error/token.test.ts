@@ -9,6 +9,55 @@ test('Token without an identity', () => {
   );
 });
 
+test('Token with an unexpected argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_ARGUMENT, Lang.Errors.UNDEFINED_IDENTITY],
+    `
+    token <X> TOKEN as 'a';`
+  );
+});
+
+test('Token with an unexpected extra argument', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
+    `
+    token <100, auto> TOKEN as 'a';`
+  );
+});
+
+test('Token with an alias token template without arguments', () => {
+  Assert.error(
+    [Lang.Errors.ARGUMENTS_MISSING],
+    `
+    alias <X>
+    token TEMPLATE as opt X;
+
+    token <100> TOKEN as TEMPLATE;`
+  );
+});
+
+test('Token with an alias token template missing arguments', () => {
+  Assert.error(
+    [Lang.Errors.ARGUMENTS_MISSING],
+    `
+    alias <X, Y>
+    token <X> TEMPLATE as opt Y;
+
+    token <100> TOKEN as TEMPLATE <50>;`
+  );
+});
+
+test('Token with an alias token template using extra arguments', () => {
+  Assert.error(
+    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
+    `
+    alias <X>
+    token TEMPLATE as set <X> 'foo';
+
+    token <100> TOKEN as TEMPLATE <50, TOKEN>;`
+  );
+});
+
 test('Token with a duplicate identifier', () => {
   Assert.error(
     [Lang.Errors.DUPLICATE_IDENTIFIER],

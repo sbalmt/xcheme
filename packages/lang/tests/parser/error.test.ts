@@ -7,6 +7,6 @@ test("Consume an expected 'ERROR' pattern", () => {
   Assert.tree(
     `
     skip error <1> REF;`,
-    Helper.withState(Lang.Parser.Nodes.Error, 'REF', '1')
+    Helper.identity(Lang.Parser.Nodes.Error, 'REF', '1')
   );
 });
