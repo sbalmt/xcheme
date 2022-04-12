@@ -1,6 +1,5 @@
 import * as Core from '@xcheme/core';
 
-import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
@@ -23,7 +22,10 @@ import * as Expression from './expression';
 const getRoute = (direction: Core.Nodes, parent: Types.Node, ancestor?: Context.Node): Types.Node | undefined => {
   const node = parent.get(direction)!;
   if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
-    if (node.value === Parser.Nodes.String || node instanceof Nodes.Identity || node instanceof Nodes.Sequence) {
+    if (
+      node.value === Parser.Nodes.String ||
+      (node.assigned && (node.data.record !== void 0 || node.data.sequence !== void 0))
+    ) {
       if (ancestor && parent) {
         ancestor.parent.set(ancestor.direction!, parent.right);
       }
@@ -39,47 +41,36 @@ const getRoute = (direction: Core.Nodes, parent: Types.Node, ancestor?: Context.
 /**
  * Emit an optimized member node replacing the current child node from the given parent.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param entry Entry node.
+ * @param member Entry member node.
  * @param identity Member identity.
- * @param member Member node.
  * @returns Returns true when the member node was emitted, false otherwise.
  */
-const emit = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  identity: number,
-  member: Types.Node
-): boolean => {
+const emit = (project: Project.Context, entry: Types.Node, member: Types.Node, identity: number): boolean => {
   const route = getRoute(Core.Nodes.Right, member);
   if (route) {
     if (route.value === Parser.Nodes.String) {
       Loose.collision(project, route.fragment.data, route);
     }
-    const expression = member.right!;
-    const replacement = new Nodes.Member(expression, identity, route);
-    parent.set(direction, replacement);
+    Types.assignNode(entry, {
+      type: Types.Nodes.MemberRoute,
+      identity: identity,
+      route: route
+    });
     return true;
   }
-  project.addError(parent.fragment, Errors.INVALID_MAP_ENTRY);
+  project.addError(entry.fragment, Errors.INVALID_MAP_ENTRY);
   return false;
 };
 
 /**
- * Consume a child node from the AST in the given parent and optimize the map pattern.
+ * Consume the given node and optimize the MAP pattern.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Map node.
  * @param state Context state.
  */
-export const consume = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  state: Context.State
-): void => {
-  let entry = parent.get(direction)!.right;
+export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
+  let entry = node.right;
   const record = state.record!;
   const dynamic = Symbols.isDynamic(record);
   while (entry) {
@@ -88,8 +79,8 @@ export const consume = (
       const identity = dynamic
         ? Project.Context.identity.increment(project.coder, project.options.identity)
         : Core.Source.Output;
-      Expression.consume(project, Core.Nodes.Right, entry, state);
-      emit(project, Core.Nodes.Right, entry, identity, entry);
+      Expression.consume(project, entry.right!, state);
+      emit(project, entry, entry, identity);
     } else {
       if (state.type === Types.Directives.Skip) {
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
@@ -110,8 +101,8 @@ export const consume = (
         Context.setMetadata(project, identifier, state.record!, state);
         record.data.dependencies.push(state.record);
         state.record.data.dependents.push(record);
-        Expression.consume(project, Core.Nodes.Right, member, state);
-        if (emit(project, Core.Nodes.Right, entry, state.identity, member)) {
+        Expression.consume(project, member.right!, state);
+        if (emit(project, entry, member, state.identity)) {
           project.symbols.add(state.record);
         }
         state.identity = identity;

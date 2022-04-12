@@ -1,6 +1,3 @@
-import * as Core from '@xcheme/core';
-
-import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
@@ -26,10 +23,10 @@ const getAllNodes = (node: Types.Node): Types.Node[] => {
 };
 
 /**
- * Get the record that corresponds to the path in all the given member nodes.
+ * Get the record that corresponds to the path in the given member nodes.
  * @param project Project context.
  * @param record Base record.
- * @param nodes All members nodes.
+ * @param nodes Members nodes.
  * @returns Returns the corresponding record or undefined when the path wasn't found.
  */
 const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.Node[]): Types.Record | undefined => {
@@ -45,18 +42,16 @@ const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.
 };
 
 /**
- * Emit a new ACCESS node replacing the current one for an optimized one.
+ * Upgrade the specified node for an optimized one after resolving its reference.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Reference node.
  * @param source Source record.
  * @param target Target record.
  * @param state Consumption state.
  */
 const upgrade = (
   project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
+  node: Types.Node,
   source: Types.Record,
   target: Types.Record,
   state: Context.State
@@ -68,15 +63,15 @@ const upgrade = (
   } else if (source.value === Parser.Symbols.AliasToken) {
     project.addError(source.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
   } else {
-    const node = parent.get(direction)!;
-    const { identity } = target.data;
-    const replacement = new Nodes.Reference(node, identity);
-    parent.set(direction, replacement);
+    Types.assignNode(node, {
+      type: Types.Nodes.Reference,
+      record: target
+    });
   }
 };
 
 /**
- * Find and connect the corresponding reference for the specified record.
+ * Find and connect the corresponding reference for the specified node and record.
  * @param project Project context.
  * @param identifier Reference identifier.
  * @param record Reference record.
@@ -109,19 +104,12 @@ const getIdentifier = (nodes: Types.Node[]): string => {
 };
 
 /**
- * Consume a child node from the AST on the given parent and optimize the ACCESS pattern.
+ * Consume the given node and optimize the ACCESS pattern.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Access node.
  * @param state Consumption state.
  */
-export const consume = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  state: Context.State
-): void => {
-  const node = parent.get(direction)!;
+export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const nodes = getAllNodes(node);
   const first = node.table.find(nodes[0].fragment.data);
   if (!first) {
@@ -132,10 +120,10 @@ export const consume = (
       const identifier = getIdentifier(nodes);
       connect(project, identifier, first, state);
       if (record.assigned) {
-        upgrade(project, direction, parent, first, record, state);
+        upgrade(project, node, first, record, state);
       } else {
         project.symbols.listen(identifier, () => {
-          upgrade(project, direction, parent, first, record, state);
+          upgrade(project, node, first, record, state);
         });
       }
     }

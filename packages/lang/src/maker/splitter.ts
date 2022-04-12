@@ -1,7 +1,7 @@
-import * as Nodes from '../core/nodes';
 import * as Coder from '../core/coder/base';
-import * as String from '../core/string';
+import * as Nodes from '../core/nodes';
 import * as Project from '../core/project';
+import * as String from '../core/string';
 import * as Types from '../core/types';
 import * as Parser from '../parser';
 import * as Context from './context';
@@ -15,15 +15,15 @@ import * as And from './patterns/and';
  * @param state Consumption state.
  * @returns Returns an array containing all patterns or undefined when the node is invalid.
  */
-const split = (project: Project.Context, node: Nodes.Sequence, state: Context.State): Coder.Pattern[] | undefined => {
-  const record = node.sequence.shift()!;
+const split = (project: Project.Context, node: Types.Node, state: Context.State): Coder.Pattern[] | undefined => {
+  const current = node.data.sequence!.shift()!;
   const patterns = And.resolve(project, node, state);
   if (patterns) {
     let units;
-    if (node.type === Parser.Nodes.String) {
-      units = String.extract(record.fragment.data).split('');
+    if (node.data.type === Types.Nodes.StringSequence) {
+      units = String.extract(current.fragment.data).split('');
     } else {
-      units = [(record as Nodes.Identity).identity];
+      units = [Nodes.getIdentity(current)];
     }
     return [project.coder.emitExpectUnitsPattern(units), ...patterns];
   }
@@ -49,7 +49,7 @@ const traverse = (project: Project.Context, node: Types.Node, state: Context.Sta
 };
 
 /**
- * Resolve the given node splitting the first part from the sequential node in an 'AND' pattern.
+ * Resolve the given node splitting the first part from the sequential node in an AND pattern.
  * @param project Project context.
  * @param node Input node.
  * @param state Consumption state.
@@ -61,8 +61,8 @@ export const resolve = (
   state: Context.State
 ): Coder.Pattern[] | undefined => {
   if (node.value === Parser.Nodes.And) {
-    if (node instanceof Nodes.Sequence) {
-      if (node.sequence.length > 1) {
+    if (node.assigned && node.data.sequence !== void 0) {
+      if (node.data.sequence.length > 1) {
         return split(project, node, state);
       }
     } else {

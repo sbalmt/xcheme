@@ -1,7 +1,7 @@
-import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
-import * as String from '../../core/string';
+import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
+import * as String from '../../core/string';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -9,11 +9,11 @@ import * as Context from '../context';
 import * as Expression from './expression';
 
 /**
- * Resolve the given input node as an 'AND' pattern.
+ * Resolve the AND pattern in the given expression node.
  * @param project Project context.
- * @param node Input node.
+ * @param node Expression node.
  * @param state Consumption state.
- * @returns Returns an array containing all rules or undefined when the pattern is invalid.
+ * @returns Returns an array containing all patterns or undefined when the expression node is invalid.
  */
 export const resolve = (
   project: Project.Context,
@@ -25,13 +25,13 @@ export const resolve = (
     if (pattern) {
       return [pattern];
     }
-  } else if (node instanceof Nodes.Sequence) {
+  } else if (node.assigned && node.data.sequence !== void 0) {
     let units;
-    if (node.type === Parser.Nodes.String) {
-      const words = node.sequence.map((node) => String.extract(node.fragment.data));
+    if (node.data.type === Types.Nodes.StringSequence) {
+      const words = node.data.sequence.map((node) => String.extract(node.fragment.data));
       units = words.join('').split('');
     } else {
-      units = node.sequence.map((node) => (node as Nodes.Identity).identity);
+      units = node.data.sequence.map((node) => Nodes.getIdentity(node));
     }
     return [project.coder.emitExpectUnitsPattern(units)];
   } else {
@@ -47,9 +47,9 @@ export const resolve = (
 };
 
 /**
- * Consume the given node resolving the 'AND' pattern.
+ * Consume the given node making the AND pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node AND node.
  * @param state Consumption state.
  * @returns Returns the pattern or undefined when the node is invalid.
  */

@@ -122,6 +122,19 @@ export default class Node<T extends Metadata.Types> extends Metadata.Container<M
   }
 
   /**
+   * Get a shallow copy of the node.
+   * @returns Returns the generated node.
+   */
+  clone(): Node<T> {
+    const result = new Node(this.#fragment, this.#value, this.#table);
+    result.#children = { ...this.#children };
+    if (this.assigned) {
+      result.assign(this.data);
+    }
+    return result;
+  }
+
+  /**
    * Get a child node in the specified direction.
    * @param child Child node direction.
    * @returns Return the corresponding child node.

@@ -1,5 +1,5 @@
-import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
+import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
@@ -25,82 +25,82 @@ const resolve = (project: Project.Context, record: Types.Record, state: Context.
 };
 
 /**
- * Resolve the corresponding reference for the specified symbol in a 'SKIP' directive.
+ * Resolve the corresponding reference for the specified symbol in a SKIP directive.
  * @param project Project context.
- * @param record Symbol record.
+ * @param target Target record.
  * @param state Consumption state.
- * @returns Returns the corresponding reference pattern.
+ * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveSkip = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
-  if (record.value !== Parser.Symbols.AliasToken) {
-    throw new Exception('The SKIP directive can only accept ALIAS TOKEN references.');
+const resolveSkip = (project: Project.Context, target: Types.Record, state: Context.State): Coder.Pattern => {
+  if (target.value !== Parser.Symbols.AliasToken) {
+    throw new Exception('SKIP directive can only accept ALIAS TOKEN references.');
   }
-  return resolve(project, record, state);
+  return resolve(project, target, state);
 };
 
 /**
- * Resolve the corresponding reference for the specified record in a 'TOKEN' directive.
+ * Resolve the corresponding reference for the specified record in a TOKEN directive.
  * @param project Project context.
- * @param record Symbol record.
+ * @param target Target record.
  * @param state Consumption state.
- * @returns Returns the corresponding reference pattern.
+ * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveToken = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
-  if (record.value !== Parser.Symbols.Token && record.value !== Parser.Symbols.AliasToken) {
-    throw new Exception('The TOKEN directive can only accept TOKEN and ALIAS TOKEN references.');
+const resolveToken = (project: Project.Context, target: Types.Record, state: Context.State): Coder.Pattern => {
+  if (target.value !== Parser.Symbols.Token && target.value !== Parser.Symbols.AliasToken) {
+    throw new Exception('TOKEN directive can only accept TOKEN and ALIAS TOKEN references.');
   }
-  return resolve(project, record, state);
+  return resolve(project, target, state);
 };
 
 /**
- * Resolve the corresponding reference for the specified record in a 'NODE' directive.
+ * Resolve the corresponding reference for the specified record in a NODE directive.
  * @param project Project context.
  * @param node Reference node.
- * @param record Symbol record.
+ * @param target Target record.
  * @param state Consumption state.
- * @returns Returns the corresponding reference pattern.
+ * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
 const resolveNode = (
   project: Project.Context,
   node: Types.Node,
-  record: Types.Record,
+  target: Types.Record,
   state: Context.State
 ): Coder.Pattern => {
-  if (record.value !== Parser.Symbols.Node && record.value !== Parser.Symbols.AliasNode) {
-    if (!(node instanceof Nodes.Identity)) {
-      throw new Exception('The NODE directive can only accept TOKEN, NODE and ALIAS NODE references.');
+  if (target.value !== Parser.Symbols.Node && target.value !== Parser.Symbols.AliasNode) {
+    if (!node.assigned || (!node.data.identity && !node.data.record)) {
+      throw new Exception('NODE directive can only accept TOKEN, NODE and ALIAS NODE references.');
     }
-    return project.coder.emitExpectUnitsPattern([node.identity]);
+    return project.coder.emitExpectUnitsPattern([Nodes.getIdentity(node)]);
   }
-  return resolve(project, record, state);
+  return resolve(project, target, state);
 };
 
 /**
- * Consume the given node resolving the reference pattern.
+ * Consume the given node making the REFERENCE pattern.
  * @param project Project context.
- * @param node Reference node.
+ * @param node REFERENCE node.
  * @param state Consumption state.
  * @returns Returns the resolved pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): Coder.Pattern => {
   const identifier = node.fragment.data;
-  const record = node.table.find(identifier);
-  if (!record) {
+  const target = node.table.find(identifier);
+  if (!target) {
     throw new Exception(`Reference node '${identifier}' doesn't exists.`);
   }
-  const directive = state.directive;
-  switch (directive.type) {
+  const { type } = Nodes.getRecord(state.directive).data;
+  switch (type) {
     case Types.Directives.Skip:
-      return resolveSkip(project, record, state);
+      return resolveSkip(project, target, state);
     case Types.Directives.Token:
-      return resolveToken(project, record, state);
+      return resolveToken(project, target, state);
     case Types.Directives.Node:
-      return resolveNode(project, node, record, state);
+      return resolveNode(project, node, target, state);
     default:
-      throw new Exception(`Unsupported directive type (${directive.type}).`);
+      throw new Exception(`Unsupported directive type (${type}).`);
   }
 };

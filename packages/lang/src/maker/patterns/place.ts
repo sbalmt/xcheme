@@ -8,11 +8,11 @@ import * as Context from '../context';
 import * as And from './and';
 
 /**
- * Consume the given node resolving the 'PLACE' pattern.
+ * Consume the given node making the PLACE pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node PLACE node.
  * @param state Consumption state.
- * @param direction Placed node direction.
+ * @param direction Place direction.
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 export const consume = (

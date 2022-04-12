@@ -6,9 +6,9 @@ import * as Context from '../context';
 import * as And from './and';
 
 /**
- * Consume the given node resolving the 'PEEK' pattern.
+ * Consume the given node making PEEK pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node PEEK node.
  * @param state Consumption state.
  * @returns Returns the pattern or undefined when the node is invalid.
  */

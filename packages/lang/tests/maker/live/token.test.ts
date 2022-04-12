@@ -26,6 +26,40 @@ test("Parse a 'TOKEN' pattern with zero identity", () => {
   Assert.tokens(context, [token.data.identity], 2);
 });
 
+test("Parse a 'TOKEN' pattern with a pre-declared token reference", () => {
+  const { project, context } = Assert.lexer(
+    'barfoo',
+    `
+    token <100> TOKEN_1 as 'foo';
+    token <101> TOKEN_2 as 'bar' & TOKEN_1;`
+  );
+  // Assert tokens.
+  const token1 = project.symbols.get('TOKEN_1')!;
+  const token2 = project.symbols.get('TOKEN_2')!;
+  expect(token1).toBeDefined();
+  expect(token2).toBeDefined();
+  expect(token1.data.identity).toBe(100);
+  expect(token2.data.identity).toBe(101);
+  Assert.tokens(context, [token1.data.identity, token2.data.identity], 2);
+});
+
+test("Parse a 'TOKEN' pattern with a post-declared token reference", () => {
+  const { project, context } = Assert.lexer(
+    'barfoo',
+    `
+    token <100> TOKEN_1 as 'bar' & TOKEN_2;
+    token <101> TOKEN_2 as 'foo';`
+  );
+  // Assert tokens.
+  const token1 = project.symbols.get('TOKEN_1')!;
+  const token2 = project.symbols.get('TOKEN_2')!;
+  expect(token1).toBeDefined();
+  expect(token2).toBeDefined();
+  expect(token1.data.identity).toBe(100);
+  expect(token2.data.identity).toBe(101);
+  Assert.tokens(context, [token1.data.identity, token2.data.identity], 2);
+});
+
 test("Parse a 'TOKEN' pattern with an alias token reference", () => {
   const { project, context } = Assert.lexer(
     '@@@',

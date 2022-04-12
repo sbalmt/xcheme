@@ -97,15 +97,15 @@ const compile = (project: Project.Context, context: Types.Context, content: stri
   return (
     Lexer.consumeText(content, context) &&
     Parser.consumeTokens(context.tokens, context) &&
-    Optimizer.consumeNodes(context.node, project) &&
-    Maker.consumeNodes(context.node, project)
+    Optimizer.consumeNodes(project, context.node) &&
+    Maker.consumeNodes(project, context.node)
   );
 };
 
 /**
- * Consume the IMPORT directive in the given node and replace it by an optimized one.
+ * Consume the given node and optimize the IMPORT pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node Import node.
  */
 export const consume = (project: Project.Context, node: Types.Node): void => {
   const location = node.right!;

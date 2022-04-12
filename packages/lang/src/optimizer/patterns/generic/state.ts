@@ -1,5 +1,4 @@
-import * as Core from '@xcheme/core';
-
+import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
 import * as Types from '../../../core/types';
 import * as Argument from './argument';
@@ -8,20 +7,14 @@ import * as Context from '../../context';
 import { Errors } from '../../../core/errors';
 
 /**
- * Consume a child node from the AST on the given parent and optimize the state argument pattern.
+ * Consume the given node and optimize the STATE pattern.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node State node.
  * @param state Consumption state.
  */
-export const consume = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  state: Context.State
-): void => {
-  const replacement = Argument.consume(project, direction, parent, state);
-  if (replacement.dynamic) {
-    project.addError(replacement.fragment, Errors.INVALID_AUTO_IDENTITY);
+export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
+  Argument.consume(project, node, state);
+  if (Nodes.isDynamic(node)) {
+    project.addError(node.fragment, Errors.INVALID_AUTO_IDENTITY);
   }
 };

@@ -32,7 +32,7 @@ const globalOptions: Lang.Project.Options = {
  */
 const optimize = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => {
   Console.printLine('Optimizing...');
-  if (Lang.Optimizer.consumeNodes(node, project)) {
+  if (Lang.Optimizer.consumeNodes(project, node)) {
     Console.clearLine();
     return true;
   }
@@ -48,7 +48,7 @@ const optimize = (project: Lang.Project.Context, node: Lang.Types.Node): boolean
  */
 const make = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => {
   Console.printLine('Making...');
-  if (Lang.Maker.consumeNodes(node, project)) {
+  if (Lang.Maker.consumeNodes(project, node)) {
     Console.clearLine();
     return true;
   }

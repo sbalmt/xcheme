@@ -49,3 +49,22 @@ test("Output an 'ACCESS' pattern in a nested token map", () => {
     }
   );
 });
+
+test("Output an 'ACCESS' pattern in a post-declared token map", () => {
+  Assert.output(
+    `
+    node <200> NODE as TOKEN.A;
+    token <auto> TOKEN as map {
+      <100> A as 'a'
+    };`,
+    {
+      NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(100))`,
+      TOKEN:
+        `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
+        /**/ `new Core.MapFlowPattern(` +
+        /******/ `new Core.SetValueRoute(100, 'a')` +
+        /**/ `)` +
+        `)`
+    }
+  );
+});

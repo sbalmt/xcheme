@@ -1,9 +1,5 @@
-import * as Core from '@xcheme/core';
-
-import type * as Types from '../core/types';
-
-import * as Nodes from '../core/nodes';
 import * as Project from '../core/project';
+import * as Types from '../core/types';
 import * as Parser from '../parser';
 import * as Context from './context';
 
@@ -16,54 +12,54 @@ import * as Skip from './patterns/skip';
 import { Exception } from '../core/exception';
 
 /**
- * Resolve the TOKEN or NODE directive for the given node.
+ * Resolve the TOKEN or NODE directive in the given node.
  * @param project Project context.
  * @param node Directive node.
  * @param state Consumption state.
- * @throws Throws an exception when the given node isn't valid.
+ * @throws Throws an exception when the given node isn't a valid directive.
  */
 const resolve = (project: Project.Context, node: Types.Node, state: Context.State): void => {
-  switch (node.value) {
-    case Parser.Nodes.Token:
-    case Parser.Nodes.AliasToken:
-      Token.consume(project, Core.Nodes.Right, node, state);
-      break;
-    case Parser.Nodes.Node:
-    case Parser.Nodes.AliasNode:
-      Node.consume(project, Core.Nodes.Right, node, state);
-      break;
-    default:
-      throw new Exception(`Invalid node type (${node.value}).`);
+  const directive = node.right!;
+  if (!directive.assigned) {
+    switch (node.value) {
+      case Parser.Nodes.Token:
+      case Parser.Nodes.AliasToken:
+        Token.consume(project, directive, state);
+        break;
+      case Parser.Nodes.Node:
+      case Parser.Nodes.AliasNode:
+        Node.consume(project, directive, state);
+        break;
+      default:
+        throw new Exception(`Invalid directive type (${node.value}).`);
+    }
   }
 };
 
 /**
  * Consume the specified node (organized as an AST) and optimize that AST for the maker.
- * @param node Input node.
  * @param project Project context.
+ * @param node Main node.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeNodes = (node: Types.Node, project: Project.Context): boolean => {
-  let current;
-  while ((current = node.next)) {
+export const consumeNodes = (project: Project.Context, node: Types.Node): boolean => {
+  for (let current; (current = node.next); ) {
     const state = Context.getNewState(node);
-    if (!(current.right instanceof Nodes.Directive)) {
-      switch (current.value) {
-        case Parser.Nodes.Import:
-          Import.consume(project, current);
-          break;
-        case Parser.Nodes.Export:
-          if (!Export.consume(project, current, state)) {
-            resolve(project, current.right!, state);
-            state.record!.data.exported = true;
-          }
-          break;
-        case Parser.Nodes.Skip:
-          Skip.consume(project, Core.Nodes.Next, node, state);
-          break;
-        default:
-          resolve(project, current, state);
-      }
+    switch (current.value) {
+      case Parser.Nodes.Import:
+        Import.consume(project, current);
+        break;
+      case Parser.Nodes.Export:
+        if (!Export.consume(project, current, state)) {
+          resolve(project, current.right!, state);
+          state.record!.data.exported = true;
+        }
+        break;
+      case Parser.Nodes.Skip:
+        Skip.consume(project, current, state);
+        break;
+      default:
+        resolve(project, current, state);
     }
     node = state.anchor.next!;
   }

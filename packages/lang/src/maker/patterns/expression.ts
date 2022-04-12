@@ -32,9 +32,9 @@ import * as Uncase from './uncase';
 import * as Peek from './peek';
 
 /**
- * Consume the given node resolving the expression patterns.
+ * Consume the given node making the EXPRESSION patterns.
  * @param project Project context.
- * @param node Expression node.
+ * @param node EXPRESSION node.
  * @param state Consumption state.
  * @returns Returns the resolved pattern.
  * @throws Throws an exception when the given node isn't valid.

@@ -51,3 +51,24 @@ test("Parse an 'ACCESS' pattern in a nested token map", () => {
   expect(nodeAC.data.identity).toBe(201);
   Assert.nodes(context, [nodeAB.data.identity, nodeAC.data.identity], 2);
 });
+
+test("Parse an 'ACCESS' pattern in a post-declared token map", () => {
+  const { project, context } = Assert.parser(
+    'aaaa',
+    `
+    node <200> NODE as TOKEN.A;
+    token <auto> TOKEN as map {
+      <100> A as 'a'
+    };`
+  );
+  // Assert tokens.
+  const tokenA = project.symbols.get('TOKEN@A')!;
+  expect(tokenA).toBeDefined();
+  expect(tokenA.data.identity).toBe(100);
+  Assert.tokens(context, [tokenA.data.identity], 4);
+  // Assert nodes.
+  const node = project.symbols.get('NODE')!;
+  expect(node).toBeDefined();
+  expect(node.data.identity).toBe(200);
+  Assert.nodes(context, [node.data.identity], 4);
+});

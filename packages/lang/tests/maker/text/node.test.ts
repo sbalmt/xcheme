@@ -59,14 +59,26 @@ test("Output a 'NODE' pattern with a loose token map reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a token reference", () => {
+test("Output a 'NODE' pattern with a pre-declared token reference", () => {
   Assert.output(
     `
-    token <100> TOKEN as '@';
+    token <100> TOKEN as 'foo';
     node  <200> NODE  as TOKEN;`,
     {
-      TOKEN: `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('@'))`,
+      TOKEN: `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('f', 'o', 'o'))`,
       NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(100))`
+    }
+  );
+});
+
+test("Output a 'NODE' pattern with a post-declared token reference", () => {
+  Assert.output(
+    `
+    node  <200> NODE  as TOKEN;
+    token <100> TOKEN as 'foo';`,
+    {
+      NODE: `new Core.EmitNodePattern(200, 1, new Core.ExpectUnitPattern(100))`,
+      TOKEN: `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('f', 'o', 'o'))`
     }
   );
 });
@@ -74,7 +86,7 @@ test("Output a 'NODE' pattern with a token reference", () => {
 test("Output a 'NODE' pattern with an alias node reference", () => {
   Assert.output(
     `
-    alias node ALIAS as '@';
+    alias node ALIAS as 'foo';
     node <200> NODE  as ALIAS;`,
     {
       ALIAS: `new Core.ExpectUnitPattern(0)`,

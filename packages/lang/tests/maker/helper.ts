@@ -56,13 +56,13 @@ export const makeParser = (coder: Lang.Coder, text: string): Lang.Project.Contex
   expect(status).toBeTruthy();
 
   // Consume input nodes and optimize its tree.
-  if (!(status = Lang.Optimizer.consumeNodes(context.node, project))) {
+  if (!(status = Lang.Optimizer.consumeNodes(project, context.node))) {
     printErrors(project.errors);
   }
   expect(status).toBeTruthy();
 
   // Consume input nodes and make the output.
-  if (!(status = Lang.Maker.consumeNodes(context.node, project))) {
+  if (!(status = Lang.Maker.consumeNodes(project, context.node))) {
     printErrors(project.errors);
   }
   expect(status).toBeTruthy();
@@ -95,7 +95,7 @@ export const makeError = (coder: Lang.Coder, text: string, errors: Lang.Errors[]
   expect(status).toBeTruthy();
 
   // Consume input nodes and optimize its tree.
-  status = Lang.Optimizer.consumeNodes(context.node, project) && Lang.Maker.consumeNodes(context.node, project);
+  status = Lang.Optimizer.consumeNodes(project, context.node) && Lang.Maker.consumeNodes(project, context.node);
   const values = project.errors.map((error) => error.value);
 
   expect(status).toBeFalsy();

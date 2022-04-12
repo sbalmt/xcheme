@@ -1,5 +1,5 @@
-import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
+import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Types from '../../core/types';
 import * as String from '../../core/string';
@@ -19,13 +19,13 @@ import * as Expression from './expression';
 const resolveUnits = (node: Types.Node): (string | number)[] => {
   if (node.value === Parser.Nodes.String) {
     return String.extract(node.fragment.data).split('');
-  } else if (node instanceof Nodes.Identity) {
-    return [node.identity];
-  } else if (node instanceof Nodes.Sequence) {
-    if (node.type !== Parser.Nodes.String) {
-      return node.sequence.map((node) => (node as Nodes.Identity).identity);
+  } else if (node.data.record !== void 0) {
+    return [Nodes.getIdentity(node)];
+  } else if (node.data.sequence !== void 0) {
+    if (node.data.type === Types.Nodes.ReferenceSequence) {
+      return node.data.sequence.map((node) => Nodes.getIdentity(node));
     }
-    const data = node.sequence.map((node) => String.extract(node.fragment.data));
+    const data = node.data.sequence.map((node) => String.extract(node.fragment.data));
     return data.join('').split('');
   } else {
     throw new Exception('MAP entries must be instance of sequential or identified nodes.');
@@ -35,39 +35,45 @@ const resolveUnits = (node: Types.Node): (string | number)[] => {
 /**
  * Resolve the corresponding route for the given map entry member.
  * @param project Project context.
- * @param map Map directive.
- * @param member Map entry member.
+ * @param directive Directive node.
+ * @param entry Map entry node.
+ * @param member Map entry member node.
  * @param state Consumption state.
  * @param units Route units.
  * @returns Returns the resolved route.
  */
 const resolveRoute = (
   project: Project.Context,
-  map: Nodes.Directive,
-  member: Nodes.Member,
+  directive: Types.Node,
+  entry: Types.Node,
+  member: Types.Node,
   state: Context.State,
   units: (string | number)[]
 ): Coder.Route => {
-  if (!member.empty) {
+  const { type } = Nodes.getRecord(directive).data;
+  const { route, identity } = entry.data;
+  const dynamic = Nodes.isDynamic(entry);
+  const expression = member.value !== Parser.Nodes.Identifier ? member : member.right!;
+  if (route !== expression) {
     const current = state.dynamic;
-    state.dynamic = member.dynamic;
-    const pattern = Expression.consume(project, member, state);
+    state.dynamic = dynamic;
+    const pattern = Expression.consume(project, expression, state);
     state.dynamic = current;
-    if (member.dynamic || map.type === Types.Directives.Skip) {
+    if (dynamic || type === Types.Directives.Skip) {
       return project.coder.getRoute(units, void 0, pattern);
     }
-    return project.coder.getRoute(units, member.identity, pattern);
+    return project.coder.getRoute(units, identity, pattern);
   }
-  if (member.dynamic || map.type === Types.Directives.Skip) {
+  if (dynamic || type === Types.Directives.Skip) {
     return project.coder.getRoute(units, void 0);
   }
-  return project.coder.getRoute(units, member.identity);
+  return project.coder.getRoute(units, identity);
 };
 
 /**
- * Consume the given node resolving the 'MAP' pattern.
+ * Consume the given node making the MAP pattern.
  * @param project Project context.
- * @param node Map node.
+ * @param node MAP node.
  * @param state Consumption state.
  * @returns Returns the resolved pattern or undefined when the map node has no entry members.
  * @throws Throws an exception when the given node isn't valid.
@@ -78,15 +84,13 @@ export const consume = (
   state: Context.State
 ): Coder.Pattern | undefined => {
   let entry = node.right!;
-  const directive = state.directive;
   const routes = [];
   while (entry) {
-    const member = entry.right!;
-    if (!(member instanceof Nodes.Member)) {
-      throw new Exception('The MAP entry node must be an instance of a member node.');
+    if (!entry.assigned || !entry.data.route) {
+      throw new Exception('The MAP entry node must be an assigned node.');
     }
-    const units = resolveUnits(member.route);
-    const route = resolveRoute(project, directive, member, state, units);
+    const units = resolveUnits(entry.data.route!);
+    const route = resolveRoute(project, state.directive, entry, entry.right!, state, units);
     routes.push(route);
     entry = entry.next!;
   }

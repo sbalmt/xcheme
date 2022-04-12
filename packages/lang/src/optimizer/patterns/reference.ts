@@ -1,6 +1,3 @@
-import * as Core from '@xcheme/core';
-
-import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
@@ -13,48 +10,7 @@ import { Exception } from '../../core/exception';
 import * as Generic from '../patterns/generic';
 
 /**
- * Process the corresponding template for the given record.
- * @param project Project context.
- * @param direction Node direction.
- * @param parent Parent node.
- * @param record Reference record.
- * @param state Consumption state.
- */
-const template = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  record: Types.Record,
-  state: Context.State
-): void => {
-  const node = parent.get(direction)!;
-  if (record.data.template) {
-    Generic.Template.consume(project, direction, parent, record, state);
-    record = node.table.get(node.fragment.data)!;
-  }
-  connect(project, node.fragment.data, record, state);
-};
-
-/**
- * Update the specified node for an optimized one after resolving its reference.
- * @param project Project context.
- * @param direction Node direction.
- * @param parent Parent node.
- * @param record Reference record.
- */
-const upgrade = (project: Project.Context, direction: Core.Nodes, parent: Types.Node, record: Types.Record): void => {
-  const node = parent.get(direction)!;
-  if (!Symbols.isDynamic(record)) {
-    const { identity } = record.data;
-    const replacement = new Nodes.Reference(node, identity);
-    parent.set(direction, replacement);
-  } else {
-    project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
-  }
-};
-
-/**
- * Find and connect the corresponding reference for the specified record.
+ * Find and connect the corresponding reference for the specified identifier and record.
  * @param project Project context.
  * @param identifier Reference identifier.
  * @param record Reference record.
@@ -74,10 +30,44 @@ const connect = (project: Project.Context, identifier: string, record: Types.Rec
 };
 
 /**
- * Resolve and validate the corresponding reference for the specified record and node in a 'SKIP' directive.
+ * Process the corresponding template for the given node and record.
+ * @param project Project context.
+ * @param node Reference node.
+ * @param record Reference record.
+ * @param state Consumption state.
+ */
+const template = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+  if (record.data.template) {
+    Generic.Template.consume(project, node, record, state);
+    record = node.table.get(node.fragment.data)!;
+  }
+  connect(project, node.fragment.data, record, state);
+};
+
+/**
+ * Upgrade the specified node for an optimized one after resolving its reference.
+ * @param project Project context.
+ * @param node Reference node.
+ * @param record Reference record.
+ * @param state Consumption state.
+ */
+const upgrade = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+  if (Symbols.isDynamic(record)) {
+    project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
+  } else {
+    connect(project, node.fragment.data, record, state);
+    Types.assignNode(node, {
+      type: Types.Nodes.Reference,
+      record: record
+    });
+  }
+};
+
+/**
+ * Resolve and validate the corresponding reference for the specified record and node in a SKIP directive.
  * REMARKS: Skips can only accept alias tokens references.
  * @param project Project context.
- * @param node Input node.
+ * @param node Reference node.
  * @param record Reference record.
  * @param state Consumption state.
  */
@@ -96,31 +86,23 @@ const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.R
 };
 
 /**
- * Resolve and validate the corresponding reference for the specified record and node in a 'TOKEN' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a TOKEN directive.
  * REMARKS: Tokens can only accept tokens and alias tokens references.
  * @param project Project context.
- * @param direction Node direction.
- * @param parent Parent node.
+ * @param node Reference node.
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveToken = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  record: Types.Record,
-  state: Context.State
-): void => {
-  const node = parent.get(direction)!;
+const resolveToken = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Token) {
     connect(project, identifier, record, state);
   } else if (record.value === Parser.Symbols.AliasToken) {
     if (record.assigned) {
-      template(project, direction, parent, record, state);
+      template(project, node, record, state);
     } else {
       project.symbols.listen(identifier, () => {
-        template(project, direction, parent, record, state);
+        template(project, node, record, state);
       });
     }
   } else if (record.value === Parser.Symbols.Node) {
@@ -133,40 +115,31 @@ const resolveToken = (
 };
 
 /**
- * Resolve and validate the corresponding reference for the specified record and node in a 'NODE' directive.
+ * Resolve and validate the corresponding reference for the specified record and node in a NODE directive.
  * REMARKS: Nodes can only accept tokens, nodes and alias nodes references.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Reference node.
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveNode = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  record: Types.Record,
-  state: Context.State
-): void => {
-  const node = parent.get(direction)!;
+const resolveNode = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Node) {
     connect(project, identifier, record, state);
   } else if (record.value === Parser.Symbols.AliasNode) {
     if (record.assigned) {
-      template(project, direction, parent, record, state);
+      template(project, node, record, state);
     } else {
       project.symbols.listen(identifier, () => {
-        template(project, direction, parent, record, state);
+        template(project, node, record, state);
       });
     }
   } else if (record.value === Parser.Symbols.Token) {
-    connect(project, identifier, record, state);
     if (record.assigned) {
-      upgrade(project, direction, parent, record);
+      upgrade(project, node, record, state);
     } else {
       project.symbols.listen(identifier, () => {
-        upgrade(project, direction, parent, record);
+        upgrade(project, node, record, state);
       });
     }
   } else if (record.value === Parser.Symbols.AliasToken) {
@@ -177,20 +150,13 @@ const resolveNode = (
 };
 
 /**
- * Consume a child node from the AST on the given parent and optimize the reference pattern.
+ * Consume the given node and optimize the REFERENCE pattern.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Reference node.
  * @param state Consumption state.
  * @throws Throws an exception when the given node isn't valid.
  */
-export const consume = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  state: Context.State
-): void => {
-  const node = parent.get(direction)!;
+export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const identifier = node.fragment.data;
   const record = node.table.find(identifier);
   if (!record) {
@@ -201,10 +167,10 @@ export const consume = (
         resolveSkip(project, node, record, state);
         break;
       case Types.Directives.Token:
-        resolveToken(project, direction, parent, record, state);
+        resolveToken(project, node, record, state);
         break;
       case Types.Directives.Node:
-        resolveNode(project, direction, parent, record, state);
+        resolveNode(project, node, record, state);
         break;
       default:
         throw new Exception(`Unsupported state type: ${state.type}`);

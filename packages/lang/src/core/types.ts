@@ -51,7 +51,28 @@ export type Metadata = {
   /**
    * Node metadata.
    */
-  node: never;
+  node: {
+    /**
+     * Node type.
+     */
+    type: Nodes;
+    /**
+     * Node record.
+     */
+    record?: Record;
+    /**
+     * Node identity.
+     */
+    identity?: number;
+    /**
+     * Node sequence.
+     */
+    sequence?: Node[];
+    /**
+     * Node route.
+     */
+    route?: Node;
+  };
   /**
    * Record metadata.
    */
@@ -128,3 +149,32 @@ export const enum Origins {
   User,
   Loose
 }
+
+/**
+ * Node types.
+ */
+export const enum Nodes {
+  Directive,
+  Reference,
+  Argument,
+  MemberRoute,
+  StringSequence,
+  ReferenceSequence
+}
+
+/**
+ * Set the specified metadata in the given node.
+ * @param node Input node.
+ * @param data Assignment data.
+ * @returns Returns the given node.
+ */
+export const assignNode = (node: Node, data: Partial<Metadata['node']> & { type: Nodes }): Node => {
+  node.assign({
+    type: data.type,
+    record: data.record,
+    identity: data.identity,
+    sequence: data.sequence,
+    route: data.route
+  });
+  return node;
+};

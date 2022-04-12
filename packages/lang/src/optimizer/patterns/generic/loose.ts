@@ -1,5 +1,3 @@
-import * as Core from '@xcheme/core';
-
 import * as Project from '../../../core/project';
 import * as Types from '../../../core/types';
 import * as Context from '../../context';
@@ -9,23 +7,15 @@ import * as Tree from '../../tree';
 import * as Expression from '../expression';
 
 /**
- * Consume a child node from the AST on the given parent and optimize the loose pattern.
+ * Consume the given node and optimize the LOOSE pattern.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Loose node.
  * @param identifier Collision identifier.
  * @param state Consumption state.
  */
-export const consume = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  identifier: string,
-  state: Context.State
-): void => {
-  const node = parent.get(direction)!;
+export const consume = (project: Project.Context, node: Types.Node, identifier: string, state: Context.State): void => {
   const record = Loose.resolve(project, identifier, node, state);
-  const reference = Tree.getReference(record.data.identifier, node.table, node.fragment.location);
-  parent.set(direction, reference);
-  Expression.consume(project, direction, parent, state);
+  const reference = Tree.getReference(record.data.identifier, node.fragment.location, node.table);
+  Expression.consume(project, reference, state);
+  node.swap(reference);
 };

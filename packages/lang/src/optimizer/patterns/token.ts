@@ -1,6 +1,3 @@
-import * as Core from '@xcheme/core';
-
-import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
@@ -16,67 +13,50 @@ import * as Range from './range';
 import * as String from './string';
 
 /**
- * Emit a new project symbol and replace the current TOKEN node by an optimized one.
+ * Consume the given node and optimize its TOKEN directive.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Directive node.
  * @param state Consumption state.
  */
-const emit = (project: Project.Context, direction: Core.Nodes, parent: Types.Node, state: Context.State): void => {
-  const node = parent.get(direction)!;
-  const replacement = new Nodes.Directive(node, state.record!);
-  parent.set(direction, replacement);
-  project.symbols.add(state.record!);
-};
-
-/**
- * Consume a child node from the AST on the given parent and optimize the TOKEN directive.
- * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
- * @param state Consumption state.
- */
-export const consume = (
-  project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
-  state: Context.State
-): void => {
-  const node = parent.get(direction)!;
+export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (project.symbols.has(identifier)) {
     project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
-    const expression = node.right!;
     const record = node.table.get(identifier)!;
     state.record = record;
     state.type = Types.Directives.Token;
     state.template = Symbols.isTemplate(record);
     state.identity = Identity.consume(project, node.left, state);
     Context.setMetadata(project, identifier, record, state);
+    Types.assignNode(node, {
+      type: Types.Nodes.Directive,
+      record
+    });
     if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
     } else if (!state.template) {
+      const expression = node.right!;
       if (expression.value === Parser.Nodes.String) {
-        String.consume(project, Core.Nodes.Right, node, state);
+        String.consume(project, expression, state);
         const word = expression.fragment.data;
         if (!Loose.collision(project, word, expression)) {
-          emit(project, direction, parent, state);
+          project.symbols.add(record);
           project.symbols.link(word, identifier);
         }
       } else if (expression.value === Parser.Nodes.Range) {
-        Range.consume(project, Core.Nodes.Right, node, state);
+        Range.consume(project, expression, state);
         const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
         if (!Loose.collision(project, range, expression)) {
-          emit(project, direction, parent, state);
+          project.symbols.add(record);
           project.symbols.link(range, identifier);
         }
       } else {
-        Expression.consume(project, Core.Nodes.Right, node, state);
-        emit(project, direction, parent, state);
+        Expression.consume(project, expression, state);
+        project.symbols.add(record);
       }
     } else {
-      emit(project, direction, parent, state);
+      project.symbols.add(record);
     }
   }
 };

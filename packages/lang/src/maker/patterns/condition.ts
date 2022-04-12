@@ -7,9 +7,9 @@ import * as Context from '../context';
 import * as Expression from './expression';
 
 /**
- * Consume the given node resolving the condition pattern.
+ * Consume the given node making the CONDITION pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node CONDITION node.
  * @param state Consumption state.
  * @returns Returns the pattern or undefined when the node is invalid.
  */

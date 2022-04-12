@@ -87,7 +87,7 @@ const getIdentifier = (...nodes: Types.Node[]): string => {
 /**
  * Clone the given node replacing any reference that exists in the specified arguments.
  * @param project Project context.
- * @param node Input node.
+ * @param node Source node.
  * @param args Arguments list.
  * @param state Consumption state.
  * @returns Return the generated node tree.
@@ -145,14 +145,14 @@ const resolve = (
   const location = template.fragment.location;
   const expression = clone(project, template.right!, args, { table: template.right!.table });
   const identity = template.left ? clone(project, template.left, args, { table: template.left.table }) : void 0;
-  const type = record.data.type === Types.Directives.Token ? Parser.Nodes.AliasToken : Parser.Nodes.AliasNode;
-  const identifier = Tree.getIdentifier(type, name, identity?.left?.fragment.data, template.table, location);
+  const type = record.data.type === Types.Directives.Token ? Tree.Directives.AliasToken : Tree.Directives.AliasNode;
+  const identifier = Tree.getIdentifier(type, location, template.table, name, identity?.left?.fragment.data);
   const directive = Tree.getDirective(type, template.table, identifier, expression);
   const temp = Context.getNewState(state.anchor);
   if (record.data.type === Types.Directives.Token) {
-    Token.consume(project, Core.Nodes.Right, directive, temp);
+    Token.consume(project, directive.right!, temp);
   } else {
-    Node.consume(project, Core.Nodes.Right, directive, temp);
+    Node.consume(project, directive.right!, temp);
   }
   if (record.data.order > state.record!.data.order) {
     directive.set(Core.Nodes.Next, state.anchor.next!.next);
@@ -166,31 +166,28 @@ const resolve = (
 };
 
 /**
- * Consume a child node from the AST in the given parent for generating the corresponding directive
- * based on the respective template and optimizing the generated directive reference.
+ * Consume the given node and generate a new directive based on the corresponding template.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Reference node.
  * @param record Reference record.
  * @param state Consumption state.
  */
 export const consume = (
   project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
+  node: Types.Node,
   record: Types.Record,
   state: Context.State
 ): void => {
-  const node = parent.get(direction)!;
   const args = getArguments(project, node, getParameters(record.link!));
   if (!args) {
     project.addError(node.fragment, Errors.ARGUMENTS_MISSING);
   } else {
+    const location = node.fragment.location;
     const identifier = getIdentifier(node, ...Object.values(args));
+    const reference = Tree.getReference(identifier, location, node.table);
     if (!project.symbols.has(identifier)) {
       resolve(project, identifier, record, args, state);
     }
-    const reference = Tree.getReference(identifier, node.table, node.fragment.location);
     node.swap(reference);
   }
 };

@@ -6,9 +6,9 @@ import * as Context from '../context';
 import * as And from './and';
 
 /**
- * Consume the given node resolving the 'NOT' pattern.
+ * Consume the given node making the NOT pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node NOT node.
  * @param state Consumption state.
  * @returns Returns the pattern or undefined when the node is invalid.
  */

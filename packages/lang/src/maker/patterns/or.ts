@@ -1,7 +1,7 @@
-import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
-import * as String from '../../core/string';
+import * as Nodes from '../../core/nodes';
 import * as Project from '../../core/project';
+import * as String from '../../core/string';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -9,7 +9,7 @@ import * as Context from '../context';
 import * as Expression from './expression';
 
 /**
- * Resolve the given node as an 'OR' pattern.
+ * Resolve the given node as an OR pattern.
  * @param project Project context.
  * @param node Input node.
  * @param state Consumption state.
@@ -25,16 +25,16 @@ export const resolve = (
     if (pattern) {
       return [pattern];
     }
-  } else if (node instanceof Nodes.Sequence) {
-    if (node.type === Parser.Nodes.String) {
-      const fragments = node.sequence.map((node) => String.extract(node.fragment.data));
+  } else if (node.assigned && node.data.sequence !== void 0) {
+    if (node.data.type === Types.Nodes.StringSequence) {
+      const fragments = node.data.sequence.map((node) => String.extract(node.fragment.data));
       if (fragments.length > 3 || fragments.find((fragment) => fragment.length > 1)) {
         const routes = fragments.map((fragment) => project.coder.getRoute(fragment.split('')));
         return [project.coder.emitMapPattern(...routes)];
       }
       return [project.coder.emitChooseUnitsPattern(fragments)];
     } else {
-      const units = node.sequence.map((node) => (node as Nodes.Identity).identity);
+      const units = node.data.sequence.map(Nodes.getIdentity);
       if (units.length > 3) {
         const routes = units.map((unit) => project.coder.getRoute([unit]));
         return [project.coder.emitMapPattern(...routes)];
@@ -54,9 +54,9 @@ export const resolve = (
 };
 
 /**
- * Consume the given node resolving the 'OR' pattern.
+ * Consume the given node making the OR pattern.
  * @param project Project context.
- * @param node Input node.
+ * @param node OR node.
  * @param state Consumption state.
  * @returns Returns the pattern or undefined when the node is invalid.
  */

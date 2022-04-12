@@ -6,7 +6,7 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 
 /**
- * Consume the EXPORT directive in the given node and replace it by an optimized one.
+ * Consume the given node and optimize the EXPORT pattern.
  * @param project Project context.
  * @param node Directive node.
  * @param state Consumption state.

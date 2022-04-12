@@ -17,10 +17,10 @@ import * as Skip from './patterns/skip';
  */
 const resolveMain = (project: Project.Context, node: Types.Node): void => {
   const directive = node.right!;
-  if (!(directive instanceof Nodes.Directive)) {
-    throw new Exception('The TOKEN or NODE node must be an instance of a directive.');
+  if (!directive.assigned) {
+    throw new Exception('The TOKEN or NODE node must be an assigned node.');
   }
-  const state = { directive, dynamic: directive.dynamic };
+  const state = { directive, dynamic: Nodes.isDynamic(directive) };
   switch (node.value) {
     case Parser.Nodes.Token:
       Token.consume(project, state);
@@ -46,20 +46,20 @@ const resolveMain = (project: Project.Context, node: Types.Node): void => {
  * @throws Throws an exception when the given node isn't valid.
  */
 const resolveSkip = (project: Project.Context, node: Types.Node): void => {
-  if (!(node instanceof Nodes.Directive)) {
-    throw new Exception('The SKIP node must be an instance of a directive.');
+  if (!node.assigned) {
+    throw new Exception('The SKIP node must be an assigned node.');
   }
   const state = { directive: node, dynamic: false };
   Skip.consume(project, state);
 };
 
 /**
- * Consume the specified node (organized as an AST) and update the given project.
- * @param node Root node.
+ * Consume the specified node (organized as an AST) and make all patterns.
  * @param project Project context.
+ * @param node Main node.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeNodes = (node: Types.Node, project: Project.Context): boolean => {
+export const consumeNodes = (project: Project.Context, node: Types.Node): boolean => {
   while ((node = node.next!)) {
     if (node.value === Parser.Nodes.Import) {
       // Just ignore for now...

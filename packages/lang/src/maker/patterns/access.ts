@@ -1,20 +1,14 @@
-import * as Nodes from '../../core/nodes';
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
+import * as Nodes from '../../core/nodes';
 import * as Types from '../../core/types';
 
-import { Exception } from '../../core/exception';
-
 /**
- * Consume the given node resolving the access pattern.
+ * Consume the given node making the ACCESS pattern.
  * @param project Project context.
- * @param node Access node.
+ * @param node ACCESS node.
  * @returns Returns the resolved pattern.
- * @throws Throws an exception when the given node isn't valid.
  */
 export const consume = (project: Project.Context, node: Types.Node): Coder.Pattern => {
-  if (!(node instanceof Nodes.Identity)) {
-    throw new Exception('The ACCESS node must be an instance of an identified node.');
-  }
-  return project.coder.emitExpectUnitsPattern([node.identity]);
+  return project.coder.emitExpectUnitsPattern([Nodes.getIdentity(node)]);
 };

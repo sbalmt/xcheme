@@ -1,6 +1,3 @@
-import * as Core from '@xcheme/core';
-
-import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
 import * as Types from '../../../core/types';
 import * as Parser from '../../../parser';
@@ -9,15 +6,15 @@ import * as Context from '../../context';
 import * as Expression from '../expression';
 
 /**
- * Determines whether or not the given node contain units that's mergeable.
+ * Determines whether or not the given node contains a sequence of units.
  * @param node Expression node.
  * @param operator Operator type.
- * @returns Returns true when the node is mergeable, false otherwise.
+ * @returns Returns true when the node is a sequence, false otherwise.
  */
-const canMergeUnits = (node: Types.Node, operator: Parser.Nodes): boolean => {
+const isUnitSequence = (node: Types.Node, operator: Parser.Nodes): boolean => {
   if (node.value === operator) {
-    if (!(node instanceof Nodes.Sequence)) {
-      return canMergeUnits(node.left!, operator) && canMergeUnits(node.right!, operator);
+    if (!(node.assigned && node.data.sequence !== void 0)) {
+      return isUnitSequence(node.left!, operator) && isUnitSequence(node.right!, operator);
     }
     return true;
   }
@@ -25,61 +22,75 @@ const canMergeUnits = (node: Types.Node, operator: Parser.Nodes): boolean => {
 };
 
 /**
- * Determines whether or not the given node contain references that's mergeable.
+ * Determines whether or not the given node contains a sequence of references.
  * @param node Expression node.
  * @param operator Operator type.
- * @returns Returns true when the node is mergeable, false otherwise.
+ * @returns Returns true when the node is a sequence, false otherwise.
  */
-const canMergeReferences = (node: Types.Node, operator: Parser.Nodes): boolean => {
+const isReferenceSequence = (node: Types.Node, operator: Parser.Nodes): boolean => {
   if (node.value === operator) {
-    if (!(node instanceof Nodes.Sequence)) {
-      return canMergeReferences(node.left!, operator) && canMergeReferences(node.right!, operator);
+    if (!(node.assigned && node.data.sequence !== void 0)) {
+      return isReferenceSequence(node.left!, operator) && isReferenceSequence(node.right!, operator);
     }
     return true;
   }
-  return node instanceof Nodes.Reference;
+  return node.assigned && node.data.type === Types.Nodes.Reference;
 };
 
 /**
- * Emit a new sequence node replacing the current one for an optimized one.
- * @param direction Child node direction.
- * @param parent Parent node.
- * @param type Node type.
+ * Get all child nodes from the specified expression node in a sequence of nodes.
+ * @param node Expression node.
+ * @param operator Operator type.
+ * @returns Returns the node sequence.
  */
-const emit = (direction: Core.Nodes, parent: Types.Node, type: Parser.Nodes): void => {
-  const node = parent.get(direction)!;
-  const replacement = new Nodes.Sequence(node, type);
-  parent.set(direction, replacement);
+const getSequence = (node: Types.Node, operator: Parser.Nodes): Types.Node[] => {
+  if (node.value === operator) {
+    if (!node.assigned || !node.data.sequence) {
+      return [...getSequence(node.left!, operator), ...getSequence(node.right!, operator)];
+    }
+    return node.data.sequence;
+  }
+  return [node];
 };
 
 /**
- * Consume a child node from the AST on the given parent and optimize the sequence pattern.
+ * Assign to the given node its corresponding sequence.
+ * @param node Expression node.
+ * @param operator Operator type.
+ * @param type Sequence type.
+ */
+const assignSequence = (node: Types.Node, operator: Parser.Nodes, type: Types.Nodes): void => {
+  Types.assignNode(node, {
+    type: type,
+    sequence: getSequence(node, operator)
+  });
+};
+
+/**
+ * Consume the given node and optimize the SEQUENCE pattern.
  * @param project Project context.
- * @param direction Child node direction.
- * @param parent Parent node.
+ * @param node Sequence node.
  * @param operator Operator type.
  * @param state Context state.
  */
 export const consume = (
   project: Project.Context,
-  direction: Core.Nodes,
-  parent: Types.Node,
+  node: Types.Node,
   operator: Parser.Nodes,
   state: Context.State
 ): void => {
-  const node = parent.get(direction)!;
   if (node.value !== operator) {
-    Expression.consume(project, direction, parent, state);
+    Expression.consume(project, node, state);
   } else {
-    Expression.consume(project, Core.Nodes.Left, node, state);
-    Expression.consume(project, Core.Nodes.Right, node, state);
+    Expression.consume(project, node.left!, state);
+    Expression.consume(project, node.right!, state);
     if (state.type !== Types.Directives.Node) {
-      if (canMergeUnits(node, operator)) {
-        emit(direction, parent, Parser.Nodes.String);
+      if (isUnitSequence(node, operator)) {
+        assignSequence(node, operator, Types.Nodes.StringSequence);
       }
     } else {
-      if (canMergeReferences(node, operator)) {
-        emit(direction, parent, Parser.Nodes.Reference);
+      if (isReferenceSequence(node, operator)) {
+        assignSequence(node, operator, Types.Nodes.ReferenceSequence);
       }
     }
   }

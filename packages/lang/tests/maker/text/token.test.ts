@@ -22,14 +22,50 @@ test("Output a 'TOKEN' pattern with zero identity", () => {
   );
 });
 
+test("Output a 'TOKEN' pattern with a pre-declared token reference", () => {
+  Assert.output(
+    `
+    token <100> TOKEN_1 as 'foo';
+    token <101> TOKEN_2 as 'bar' & TOKEN_1;`,
+    {
+      TOKEN_1: `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('f', 'o', 'o'))`,
+      TOKEN_2:
+        `new Core.EmitTokenPattern(101, ` +
+        /**/ `new Core.ExpectFlowPattern(` +
+        /**/ `new Core.ExpectUnitPattern('b', 'a', 'r'), ` +
+        /**/ `new Core.EmitTokenPattern(100, ` +
+        /******/ `new Core.ExpectUnitPattern('f', 'o', 'o'))` +
+        /**/ `)` +
+        `)`
+    }
+  );
+});
+
+test("Output a 'TOKEN' pattern with a post-declared token reference", () => {
+  Assert.output(
+    `
+    token <100> TOKEN_1 as 'bar' & TOKEN_2;
+    token <101> TOKEN_2 as 'foo';`,
+    {
+      TOKEN_1:
+        `new Core.EmitTokenPattern(100, ` +
+        /**/ `new Core.ExpectFlowPattern(` +
+        /******/ `new Core.ExpectUnitPattern('b', 'a', 'r'), new Core.RunFlowPattern(() => L0_TOKEN_2)` +
+        /**/ `)` +
+        `)`,
+      TOKEN_2: `new Core.EmitTokenPattern(101, new Core.ExpectUnitPattern('f', 'o', 'o'))`
+    }
+  );
+});
+
 test("Output a 'TOKEN' pattern with an alias token reference", () => {
   Assert.output(
     `
-    alias token ALIAS as '@';
-    token <100> TOKEN as ALIAS;`,
+    token <100> TOKEN as ALIAS;
+    alias token ALIAS as 'foo';`,
     {
-      ALIAS: `new Core.ExpectUnitPattern('@')`,
-      TOKEN: `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('@'))`
+      ALIAS: `new Core.ExpectUnitPattern('f', 'o', 'o')`,
+      TOKEN: `new Core.EmitTokenPattern(100, new Core.RunFlowPattern(() => L0_ALIAS))`
     }
   );
 });
