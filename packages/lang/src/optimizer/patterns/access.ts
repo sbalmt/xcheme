@@ -25,12 +25,12 @@ const getAllNodes = (node: Types.Node): Types.Node[] => {
 /**
  * Get the record that corresponds to the path in the given member nodes.
  * @param project Project context.
- * @param record Base record.
+ * @param source Source record.
  * @param nodes Members nodes.
  * @returns Returns the corresponding record or undefined when the path wasn't found.
  */
-const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.Node[]): Types.Record | undefined => {
-  let member: Types.Record | undefined = record;
+const getRecord = (project: Project.Context, source: Types.Record, nodes: Types.Node[]): Types.Record | undefined => {
+  let member: Types.Record | undefined = source;
   for (let index = 1; index < nodes.length; index++) {
     const node = nodes[index];
     if (!(member = member.link?.get(node.fragment.data))) {
@@ -44,9 +44,10 @@ const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.
 /**
  * Upgrade the specified node for an optimized one after resolving its reference.
  * @param project Project context.
- * @param node Reference node.
+ * @param node Access node.
  * @param source Source record.
  * @param target Target record.
+ * @param nodes Member nodes.
  * @param state Consumption state.
  */
 const upgrade = (
@@ -54,14 +55,15 @@ const upgrade = (
   node: Types.Node,
   source: Types.Record,
   target: Types.Record,
+  nodes: Types.Node[],
   state: Context.State
 ): void => {
   if (state.type !== Types.Directives.Node || target.data.type === Types.Directives.Node) {
-    project.addError(target.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+    project.addError(nodes[nodes.length - 1].fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
   } else if (Symbols.isDynamic(target)) {
-    project.addError(target.fragment, Errors.INVALID_MAP_REFERENCE);
+    project.addError(nodes[nodes.length - 1].fragment, Errors.INVALID_MAP_REFERENCE);
   } else if (source.value === Parser.Symbols.AliasToken) {
-    project.addError(source.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+    project.addError(nodes[0].fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
   } else {
     Types.assignNode(node, {
       type: Types.Nodes.Reference,
@@ -111,19 +113,19 @@ const getIdentifier = (nodes: Types.Node[]): string => {
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const nodes = getAllNodes(node);
-  const first = node.table.find(nodes[0].fragment.data);
-  if (!first) {
+  const source = node.table.find(nodes[0].fragment.data);
+  if (!source) {
     project.addError(nodes[0].fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
-    const record = getRecord(project, first, nodes);
+    const record = getRecord(project, source, nodes);
     if (record) {
       const identifier = getIdentifier(nodes);
-      connect(project, identifier, first, state);
+      connect(project, identifier, source, state);
       if (record.assigned) {
-        upgrade(project, node, first, record, state);
+        upgrade(project, node, source, record, nodes, state);
       } else {
         project.symbols.listen(identifier, () => {
-          upgrade(project, node, first, record, state);
+          upgrade(project, node, source, record, nodes, state);
         });
       }
     }

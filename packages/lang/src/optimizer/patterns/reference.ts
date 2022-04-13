@@ -7,7 +7,7 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 import { Exception } from '../../core/exception';
 
-import * as Generic from '../patterns/generic';
+import * as Generic from './generic';
 
 /**
  * Find and connect the corresponding reference for the specified identifier and record.
