@@ -10,7 +10,7 @@ import * as Lang from '../../src/index';
  * @param file File path.
  * @returns Returns the imported file contents or undefined when the file wasn't found.
  */
-const loadFileHook = (file: string): string | undefined => {
+export const loadFileHook = (file: string): string | undefined => {
   const path = Path.join(__dirname, file);
   if (FS.existsSync(path)) {
     return FS.readFileSync(path, { encoding: 'utf-8' });
@@ -66,44 +66,6 @@ export const makeParser = (coder: Lang.Coder, text: string): Lang.Project.Contex
     printErrors(project.errors);
   }
   expect(status).toBeTruthy();
-
-  return project;
-};
-
-/**
- * Make a new parser using the given coder and input text expecting errors.
- * @param coder Project coder.
- * @param text Input text.
- * @param errors Expected errors.
- * @returns Returns the generated project.
- */
-export const makeError = (coder: Lang.Coder, text: string, errors: Lang.Errors[]): Lang.Project.Context => {
-  const project = new Lang.Project.Context('make', coder, { loadFileHook });
-  const context = new Core.Context<Lang.Types.Metadata>('make');
-  let status: boolean;
-
-  // Consume input text.
-  if (!(status = Lang.Lexer.consumeText(text, context))) {
-    printErrors(context.errors);
-  }
-  expect(status).toBeTruthy();
-
-  // Consume input tokens.
-  if (!(status = Lang.Parser.consumeTokens(context.tokens, context))) {
-    printErrors(context.errors);
-  }
-  expect(status).toBeTruthy();
-
-  // Consume input nodes and optimize its tree.
-  status = Lang.Optimizer.consumeNodes(project, context.node) && Lang.Maker.consumeNodes(project, context.node);
-  const values = project.errors.map((error) => error.value);
-
-  expect(status).toBeFalsy();
-  expect(values).toHaveLength(errors.length);
-
-  for (const error of errors) {
-    expect(values).toContain(error);
-  }
 
   return project;
 };

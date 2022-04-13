@@ -3,42 +3,87 @@ import * as Assert from './utils/assert';
 
 test("Symbol without an identity in a 'SKIP' directive", () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTITY],
     `
-    skip symbol 'a';`
+    skip symbol 'a';`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [9, 15],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test("Symbol without an identity in an 'ALIAS TOKEN' directive", () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTITY, Lang.Errors.UNDEFINED_IDENTITY],
     `
-    alias token ALIAS as symbol 'a';`
+    alias token ALIAS as symbol 'a';`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [25, 31],
+        line: [1, 1]
+      },
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [16, 21],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test("Symbol without an identity in a 'MAP' operand", () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTITY, Lang.Errors.UNDEFINED_IDENTITY],
     `
     alias token ALIAS as map {
       ENTRY as 'a' & symbol 'b'
-    };`
+    };`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [21, 27],
+        line: [2, 2]
+      },
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [6, 11],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Symbol with an unexpected argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_ARGUMENT, Lang.Errors.UNDEFINED_IDENTITY],
     `
-    skip symbol <X> 'a';`
+    skip symbol <X> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_ARGUMENT,
+        column: [17, 18],
+        line: [1, 1]
+      },
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [9, 19],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Symbol with an unexpected extra argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
     `
-    skip symbol <100, auto> 'a';`
+    skip symbol <100, auto> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
+        column: [22, 26],
+        line: [1, 1]
+      }
+    ]
   );
 });

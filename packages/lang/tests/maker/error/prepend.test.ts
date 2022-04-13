@@ -3,42 +3,87 @@ import * as Assert from './utils/assert';
 
 test("Prepend without an identity in a 'SKIP' directive", () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTITY],
     `
-    skip prepend 'a';`
+    skip prepend 'a';`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [9, 16],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test("Prepend without an identity in an 'ALIAS TOKEN' directive", () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTITY, Lang.Errors.UNDEFINED_IDENTITY],
     `
-    alias token ALIAS as prepend 'a';`
+    alias token ALIAS as prepend 'a';`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [25, 32],
+        line: [1, 1]
+      },
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [16, 21],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test("Prepend without an identity in a 'MAP' operand", () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTITY, Lang.Errors.UNDEFINED_IDENTITY],
     `
     alias token ALIAS as map {
       ENTRY as 'a' & prepend 'b'
-    };`
+    };`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [21, 28],
+        line: [2, 2]
+      },
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [6, 11],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Prepend with an unexpected argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_ARGUMENT, Lang.Errors.UNDEFINED_IDENTITY],
     `
-    skip prepend <X> 'a';`
+    skip prepend <X> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_ARGUMENT,
+        column: [18, 19],
+        line: [1, 1]
+      },
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [9, 20],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Prepend with an unexpected extra argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
     `
-    skip prepend <100, auto> 'a';`
+    skip prepend <100, auto> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
+        column: [23, 27],
+        line: [1, 1]
+      }
+    ]
   );
 });

@@ -3,128 +3,217 @@ import * as Assert from './utils/assert';
 
 test('Token without an identity', () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTITY],
     `
-    token TOKEN as 'a';`
+    token TOKEN as 'a';`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [10, 15],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Token with an unexpected argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_ARGUMENT, Lang.Errors.UNDEFINED_IDENTITY],
     `
-    token <X> TOKEN as 'a';`
+    token <X> TOKEN as 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_ARGUMENT,
+        column: [11, 12],
+        line: [1, 1]
+      },
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [14, 19],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Token with an unexpected extra argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
     `
-    token <100, auto> TOKEN as 'a';`
+    token <100, auto> TOKEN as 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
+        column: [16, 20],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Token with an alias token template without arguments', () => {
   Assert.error(
-    [Lang.Errors.ARGUMENTS_MISSING],
     `
     alias <X>
     token TEMPLATE as opt X;
 
-    token <100> TOKEN as TEMPLATE;`
+    token <100> TOKEN as TEMPLATE;`,
+    [
+      {
+        code: Lang.Errors.ARGUMENTS_MISSING,
+        column: [25, 33],
+        line: [4, 4]
+      }
+    ]
   );
 });
 
 test('Token with an alias token template missing arguments', () => {
   Assert.error(
-    [Lang.Errors.ARGUMENTS_MISSING],
     `
     alias <X, Y>
     token <X> TEMPLATE as opt Y;
 
-    token <100> TOKEN as TEMPLATE <50>;`
+    token <100> TOKEN as TEMPLATE <50>;`,
+    [
+      {
+        code: Lang.Errors.ARGUMENTS_MISSING,
+        column: [25, 33],
+        line: [4, 4]
+      }
+    ]
   );
 });
 
 test('Token with an alias token template using extra arguments', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
     `
     alias <X>
     token TEMPLATE as set <X> 'foo';
 
-    token <100> TOKEN as TEMPLATE <50, TOKEN>;`
+    token <100> TOKEN as TEMPLATE <50, TOKEN>;`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
+        column: [39, 44],
+        line: [4, 4]
+      }
+    ]
   );
 });
 
 test('Token with a duplicate identifier', () => {
   Assert.error(
-    [Lang.Errors.DUPLICATE_IDENTIFIER],
     `
     token <100> TOKEN as 'a';
-    token <101> TOKEN as 'b';`
+    token <101> TOKEN as 'b';`,
+    [
+      {
+        code: Lang.Errors.DUPLICATE_IDENTIFIER,
+        column: [16, 21],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Token referring an undefined identifier', () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTIFIER],
     `
-    token <100> TOKEN as ALIAS;`
+    token <100> TOKEN as ALIAS;`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTIFIER,
+        column: [25, 30],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Token referring a node (reference error)', () => {
   Assert.error(
-    [Lang.Errors.INVALID_NODE_REFERENCE],
     `
     node  <200> NODE  as '@';
-    token <100> TOKEN as NODE;`
+    token <100> TOKEN as NODE;`,
+    [
+      {
+        code: Lang.Errors.INVALID_NODE_REFERENCE,
+        column: [25, 29],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Token referring an alias node (reference error)', () => {
   Assert.error(
-    [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE],
     `
     alias node  NODE  as '@';
-    token <100> TOKEN as NODE;`
+    token <100> TOKEN as NODE;`,
+    [
+      {
+        code: Lang.Errors.INVALID_ALIAS_NODE_REFERENCE,
+        column: [25, 29],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Loose token already defined (token collision)', () => {
   Assert.error(
-    [Lang.Errors.TOKEN_COLLISION],
     `
     node  <200> NODE  as '@';
-    token <100> TOKEN as '@';`
+    token <100> TOKEN as '@';`,
+    [
+      {
+        code: Lang.Errors.TOKEN_COLLISION,
+        column: [25, 28],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Loose token range already defined (token collision)', () => {
   Assert.error(
-    [Lang.Errors.TOKEN_COLLISION],
     `
     node  <200> NODE  as from '0' to '9';
-    token <100> TOKEN as from '0' to '9';`
+    token <100> TOKEN as from '0' to '9';`,
+    [
+      {
+        code: Lang.Errors.TOKEN_COLLISION,
+        column: [34, 36],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Token already defined (token collision)', () => {
   Assert.error(
-    [Lang.Errors.TOKEN_COLLISION],
     `
     token <100> TOKEN1 as '@';
-    token <101> TOKEN2 as '@';`
+    token <101> TOKEN2 as '@';`,
+    [
+      {
+        code: Lang.Errors.TOKEN_COLLISION,
+        column: [26, 29],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Token range already defined (token collision)', () => {
   Assert.error(
-    [Lang.Errors.TOKEN_COLLISION],
     `
     token <100> TOKEN1 as from '0' to '9';
-    token <101> TOKEN2 as from '0' to '9';`
+    token <101> TOKEN2 as from '0' to '9';`,
+    [
+      {
+        code: Lang.Errors.TOKEN_COLLISION,
+        column: [35, 37],
+        line: [2, 2]
+      }
+    ]
   );
 });

@@ -3,35 +3,59 @@ import * as Assert from './utils/assert';
 
 test('Skip referring an undefined identifier', () => {
   Assert.error(
-    [Lang.Errors.UNDEFINED_IDENTIFIER],
     `
-    skip TOKEN;`
+    skip TOKEN;`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTIFIER,
+        column: [9, 14],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Skip referring a token (reference error)', () => {
   Assert.error(
-    [Lang.Errors.INVALID_TOKEN_REFERENCE],
     `
     token <100> TOKEN as '@';
-    skip TOKEN;`
+    skip TOKEN;`,
+    [
+      {
+        code: Lang.Errors.INVALID_TOKEN_REFERENCE,
+        column: [9, 14],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Skip referring a node (reference error)', () => {
   Assert.error(
-    [Lang.Errors.INVALID_NODE_REFERENCE],
     `
     node <200> NODE as '@';
-    skip NODE;`
+    skip NODE;`,
+    [
+      {
+        code: Lang.Errors.INVALID_NODE_REFERENCE,
+        column: [9, 13],
+        line: [2, 2]
+      }
+    ]
   );
 });
 
 test('Skip referring an alias node (reference error)', () => {
   Assert.error(
-    [Lang.Errors.INVALID_ALIAS_NODE_REFERENCE],
     `
     alias node NODE as '@';
-    skip NODE;`
+    skip NODE;`,
+    [
+      {
+        code: Lang.Errors.INVALID_ALIAS_NODE_REFERENCE,
+        column: [9, 13],
+        line: [2, 2]
+      }
+    ]
   );
 });

@@ -3,24 +3,42 @@ import * as Assert from './utils/assert';
 
 test('Set with an auto identity', () => {
   Assert.error(
-    [Lang.Errors.INVALID_AUTO_IDENTITY],
     `
-    skip set <auto> 'a';`
+    skip set <auto> 'a';`,
+    [
+      {
+        code: Lang.Errors.INVALID_AUTO_IDENTITY,
+        column: [9, 19],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Set with an unexpected argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_ARGUMENT],
     `
-    skip set <X> 'a';`
+    skip set <X> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_ARGUMENT,
+        column: [14, 15],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Set with an unexpected extra argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
     `
-    skip set <100, auto> 'a';`
+    skip set <100, auto> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
+        column: [19, 23],
+        line: [1, 1]
+      }
+    ]
   );
 });

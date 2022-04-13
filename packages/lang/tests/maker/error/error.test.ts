@@ -3,24 +3,42 @@ import * as Assert from './utils/assert';
 
 test('Error with an auto identity', () => {
   Assert.error(
-    [Lang.Errors.INVALID_AUTO_IDENTITY],
     `
-    skip error <auto> 'a';`
+    skip error <auto> 'a';`,
+    [
+      {
+        code: Lang.Errors.INVALID_AUTO_IDENTITY,
+        column: [9, 21],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Error with an unexpected argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_ARGUMENT],
     `
-    skip error <X> 'a';`
+    skip error <X> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_ARGUMENT,
+        column: [16, 17],
+        line: [1, 1]
+      }
+    ]
   );
 });
 
 test('Error with an unexpected extra argument', () => {
   Assert.error(
-    [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT],
     `
-    skip error <100, auto> 'a';`
+    skip error <100, auto> 'a';`,
+    [
+      {
+        code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
+        column: [21, 25],
+        line: [1, 1]
+      }
+    ]
   );
 });
