@@ -1,5 +1,3 @@
-import * as Core from '@xcheme/core';
-
 import * as Project from '../core/project';
 import * as Counter from '../core/counter';
 import * as Types from '../core/types';
@@ -8,20 +6,6 @@ import * as Types from '../core/types';
  * Global order counter.
  */
 const orderCounter = new Counter.Context();
-
-/**
- * Context node.
- */
-export type Node = {
-  /**
-   * Node direction.
-   */
-  direction: Core.Nodes;
-  /**
-   * Node parent.
-   */
-  parent: Types.Node;
-};
 
 /**
  * Context consumption state.

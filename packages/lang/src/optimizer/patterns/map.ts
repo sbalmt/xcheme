@@ -13,42 +13,58 @@ import { Errors } from '../../core/errors';
 import * as Expression from './expression';
 
 /**
- * Get the corresponding route from a child node in the given parent.
- * @param direction Child node direction.
- * @param parent Parent node.
- * @param ancestor Ancestor node.
- * @returns Returns the corresponding route or undefined when there's no route.
+ * Determines whether or not the given node is routable.
+ * @param node Route node.
+ * @returns Returns true when the node is routable, false otherwise.
  */
-const getRoute = (direction: Core.Nodes, parent: Types.Node, ancestor?: Context.Node): Types.Node | undefined => {
-  const node = parent.get(direction)!;
-  if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
-    if (
-      node.value === Parser.Nodes.String ||
-      (node.assigned && (node.data.record !== void 0 || node.data.sequence !== void 0))
-    ) {
-      if (ancestor && parent) {
-        ancestor.parent.set(ancestor.direction!, parent.right);
-      }
-      return node;
-    }
-    if (node.left) {
-      return getRoute(Core.Nodes.Left, node, { direction, parent });
-    }
-  }
-  return void 0;
+const isRoutable = (node: Types.Node): boolean => {
+  return (
+    node.value === Parser.Nodes.String ||
+    (node.assigned && (node.data.record !== void 0 || node.data.sequence !== void 0))
+  );
 };
 
 /**
- * Emit an optimized member node replacing the current child node from the given parent.
+ * Get the corresponding route from the child node in the given parent.
+ * @param direction Child node direction.
+ * @param parent Parent node.
+ * @returns Returns the corresponding route or undefined when there's no route.
+ */
+const getRoute = (direction: Core.Nodes, parent: Types.Node): Types.Node | undefined => {
+  const action = (
+    direction: Core.Nodes,
+    parent: Types.Node,
+    ancestor?: { direction: Core.Nodes; parent: Types.Node }
+  ): Types.Node | undefined => {
+    const node = parent.get(direction)!;
+    if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
+      if (isRoutable(node)) {
+        if (ancestor && parent) {
+          ancestor.parent.set(ancestor.direction!, parent.right);
+        }
+        return node;
+      }
+      if (node.left) {
+        return action(Core.Nodes.Left, node, { direction, parent });
+      }
+    }
+    return void 0;
+  };
+  return action(direction, parent);
+};
+
+/**
+ * Assign to the given node its corresponding route and identity.
  * @param project Project context.
  * @param entry Entry node.
  * @param member Entry member node.
- * @param identity Member identity.
- * @returns Returns true when the member node was emitted, false otherwise.
+ * @param identity Route identity.
  */
-const emit = (project: Project.Context, entry: Types.Node, member: Types.Node, identity: number): boolean => {
+const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.Node, identity: number): void => {
   const route = getRoute(Core.Nodes.Right, member);
-  if (route) {
+  if (!route) {
+    project.addError(entry.fragment, Errors.INVALID_MAP_ENTRY);
+  } else {
     if (route.value === Parser.Nodes.String) {
       Loose.collision(project, route.fragment.data, route);
     }
@@ -57,56 +73,73 @@ const emit = (project: Project.Context, entry: Types.Node, member: Types.Node, i
       identity: identity,
       route: route
     });
-    return true;
   }
-  project.addError(entry.fragment, Errors.INVALID_MAP_ENTRY);
-  return false;
 };
 
 /**
- * Consume the given node and optimize the MAP pattern.
+ * Consume the given node and optimize its anonymous ENTRY pattern.
+ * @param project Project context.
+ * @param entry Entry node.
+ * @param state Consumption state.
+ */
+const consumeAnonymous = (project: Project.Context, entry: Types.Node, state: Context.State): void => {
+  const identity = Records.isDynamic(state.record!)
+    ? Project.Context.identity.increment(project.coder, project.options.identity)
+    : Core.Source.Output;
+  Expression.consume(project, entry.right!, state);
+  assignRoute(project, entry, entry, identity);
+};
+
+/**
+ * Consume the given node and optimize its identifiable ENTRY pattern
+ * @param project Project context.
+ * @param entry Entry node.
+ * @param state Consumption state.
+ */
+const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state: Context.State): void => {
+  const member = entry.right!;
+  const identifier = `${state.record!.data.identifier}@${member.fragment.data}`;
+  if (project.symbols.has(identifier)) {
+    project.addError(member.fragment, Errors.DUPLICATE_IDENTIFIER);
+  } else {
+    const previousRecord = state.record!;
+    const previousIdentity = state.identity;
+    state.identity = Identity.consume(project, member.left, state);
+    state.record = entry.table.get(member.fragment.data)!;
+    Context.setMetadata(project, identifier, state.record!, state);
+    Records.connect(project, identifier, state.record!, previousRecord);
+    project.symbols.add(state.record);
+    Expression.consume(project, member.right!, state);
+    assignRoute(project, entry, member, state.identity);
+    state.identity = previousIdentity;
+    state.record = previousRecord;
+  }
+};
+
+/**
+ * Consume the given node and optimize its MAP pattern.
  * @param project Project context.
  * @param node Map node.
  * @param state Context state.
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
-  let entry = node.right;
   const record = state.record!;
-  const dynamic = Records.isDynamic(record);
+  let entry = node.right;
   while (entry) {
     const member = entry.right!;
     if (member.value !== Parser.Nodes.Identifier) {
-      const identity = dynamic
-        ? Project.Context.identity.increment(project.coder, project.options.identity)
-        : Core.Source.Output;
-      Expression.consume(project, member, state);
-      emit(project, entry, entry, identity);
+      consumeAnonymous(project, entry, state);
     } else {
       if (state.type === Types.Directives.Skip) {
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
-      if (!dynamic && !Records.isAlias(record)) {
+      if (!Records.isDynamic(record) && !Records.isAlias(record)) {
         project.addError(record.fragment, Errors.UNDEFINED_AUTO_IDENTITY);
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
-      const identifier = `${record!.data.identifier}@${member.fragment.data}`;
-      if (project.symbols.has(identifier)) {
-        project.addError(member.fragment, Errors.DUPLICATE_IDENTIFIER);
-      } else {
-        const identity = state.identity;
-        state.identity = Identity.consume(project, member.left, state);
-        state.record = entry.table.get(member.fragment.data)!;
-        Context.setMetadata(project, identifier, state.record!, state);
-        Records.connect(project, identifier, state.record!, record);
-        Expression.consume(project, member.right!, state);
-        if (emit(project, entry, member, state.identity)) {
-          project.symbols.add(state.record);
-        }
-        state.identity = identity;
-        state.record = record;
-      }
+      consumeIdentifiable(project, entry, state);
     }
     entry = entry.next!;
   }
