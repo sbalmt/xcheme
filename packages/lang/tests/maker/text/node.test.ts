@@ -164,7 +164,7 @@ test("Output a 'NODE' pattern with an alias node that has a reference to itself"
   );
 });
 
-test("Output a 'NODE' pattern with a template node that has a reference to itself", () => {
+test("Output a 'NODE' pattern referencing a template alias node and passing itself as an argument", () => {
   Assert.output(
     `
     alias <X>

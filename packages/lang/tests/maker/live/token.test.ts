@@ -122,7 +122,7 @@ test("Parse a 'TOKEN' pattern with an alias token that has a reference to itself
   Assert.tokens(context, [token.data.identity], 1);
 });
 
-test("Parse a 'TOKEN' pattern with a template token that has a reference to itself", () => {
+test("Parse a 'TOKEN' pattern referencing a template alias token and passing itself as an argument", () => {
   const { project, context } = Assert.lexer(
     'foofoo',
     `

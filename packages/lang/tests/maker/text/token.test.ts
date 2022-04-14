@@ -140,7 +140,7 @@ test("Output a 'TOKEN' pattern with an alias token that has a reference to itsel
   );
 });
 
-test("Output a 'TOKEN' pattern with a template token that has a reference to itself", () => {
+test("Output a 'TOKEN' pattern referencing a template token and passing itself as an argument", () => {
   Assert.output(
     `
     alias <X>
