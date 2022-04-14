@@ -12,13 +12,13 @@ export type Error = {
    */
   code: Lang.Errors;
   /**
-   * Error line range.
-   */
-  line?: [number, number];
-  /**
    * Error column range.
    */
   column?: [number, number];
+  /**
+   * Error line range.
+   */
+  line?: [number, number];
 };
 
 /**
@@ -31,18 +31,13 @@ export const error = (code: string, errors: Error[]): void => {
   const project = new Lang.Project.Context('make', coder, { loadFileHook: Helper.loadFileHook });
   const context = new Core.Context<Lang.Types.Metadata>('make');
 
-  // Consume input text and tokens.
+  // Consume input text, tokens and optimize the generated AST.
   expect(Lang.Lexer.consumeText(code, context)).toBeTruthy();
   expect(Lang.Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-
-  // Consume input nodes and optimize its tree.
-  const status = Lang.Optimizer.consumeNodes(project, context.node) && Lang.Maker.consumeNodes(project, context.node);
-  const values = project.errors.map((error) => error.value);
-
-  expect(status).toBeFalsy();
+  expect(Lang.Optimizer.consumeNodes(project, context.node)).toBeFalsy();
 
   // Assert all errors.
-  expect(values).toHaveLength(errors.length);
+  expect(project.errors).toHaveLength(errors.length);
 
   for (let index = 0; index < errors.length; ++index) {
     const source = project.errors[index];
