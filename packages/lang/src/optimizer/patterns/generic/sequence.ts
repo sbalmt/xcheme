@@ -38,7 +38,7 @@ const isReferenceSequence = (node: Types.Node, operator: Parser.Nodes): boolean 
 };
 
 /**
- * Get all child nodes from the specified expression node in a sequence of nodes.
+ * Get all child nodes from the specified node in a sequence of nodes.
  * @param node Expression node.
  * @param operator Operator type.
  * @returns Returns the node sequence.
@@ -55,7 +55,7 @@ const getSequence = (node: Types.Node, operator: Parser.Nodes): Types.Node[] => 
 
 /**
  * Assign to the given node its corresponding sequence.
- * @param node Expression node.
+ * @param node Sequence node.
  * @param operator Operator type.
  * @param type Sequence type.
  */
@@ -67,9 +67,31 @@ const assignSequence = (node: Types.Node, operator: Parser.Nodes, type: Types.No
 };
 
 /**
- * Consume the given node and optimize the SEQUENCE pattern.
+ * Consume the given node as a sequence of units.
+ * @param node Expression node.
+ * @param operator Operator type.
+ */
+const consumeUnits = (node: Types.Node, operator: Parser.Nodes): void => {
+  if (isUnitSequence(node, operator)) {
+    assignSequence(node, operator, Types.Nodes.StringSequence);
+  }
+};
+
+/**
+ * Consume the given node as a sequence of references.
+ * @param node Expression node.
+ * @param operator Operator type.
+ */
+const consumeReferences = (node: Types.Node, operator: Parser.Nodes): void => {
+  if (isReferenceSequence(node, operator)) {
+    assignSequence(node, operator, Types.Nodes.ReferenceSequence);
+  }
+};
+
+/**
+ * Consume the given node and optimize its SEQUENCE pattern.
  * @param project Project context.
- * @param node Sequence node.
+ * @param node Expression node.
  * @param operator Operator type.
  * @param state Context state.
  */
@@ -84,14 +106,10 @@ export const consume = (
   } else {
     Expression.consume(project, node.left!, state);
     Expression.consume(project, node.right!, state);
-    if (state.type !== Types.Directives.Node) {
-      if (isUnitSequence(node, operator)) {
-        assignSequence(node, operator, Types.Nodes.StringSequence);
-      }
+    if (state.type === Types.Directives.Node) {
+      consumeReferences(node, operator);
     } else {
-      if (isReferenceSequence(node, operator)) {
-        assignSequence(node, operator, Types.Nodes.ReferenceSequence);
-      }
+      consumeUnits(node, operator);
     }
   }
 };

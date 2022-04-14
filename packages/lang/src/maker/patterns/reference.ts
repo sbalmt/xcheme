@@ -1,7 +1,7 @@
 import * as Coder from '../../core/coder/base';
 import * as Nodes from '../../core/nodes';
+import * as Records from '../../core/records';
 import * as Project from '../../core/project';
-import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -18,7 +18,7 @@ import { Exception } from '../../core/exception';
 const resolve = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
   const { identity } = record.data;
   const reference = project.coder.emitReferencePattern(record);
-  if (state.dynamic && !Symbols.isEmpty(record) && !Symbols.isDynamic(record)) {
+  if (state.dynamic && !Records.isEmpty(record) && !Records.isDynamic(record)) {
     return project.coder.emitIdentityPattern(identity, reference);
   }
   return reference;
@@ -70,7 +70,7 @@ const resolveNode = (
   state: Context.State
 ): Coder.Pattern => {
   if (target.value !== Parser.Symbols.Node && target.value !== Parser.Symbols.AliasNode) {
-    if (!node.assigned || (!node.data.identity && !node.data.record)) {
+    if (!node.assigned || !Nodes.hasIdentity(node)) {
       throw new Exception('NODE directive can only accept TOKEN, NODE and ALIAS NODE references.');
     }
     return project.coder.emitExpectUnitsPattern([Nodes.getIdentity(node)]);

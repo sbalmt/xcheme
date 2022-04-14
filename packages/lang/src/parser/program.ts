@@ -1,7 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import type * as Types from '../core/types';
-
+import * as Types from '../core/types';
 import * as Lexer from '../lexer';
 
 import UnaryExpression from './patterns/unary';

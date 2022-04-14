@@ -1,5 +1,5 @@
+import * as Records from '../../core/records';
 import * as Project from '../../core/project';
-import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -8,26 +8,6 @@ import { Errors } from '../../core/errors';
 import { Exception } from '../../core/exception';
 
 import * as Generic from './generic';
-
-/**
- * Find and connect the corresponding reference for the specified identifier and record.
- * @param project Project context.
- * @param identifier Reference identifier.
- * @param record Reference record.
- * @param state Consumption state.
- */
-const connect = (project: Project.Context, identifier: string, record: Types.Record, state: Context.State): void => {
-  const current = state.record!;
-  if (record.assigned) {
-    current.data.dependencies.push(record);
-    record.data.dependents.push(current);
-  } else {
-    project.symbols.listen(identifier, () => {
-      current.data.dependencies.push(record);
-      record.data.dependents.push(current);
-    });
-  }
-};
 
 /**
  * Process the corresponding template for the given node and record.
@@ -41,7 +21,7 @@ const template = (project: Project.Context, node: Types.Node, record: Types.Reco
     Generic.Template.consume(project, node, record, state);
     record = node.table.get(node.fragment.data)!;
   }
-  connect(project, node.fragment.data, record, state);
+  Records.connect(project, node.fragment.data, record, state.record!);
 };
 
 /**
@@ -52,10 +32,10 @@ const template = (project: Project.Context, node: Types.Node, record: Types.Reco
  * @param state Consumption state.
  */
 const upgrade = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
-  if (Symbols.isDynamic(record)) {
+  if (Records.isDynamic(record)) {
     project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
   } else {
-    connect(project, node.fragment.data, record, state);
+    Records.connect(project, node.fragment.data, record, state.record!);
     Types.assignNode(node, {
       type: Types.Nodes.Reference,
       record: record
@@ -73,7 +53,7 @@ const upgrade = (project: Project.Context, node: Types.Node, record: Types.Recor
  */
 const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   if (record.value === Parser.Symbols.AliasToken) {
-    connect(project, node.fragment.data, record, state);
+    Records.connect(project, node.fragment.data, record, state.record!);
   } else if (record.value === Parser.Symbols.Token) {
     project.addError(node.fragment, Errors.INVALID_TOKEN_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -96,7 +76,7 @@ const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.R
 const resolveToken = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Token) {
-    connect(project, identifier, record, state);
+    Records.connect(project, identifier, record, state.record!);
   } else if (record.value === Parser.Symbols.AliasToken) {
     if (record.assigned) {
       template(project, node, record, state);
@@ -125,7 +105,7 @@ const resolveToken = (project: Project.Context, node: Types.Node, record: Types.
 const resolveNode = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Node) {
-    connect(project, identifier, record, state);
+    Records.connect(project, identifier, record, state.record!);
   } else if (record.value === Parser.Symbols.AliasNode) {
     if (record.assigned) {
       template(project, node, record, state);

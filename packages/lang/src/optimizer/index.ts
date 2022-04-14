@@ -31,7 +31,7 @@ const resolve = (project: Project.Context, node: Types.Node, state: Context.Stat
         Node.consume(project, directive, state);
         break;
       default:
-        throw new Exception(`Invalid directive type (${node.value}).`);
+        throw new Exception(`Unsupported directive: "${node.fragment.data}" (${node.value}).`);
     }
   }
 };

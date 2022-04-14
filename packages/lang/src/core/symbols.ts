@@ -1,10 +1,5 @@
-import * as Core from '@xcheme/core';
+import * as Types from './types';
 
-import type * as Types from './types';
-
-import * as Parser from '../parser';
-
-import { Symbols } from '../parser/symbols';
 import { Exception } from './exception';
 
 /**
@@ -137,70 +132,3 @@ export class Aggregator {
     }
   }
 }
-
-/**
- * Determines whether or not the given record is an alias directive.
- * @param record Symbol record.
- * @returns Returns true when the record is an alias, false otherwise.
- */
-export const isAlias = (record: Types.Record): boolean => {
-  return record.value === Symbols.AliasToken || record.value === Symbols.AliasNode;
-};
-
-/**
- * Determines whether or not the given record is a template.
- * @param record Symbol record.
- * @returns Returns true when the record is a template, false otherwise.
- */
-export const isTemplate = (record: Types.Record): boolean => {
-  if (record.link) {
-    for (const current of record.link) {
-      if (current.value === Parser.Symbols.AliasParameter) {
-        return true;
-      }
-    }
-  }
-  return false;
-};
-
-/**
- * Determines whether or not the given record has a dynamic identity.
- * @param record Symbol record.
- * @returns Returns true when the record has a dynamic identity, false otherwise.
- */
-export const isDynamic = (record: Types.Record): boolean => {
-  return record.data.identity === Core.Source.Output;
-};
-
-/**
- * Determines whether or not the given record has an empty identity.
- * @param record Symbol record.
- * @returns Returns true when the symbol identity is empty, false otherwise.
- */
-export const isEmpty = (record: Types.Record): boolean => {
-  return Number.isNaN(record.data.identity);
-};
-
-/**
- * Determines whether or not the given record is referenced.
- * @param record System record.
- * @param types Symbol types.
- * @returns Returns true when the record is referenced, false otherwise.
- * @throws Throws an exception when the given error has no metadata.
- */
-export const isReferencedBy = (record: Types.Record, ...types: Types.Directives[]): boolean => {
-  const { order, dependents, dependencies } = record.data;
-  let counter = 0;
-  for (const dependent of dependents) {
-    if (counter > 1 || dependent === record || dependencies.includes(dependent)) {
-      return true;
-    }
-    if (types.includes(dependent.data.type)) {
-      if (order > dependent.data.order) {
-        return true;
-      }
-      counter++;
-    }
-  }
-  return counter > 1;
-};

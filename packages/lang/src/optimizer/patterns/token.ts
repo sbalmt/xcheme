@@ -1,5 +1,5 @@
+import * as Records from '../../core/records';
 import * as Project from '../../core/project';
-import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Identity from '../identity';
@@ -24,14 +24,14 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     const record = node.table.get(identifier)!;
     state.record = record;
     state.type = Types.Directives.Token;
-    state.template = Symbols.isTemplate(record);
+    state.template = Records.isTemplate(record);
     state.identity = Identity.consume(project, node.left, state);
     Context.setMetadata(project, identifier, record, state);
     Types.assignNode(node, {
       type: Types.Nodes.Directive,
       record
     });
-    if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
+    if (!Records.isAlias(record) && Records.isEmpty(record)) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
     } else {
       project.symbols.add(record);

@@ -7,7 +7,7 @@ import * as Context from '../../context';
 import { Errors } from '../../../core/errors';
 
 /**
- * Consume the given node and optimize the STATE pattern.
+ * Consume the given node and optimize its STATE pattern.
  * @param project Project context.
  * @param node State node.
  * @param state Consumption state.

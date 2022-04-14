@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
 
-import type * as Types from '../core/types';
+import * as Types from '../core/types';
 
 import { Errors } from '../core/errors';
 import { Program } from './program';
@@ -9,9 +9,18 @@ export { Symbols } from './symbols';
 export { Nodes } from './nodes';
 
 /**
- * Consume the specified tokens and produce an AST in the given context.
+ * Consume the given source.
+ * @param source Data source.
+ * @returns Returns true when the source was consumed, otherwise returns false.
+ */
+export const consume = (source: Types.Source): boolean => {
+  return Program.consume(source);
+};
+
+/**
+ * Consume the specified tokens and produce an AST for the given context.
  * @param tokens Input tokens.
- * @param context Input context.
+ * @param context Output context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
 export const consumeTokens = (tokens: Types.Token[], context: Types.Context): boolean => {
@@ -22,13 +31,4 @@ export const consumeTokens = (tokens: Types.Token[], context: Types.Context): bo
     return false;
   }
   return true;
-};
-
-/**
- * Consume the given source.
- * @param source Data source.
- * @returns Returns true when the source was consumed, otherwise returns false.
- */
-export const consume = (source: Types.Source): boolean => {
-  return Program.consume(source);
 };

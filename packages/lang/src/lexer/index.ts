@@ -1,11 +1,20 @@
 import * as Core from '@xcheme/core';
 
-import type * as Types from '../core/types';
+import * as Types from '../core/types';
 
 import { Errors } from '../core/errors';
 import { Program } from './program';
 
 export { Tokens } from './tokens';
+
+/**
+ * Consume the given source.
+ * @param source Data source.
+ * @returns Returns true when the source was consumed, otherwise returns false.
+ */
+export const consume = (source: Types.Source): boolean => {
+  return Program.consume(source);
+};
 
 /**
  * Consume the specified text and produce a list of tokens in the given context.
@@ -20,13 +29,4 @@ export const consumeText = (text: string, context: Types.Context): boolean => {
     return false;
   }
   return true;
-};
-
-/**
- * Consume the given source.
- * @param source Data source.
- * @returns Returns true when the source was consumed, otherwise returns false.
- */
-export const consume = (source: Types.Source): boolean => {
-  return Program.consume(source);
 };

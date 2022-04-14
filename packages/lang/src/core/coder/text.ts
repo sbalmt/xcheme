@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as String from '../string';
-import * as Symbols from '../symbols';
+import * as Records from '../records';
 import * as Types from '../types';
 
 import { Base } from './base';
@@ -352,7 +352,7 @@ export class Text extends Base {
     const data = record.data;
     if (!data.pattern) {
       return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(data.name)}`);
-    } else if (Symbols.isReferencedBy(record, data.type)) {
+    } else if (Records.isReferenced(record, data.type)) {
       return this.#getIdentifier(data.name);
     } else {
       return data.pattern as string;

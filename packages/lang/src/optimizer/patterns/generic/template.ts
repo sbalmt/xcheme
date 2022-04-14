@@ -1,5 +1,6 @@
 import * as Core from '@xcheme/core';
 
+import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
 import * as Types from '../../../core/types';
 import * as Parser from '../../../parser';
@@ -69,19 +70,6 @@ const getArguments = (project: Project.Context, node: Types.Node, parameters: st
     }
   }
   return void 0;
-};
-
-/**
- * Get an identifier from the given nodes.
- * @param nodes Node list.
- * @returns Returns the identifier.
- */
-const getIdentifier = (...nodes: Types.Node[]): string => {
-  const name = [];
-  for (const node of nodes) {
-    name.push(node.fragment.data);
-  }
-  return `@${name.join(':')}`;
 };
 
 /**
@@ -166,7 +154,7 @@ const resolve = (
 };
 
 /**
- * Consume the given node and generate a new directive based on the corresponding template.
+ * Consume the given node and generate a new directive based on its corresponding TEMPLATE pattern.
  * @param project Project context.
  * @param node Reference node.
  * @param record Reference record.
@@ -183,7 +171,7 @@ export const consume = (
     project.addError(node.fragment, Errors.ARGUMENTS_MISSING);
   } else {
     const location = node.fragment.location;
-    const identifier = getIdentifier(node, ...Object.values(args));
+    const identifier = `@${Nodes.getPath([node, ...Object.values(args)], ':')}`;
     const reference = Tree.getReference(identifier, location, node.table);
     if (!project.symbols.has(identifier)) {
       resolve(project, identifier, record, args, state);

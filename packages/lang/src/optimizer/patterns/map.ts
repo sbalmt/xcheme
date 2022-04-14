@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
 
+import * as Records from '../../core/records';
 import * as Project from '../../core/project';
-import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Identity from '../identity';
@@ -72,21 +72,21 @@ const emit = (project: Project.Context, entry: Types.Node, member: Types.Node, i
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   let entry = node.right;
   const record = state.record!;
-  const dynamic = Symbols.isDynamic(record);
+  const dynamic = Records.isDynamic(record);
   while (entry) {
     const member = entry.right!;
     if (member.value !== Parser.Nodes.Identifier) {
       const identity = dynamic
         ? Project.Context.identity.increment(project.coder, project.options.identity)
         : Core.Source.Output;
-      Expression.consume(project, entry.right!, state);
+      Expression.consume(project, member, state);
       emit(project, entry, entry, identity);
     } else {
       if (state.type === Types.Directives.Skip) {
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
       }
-      if (!dynamic && !Symbols.isAlias(record)) {
+      if (!dynamic && !Records.isAlias(record)) {
         project.addError(record.fragment, Errors.UNDEFINED_AUTO_IDENTITY);
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
         break;
@@ -99,8 +99,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
         state.identity = Identity.consume(project, member.left, state);
         state.record = entry.table.get(member.fragment.data)!;
         Context.setMetadata(project, identifier, state.record!, state);
-        record.data.dependencies.push(state.record);
-        state.record.data.dependents.push(record);
+        Records.connect(project, identifier, state.record!, record);
         Expression.consume(project, member.right!, state);
         if (emit(project, entry, member, state.identity)) {
           project.symbols.add(state.record);

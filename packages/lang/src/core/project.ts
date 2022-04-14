@@ -2,6 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Parser from '../parser';
 import * as Coder from './coder/base';
+import * as Records from './records';
 import * as Counter from './counter';
 import * as Symbols from './symbols';
 import * as Types from './types';
@@ -142,7 +143,7 @@ export class Context {
    */
   #getPatterns(records: Types.Record[], ...types: Types.Directives[]): Coder.Pattern[] {
     return records.map((current) => {
-      if (Symbols.isReferencedBy(current, ...types)) {
+      if (Records.isReferenced(current, ...types)) {
         return this.#coder.emitReferencePattern(current);
       }
       return current.data.pattern!;
@@ -218,7 +219,7 @@ export class Context {
     const records = this.#getRecordsByType(Parser.Symbols.Skip, Parser.Symbols.Token, Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Token, Parser.Symbols.AliasToken);
     const sorted = this.#getSortedRecords(flatten);
-    const references = sorted.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Token));
+    const references = sorted.filter((record) => Records.isReferenced(record, Types.Directives.Token));
     const tokens = sorted.filter((record) => record.value === Parser.Symbols.Token);
     return this.#coder.getEntry('Lexer', this.#getReferences(references), [
       ...this.#getPatterns(this.#getRecordsByType(Parser.Symbols.Skip), Types.Directives.Token),
@@ -233,7 +234,7 @@ export class Context {
     const records = this.#getRecordsByType(Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Node, Parser.Symbols.AliasNode);
     const sorted = this.#getSortedRecords(flatten);
-    const references = sorted.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Node));
+    const references = sorted.filter((record) => Records.isReferenced(record, Types.Directives.Node));
     const nodes = sorted.filter((record) => record.value === Parser.Symbols.Node);
     return this.#coder.getEntry(
       'Parser',

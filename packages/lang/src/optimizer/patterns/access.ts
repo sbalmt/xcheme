@@ -1,5 +1,6 @@
+import * as Nodes from '../../core/nodes';
+import * as Records from '../../core/records';
 import * as Project from '../../core/project';
-import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
@@ -60,7 +61,7 @@ const upgrade = (
 ): void => {
   if (state.type !== Types.Directives.Node || target.data.type === Types.Directives.Node) {
     project.addError(nodes[nodes.length - 1].fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-  } else if (Symbols.isDynamic(target)) {
+  } else if (Records.isDynamic(target)) {
     project.addError(nodes[nodes.length - 1].fragment, Errors.INVALID_MAP_REFERENCE);
   } else if (source.value === Parser.Symbols.AliasToken) {
     project.addError(nodes[0].fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
@@ -70,39 +71,6 @@ const upgrade = (
       record: target
     });
   }
-};
-
-/**
- * Find and connect the corresponding reference for the specified node and record.
- * @param project Project context.
- * @param identifier Reference identifier.
- * @param record Reference record.
- * @param state Consumption state.
- */
-const connect = (project: Project.Context, identifier: string, record: Types.Record, state: Context.State): void => {
-  const current = state.record!;
-  if (record.assigned) {
-    current.data.dependencies.push(record);
-    record.data.dependents.push(current);
-  } else {
-    project.symbols.listen(identifier, () => {
-      current.data.dependencies.push(record);
-      record.data.dependents.push(current);
-    });
-  }
-};
-
-/**
- * Get an identifier from the given nodes.
- * @param nodes Node list.
- * @returns Returns the identifier.
- */
-const getIdentifier = (nodes: Types.Node[]): string => {
-  const parts = [];
-  for (const node of nodes) {
-    parts.push(node.fragment.data);
-  }
-  return parts.join('@');
 };
 
 /**
@@ -119,8 +87,8 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   } else {
     const record = getRecord(project, source, nodes);
     if (record) {
-      const identifier = getIdentifier(nodes);
-      connect(project, identifier, source, state);
+      const identifier = Nodes.getPath(nodes, '@');
+      Records.connect(project, identifier, source, state.record!);
       if (record.assigned) {
         upgrade(project, node, source, record, nodes, state);
       } else {

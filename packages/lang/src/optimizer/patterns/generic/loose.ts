@@ -7,7 +7,7 @@ import * as Tree from '../../tree';
 import * as Expression from '../expression';
 
 /**
- * Consume the given node and optimize the LOOSE pattern.
+ * Consume the given node and optimize its LOOSE pattern.
  * @param project Project context.
  * @param node Loose node.
  * @param identifier Collision identifier.
