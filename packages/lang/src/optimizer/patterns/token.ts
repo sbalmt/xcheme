@@ -9,8 +9,6 @@ import * as Loose from '../loose';
 import { Errors } from '../../core/errors';
 
 import * as Expression from './expression';
-import * as Range from './range';
-import * as String from './string';
 
 /**
  * Consume the given node and optimize its TOKEN directive.
@@ -35,28 +33,23 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     });
     if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
-    } else if (!state.template) {
-      const expression = node.right!;
-      if (expression.value === Parser.Nodes.String) {
-        String.consume(project, expression, state);
-        const word = expression.fragment.data;
-        if (!Loose.collision(project, word, expression)) {
-          project.symbols.add(record);
-          project.symbols.link(word, identifier);
-        }
-      } else if (expression.value === Parser.Nodes.Range) {
-        Range.consume(project, expression, state);
-        const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
-        if (!Loose.collision(project, range, expression)) {
-          project.symbols.add(record);
-          project.symbols.link(range, identifier);
-        }
-      } else {
-        Expression.consume(project, expression, state);
-        project.symbols.add(record);
-      }
     } else {
       project.symbols.add(record);
+      if (!state.template) {
+        const expression = node.right!;
+        Expression.consume(project, expression, state);
+        if (expression.value === Parser.Nodes.String) {
+          const word = expression.fragment.data;
+          if (!Loose.collision(project, word, expression)) {
+            project.symbols.link(word, identifier);
+          }
+        } else if (expression.value === Parser.Nodes.Range) {
+          const range = `${expression.left!.fragment.data}-${expression.right!.fragment.data}`;
+          if (!Loose.collision(project, range, expression)) {
+            project.symbols.link(range, identifier);
+          }
+        }
+      }
     }
   }
 };

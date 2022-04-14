@@ -32,11 +32,10 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     if (!Symbols.isAlias(record) && Symbols.isEmpty(record)) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
     } else {
-      const expression = node.right!;
-      if (!state.template) {
-        Expression.consume(project, expression, state);
-      }
       project.symbols.add(record);
+      if (!state.template) {
+        Expression.consume(project, node.right!, state);
+      }
     }
   }
 };

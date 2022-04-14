@@ -45,6 +45,6 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     type: Types.Nodes.Directive,
     record
   });
-  Expression.consume(project, node.right!, state);
   project.symbols.add(record);
+  Expression.consume(project, node.right!, state);
 };
