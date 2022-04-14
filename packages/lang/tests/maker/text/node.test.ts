@@ -95,7 +95,7 @@ test("Output a 'NODE' pattern with an alias node reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a template node reference", () => {
+test("Output a 'NODE' pattern with a template alias node reference", () => {
   Assert.output(
     `
     alias <X, Y>
@@ -112,7 +112,7 @@ test("Output a 'NODE' pattern with a template node reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with multiple template node references", () => {
+test("Output a 'NODE' pattern with multiple template alias node references", () => {
   Assert.output(
     `
     alias <X>
@@ -178,6 +178,24 @@ test("Output a 'NODE' pattern referencing a template alias node and passing itse
         /**/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => L0_NODE))` +
         `)`,
       NODE: `new Core.EmitNodePattern(200, 1, L0_TEMPLATE_NODE)`
+    }
+  );
+});
+
+test("Output a 'NODE' pattern referencing a template alias node that has a reference to itself", () => {
+  Assert.output(
+    `
+    alias <X>
+    node TEMPLATE as 'foo' & opt TEMPLATE <X>;
+
+    node <200> NODE as TEMPLATE <100>;`,
+    {
+      TEMPLATE: void 0,
+      '@TEMPLATE:100':
+        `new Core.ExpectFlowPattern(new Core.ExpectUnitPattern(0), ` +
+        /**/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => L0_TEMPLATE_100))` +
+        `)`,
+      NODE: `new Core.EmitNodePattern(200, 1, L0_TEMPLATE_100)`
     }
   );
 });

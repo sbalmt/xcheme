@@ -70,7 +70,7 @@ test("Output a 'TOKEN' pattern with an alias token reference", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with a template token reference", () => {
+test("Output a 'TOKEN' pattern with a template alias token reference", () => {
   Assert.output(
     `
     alias <X, Y>
@@ -87,7 +87,7 @@ test("Output a 'TOKEN' pattern with a template token reference", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with multiple template token references", () => {
+test("Output a 'TOKEN' pattern with multiple template alias token references", () => {
   Assert.output(
     `
     alias <X>
@@ -140,7 +140,7 @@ test("Output a 'TOKEN' pattern with an alias token that has a reference to itsel
   );
 });
 
-test("Output a 'TOKEN' pattern referencing a template token and passing itself as an argument", () => {
+test("Output a 'TOKEN' pattern referencing a template alias token and passing itself as an argument", () => {
   Assert.output(
     `
     alias <X>
@@ -154,6 +154,24 @@ test("Output a 'TOKEN' pattern referencing a template token and passing itself a
         /**/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => L0_TOKEN))` +
         `)`,
       TOKEN: `new Core.EmitTokenPattern(100, L0_TEMPLATE_TOKEN)`
+    }
+  );
+});
+
+test("Output a 'TOKEN' pattern referencing a template alias token that has a reference ot itself", () => {
+  Assert.output(
+    `
+    alias <X>
+    token TEMPLATE as 'foo' & opt TEMPLATE <X>;
+
+    token <100> TOKEN as TEMPLATE <200>;`,
+    {
+      TEMPLATE: void 0,
+      '@TEMPLATE:200':
+        `new Core.ExpectFlowPattern(new Core.ExpectUnitPattern('f', 'o', 'o'), ` +
+        /**/ `new Core.OptFlowPattern(new Core.RunFlowPattern(() => L0_TEMPLATE_200))` +
+        `)`,
+      TOKEN: `new Core.EmitTokenPattern(100, L0_TEMPLATE_200)`
     }
   );
 });
