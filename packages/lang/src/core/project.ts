@@ -110,19 +110,28 @@ export class Context {
   }
 
   /**
+   * Get an array of sorted records based on its respecting order.
+   * @param record Record list.
+   * @returns Returns an array containing the sorted records.
+   */
+  #getSortedRecords(record: Types.Record[]): Types.Record[] {
+    return record.sort((a, b) => {
+      return a.data.order <= b.data.order ? -1 : 1;
+    });
+  }
+
+  /**
    * Get an array of references from the specified records.
    * @param records Record list.
    * @returns Returns an array containing all the references.
    */
   #getReferences(records: Types.Record[]): Coder.Reference[] {
-    return records
-      .sort((a, b) => (a.data.order <= b.data.order ? -1 : 1))
-      .map((record) => {
-        return {
-          name: record.data.name,
-          pattern: record.data.pattern!
-        };
-      });
+    return records.map((record) => {
+      return {
+        name: record.data.name,
+        pattern: record.data.pattern!
+      };
+    });
   }
 
   /**
@@ -208,8 +217,9 @@ export class Context {
   get lexer(): string | Types.Pattern {
     const records = this.#getRecordsByType(Parser.Symbols.Skip, Parser.Symbols.Token, Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Token, Parser.Symbols.AliasToken);
-    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Token));
-    const tokens = flatten.filter((record) => record.value === Parser.Symbols.Token);
+    const sorted = this.#getSortedRecords(flatten);
+    const references = sorted.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Token));
+    const tokens = sorted.filter((record) => record.value === Parser.Symbols.Token);
     return this.#coder.getEntry('Lexer', this.#getReferences(references), [
       ...this.#getPatterns(this.#getRecordsByType(Parser.Symbols.Skip), Types.Directives.Token),
       ...this.#getPatterns(tokens, Types.Directives.Token)
@@ -222,8 +232,9 @@ export class Context {
   get parser(): string | Types.Pattern {
     const records = this.#getRecordsByType(Parser.Symbols.Node);
     const flatten = this.#getFlattenRecordsByType(records, Parser.Symbols.Node, Parser.Symbols.AliasNode);
-    const references = flatten.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Node));
-    const nodes = flatten.filter((record) => record.value === Parser.Symbols.Node);
+    const sorted = this.#getSortedRecords(flatten);
+    const references = sorted.filter((record) => Symbols.isReferencedBy(record, Types.Directives.Node));
+    const nodes = sorted.filter((record) => record.value === Parser.Symbols.Node);
     return this.#coder.getEntry(
       'Parser',
       this.#getReferences(references),
