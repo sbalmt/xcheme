@@ -11,7 +11,7 @@ import * as Expression from '../expression';
  * @param node Argument node.
  * @param identity Argument identity.
  */
-const assignIdentity = (node: Types.Node, identity: number): void => {
+const assign = (node: Types.Node, identity: number): void => {
   Types.assignNode(node, {
     type: Types.Nodes.Argument,
     identity
@@ -26,12 +26,12 @@ const assignIdentity = (node: Types.Node, identity: number): void => {
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const expression = node.right!;
-  if (expression.value !== Parser.Nodes.Arguments) {
-    Expression.consume(project, expression, state);
-    assignIdentity(node, state.identity);
-  } else {
-    const identity = Identity.consume(project, expression, state, state.identity);
+  const { identity, template } = state.record!.data;
+  if (expression.value === Parser.Nodes.Arguments) {
     Expression.consume(project, expression.right!, state);
-    assignIdentity(node, identity);
+    assign(node, Identity.consume(project, expression, template, identity));
+  } else {
+    Expression.consume(project, expression, state);
+    assign(node, identity);
   }
 };

@@ -5,7 +5,7 @@ import * as Context from '../context';
 import * as Generic from './generic';
 
 /**
- * Consume the given node and optimize the STRING pattern.
+ * Consume the given node and optimize its STRING pattern.
  * @param project Project context.
  * @param node String node.
  * @param state Context state.

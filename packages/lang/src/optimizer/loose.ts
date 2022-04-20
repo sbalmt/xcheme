@@ -21,7 +21,7 @@ const emit = (project: Project.Context, node: Types.Node, state: Context.State):
   const identity = Project.Context.identity.increment(project.coder, project.options.identity);
   const identifier = Tree.getIdentifier(Tree.Directives.Token, location, node.table, `@REF${identity}`, identity);
   const token = Tree.getDirective(Tree.Directives.Token, node.table, identifier, node.clone());
-  const temp = Context.getNewState(state.anchor, identity);
+  const temp = Context.getNewState(state.anchor);
   temp.origin = Types.Origins.Loose;
   Token.consume(project, token.right!, temp);
   token.set(Core.Nodes.Next, state.anchor.next);

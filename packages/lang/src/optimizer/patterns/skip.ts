@@ -14,6 +14,29 @@ import * as Expression from './expression';
 const counter = new Counter.Context();
 
 /**
+ * Assign the corresponding metadata to the given node and record.
+ * @param project Project context.
+ * @param node Input node.
+ * @param record Input record.
+ * @param state Consumption state.
+ */
+const assign = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+  state.type = Types.Directives.Skip;
+  state.record = record;
+  Types.assignRecord(project, record, {
+    type: state.type,
+    origin: state.origin,
+    identifier: record.fragment.data,
+    identity: NaN,
+    template: false
+  });
+  Types.assignNode(node, {
+    type: Types.Nodes.Directive,
+    record
+  });
+};
+
+/**
  * Register a new symbol record for the given SKIP directive.
  * @param project Project context.
  * @param node Directive node.
@@ -30,7 +53,7 @@ const register = (project: Project.Context, node: Types.Node, identifier: string
 };
 
 /**
- * Consume the given node and optimize the SKIP directive.
+ * Consume the given node and optimize its SKIP directive.
  * @param project Project context.
  * @param node Directive node.
  * @param state Consumption state.
@@ -38,13 +61,7 @@ const register = (project: Project.Context, node: Types.Node, identifier: string
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const identifier = `@SKIP${counter.increment(project)}`;
   const record = register(project, node, identifier);
-  state.record = record;
-  state.type = Types.Directives.Skip;
-  Context.setMetadata(project, identifier, record, state);
-  Types.assignNode(node, {
-    type: Types.Nodes.Directive,
-    record
-  });
-  project.symbols.add(record);
+  assign(project, node, record, state);
   Expression.consume(project, node.right!, state);
+  project.symbols.add(record);
 };

@@ -71,7 +71,7 @@ const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.
     Types.assignNode(entry, {
       type: Types.Nodes.MemberRoute,
       identity: identity,
-      route: route
+      route
     });
   }
 };
@@ -103,15 +103,20 @@ const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state:
     project.addError(member.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
     const previousRecord = state.record!;
-    const previousIdentity = state.identity;
-    state.identity = Identity.consume(project, member.left, state);
+    const template = previousRecord.data.template;
+    const identity = Identity.consume(project, member.left, template);
     state.record = entry.table.get(member.fragment.data)!;
-    Context.setMetadata(project, identifier, state.record!, state);
-    Records.connect(project, identifier, state.record!, previousRecord);
+    Types.assignRecord(project, state.record, {
+      type: state.type,
+      origin: state.origin,
+      identity,
+      identifier,
+      template
+    });
+    Records.connect(project, identifier, state.record, previousRecord);
     project.symbols.add(state.record);
     Expression.consume(project, member.right!, state);
-    assignRoute(project, entry, member, state.identity);
-    state.identity = previousIdentity;
+    assignRoute(project, entry, member, identity);
     state.record = previousRecord;
   }
 };

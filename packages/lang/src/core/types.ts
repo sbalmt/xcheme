@@ -1,5 +1,8 @@
 import * as Core from '@xcheme/core';
 
+import * as Project from './project';
+import * as Counter from './counter';
+
 /**
  * Core source type.
  */
@@ -41,6 +44,32 @@ export type Pattern = Core.Pattern<Metadata>;
 export type Route = Core.Route<Metadata>;
 
 /**
+ * Required record metadata.
+ */
+type RecordData = {
+  /**
+   * Record type.
+   */
+  type: Directives;
+  /**
+   * Record origin.
+   */
+  origin: Origins;
+  /**
+   * Record identifier.
+   */
+  identifier: string;
+  /**
+   * Record identity.
+   */
+  identity: number;
+  /**
+   * Determines whether or not the record is a template.
+   */
+  template: boolean;
+};
+
+/**
  * Core metadata type.
  */
 export type Metadata = {
@@ -76,15 +105,7 @@ export type Metadata = {
   /**
    * Record metadata.
    */
-  record: {
-    /**
-     * Record type.
-     */
-    type: Directives;
-    /**
-     * Record origin.
-     */
-    origin: Origins;
+  record: RecordData & {
     /**
      * Record order.
      */
@@ -93,18 +114,6 @@ export type Metadata = {
      * Record name.
      */
     name: string;
-    /**
-     * Determines whether or not the record is a template.
-     */
-    template: boolean;
-    /**
-     * Record identifier.
-     */
-    identifier: string;
-    /**
-     * Record identity.
-     */
-    identity: number;
     /**
      * Record location.
      */
@@ -163,12 +172,17 @@ export const enum Nodes {
 }
 
 /**
- * Set the specified metadata in the given node.
+ * Global order counter.
+ */
+const orderCounter = new Counter.Context();
+
+/**
+ * Assign the specified metadata in the given node.
  * @param node Input node.
- * @param data Assignment data.
+ * @param data Input metadata.
  * @returns Returns the given node.
  */
-export const assignNode = (node: Node, data: Partial<Metadata['node']> & { type: Nodes }): Node => {
+export const assignNode = (node: Node, data: Metadata['node']): Node => {
   node.assign({
     type: data.type,
     record: data.record,
@@ -177,4 +191,30 @@ export const assignNode = (node: Node, data: Partial<Metadata['node']> & { type:
     route: data.route
   });
   return node;
+};
+
+/**
+ * Assign the specified metadata in the given record.
+ * @param project Project context.
+ * @param record Input record.
+ * @param data Input metadata.
+ * @returns Returns the given record.
+ */
+export const assignRecord = (project: Project.Context, record: Record, data: RecordData): Record => {
+  record.assign({
+    type: data.type,
+    origin: data.origin,
+    order: orderCounter.increment(project.coder),
+    name: `L${project.id}:${data.identifier}`,
+    template: data.template,
+    identifier: data.identifier,
+    identity: data.identity,
+    location: project.name,
+    imported: false,
+    exported: false,
+    dependencies: [],
+    dependents: [],
+    pattern: void 0
+  });
+  return record;
 };

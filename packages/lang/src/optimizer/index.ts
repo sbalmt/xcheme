@@ -50,7 +50,7 @@ export const consumeNodes = (project: Project.Context, node: Types.Node): boolea
         Import.consume(project, current);
         break;
       case Parser.Nodes.Export:
-        if (!Export.consume(project, current, state)) {
+        if (!Export.consume(project, current)) {
           resolve(project, current.right!, state);
           state.record!.data.exported = true;
         }

@@ -3,7 +3,6 @@ import * as Core from '@xcheme/core';
 import * as Project from '../core/project';
 import * as Types from '../core/types';
 import * as Parser from '../parser';
-import * as Context from './context';
 
 import { Errors } from '../core/errors';
 
@@ -28,15 +27,15 @@ const resolve = (node: Types.Node): number => {
  * Consume the identity in the given node.
  * @param project Project context.
  * @param node Identity node.
- * @param state Consumption state.
- * @param def Default identity for nodes without an identity.
+ * @param template Determines whether or not the identity given can be a template.
+ * @param value Default identity value for nodes without an identity.
  * @returns Returns the identity number.
  */
 export const consume = (
   project: Project.Context,
   node: Types.Node | undefined,
-  state: Context.State,
-  def: number = NaN
+  template: boolean,
+  value: number = NaN
 ): number => {
   const identity = node?.left;
   if (identity) {
@@ -46,9 +45,9 @@ export const consume = (
     if (identity.value === Parser.Nodes.Identity) {
       return resolve(identity);
     }
-    if (!state.template) {
+    if (!template) {
       project.addError(identity.fragment, Errors.UNEXPECTED_ARGUMENT);
     }
   }
-  return def;
+  return value;
 };
