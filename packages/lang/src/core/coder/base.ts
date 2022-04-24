@@ -181,24 +181,38 @@ export class Base {
   /**
    * Should be implemented to return an append node pattern.
    * @param identity Node identity.
-   * @param current Current node destination.
+   * @param left Left node direction.
+   * @param right Right node direction.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  emitAppendPattern(identity: string | number, current: Core.Nodes, head: Pattern, ...patterns: Pattern[]): Pattern {
+  emitAppendPattern(
+    identity: string | number,
+    left: Core.Nodes,
+    right: Core.Nodes,
+    head: Pattern,
+    ...patterns: Pattern[]
+  ): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
 
   /**
    * Should be implemented to return a prepend node pattern.
    * @param identity Node identity.
-   * @param current Current node destination.
+   * @param left Left node direction.
+   * @param right Right node direction.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Should return the pattern.
    */
-  emitPrependPattern(identity: string | number, current: Core.Nodes, head: Pattern, ...patterns: Pattern[]): Pattern {
+  emitPrependPattern(
+    identity: string | number,
+    left: Core.Nodes,
+    right: Core.Nodes,
+    head: Pattern,
+    ...patterns: Pattern[]
+  ): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
 

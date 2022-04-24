@@ -41,14 +41,24 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     case Parser.Nodes.And:
       Generic.Sequence.consume(project, node, Parser.Nodes.And, state);
       break;
-    case Parser.Nodes.Append:
-    case Parser.Nodes.AppendLeft:
-    case Parser.Nodes.AppendNext:
-    case Parser.Nodes.AppendRight:
-    case Parser.Nodes.Prepend:
-    case Parser.Nodes.PrependLeft:
-    case Parser.Nodes.PrependNext:
-    case Parser.Nodes.PrependRight:
+    case Parser.Nodes.AppendRTL:
+    case Parser.Nodes.AppendRTR:
+    case Parser.Nodes.AppendRTN:
+    case Parser.Nodes.AppendLTL:
+    case Parser.Nodes.AppendLTR:
+    case Parser.Nodes.AppendLTN:
+    case Parser.Nodes.AppendNTL:
+    case Parser.Nodes.AppendNTR:
+    case Parser.Nodes.AppendNTN:
+    case Parser.Nodes.PrependRTL:
+    case Parser.Nodes.PrependRTR:
+    case Parser.Nodes.PrependRTN:
+    case Parser.Nodes.PrependLTL:
+    case Parser.Nodes.PrependLTR:
+    case Parser.Nodes.PrependLTN:
+    case Parser.Nodes.PrependNTL:
+    case Parser.Nodes.PrependNTR:
+    case Parser.Nodes.PrependNTN:
     case Parser.Nodes.Pivot:
     case Parser.Nodes.Symbol:
       Generic.Identity.consume(project, node, state);

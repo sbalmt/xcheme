@@ -184,35 +184,39 @@ export class Live extends Base {
   /**
    * Get a new append node pattern.
    * @param identity Node identity.
-   * @param current Current node destination.
+   * @param left Left node direction.
+   * @param right Right node direction.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
   emitAppendPattern(
     identity: number,
-    current: Core.Nodes,
+    left: Core.Nodes,
+    right: Core.Nodes,
     head: Types.Pattern,
     ...patterns: Types.Pattern[]
   ): Types.Pattern {
-    return new Core.AppendNodePattern(identity, Core.Nodes.Right, current, head, ...patterns);
+    return new Core.AppendNodePattern(identity, left, right, head, ...patterns);
   }
 
   /**
    * Get a new prepend node pattern.
    * @param identity Node identity.
-   * @param current Current node destination.
+   * @param left Left node direction.
+   * @param right Right node direction.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
   emitPrependPattern(
     identity: number,
-    current: Core.Nodes,
+    left: Core.Nodes,
+    right: Core.Nodes,
     head: Types.Pattern,
     ...patterns: Types.Pattern[]
   ): Types.Pattern {
-    return new Core.PrependNodePattern(identity, Core.Nodes.Right, current, head, ...patterns);
+    return new Core.PrependNodePattern(identity, left, right, head, ...patterns);
   }
 
   /**

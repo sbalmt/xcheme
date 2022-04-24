@@ -13,20 +13,22 @@ import * as Generic from './generic';
  * @param project Project context.
  * @param node APPEND node.
  * @param state Consumption state.
- * @param direction Append direction.
+ * @param left Left node direction.
+ * @param right Right node direction.
  * @returns Returns the pattern or undefined when the node is invalid.
  */
 export const consume = (
   project: Project.Context,
   node: Types.Node,
   state: Context.State,
-  direction: Core.Nodes
+  left: Core.Nodes,
+  right: Core.Nodes
 ): Coder.Pattern | undefined => {
   const patterns = Generic.Identity.consume(project, node, state);
   if (patterns) {
     const [test, ...remaining] = patterns;
     const identity = Nodes.getIdentity(node);
-    return project.coder.emitAppendPattern(identity, direction, test, ...remaining);
+    return project.coder.emitAppendPattern(identity, left, right, test, ...remaining);
   }
   return void 0;
 };

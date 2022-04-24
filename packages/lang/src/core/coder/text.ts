@@ -243,25 +243,39 @@ export class Text extends Base {
   /**
    * Get a new append node pattern.
    * @param identity Node identity.
-   * @param current Current node destination.
+   * @param left Left node direction.
+   * @param right Right node direction.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  emitAppendPattern(identity: number, current: Core.Nodes, head: string, ...patterns: string[]): string {
-    return this.#getPattern('AppendNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
+  emitAppendPattern(
+    identity: number,
+    left: Core.Nodes,
+    right: Core.Nodes,
+    head: string,
+    ...patterns: string[]
+  ): string {
+    return this.#getPattern('AppendNodePattern', identity, left, right, head, ...patterns);
   }
 
   /**
    * Get a new prepend node pattern.
    * @param identity Node identity.
-   * @param current Current node destination.
+   * @param left Left node direction.
+   * @param right Right node direction.
    * @param head Head pattern.
    * @param patterns Optional patterns.
    * @returns Returns the pattern.
    */
-  emitPrependPattern(identity: number, current: Core.Nodes, head: string, ...patterns: string[]): string {
-    return this.#getPattern('PrependNodePattern', identity, Core.Nodes.Right, current, head, ...patterns);
+  emitPrependPattern(
+    identity: number,
+    left: Core.Nodes,
+    right: Core.Nodes,
+    head: string,
+    ...patterns: string[]
+  ): string {
+    return this.#getPattern('PrependNodePattern', identity, left, right, head, ...patterns);
   }
 
   /**

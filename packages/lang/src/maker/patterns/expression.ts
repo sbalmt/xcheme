@@ -69,27 +69,48 @@ export const consume = (
       return Option.consume(project, node, state);
     case Parser.Nodes.Repeat:
       return Repeat.consume(project, node, state);
-    case Parser.Nodes.Place:
+    case Parser.Nodes.PlaceLeft:
+      return Place.consume(project, node, state, Core.Nodes.Left);
     case Parser.Nodes.PlaceRight:
       return Place.consume(project, node, state, Core.Nodes.Right);
     case Parser.Nodes.PlaceNext:
       return Place.consume(project, node, state, Core.Nodes.Next);
-    case Parser.Nodes.PlaceLeft:
-      return Place.consume(project, node, state, Core.Nodes.Left);
-    case Parser.Nodes.Append:
-    case Parser.Nodes.AppendRight:
-      return Append.consume(project, node, state, Core.Nodes.Right);
-    case Parser.Nodes.AppendNext:
-      return Append.consume(project, node, state, Core.Nodes.Next);
-    case Parser.Nodes.AppendLeft:
-      return Append.consume(project, node, state, Core.Nodes.Left);
-    case Parser.Nodes.Prepend:
-    case Parser.Nodes.PrependRight:
-      return Prepend.consume(project, node, state, Core.Nodes.Right);
-    case Parser.Nodes.PrependNext:
-      return Prepend.consume(project, node, state, Core.Nodes.Next);
-    case Parser.Nodes.PrependLeft:
-      return Prepend.consume(project, node, state, Core.Nodes.Left);
+    case Parser.Nodes.AppendRTL:
+      return Append.consume(project, node, state, Core.Nodes.Right, Core.Nodes.Left);
+    case Parser.Nodes.AppendRTR:
+      return Append.consume(project, node, state, Core.Nodes.Right, Core.Nodes.Right);
+    case Parser.Nodes.AppendRTN:
+      return Append.consume(project, node, state, Core.Nodes.Right, Core.Nodes.Next);
+    case Parser.Nodes.AppendLTL:
+      return Append.consume(project, node, state, Core.Nodes.Left, Core.Nodes.Left);
+    case Parser.Nodes.AppendLTR:
+      return Append.consume(project, node, state, Core.Nodes.Left, Core.Nodes.Right);
+    case Parser.Nodes.AppendLTN:
+      return Append.consume(project, node, state, Core.Nodes.Left, Core.Nodes.Next);
+    case Parser.Nodes.AppendNTL:
+      return Append.consume(project, node, state, Core.Nodes.Next, Core.Nodes.Left);
+    case Parser.Nodes.AppendNTR:
+      return Append.consume(project, node, state, Core.Nodes.Next, Core.Nodes.Right);
+    case Parser.Nodes.AppendNTN:
+      return Append.consume(project, node, state, Core.Nodes.Next, Core.Nodes.Next);
+    case Parser.Nodes.PrependRTL:
+      return Prepend.consume(project, node, state, Core.Nodes.Right, Core.Nodes.Left);
+    case Parser.Nodes.PrependRTR:
+      return Prepend.consume(project, node, state, Core.Nodes.Right, Core.Nodes.Right);
+    case Parser.Nodes.PrependRTN:
+      return Prepend.consume(project, node, state, Core.Nodes.Right, Core.Nodes.Next);
+    case Parser.Nodes.PrependLTL:
+      return Prepend.consume(project, node, state, Core.Nodes.Left, Core.Nodes.Left);
+    case Parser.Nodes.PrependLTR:
+      return Prepend.consume(project, node, state, Core.Nodes.Left, Core.Nodes.Right);
+    case Parser.Nodes.PrependLTN:
+      return Prepend.consume(project, node, state, Core.Nodes.Left, Core.Nodes.Next);
+    case Parser.Nodes.PrependNTL:
+      return Prepend.consume(project, node, state, Core.Nodes.Next, Core.Nodes.Left);
+    case Parser.Nodes.PrependNTR:
+      return Prepend.consume(project, node, state, Core.Nodes.Next, Core.Nodes.Right);
+    case Parser.Nodes.PrependNTN:
+      return Prepend.consume(project, node, state, Core.Nodes.Next, Core.Nodes.Next);
     case Parser.Nodes.Pivot:
       return Pivot.consume(project, node, state);
     case Parser.Nodes.Symbol:
@@ -107,6 +128,6 @@ export const consume = (
     case Parser.Nodes.Peek:
       return Peek.consume(project, node, state);
     default:
-      throw new Exception(`Invalid expression: ${node.fragment.data} (${node.value}).`);
+      throw new Exception(`Unsupported expression: "${node.fragment.data}" (${node.value}).`);
   }
 };

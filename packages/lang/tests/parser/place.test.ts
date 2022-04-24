@@ -3,15 +3,7 @@ import * as Lang from '../../src';
 import * as Helper from './utils/helper';
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'PLACE' pattern", () => {
-  Assert.tree(
-    `
-    skip place REF;`,
-    Helper.basic(Lang.Parser.Nodes.Place, 'REF')
-  );
-});
-
-test("Consume an expected 'PLACE LEFT' pattern", () => {
+test('Consume a PLACE LEFT pattern', () => {
   Assert.tree(
     `
     skip place left REF_LEFT;`,
@@ -19,7 +11,7 @@ test("Consume an expected 'PLACE LEFT' pattern", () => {
   );
 });
 
-test("Consume an expected 'PLACE RIGHT' pattern", () => {
+test('Consume a PLACE RIGHT pattern', () => {
   Assert.tree(
     `
     skip place right REF_RIGHT;`,
@@ -27,7 +19,15 @@ test("Consume an expected 'PLACE RIGHT' pattern", () => {
   );
 });
 
-test("Consume an expected 'PLACE NEXT' pattern", () => {
+test('Consume a PLACE pattern (same as PLACE RIGHT)', () => {
+  Assert.tree(
+    `
+    skip place REF;`,
+    Helper.basic(Lang.Parser.Nodes.PlaceRight, 'REF')
+  );
+});
+
+test('Consume a PLACE NEXT pattern', () => {
   Assert.tree(
     `
     skip place next REF_NEXT;`,

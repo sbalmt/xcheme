@@ -19,7 +19,7 @@ export const enum Directives {
  * @returns Returns the corresponding record type.
  */
 const getRecordType = (type: Directives): Parser.Symbols => {
-  return type + 0x3f;
+  return type + (Parser.Symbols.Token - Parser.Nodes.Token);
 };
 
 /**
