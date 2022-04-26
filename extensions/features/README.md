@@ -12,7 +12,7 @@ See any syntactic and semantic errors in the editor before running the CLI.
 
 Auto complete any reference for local or imported directives.
 
-<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/reference-completion.png" alt="XCHEME Reference Completion" width="750"/>
+<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/reference-completion.png" alt="XCHEME Reference Completion" width="570"/>
 
 ### Easy importation
 
