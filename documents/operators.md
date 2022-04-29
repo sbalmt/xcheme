@@ -230,7 +230,7 @@ There are some operators for managing how the generated nodes must be inserted i
 
 #### Append operator
 
-The `append` operator is a unary operator used to append a new node in the AST when evaluating its operand as `true`.
+The `append` operator is a unary operator used to attach a new node into the last AST child for the given directions when evaluating its operand as `true`.
 
 Syntax:
 
@@ -264,7 +264,7 @@ node  <2> N_FOO3 as left append left T_FOO;
 
 #### Prepend operator
 
-The `prepend` operator is a unary operator used to prepend a new node in the AST when evaluating its operand as `true`.
+The `prepend` operator is a unary operator used to attach a new node in the first AST child for the given directions when evaluating its operand as `true`.
 
 Syntax:
 

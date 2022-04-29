@@ -106,7 +106,7 @@ node <200> NODE as ALIAS <20, NODE>;
 
 > Template arguments `20` and `NODE` are being passed to the `ALIAS` reference.
 
-Unlike the common _token_ or _node_ directive, an _alias_ directive must be referenced by a non aliased directive to take effect. And talking about references, let's see how to manage references in the next steps.
+Unlike the common _token_ or _node_ directive, an _alias_ directive must be referenced by a non aliased directive to take effect, and if it has some template parameter, the parameter must be an identity or a reference.
 
 ## Next steps
 
