@@ -230,67 +230,67 @@ There are some operators for managing how the generated nodes must be inserted i
 
 #### Append operator
 
-The `append` operator is a unary operator used to append a new node in the AST after evaluating its operand as `true`.
+The `append` operator is a unary operator used to append a new node in the AST when evaluating its operand as `true`.
 
 Syntax:
 
 ```xcm
 append FOO
-append <identity> FOO
+append <IDENTITY> FOO
 ```
 
-When no identity is provided, the directive identity is used for the new node.
+> When no identity is provided, the directive identity is used for the new node.
 
-Use `left`, `right` or `next` when you want to be more specific, the default direction is `right`.
+Use `left`, `right` or `next` when you want to be more specific, the default directions are `right` and `right`.
 
 Syntax:
 
 ```xcm
-append left FOO
-append right FOO
-append next FOO
+DIRECTION append DIRECTION EXPRESSION
+DIRECTION append <IDENTITY> DIRECTION EXPRESSION
 ```
 
 Example:
 
 ```xcm
 token <0> T_FOO as FOO;
-node  <1> N_FOO as append <0> right T_FOO;
-```
 
-> Append a new node as the right child of the active AST node when `T_FOO` is found.
+node  <1> N_FOO1 as append left T_FOO;
+node  <2> N_FOO2 as left append T_FOO;
+node  <2> N_FOO3 as left append left T_FOO;
+```
 
 [Back to table](#operator-precedence)
 
 #### Prepend operator
 
-The `prepend` operator is a unary operator used to prepend a new node in the AST after evaluating its operand as `true`.
+The `prepend` operator is a unary operator used to prepend a new node in the AST when evaluating its operand as `true`.
 
 Syntax:
 
 ```xcm
 prepend FOO
-prepend <identity> FOO
+prepend <IDENTITY> FOO
 ```
 
 > When no identity is provided, the directive identity is used for the new node.
 
-Use `left`, `right` or `next` when you want to be more specific, the default direction is `right`.
+Use `left`, `right` or `next` when you want to be more specific, the default directions are `right` and `right`.
 
 ```xcm
-prepend left FOO
-prepend right FOO
-prepend next FOO
+DIRECTION prepend DIRECTION EXPRESSION
+DIRECTION prepend <IDENTITY> DIRECTION EXPRESSION
 ```
 
 Example:
 
 ```xcm
 token <0> T_FOO as FOO;
-node  <1> N_FOO as prepend <0> next T_FOO;
-```
 
-> Prepend a new node as the next child of the active AST node when `T_FOO` is found.
+node  <1> N_FOO1 as prepend left T_FOO;
+node  <2> N_FOO2 as left prepend T_FOO;
+node  <2> N_FOO3 as left prepend left T_FOO;
+```
 
 [Back to table](#operator-precedence)
 
