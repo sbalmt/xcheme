@@ -58,27 +58,53 @@ skip '\r' | '\n';
 
 ## Alias directives
 
-In some cases we want to reuse a _token_ or a _node_ expression to avoid code duplications, but if we declare it as in the examples above, it will output the directive result and may become unexpected behavior... To achieve the expected behavior you must prefix the `alias` modifier in the directive declaration, then no _token_ or _node_ output will be produced during the directive evaluation. An _alias_ directive performs in its respective _token_ or _node_ step respecting the reference order.
+In some cases we want to reuse a _token_ or a _node_ expression to avoid duplications, but if we declare it as in the examples above, it will output the directive result and may become unexpected behavior... To achieve the expected behavior you must prefix the `alias` modifier in the directive declaration, then no _token_ or _node_ output will be produced during the directive evaluation. An _alias_ directive performs in its respective _token_ or _node_ step respecting the reference order.
 
 #### Alias token
 
 The _alias token_ directive is used to consume an input string without producing any output token and can be referenced by another _token_ or _alias token_ directive.
 
 ```xcm
-alias token IDENTIFIER as EXPRESSION;
+alias token ALIAS as EXPRESSION;
+
+token <100> TOKEN as ALIAS;
 ```
 
-> An identity is optional in this case.
+> An identity is optional for _alias token_ directives.
+
+To make an _alias token_ directive more flexible, the template arguments can be specified in the alias statement and further referenced in the respective directive statements.
+
+```xcm
+alias <ID, EXPRESSION>
+token <ID> ALIAS as opt EXPRESSION;
+
+token <100> TOKEN as ALIAS <10, TOKEN>;
+```
+
+> Template arguments `10` and `TOKEN` are being passed to the `ALIAS` reference.
 
 #### Alias node
 
 The _alias node_ directive is used to consume an input token without producing any output node and can be referenced by another _node_ or _alias node_ directive.
 
 ```xcm
-alias node IDENTIFIER as EXPRESSION;
+alias node ALIAS as EXPRESSION;
+
+node <200> TOKEN as ALIAS;
 ```
 
-> An identity is optional in this case.
+> An identity is optional for _alias node_ directives.
+
+Such as an _alias token_, to make an _alias node_ directive more flexible the template arguments can be specified in the alias statement and referenced in the directive statements.
+
+```xcm
+alias <ID, EXPRESSION>
+node <ID> ALIAS as opt EXPRESSION;
+
+node <200> NODE as ALIAS <20, NODE>;
+```
+
+> Template arguments `20` and `NODE` are being passed to the `ALIAS` reference.
 
 Unlike the common _token_ or _node_ directive, an _alias_ directive must be referenced by a non aliased directive to take effect. And talking about references, let's see how to manage references in the next steps.
 
