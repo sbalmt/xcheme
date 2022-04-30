@@ -19,7 +19,7 @@ import * as Generic from './generic';
 const template = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   if (record.data.template) {
     Generic.Template.consume(project, node, record, state);
-    record = node.table.get(node.fragment.data)!;
+    record = node.table.find(node.fragment.data)!;
   }
   Records.connect(project, node.fragment.data, record, state.record!);
 };
@@ -53,7 +53,13 @@ const upgrade = (project: Project.Context, node: Types.Node, record: Types.Recor
  */
 const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   if (record.value === Parser.Symbols.AliasToken) {
-    Records.connect(project, node.fragment.data, record, state.record!);
+    if (record.assigned) {
+      template(project, node, record, state);
+    } else {
+      project.symbols.listen(node.fragment.data, () => {
+        template(project, node, record, state);
+      });
+    }
   } else if (record.value === Parser.Symbols.Token) {
     project.addError(node.fragment, Errors.INVALID_TOKEN_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {

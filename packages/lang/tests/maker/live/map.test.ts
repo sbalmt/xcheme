@@ -51,6 +51,19 @@ test("Parse a 'MAP' pattern with nested map patterns", () => {
   );
 });
 
+test("Parse a 'MAP' pattern with a template reference", () => {
+  Assert.lexer(
+    'barfoo',
+    `
+    alias <X>
+    token <X> FOO as 'foo';
+
+    skip map {
+      'bar' & FOO <10>
+    };`
+  );
+});
+
 test("Parse a 'MAP' pattern in a token directive", () => {
   const { project, context } = Assert.lexer(
     'abc',

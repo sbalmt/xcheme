@@ -88,6 +88,26 @@ test("Output a 'MAP' pattern with a nested map pattern", () => {
   );
 });
 
+test("Output a 'MAP' pattern with a template reference", () => {
+  Assert.output(
+    `
+    alias <X>
+    token <X> FOO as 'foo';
+
+    skip map {
+      'bar' & FOO <10>
+    };`,
+    {
+      '@SKIP0':
+        `new Core.MapFlowPattern(` +
+        /**/ `new Core.FlowRoute(` +
+        /******/ `new Core.UseValuePattern(10, new Core.ExpectUnitPattern('f', 'o', 'o')), 'b', 'a', 'r'` +
+        /**/ `)` +
+        `)`
+    }
+  );
+});
+
 test("Output a 'MAP' pattern in a token directive", () => {
   Assert.output(
     `
