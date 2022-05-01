@@ -17,11 +17,20 @@ import * as Generic from './generic';
  * @param state Consumption state.
  */
 const template = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
-  if (record.data.template) {
-    Generic.Template.consume(project, node, record, state);
-    record = node.table.find(node.fragment.data)!;
+  let identifier = node.fragment.data;
+  const action = () => {
+    if (record.data.template) {
+      Generic.Template.consume(project, node, record, state);
+      identifier = node.fragment.data;
+      record = node.table.find(identifier)!;
+    }
+    Records.connect(project, identifier, record, state.record!);
+  };
+  if (!record.assigned) {
+    project.symbols.listen(identifier, action);
+  } else {
+    action();
   }
-  Records.connect(project, node.fragment.data, record, state.record!);
 };
 
 /**
@@ -32,14 +41,19 @@ const template = (project: Project.Context, node: Types.Node, record: Types.Reco
  * @param state Consumption state.
  */
 const upgrade = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
-  if (Records.isDynamic(record)) {
-    project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
+  const identifier = node.fragment.data;
+  const action = () => {
+    if (Records.isDynamic(record)) {
+      project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
+    } else {
+      Records.connect(project, identifier, record, state.record!);
+      Types.assignNode(node, { type: Types.Nodes.Reference, record });
+    }
+  };
+  if (!record.assigned) {
+    project.symbols.listen(identifier, action);
   } else {
-    Records.connect(project, node.fragment.data, record, state.record!);
-    Types.assignNode(node, {
-      type: Types.Nodes.Reference,
-      record: record
-    });
+    action();
   }
 };
 
@@ -53,13 +67,7 @@ const upgrade = (project: Project.Context, node: Types.Node, record: Types.Recor
  */
 const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   if (record.value === Parser.Symbols.AliasToken) {
-    if (record.assigned) {
-      template(project, node, record, state);
-    } else {
-      project.symbols.listen(node.fragment.data, () => {
-        template(project, node, record, state);
-      });
-    }
+    template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
     project.addError(node.fragment, Errors.INVALID_TOKEN_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -84,13 +92,7 @@ const resolveToken = (project: Project.Context, node: Types.Node, record: Types.
   if (record.value === Parser.Symbols.Token) {
     Records.connect(project, identifier, record, state.record!);
   } else if (record.value === Parser.Symbols.AliasToken) {
-    if (record.assigned) {
-      template(project, node, record, state);
-    } else {
-      project.symbols.listen(identifier, () => {
-        template(project, node, record, state);
-      });
-    }
+    template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Node) {
     project.addError(node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -113,21 +115,9 @@ const resolveNode = (project: Project.Context, node: Types.Node, record: Types.R
   if (record.value === Parser.Symbols.Node) {
     Records.connect(project, identifier, record, state.record!);
   } else if (record.value === Parser.Symbols.AliasNode) {
-    if (record.assigned) {
-      template(project, node, record, state);
-    } else {
-      project.symbols.listen(identifier, () => {
-        template(project, node, record, state);
-      });
-    }
+    template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
-    if (record.assigned) {
-      upgrade(project, node, record, state);
-    } else {
-      project.symbols.listen(identifier, () => {
-        upgrade(project, node, record, state);
-      });
-    }
+    upgrade(project, node, record, state);
   } else if (record.value === Parser.Symbols.AliasToken) {
     project.addError(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
   } else {
