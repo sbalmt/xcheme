@@ -110,9 +110,10 @@ Unlike the common _token_ or _node_ directive, an _alias_ directive must be refe
 
 ## Next steps
 
+- [References](./references.md)
 - [Operators](./operators.md)
 - [Operands](./operands.md)
-- [References](./references.md)
+- [Modules](./modules.md)
 
 ## License
 

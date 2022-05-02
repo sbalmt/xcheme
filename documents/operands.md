@@ -162,6 +162,7 @@ node <0> N_FOOBAR as T_FOOBAR.FOO & T_FOOBAR.BAR;
 - [Directives](./directives.md)
 - [Operators](./operators.md)
 - [References](./references.md)
+- [Modules](./modules.md)
 
 ## License
 

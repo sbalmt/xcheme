@@ -74,6 +74,8 @@ We just used XCHEME to make a parser that's able to consume combinations of _hel
 - [Directives](./directives.md)
 - [References](./references.md)
 - [Operators](./operators.md)
+- [Operands](./operands.md)
+- [Modules](./modules.md)
 
 ## License
 

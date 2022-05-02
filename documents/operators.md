@@ -563,9 +563,10 @@ token <0> T_FOOBAR as FOO & (repeat BAR & BAZ);
 
 ## Next steps
 
-- [Operands](./operands.md)
 - [Directives](./directives.md)
+- [Operands](./operands.md)
 - [References](./references.md)
+- [Modules](./modules.md)
 
 ## License
 

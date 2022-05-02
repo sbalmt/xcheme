@@ -65,6 +65,7 @@ When referencing map entries, all the rules above must be considered, but only _
 - [Directives](./directives.md)
 - [Operators](./operators.md)
 - [Operands](./operands.md)
+- [Modules](./modules.md)
 
 ## License
 
