@@ -4,7 +4,7 @@ XCHEME Lang is a programming language designed for developing lexers and parsers
 
 ## What is XCHEME?
 
-XCHEME Lang (Or just "XCHEME") is a set of case-sensitive directives and expressions commonly used for validating portions of strings, each directive and expression is an atomic pattern (a small action, e.g: `repeat`, `expect`, `choose`, etc...) that must be valid to make the analysis process move on to the end of the string. By using atomic patterns, it's possible to combine a variety of components and create complex validation rules that will produce _Tokens_ and _Nodes_ already in an AST (Abstract Syntax Tree) for post-processing.
+XCHEME Lang (Or just "XCHEME") is a set of case-sensitive directives and expressions commonly used for validating portions of strings, each directive is an atomic pattern (a small action, e.g: `repeat`, `expect`, `choose`, etc...) that must be valid for making the analysis process to move on up to the end of the string. By using atomic patterns, it's possible to combine a variety of statements to create complex validation rules that will produce a list of _tokens_ and _nodes_ already organized an AST (Abstract Syntax Tree) for post-processing.
 
 ## A _Hello world!_ example
 
@@ -67,7 +67,7 @@ Done!
 
 ## What happened?
 
-We just used XCHEME to make a parser that's able to consume combinations of _hello world_ sentences, and we also printed all the tokens and nodes resulting of the analysis process... To get a deep understanding of what happened, why it happened that way, and start creating your own lexer and/or parser, take a time to delve into the next steps.
+In basic terms, we've just used XCHEME to make a parser that's able to consume a combination of case-insensitive _hello world_ sentences, and also printed all the resulting tokens and nodes of the analysis process... To get a really deep understanding of what happened, why it happened that way, and start creating your own lexer and/or parser, take a time to delve into the next steps.
 
 ## Next steps
 
