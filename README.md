@@ -57,6 +57,7 @@ Learn more about XCHEME.
 - [Operators](./documents/operators.md)
 - [Operands](./documents/operands.md)
 - [References](./documents/references.md)
+- [Modules](./documents/modules.md)
 
 ## Samples
 
