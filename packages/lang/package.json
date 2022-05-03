@@ -1,6 +1,6 @@
 {
 	"name": "@xcheme/lang",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "XCHEME Language components",
 	"license": "MIT",
 	"keywords": [
@@ -32,6 +32,6 @@
 		"typescript": "^4.3.5"
 	},
 	"dependencies": {
-		"@xcheme/core": "^0.0.7"
+		"@xcheme/core": "^0.0.8"
 	}
 }

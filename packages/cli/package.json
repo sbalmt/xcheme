@@ -1,6 +1,6 @@
 {
 	"name": "@xcheme/cli",
-	"version": "0.0.7",
+	"version": "0.0.8",
 	"description": "XCHEME command line interface.",
 	"license": "MIT",
 	"keywords": [
@@ -32,7 +32,7 @@
 		"webpack-shebang-plugin": "^1.1.6"
 	},
 	"dependencies": {
-		"@xcheme/core": "^0.0.7",
-		"@xcheme/lang": "^0.0.7"
+		"@xcheme/core": "^0.0.8",
+		"@xcheme/lang": "^0.0.8"
 	}
 }
