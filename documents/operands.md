@@ -16,7 +16,7 @@ The following table lists all the available operands. Click on the description t
 
 ## Any operand
 
-The `any` operand is used when we want to accept any character in a _token_ directive or any token in a _node_ directive.
+The `any` operand is used to accept any character in a _token_ directive or any token in a _node_ directive.
 
 Syntax:
 
@@ -44,7 +44,7 @@ node <0> N_FOO as *;
 
 ## Range operand
 
-The range operand is used when we want to accept a range of characters in a _token_ directive. When a range operand is used in a _node_ directive a new _token_ directive is generated automatically, this behavior is called _loose token_ directive generation.
+The range operand is used to accept a range of characters in a _token_ directive. When the range operand is used in a _node_ directive a new _token_ directive is generated automatically and referenced into the respective _node_ directive, this behavior is called _loose token_ generation.
 
 Syntax:
 
@@ -70,7 +70,7 @@ node <0> N_FOO as from '0' to '9';
 
 ## String operand
 
-The string operand is used when we want to accept a string in a _token_ directive. When strings are used in a _node_ directive a _loose token_ directive will be generated.
+The string operand is used to accept a sequence of characters in a _token_ directive. When strings are used within _node_ directives a _loose token_ directive will be generated.
 
 Syntax:
 
@@ -96,7 +96,7 @@ node <0> N_FOO as 'foo';
 
 ## Reference operand
 
-The reference operand is used when we want to reuse an expression from a _token_ or _node_ directive without duplicating it. There are some rules for using references, you can learn more about [here](./references.md).
+The reference operand is used to reuse an expression from a _token_ or _node_ directive without the need of duplicating it. There are some rules for using references, you can learn more about [here](./references.md).
 
 Example:
 
@@ -111,7 +111,7 @@ token <0> T_BAZ as (T_FOO & T_BAR) | (T_BAR & T_FOO);
 
 ## Map operand
 
-The map operand is used when we want to group characters or strings in a _token_ directive, or a set of tokens in a _node_ directive.
+The map operand is used to group characters or strings in a _token_ directive, or a set of tokens in a _node_ directive.
 
 Syntax:
 
@@ -126,14 +126,14 @@ Example:
 
 ```xcm
 token <0> T_FOOBAR as map {
-  FOO,
-  BAR
+  'foo',
+  'bar'
 };
 ```
 
-> For each `FOO` or `BAR` a new `T_FOOBAR` token will be generated.
+> For each `'foo'` or `'bar'` a new `T_FOOBAR` token will be generated.
 
-Maps performs better than a sequence of _token_ directives and can be used to combine multiple directives into a single one, but in some cases we would like to define an individual identity for each map entry, as we can do using one _token_ directive for each token, let's see how to achieve that.
+Maps can perform better than sequences of _token_ directives and can be useful to combine multiple directives into a single one, but in some cases, we would like to define an individual identity for each map entry as we can do in directives, let's see down below how to achieve that.
 
 ```xcm
 token <auto> T_FOOBAR as map {
@@ -144,7 +144,7 @@ token <auto> T_FOOBAR as map {
 
 > For each `'foo'` or `'bar'` a new `T_FOOBAR` token will be generated, and the `auto` identity in the _token_ directive ensures that every token generated will assume the identity provided in the respective entry.
 
-Now that we've added identities and identifier for each map entry, it's also possible to use an individual reference for some entries, as we will see below.
+Now that we've added identities and identifier for each map entry, it's also possible to use an individual reference for each entry, as we will see below.
 
 ```xcm
 token <auto> T_FOOBAR as map {

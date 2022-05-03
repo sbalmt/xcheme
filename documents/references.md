@@ -1,14 +1,14 @@
 # XCHEME - References
 
-References can be very useful to avoid duplicating your code, in other words, instead of writing everything a lot of times, you should use references. XCHEME has are some rules for referencing directives and map entries, let's see down below how to manage them.
+References are very useful to avoid duplicating the source code, so, instead of writing everything a lot of times, just create aliases and then, reference it everywhere... However, references has some rules for directives and map entries, let's see down below how to work with them.
 
 ## Directive references
 
-As seen in the [directives](./directives.md) section, there are some notes to consider when writing your parser, the directive order implies in the parsing behavior, and for that reason a _token_ directive can't reference a _node_ directive for example... So, for avoiding any mistake let's take a look at the directive reference rules.
+As seen in the [directives](./directives.md) section, there are some remarks to consider when writing your parser, the directive order implies in the parsing behavior, and for that reason a _token_ directive can't reference a _node_ directive an vice versa... So, to avoid any mistake, let's take a look at the directive reference rules.
 
 #### Token directives
 
-The _token_ directive can only have references to another _token_ or _alias token_ directive, as the _token_ directive performs in the lexer step, there's no way to reference _node_ directives here.
+The _token_ directive can only have references from another _token_ or _alias token_ directive, as the _token_ directive performs in the lexer step, there's no way to reference _node_ directives here.
 
 | Directive | Reference   | Behavior  | Example                       |
 | --------- | ----------- | --------- | ----------------------------- |
@@ -19,7 +19,7 @@ The _token_ directive can only have references to another _token_ or _alias toke
 
 #### Node directives
 
-The _node_ directive can only have references to another _node_, _alias node_ or _token_ directive, as the _node_ directive performs in the parsing step, there's no way to reference _alias token_ directives here.
+The _node_ directive can only have references from another _node_, _alias node_ or _token_ directive, as the _node_ directive performs in the parsing step, there's no way to reference _alias token_ directives here.
 
 | Directive | Reference   | Behavior  | Example                      |
 | --------- | ----------- | --------- | ---------------------------- |
@@ -30,7 +30,7 @@ The _node_ directive can only have references to another _node_, _alias node_ or
 
 #### Skip directives
 
-The _skip_ directive can only have references to an _alias token_ directive, as the _skip_ directive shouldn't output any result, there's no way to reference _token_ or _node_ directives here.
+The _skip_ directive can only have references from _alias token_ directives, as the _skip_ directive shouldn't output any result, there's no way to reference _token_ or _node_ directives here.
 
 | Directive | Reference   |           | Example             |
 | --------- | ----------- | --------- | ------------------- |

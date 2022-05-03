@@ -1,6 +1,6 @@
 # XCHEME - Directives
 
-By using directives, we tell XCHEME how to tokenize an input string in the lexer, how to parse a token in the parser and, in some cases, we want to tell how to ignore some characters like white-spaces, tabs, and so on... Something you must consider when writing your parser is the order of the directives, for example, no matter where a _skip_ directive is placed in the code, _skip_ directives always performs first. There are three main directives you should know about, and both of them are written almost in the same way, let's see how to write them and what's the expected behavior for each one.
+Using directives we tell XCHEME how to tokenize an input string in the lexer, how to parse a token in the parser and, in some cases, we want to tell how to ignore some characters like white-spaces, tabs, and so on... Something you must consider when writing your parser is the order of the directives, for example, no matter where a _skip_ directive is placed in the code, _skip_ directives always performs first... There are three main directives you should know about, and both of them are written almost in the same way, let's see how to write them and what's the expected behavior for each one.
 
 ## Token directives
 
