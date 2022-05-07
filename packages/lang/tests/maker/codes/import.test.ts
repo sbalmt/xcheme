@@ -48,3 +48,22 @@ test('IMPORT directive with dependent and purged references', () => {
       `);`
   );
 });
+
+test('IMPORT directive with multiple re-importation', () => {
+  const project = Helper.makeParser(
+    new Lang.TextCoder(),
+    `
+    import './module5';
+    import './module6';`
+  );
+  expect(project.lexer).toBe(
+    `exports.Lexer = new Core.ExpectFlowPattern(` +
+      /**/ `new Core.OptFlowPattern(` +
+      /******/ `new Core.RepeatFlowPattern(` +
+      /**********/ `new Core.ChooseFlowPattern()` +
+      /******/ `)` +
+      /**/ `), ` +
+      /**/ `new Core.EndFlowPattern()` +
+      `);`
+  );
+});

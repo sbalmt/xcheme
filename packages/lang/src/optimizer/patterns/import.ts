@@ -135,6 +135,7 @@ export const consume = (project: Project.Context, node: Types.Node): void => {
           project.addError(location.fragment, Errors.IMPORT_FAILURE);
           project.errors.push(...extProject.errors);
         }
+        cache.delete(project.coder, path);
       }
     }
   }

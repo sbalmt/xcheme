@@ -1,0 +1,4 @@
+// Imported directives.
+import './module5';
+
+export alias node NODE as 'node';

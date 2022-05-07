@@ -30,4 +30,16 @@ export class Context<V> {
       cache.add(value);
     }
   }
+
+  /**
+   * Delete the specified value from the cache.
+   * @param object Key object.
+   * @param value Input value.
+   */
+  delete<K extends object>(object: K, value: V): void {
+    const cache = this.#cache.get(object);
+    if (cache) {
+      cache.delete(value);
+    }
+  }
 }

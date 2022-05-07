@@ -1,0 +1,2 @@
+// Exported directives.
+export alias token TOKEN as 'token';
