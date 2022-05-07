@@ -2,7 +2,7 @@ import * as Lang from '../../src';
 
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'THEN' pattern (half condition)", () => {
+test('Consume an expected THEN pattern (half condition)', () => {
   Assert.tree(
     `
     skip REF then TRUE;`,
@@ -23,7 +23,7 @@ test("Consume an expected 'THEN' pattern (half condition)", () => {
   );
 });
 
-test("Consume an expected 'THEN/ELSE' pattern (full condition)", () => {
+test('Consume an expected THEN/ELSE pattern (full condition)', () => {
   Assert.tree(
     `
     skip REF then TRUE else FALSE;`,

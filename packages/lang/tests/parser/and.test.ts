@@ -2,7 +2,7 @@ import * as Lang from '../../src';
 
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'AND' pattern", () => {
+test('Consume an expected AND pattern', () => {
   Assert.tree(
     `
     skip REF1 and REF2 & REF3;`,

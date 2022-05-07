@@ -2,7 +2,7 @@ import * as Lang from '../../src';
 
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'NODE' pattern", () => {
+test('Consume an expected NODE pattern', () => {
   Assert.tree(
     `
     node NODE as REF;`,
@@ -20,7 +20,7 @@ test("Consume an expected 'NODE' pattern", () => {
   );
 });
 
-test("Consume an expected 'NODE' pattern with an identity", () => {
+test('Consume an expected NODE pattern with an identity', () => {
   Assert.tree(
     `
     node <200> NODE as REF;`,
@@ -45,7 +45,7 @@ test("Consume an expected 'NODE' pattern with an identity", () => {
   );
 });
 
-test("Consume an expected 'ALIAS NODE' pattern", () => {
+test('Consume an expected ALIAS NODE pattern', () => {
   Assert.tree(
     `
     alias node ALIAS as REF;`,
@@ -63,7 +63,7 @@ test("Consume an expected 'ALIAS NODE' pattern", () => {
   );
 });
 
-test("Consume an expected 'ALIAS NODE' pattern with an identity", () => {
+test('Consume an expected ALIAS NODE pattern with an identity', () => {
   Assert.tree(
     `
     alias node <200> ALIAS as REF;`,

@@ -2,7 +2,7 @@ import * as Lang from '../../src';
 
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'FROM/TO' pattern", () => {
+test('Consume an expected FROM/TO pattern', () => {
   Assert.tree(
     `
     skip from '0' to '9';`,

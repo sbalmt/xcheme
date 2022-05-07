@@ -2,7 +2,7 @@ import * as Lang from '../../src';
 
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'TOKEN' pattern", () => {
+test('Consume an expected TOKEN pattern', () => {
   Assert.tree(
     `
     token TOKEN as REF;`,
@@ -20,7 +20,7 @@ test("Consume an expected 'TOKEN' pattern", () => {
   );
 });
 
-test("Consume an expected 'TOKEN' pattern with an identity", () => {
+test('Consume an expected TOKEN pattern with an identity', () => {
   Assert.tree(
     `
     token <100> TOKEN as REF;`,
@@ -45,7 +45,7 @@ test("Consume an expected 'TOKEN' pattern with an identity", () => {
   );
 });
 
-test("Consume an expected 'ALIAS TOKEN' pattern", () => {
+test('Consume an expected ALIAS TOKEN pattern', () => {
   Assert.tree(
     `
     alias token ALIAS as REF;`,
@@ -63,7 +63,7 @@ test("Consume an expected 'ALIAS TOKEN' pattern", () => {
   );
 });
 
-test("Consume an expected 'ALIAS TOKEN' pattern with an identity", () => {
+test('Consume an expected ALIAS TOKEN pattern with an identity', () => {
   Assert.tree(
     `
     alias token <100> ALIAS as REF;`,

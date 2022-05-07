@@ -3,7 +3,7 @@ import * as Lang from '../../src';
 import * as Helper from './utils/helper';
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'SYMBOL' pattern", () => {
+test('Consume an expected SYMBOL pattern', () => {
   Assert.tree(
     `
     skip symbol REF;`,
@@ -11,7 +11,7 @@ test("Consume an expected 'SYMBOL' pattern", () => {
   );
 });
 
-test("Consume an expected 'SYMBOL' pattern with an identity", () => {
+test('Consume an expected SYMBOL pattern with an identity', () => {
   Assert.tree(
     `
     skip symbol <1> REF;`,
@@ -19,7 +19,7 @@ test("Consume an expected 'SYMBOL' pattern with an identity", () => {
   );
 });
 
-test("Consume an expected 'SYMBOL' pattern with an auto identity", () => {
+test('Consume an expected SYMBOL pattern with an auto identity', () => {
   Assert.tree(
     `
     skip symbol <auto> REF;`,

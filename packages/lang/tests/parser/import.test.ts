@@ -2,7 +2,7 @@ import * as Lang from '../../src';
 
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'IMPORT' pattern", () => {
+test('Consume an expected IMPORT pattern', () => {
   Assert.tree(
     `
     import 'module';`,

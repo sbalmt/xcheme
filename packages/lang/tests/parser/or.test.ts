@@ -2,7 +2,7 @@ import * as Lang from '../../src';
 
 import * as Assert from './utils/assert';
 
-test("Consume an expected 'OR' pattern", () => {
+test('Consume an expected OR pattern', () => {
   Assert.tree(
     `
     skip REF1 or REF2 | REF3;`,
