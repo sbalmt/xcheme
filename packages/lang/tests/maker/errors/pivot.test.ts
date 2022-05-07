@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test("Pivot without an identity in a 'SKIP' directive", () => {
+test('PIVOT without an identity in a SKIP directive', () => {
   Assert.error(
     `
     skip pivot 'a';`,
@@ -15,7 +15,7 @@ test("Pivot without an identity in a 'SKIP' directive", () => {
   );
 });
 
-test("Pivot without an identity in an 'ALIAS TOKEN' directive", () => {
+test('PIVOT without an identity in an ALIAS TOKEN directive', () => {
   Assert.error(
     `
     alias token ALIAS as pivot 'a';`,
@@ -34,7 +34,7 @@ test("Pivot without an identity in an 'ALIAS TOKEN' directive", () => {
   );
 });
 
-test("Pivot without an identity in a 'MAP' operand", () => {
+test('PIVOT without an identity in a MAP operand', () => {
   Assert.error(
     `
     alias token ALIAS as map {
@@ -55,7 +55,7 @@ test("Pivot without an identity in a 'MAP' operand", () => {
   );
 });
 
-test('Pivot with an unexpected argument', () => {
+test('PIVOT with an unexpected argument', () => {
   Assert.error(
     `
     skip pivot <X> 'a';`,
@@ -74,7 +74,7 @@ test('Pivot with an unexpected argument', () => {
   );
 });
 
-test('Pivot with an unexpected extra argument', () => {
+test('PIVOT with an unexpected extra argument', () => {
   Assert.error(
     `
     skip pivot <100, auto> 'a';`,

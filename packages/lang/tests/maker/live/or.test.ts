@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse an 'OR' pattern", () => {
+test("Parse an OR pattern", () => {
   Assert.lexer(
     '-+@-+@',
     `
@@ -8,7 +8,7 @@ test("Parse an 'OR' pattern", () => {
   );
 });
 
-test("Parse an 'OR' pattern optimized with a map", () => {
+test("Parse an OR pattern optimized with a map", () => {
   Assert.lexer(
     '-123+abc',
     `
@@ -16,7 +16,7 @@ test("Parse an 'OR' pattern optimized with a map", () => {
   );
 });
 
-test("Parse an 'OR' pattern with a complex sequence", () => {
+test("Parse an OR pattern with a complex sequence", () => {
   Assert.lexer(
     '---+@1AB@2',
     `

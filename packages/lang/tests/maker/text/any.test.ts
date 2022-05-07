@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output an 'ANY' pattern from the operator", () => {
+test('Output an ANY pattern from the operator', () => {
   Assert.output(
     `
     skip *;`,
@@ -10,7 +10,7 @@ test("Output an 'ANY' pattern from the operator", () => {
   );
 });
 
-test("Output an 'ANY' pattern from the keyword", () => {
+test('Output an ANY pattern from the keyword', () => {
   Assert.output(
     `
     skip any;`,

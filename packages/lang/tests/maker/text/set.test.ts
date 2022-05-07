@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output a 'SET' pattern", () => {
+test('Output a SET pattern', () => {
   Assert.output(
     `
     skip set <1> '@';`,

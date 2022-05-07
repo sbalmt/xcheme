@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
-test("Output a 'TOKEN' pattern", () => {
+test('Output a TOKEN pattern', () => {
   Assert.output(
     `
     token <100> TOKEN as '@';`,
@@ -12,7 +12,7 @@ test("Output a 'TOKEN' pattern", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with zero identity", () => {
+test('Output a TOKEN pattern with zero identity', () => {
   Assert.output(
     `
     token <0> TOKEN as '@';`,
@@ -22,7 +22,7 @@ test("Output a 'TOKEN' pattern with zero identity", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with a pre-declared token reference", () => {
+test('Output a TOKEN pattern with a pre-declared token reference', () => {
   Assert.output(
     `
     token <100> TOKEN_1 as 'foo';
@@ -41,7 +41,7 @@ test("Output a 'TOKEN' pattern with a pre-declared token reference", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with a post-declared token reference", () => {
+test('Output a TOKEN pattern with a post-declared token reference', () => {
   Assert.output(
     `
     token <100> TOKEN_1 as 'bar' & TOKEN_2;
@@ -58,7 +58,7 @@ test("Output a 'TOKEN' pattern with a post-declared token reference", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with an alias token reference", () => {
+test('Output a TOKEN pattern with an alias token reference', () => {
   Assert.output(
     `
     token <100> TOKEN as ALIAS;
@@ -70,7 +70,7 @@ test("Output a 'TOKEN' pattern with an alias token reference", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with a template alias token reference", () => {
+test('Output a TOKEN pattern with a template alias token reference', () => {
   Assert.output(
     `
     alias <X, Y>
@@ -87,7 +87,7 @@ test("Output a 'TOKEN' pattern with a template alias token reference", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with multiple template alias token references", () => {
+test('Output a TOKEN pattern with multiple template alias token references', () => {
   Assert.output(
     `
     alias <X>
@@ -104,7 +104,7 @@ test("Output a 'TOKEN' pattern with multiple template alias token references", (
   );
 });
 
-test("Output a 'TOKEN' pattern with a reference to itself", () => {
+test('Output a TOKEN pattern with a reference to itself', () => {
   Assert.output(
     `
     token <100> TOKEN as '@' & opt TOKEN;`,
@@ -122,7 +122,7 @@ test("Output a 'TOKEN' pattern with a reference to itself", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with an alias token that has a reference to itself", () => {
+test('Output a TOKEN pattern with an alias token that has a reference to itself', () => {
   Assert.output(
     `
     alias token ALIAS as '@' & opt ALIAS;
@@ -140,7 +140,7 @@ test("Output a 'TOKEN' pattern with an alias token that has a reference to itsel
   );
 });
 
-test("Output a 'TOKEN' pattern referencing a template alias token and passing itself as an argument", () => {
+test('Output a TOKEN pattern referencing a template alias token and passing itself as an argument', () => {
   Assert.output(
     `
     alias <X>
@@ -158,7 +158,7 @@ test("Output a 'TOKEN' pattern referencing a template alias token and passing it
   );
 });
 
-test("Output a 'TOKEN' pattern referencing a template alias token that has a reference ot itself", () => {
+test('Output a TOKEN pattern referencing a template alias token that has a reference ot itself', () => {
   Assert.output(
     `
     alias <X>
@@ -176,7 +176,7 @@ test("Output a 'TOKEN' pattern referencing a template alias token that has a ref
   );
 });
 
-test("Output a 'TOKEN' pattern with a whole token map reference", () => {
+test('Output a TOKEN pattern with a whole token map reference', () => {
   Assert.output(
     `
     alias token ALIAS as map {
@@ -204,7 +204,7 @@ test("Output a 'TOKEN' pattern with a whole token map reference", () => {
   );
 });
 
-test("Output a 'TOKEN' pattern with an imported token alias directive", () => {
+test('Output a TOKEN pattern with an imported token alias directive', () => {
   Assert.output(
     `
     import './module2';

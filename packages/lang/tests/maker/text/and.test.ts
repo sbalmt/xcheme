@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output an 'AND' pattern", () => {
+test('Output an AND pattern', () => {
   Assert.output(
     `
     skip 'a' & 'bc';`,
@@ -10,7 +10,7 @@ test("Output an 'AND' pattern", () => {
   );
 });
 
-test("Output an optimized 'AND' pattern", () => {
+test('Output an optimized AND pattern', () => {
   Assert.output(
     `
     skip 'a' & 'bc' & 'd';`,
@@ -20,7 +20,7 @@ test("Output an optimized 'AND' pattern", () => {
   );
 });
 
-test("Output multiple optimized 'AND' patterns", () => {
+test('Output multiple optimized AND patterns', () => {
   Assert.output(
     `
     skip 'a' & 'b' & repeat ('c' | 'd') & 'ef';`,
@@ -35,7 +35,7 @@ test("Output multiple optimized 'AND' patterns", () => {
   );
 });
 
-test("Output an optimized 'AND' pattern in a 'NODE' directive", () => {
+test('Output an optimized AND pattern in a NODE directive', () => {
   Assert.output(
     `
     token <100> TOKEN_A as 'a';

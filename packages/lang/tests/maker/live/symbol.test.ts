@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'SYMBOL' pattern", () => {
+test("Parse a SYMBOL pattern", () => {
   Assert.lexer(
     '@',
     `
@@ -8,7 +8,7 @@ test("Parse a 'SYMBOL' pattern", () => {
   );
 });
 
-test("Parse a 'SYMBOL' pattern with chained patterns", () => {
+test("Parse a SYMBOL pattern with chained patterns", () => {
   Assert.lexer(
     '@**',
     `

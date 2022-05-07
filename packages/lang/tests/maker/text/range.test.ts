@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test('Output a range pattern', () => {
+test('Output a RANGE pattern', () => {
   Assert.output(
     `
     skip from '0' to '9';`,

@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test('Cyclic import error', () => {
+test('Cyclic IMPORT error', () => {
   Assert.error(
     `
     import './module3';`,

@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test('Skip referring an undefined identifier', () => {
+test('SKIP referring an undefined identifier', () => {
   Assert.error(
     `
     skip TOKEN;`,
@@ -15,7 +15,7 @@ test('Skip referring an undefined identifier', () => {
   );
 });
 
-test('Skip referring a token (reference error)', () => {
+test('SKIP referring a token (reference error)', () => {
   Assert.error(
     `
     token <100> TOKEN as '@';
@@ -30,7 +30,7 @@ test('Skip referring a token (reference error)', () => {
   );
 });
 
-test('Skip referring a node (reference error)', () => {
+test('SKIP referring a node (reference error)', () => {
   Assert.error(
     `
     node <200> NODE as '@';
@@ -45,7 +45,7 @@ test('Skip referring a node (reference error)', () => {
   );
 });
 
-test('Skip referring an alias node (reference error)', () => {
+test('SKIP referring an alias node (reference error)', () => {
   Assert.error(
     `
     alias node NODE as '@';

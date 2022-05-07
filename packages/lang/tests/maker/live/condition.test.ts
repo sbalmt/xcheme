@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'THEN' pattern", () => {
+test('Parse a THEN pattern', () => {
   Assert.lexer(
     '\\x\\y\\z',
     `
@@ -8,7 +8,7 @@ test("Parse a 'THEN' pattern", () => {
   );
 });
 
-test("Parse a 'THEN/ELSE' pattern", () => {
+test('Parse a THEN/ELSE pattern', () => {
   Assert.lexer(
     '\\x\\y@@',
     `

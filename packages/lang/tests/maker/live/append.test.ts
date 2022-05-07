@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse an 'APPEND' pattern", () => {
+test('Parse an APPEND pattern', () => {
   Assert.lexer(
     '@@@',
     `
@@ -8,7 +8,7 @@ test("Parse an 'APPEND' pattern", () => {
   );
 });
 
-test("Parse an 'APPEND' pattern with multiple patterns", () => {
+test('Parse an APPEND pattern with multiple patterns', () => {
   Assert.lexer(
     '@*',
     `
@@ -16,7 +16,7 @@ test("Parse an 'APPEND' pattern with multiple patterns", () => {
   );
 });
 
-test("Parse an 'APPEND' pattern with chained patterns", () => {
+test('Parse an APPEND pattern with chained patterns', () => {
   Assert.lexer(
     '@**!',
     `
@@ -24,7 +24,7 @@ test("Parse an 'APPEND' pattern with chained patterns", () => {
   );
 });
 
-test("Parse an 'APPEND LEFT' pattern", () => {
+test('Parse an APPEND LEFT pattern', () => {
   Assert.lexer(
     '@@@',
     `
@@ -32,7 +32,7 @@ test("Parse an 'APPEND LEFT' pattern", () => {
   );
 });
 
-test("Parse an 'APPEND RIGHT' pattern", () => {
+test('Parse an APPEND RIGHT pattern', () => {
   Assert.lexer(
     '@@@',
     `

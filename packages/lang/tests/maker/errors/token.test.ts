@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test('Token without an identity', () => {
+test('TOKEN without an identity', () => {
   Assert.error(
     `
     token TOKEN as 'a';`,
@@ -15,7 +15,7 @@ test('Token without an identity', () => {
   );
 });
 
-test('Token with an unexpected argument', () => {
+test('TOKEN with an unexpected argument', () => {
   Assert.error(
     `
     token <X> TOKEN as 'a';`,
@@ -34,7 +34,7 @@ test('Token with an unexpected argument', () => {
   );
 });
 
-test('Token with an unexpected extra argument', () => {
+test('TOKEN with an unexpected extra argument', () => {
   Assert.error(
     `
     token <100, auto> TOKEN as 'a';`,
@@ -48,7 +48,7 @@ test('Token with an unexpected extra argument', () => {
   );
 });
 
-test('Token with an alias token template without arguments', () => {
+test('TOKEN with an alias token template without arguments', () => {
   Assert.error(
     `
     alias <X>
@@ -65,7 +65,7 @@ test('Token with an alias token template without arguments', () => {
   );
 });
 
-test('Token with an alias token template missing arguments', () => {
+test('TOKEN with an alias token template missing arguments', () => {
   Assert.error(
     `
     alias <X, Y>
@@ -82,7 +82,7 @@ test('Token with an alias token template missing arguments', () => {
   );
 });
 
-test('Token with an alias token template using extra arguments', () => {
+test('TOKEN with an alias token template using extra arguments', () => {
   Assert.error(
     `
     alias <X>
@@ -99,7 +99,7 @@ test('Token with an alias token template using extra arguments', () => {
   );
 });
 
-test('Token with a duplicate identifier', () => {
+test('TOKEN with a duplicate identifier', () => {
   Assert.error(
     `
     token <100> TOKEN as 'a';
@@ -114,7 +114,7 @@ test('Token with a duplicate identifier', () => {
   );
 });
 
-test('Token referring an undefined identifier', () => {
+test('TOKEN referring an undefined identifier', () => {
   Assert.error(
     `
     token <100> TOKEN as ALIAS;`,
@@ -128,7 +128,7 @@ test('Token referring an undefined identifier', () => {
   );
 });
 
-test('Token referring a node (reference error)', () => {
+test('TOKEN referring a node (reference error)', () => {
   Assert.error(
     `
     node  <200> NODE  as '@';
@@ -143,7 +143,7 @@ test('Token referring a node (reference error)', () => {
   );
 });
 
-test('Token referring an alias node (reference error)', () => {
+test('TOKEN referring an alias node (reference error)', () => {
   Assert.error(
     `
     alias node  NODE  as '@';
@@ -158,7 +158,7 @@ test('Token referring an alias node (reference error)', () => {
   );
 });
 
-test('Loose token already defined (token collision)', () => {
+test('Loose TOKEN already defined (token collision)', () => {
   Assert.error(
     `
     node  <200> NODE  as '@';
@@ -173,7 +173,7 @@ test('Loose token already defined (token collision)', () => {
   );
 });
 
-test('Loose token range already defined (token collision)', () => {
+test('Loose TOKEN range already defined (token collision)', () => {
   Assert.error(
     `
     node  <200> NODE  as from '0' to '9';
@@ -188,7 +188,7 @@ test('Loose token range already defined (token collision)', () => {
   );
 });
 
-test('Token already defined (token collision)', () => {
+test('TOKEN already defined (token collision)', () => {
   Assert.error(
     `
     token <100> TOKEN1 as '@';
@@ -203,7 +203,7 @@ test('Token already defined (token collision)', () => {
   );
 });
 
-test('Token range already defined (token collision)', () => {
+test('TOKEN range already defined (token collision)', () => {
   Assert.error(
     `
     token <100> TOKEN1 as from '0' to '9';

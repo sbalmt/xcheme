@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test('Error with an auto identity', () => {
+test('ERROR with an auto identity', () => {
   Assert.error(
     `
     skip error <auto> 'a';`,
@@ -15,7 +15,7 @@ test('Error with an auto identity', () => {
   );
 });
 
-test('Error with an unexpected argument', () => {
+test('ERROR with an unexpected argument', () => {
   Assert.error(
     `
     skip error <X> 'a';`,
@@ -29,7 +29,7 @@ test('Error with an unexpected argument', () => {
   );
 });
 
-test('Error with an unexpected extra argument', () => {
+test('ERROR with an unexpected extra argument', () => {
   Assert.error(
     `
     skip error <100, auto> 'a';`,

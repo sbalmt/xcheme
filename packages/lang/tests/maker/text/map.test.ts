@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
-test("Output a 'MAP' pattern", () => {
+test('Output a MAP pattern', () => {
   Assert.output(
     `
     skip map {
@@ -21,7 +21,7 @@ test("Output a 'MAP' pattern", () => {
   );
 });
 
-test("Output a 'MAP' pattern using multiple optimized nodes", () => {
+test('Output a MAP pattern using multiple optimized nodes', () => {
   Assert.output(
     `
     skip map {
@@ -41,7 +41,7 @@ test("Output a 'MAP' pattern using multiple optimized nodes", () => {
   );
 });
 
-test("Output a 'MAP' pattern with compound patterns", () => {
+test('Output a MAP pattern with compound patterns', () => {
   Assert.output(
     `
     skip map {
@@ -61,7 +61,7 @@ test("Output a 'MAP' pattern with compound patterns", () => {
   );
 });
 
-test("Output a 'MAP' pattern with a nested map pattern", () => {
+test('Output a MAP pattern with a nested map pattern', () => {
   Assert.output(
     `
     skip map {
@@ -88,7 +88,7 @@ test("Output a 'MAP' pattern with a nested map pattern", () => {
   );
 });
 
-test("Output a 'MAP' pattern with a template reference", () => {
+test('Output a MAP pattern with a template reference', () => {
   Assert.output(
     `
     alias <X>
@@ -108,7 +108,7 @@ test("Output a 'MAP' pattern with a template reference", () => {
   );
 });
 
-test("Output a 'MAP' pattern in a token directive", () => {
+test('Output a MAP pattern in a token directive', () => {
   Assert.output(
     `
     token <auto> TOKEN as map {
@@ -129,7 +129,7 @@ test("Output a 'MAP' pattern in a token directive", () => {
   );
 });
 
-test("Output a 'MAP' pattern in an alias token directive", () => {
+test('Output a MAP pattern in an alias token directive', () => {
   Assert.output(
     `
     alias token ALIAS as map {
@@ -148,7 +148,7 @@ test("Output a 'MAP' pattern in an alias token directive", () => {
   );
 });
 
-test("Output a 'MAP' pattern in a node directive", () => {
+test('Output a MAP pattern in a node directive', () => {
   Assert.output(
     `
     node <auto> NODE as map {
@@ -169,7 +169,7 @@ test("Output a 'MAP' pattern in a node directive", () => {
   );
 });
 
-test("Output a 'MAP' pattern in an alias node directive", () => {
+test('Output a MAP pattern in an alias node directive', () => {
   Assert.output(
     `
     alias node ALIAS as map {
@@ -188,7 +188,7 @@ test("Output a 'MAP' pattern in an alias node directive", () => {
   );
 });
 
-test("Output a 'MAP' pattern in a node directive using access expressions", () => {
+test('Output a MAP pattern in a node directive using access expressions', () => {
   Assert.output(
     `
     token <auto> TOKEN as map {

@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test('Output a group pattern', () => {
+test('Output a GROUP pattern', () => {
   Assert.output(
     `
     skip ('1' | '2') & 'x';`,

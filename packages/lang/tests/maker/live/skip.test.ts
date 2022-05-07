@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'SKIP' pattern", () => {
+test("Parse a SKIP pattern", () => {
   Assert.lexer(
     '@@@',
     `
@@ -8,7 +8,7 @@ test("Parse a 'SKIP' pattern", () => {
   );
 });
 
-test("Parse a 'SKIP' pattern with an alias token reference", () => {
+test("Parse a SKIP pattern with an alias token reference", () => {
   Assert.lexer(
     '@@@',
     `

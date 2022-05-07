@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test('Parse a group pattern', () => {
+test('Parse a GROUP pattern', () => {
   Assert.lexer(
     '1x2x',
     `

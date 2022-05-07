@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
-test("Output a 'NODE' pattern with zero identity", () => {
+test('Output a NODE pattern with zero identity', () => {
   Assert.output(
     `
     token <100> TOKEN as 'a';
@@ -14,7 +14,7 @@ test("Output a 'NODE' pattern with zero identity", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a loose token reference", () => {
+test('Output a NODE pattern with a loose token reference', () => {
   Assert.output(
     `
     node <200> NODE as '@' & '@' & opt '@';`,
@@ -30,7 +30,7 @@ test("Output a 'NODE' pattern with a loose token reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a loose token range reference", () => {
+test('Output a NODE pattern with a loose token range reference', () => {
   Assert.output(
     `
     node <200> NODE as from '0' to '9';`,
@@ -40,7 +40,7 @@ test("Output a 'NODE' pattern with a loose token range reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a loose token map reference", () => {
+test('Output a NODE pattern with a loose token map reference', () => {
   Assert.output(
     `
     node <200> NODE as map {
@@ -59,7 +59,7 @@ test("Output a 'NODE' pattern with a loose token map reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a pre-declared token reference", () => {
+test('Output a NODE pattern with a pre-declared token reference', () => {
   Assert.output(
     `
     token <100> TOKEN as 'foo';
@@ -71,7 +71,7 @@ test("Output a 'NODE' pattern with a pre-declared token reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a post-declared token reference", () => {
+test('Output a NODE pattern with a post-declared token reference', () => {
   Assert.output(
     `
     node  <200> NODE  as TOKEN;
@@ -83,7 +83,7 @@ test("Output a 'NODE' pattern with a post-declared token reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with an alias node reference", () => {
+test('Output a NODE pattern with an alias node reference', () => {
   Assert.output(
     `
     alias node ALIAS as 'foo';
@@ -95,7 +95,7 @@ test("Output a 'NODE' pattern with an alias node reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a template alias node reference", () => {
+test('Output a NODE pattern with a template alias node reference', () => {
   Assert.output(
     `
     alias <X, Y>
@@ -112,7 +112,7 @@ test("Output a 'NODE' pattern with a template alias node reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with multiple template alias node references", () => {
+test('Output a NODE pattern with multiple template alias node references', () => {
   Assert.output(
     `
     alias <X>
@@ -129,7 +129,7 @@ test("Output a 'NODE' pattern with multiple template alias node references", () 
   );
 });
 
-test("Output a 'NODE' pattern with a reference to itself", () => {
+test('Output a NODE pattern with a reference to itself', () => {
   Assert.output(
     `
     node <200> NODE as '@' & opt NODE;`,
@@ -147,7 +147,7 @@ test("Output a 'NODE' pattern with a reference to itself", () => {
   );
 });
 
-test("Output a 'NODE' pattern with an alias node that has a reference to itself", () => {
+test('Output a NODE pattern with an alias node that has a reference to itself', () => {
   Assert.output(
     `
     alias node ALIAS as '@' & opt ALIAS;
@@ -164,7 +164,7 @@ test("Output a 'NODE' pattern with an alias node that has a reference to itself"
   );
 });
 
-test("Output a 'NODE' pattern referencing a template alias node and passing itself as an argument", () => {
+test('Output a NODE pattern referencing a template alias node and passing itself as an argument', () => {
   Assert.output(
     `
     alias <X>
@@ -182,7 +182,7 @@ test("Output a 'NODE' pattern referencing a template alias node and passing itse
   );
 });
 
-test("Output a 'NODE' pattern referencing a template alias node that has a reference to itself", () => {
+test('Output a NODE pattern referencing a template alias node that has a reference to itself', () => {
   Assert.output(
     `
     alias <X>
@@ -200,7 +200,7 @@ test("Output a 'NODE' pattern referencing a template alias node that has a refer
   );
 });
 
-test("Output a 'NODE' pattern with token map entry references", () => {
+test('Output a NODE pattern with token map entry references', () => {
   Assert.output(
     `
     token <auto> TOKEN as map {
@@ -230,7 +230,7 @@ test("Output a 'NODE' pattern with token map entry references", () => {
   );
 });
 
-test("Output a 'NODE' pattern with a whole node map reference", () => {
+test('Output a NODE pattern with a whole node map reference', () => {
   Assert.output(
     `
     alias node ALIAS as map {
@@ -258,7 +258,7 @@ test("Output a 'NODE' pattern with a whole node map reference", () => {
   );
 });
 
-test("Output a 'NODE' pattern with an imported node alias directive", () => {
+test('Output a NODE pattern with an imported node alias directive', () => {
   Assert.output(
     `
     import './module2';
@@ -275,7 +275,7 @@ test("Output a 'NODE' pattern with an imported node alias directive", () => {
   );
 });
 
-test("Output a 'NODE' pattern with an imported token directive", () => {
+test('Output a NODE pattern with an imported token directive', () => {
   Assert.output(
     `
     import './module2';

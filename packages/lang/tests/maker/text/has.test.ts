@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output a 'HAS' pattern", () => {
+test('Output a HAS pattern', () => {
   Assert.output(
     `
     skip has <0> '@';`,

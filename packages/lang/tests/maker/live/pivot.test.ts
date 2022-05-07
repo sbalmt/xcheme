@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'PIVOT' pattern", () => {
+test('Parse a PIVOT pattern', () => {
   Assert.lexer(
     '@@@',
     `
@@ -8,7 +8,7 @@ test("Parse a 'PIVOT' pattern", () => {
   );
 });
 
-test("Parse a 'PIVOT' pattern with multiple patterns", () => {
+test('Parse a PIVOT pattern with multiple patterns', () => {
   Assert.lexer(
     '@*',
     `
@@ -16,7 +16,7 @@ test("Parse a 'PIVOT' pattern with multiple patterns", () => {
   );
 });
 
-test("Parse a 'PIVOT' pattern with chained patterns", () => {
+test('Parse a PIVOT pattern with chained patterns', () => {
   Assert.lexer(
     '@**!',
     `

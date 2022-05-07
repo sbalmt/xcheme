@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'HAS' pattern", () => {
+test("Parse a HAS pattern", () => {
   Assert.lexer(
     '@',
     `

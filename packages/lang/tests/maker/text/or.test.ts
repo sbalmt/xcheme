@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output an 'OR' pattern", () => {
+test('Output an OR pattern', () => {
   Assert.output(
     `
     skip '-' | '+' | '@';`,
@@ -10,7 +10,7 @@ test("Output an 'OR' pattern", () => {
   );
 });
 
-test("Output an 'OR' pattern optimized with a map", () => {
+test('Output an OR pattern optimized with a map', () => {
   Assert.output(
     `
     skip '-' | '+' | '123' | 'abc';`,

@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test("Prepend without an identity in a 'SKIP' directive", () => {
+test('PREPEND without an identity in a SKIP directive', () => {
   Assert.error(
     `
     skip prepend 'a';`,
@@ -15,7 +15,7 @@ test("Prepend without an identity in a 'SKIP' directive", () => {
   );
 });
 
-test("Prepend without an identity in an 'ALIAS TOKEN' directive", () => {
+test('PREPEND without an identity in an ALIAS TOKEN directive', () => {
   Assert.error(
     `
     alias token ALIAS as prepend 'a';`,
@@ -34,7 +34,7 @@ test("Prepend without an identity in an 'ALIAS TOKEN' directive", () => {
   );
 });
 
-test("Prepend without an identity in a 'MAP' operand", () => {
+test('PREPEND without an identity in a MAP operand', () => {
   Assert.error(
     `
     alias token ALIAS as map {
@@ -55,7 +55,7 @@ test("Prepend without an identity in a 'MAP' operand", () => {
   );
 });
 
-test('Prepend with an unexpected argument', () => {
+test('PREPEND with an unexpected argument', () => {
   Assert.error(
     `
     skip prepend <X> 'a';`,
@@ -74,7 +74,7 @@ test('Prepend with an unexpected argument', () => {
   );
 });
 
-test('Prepend with an unexpected extra argument', () => {
+test('PREPEND with an unexpected extra argument', () => {
   Assert.error(
     `
     skip prepend <100, auto> 'a';`,

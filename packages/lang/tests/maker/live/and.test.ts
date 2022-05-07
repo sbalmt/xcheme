@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse an 'AND' pattern", () => {
+test('Parse an AND pattern', () => {
   Assert.lexer(
     '-+@-+@',
     `
@@ -8,7 +8,7 @@ test("Parse an 'AND' pattern", () => {
   );
 });
 
-test("Parse an 'AND' pattern with an optimized sequence", () => {
+test('Parse an AND pattern with an optimized sequence', () => {
   Assert.lexer(
     '-+@A12-+@@AA12',
     `

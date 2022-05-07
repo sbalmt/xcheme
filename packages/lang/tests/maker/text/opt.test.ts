@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output an 'OPT' pattern", () => {
+test('Output an OPT pattern', () => {
   Assert.output(
     `
     skip '.' & opt '@';`,

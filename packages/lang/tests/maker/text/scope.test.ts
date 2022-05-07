@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output a 'SCOPE' pattern", () => {
+test('Output a SCOPE pattern', () => {
   Assert.output(
     `
     skip scope '@';`,

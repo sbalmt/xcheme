@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test("Symbol without an identity in a 'SKIP' directive", () => {
+test('SYMBOL without an identity in a SKIP directive', () => {
   Assert.error(
     `
     skip symbol 'a';`,
@@ -15,7 +15,7 @@ test("Symbol without an identity in a 'SKIP' directive", () => {
   );
 });
 
-test("Symbol without an identity in an 'ALIAS TOKEN' directive", () => {
+test('SYMBOL without an identity in an ALIAS TOKEN directive', () => {
   Assert.error(
     `
     alias token ALIAS as symbol 'a';`,
@@ -34,7 +34,7 @@ test("Symbol without an identity in an 'ALIAS TOKEN' directive", () => {
   );
 });
 
-test("Symbol without an identity in a 'MAP' operand", () => {
+test('SYMBOL without an identity in a MAP operand', () => {
   Assert.error(
     `
     alias token ALIAS as map {
@@ -55,7 +55,7 @@ test("Symbol without an identity in a 'MAP' operand", () => {
   );
 });
 
-test('Symbol with an unexpected argument', () => {
+test('SYMBOL with an unexpected argument', () => {
   Assert.error(
     `
     skip symbol <X> 'a';`,
@@ -74,7 +74,7 @@ test('Symbol with an unexpected argument', () => {
   );
 });
 
-test('Symbol with an unexpected extra argument', () => {
+test('SYMBOL with an unexpected extra argument', () => {
   Assert.error(
     `
     skip symbol <100, auto> 'a';`,

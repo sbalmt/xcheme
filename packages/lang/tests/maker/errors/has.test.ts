@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test('Has with an auto identity', () => {
+test('HAS with an auto identity', () => {
   Assert.error(
     `
     skip has <auto> 'a';`,
@@ -15,7 +15,7 @@ test('Has with an auto identity', () => {
   );
 });
 
-test('Has with an unexpected argument', () => {
+test('HAS with an unexpected argument', () => {
   Assert.error(
     `
     skip has <X> 'a';`,
@@ -29,7 +29,7 @@ test('Has with an unexpected argument', () => {
   );
 });
 
-test('Has with an unexpected extra argument', () => {
+test('HAS with an unexpected extra argument', () => {
   Assert.error(
     `
     skip has <100, auto> 'a';`,

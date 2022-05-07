@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output an 'ERROR' pattern", () => {
+test('Output an ERROR pattern', () => {
   Assert.output(
     `
     skip error <1> '@';`,

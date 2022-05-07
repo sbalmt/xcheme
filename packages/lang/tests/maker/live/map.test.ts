@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
-test("Parse a 'MAP' pattern", () => {
+test("Parse a MAP pattern", () => {
   Assert.lexer(
     'abc',
     `
@@ -14,7 +14,7 @@ test("Parse a 'MAP' pattern", () => {
   );
 });
 
-test("Parse a 'MAP' pattern using multiple optimized nodes", () => {
+test("Parse a MAP pattern using multiple optimized nodes", () => {
   Assert.lexer(
     'abc',
     `
@@ -24,7 +24,7 @@ test("Parse a 'MAP' pattern using multiple optimized nodes", () => {
   );
 });
 
-test("Parse a 'MAP' pattern with compound patterns", () => {
+test("Parse a MAP pattern with compound patterns", () => {
   Assert.lexer(
     'abcaccde',
     `
@@ -36,7 +36,7 @@ test("Parse a 'MAP' pattern with compound patterns", () => {
   );
 });
 
-test("Parse a 'MAP' pattern with nested map patterns", () => {
+test("Parse a MAP pattern with nested map patterns", () => {
   Assert.lexer(
     'a1ba2c',
     `
@@ -51,7 +51,7 @@ test("Parse a 'MAP' pattern with nested map patterns", () => {
   );
 });
 
-test("Parse a 'MAP' pattern with a template reference", () => {
+test("Parse a MAP pattern with a template reference", () => {
   Assert.lexer(
     'barfoo',
     `
@@ -64,7 +64,7 @@ test("Parse a 'MAP' pattern with a template reference", () => {
   );
 });
 
-test("Parse a 'MAP' pattern in a token directive", () => {
+test("Parse a MAP pattern in a token directive", () => {
   const { project, context } = Assert.lexer(
     'abc',
     `
@@ -81,7 +81,7 @@ test("Parse a 'MAP' pattern in a token directive", () => {
   Assert.tokens(context, [tokenA.data.identity, 0, 1], 3);
 });
 
-test("Parse a 'MAP' pattern in a node directive", () => {
+test("Parse a MAP pattern in a node directive", () => {
   const { project, context } = Assert.parser(
     'abc',
     `
@@ -106,7 +106,7 @@ test("Parse a 'MAP' pattern in a node directive", () => {
   Assert.nodes(context, [nodeA.data.identity, 1, 3], 3);
 });
 
-test("Parse a 'MAP' pattern in a node directive using access expressions", () => {
+test("Parse a MAP pattern in a node directive using access expressions", () => {
   const { project, context } = Assert.parser(
     'acbc',
     `

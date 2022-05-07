@@ -1,7 +1,7 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
-test('Node without an identity', () => {
+test('NODE without an identity', () => {
   Assert.error(
     `
     node NODE as 'a';`,
@@ -15,7 +15,7 @@ test('Node without an identity', () => {
   );
 });
 
-test('Node with an unexpected argument', () => {
+test('NODE with an unexpected argument', () => {
   Assert.error(
     `
     node <X> NODE as 'a';`,
@@ -34,7 +34,7 @@ test('Node with an unexpected argument', () => {
   );
 });
 
-test('Node with an unexpected extra argument', () => {
+test('NODE with an unexpected extra argument', () => {
   Assert.error(
     `
     node <100, auto> NODE as 'a';`,
@@ -48,7 +48,7 @@ test('Node with an unexpected extra argument', () => {
   );
 });
 
-test('Node with an alias node template without arguments', () => {
+test('NODE with an alias node template without arguments', () => {
   Assert.error(
     `
     alias <X>
@@ -65,7 +65,7 @@ test('Node with an alias node template without arguments', () => {
   );
 });
 
-test('Node with an alias node template missing arguments', () => {
+test('NODE with an alias node template missing arguments', () => {
   Assert.error(
     `
     alias <X, Y>
@@ -82,7 +82,7 @@ test('Node with an alias node template missing arguments', () => {
   );
 });
 
-test('Node with an alias node template using extra arguments', () => {
+test('NODE with an alias node template using extra arguments', () => {
   Assert.error(
     `
     alias <X>
@@ -99,7 +99,7 @@ test('Node with an alias node template using extra arguments', () => {
   );
 });
 
-test('Node with a duplicate identifier', () => {
+test('NODE with a duplicate identifier', () => {
   Assert.error(
     `
     node <200> NODE as 'a';
@@ -114,7 +114,7 @@ test('Node with a duplicate identifier', () => {
   );
 });
 
-test('Node referring an undefined identifier', () => {
+test('NODE referring an undefined identifier', () => {
   Assert.error(
     `
     node <200> NODE as TOKEN;`,
@@ -128,7 +128,7 @@ test('Node referring an undefined identifier', () => {
   );
 });
 
-test('Node referring an alias token (reference error)', () => {
+test('NODE referring an alias token (reference error)', () => {
   Assert.error(
     `
     alias token TOKEN as '@';
@@ -143,7 +143,7 @@ test('Node referring an alias token (reference error)', () => {
   );
 });
 
-test('Node referring a loose token already defined (token collision)', () => {
+test('NODE referring a loose token already defined (token collision)', () => {
   Assert.error(
     `
     token <100> TOKEN as '@';
@@ -158,7 +158,7 @@ test('Node referring a loose token already defined (token collision)', () => {
   );
 });
 
-test('Node referring a loose token range already defined (token collision)', () => {
+test('NODE referring a loose token range already defined (token collision)', () => {
   Assert.error(
     `
     token <100> TOKEN as from 'a' to 'z';

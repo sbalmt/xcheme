@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'NOT' pattern", () => {
+test("Parse a NOT pattern", () => {
   Assert.lexer(
     '.a0@!',
     `

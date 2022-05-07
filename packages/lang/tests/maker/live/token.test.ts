@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'TOKEN' pattern", () => {
+test('Parse a TOKEN pattern', () => {
   const { project, context } = Assert.lexer(
     '@@@',
     `
@@ -13,7 +13,7 @@ test("Parse a 'TOKEN' pattern", () => {
   Assert.tokens(context, [token.data.identity], 3);
 });
 
-test("Parse a 'TOKEN' pattern with zero identity", () => {
+test('Parse a TOKEN pattern with zero identity', () => {
   const { project, context } = Assert.lexer(
     'aa',
     `
@@ -26,7 +26,7 @@ test("Parse a 'TOKEN' pattern with zero identity", () => {
   Assert.tokens(context, [token.data.identity], 2);
 });
 
-test("Parse a 'TOKEN' pattern with a pre-declared token reference", () => {
+test('Parse a TOKEN pattern with a pre-declared token reference', () => {
   const { project, context } = Assert.lexer(
     'barfoo',
     `
@@ -43,7 +43,7 @@ test("Parse a 'TOKEN' pattern with a pre-declared token reference", () => {
   Assert.tokens(context, [token1.data.identity, token2.data.identity], 2);
 });
 
-test("Parse a 'TOKEN' pattern with a post-declared token reference", () => {
+test('Parse a TOKEN pattern with a post-declared token reference', () => {
   const { project, context } = Assert.lexer(
     'barfoo',
     `
@@ -60,7 +60,7 @@ test("Parse a 'TOKEN' pattern with a post-declared token reference", () => {
   Assert.tokens(context, [token1.data.identity, token2.data.identity], 2);
 });
 
-test("Parse a 'TOKEN' pattern with an alias token reference", () => {
+test('Parse a TOKEN pattern with an alias token reference', () => {
   const { project, context } = Assert.lexer(
     '@@@',
     `
@@ -74,7 +74,7 @@ test("Parse a 'TOKEN' pattern with an alias token reference", () => {
   Assert.tokens(context, [token.data.identity], 3);
 });
 
-test("Parse a 'TOKEN' pattern with a template alias token reference", () => {
+test('Parse a TOKEN pattern with a template alias token reference', () => {
   const { project, context } = Assert.lexer(
     '@@@',
     `
@@ -95,7 +95,7 @@ test("Parse a 'TOKEN' pattern with a template alias token reference", () => {
   Assert.tokens(context, [token.data.identity], 1);
 });
 
-test("Parse a 'TOKEN' pattern with a reference to itself", () => {
+test('Parse a TOKEN pattern with a reference to itself', () => {
   const { project, context } = Assert.lexer(
     '@@@',
     `
@@ -108,7 +108,7 @@ test("Parse a 'TOKEN' pattern with a reference to itself", () => {
   Assert.tokens(context, [token.data.identity], 3);
 });
 
-test("Parse a 'TOKEN' pattern with an alias token that has a reference to itself", () => {
+test('Parse a TOKEN pattern with an alias token that has a reference to itself', () => {
   const { project, context } = Assert.lexer(
     '@@@',
     `
@@ -122,7 +122,7 @@ test("Parse a 'TOKEN' pattern with an alias token that has a reference to itself
   Assert.tokens(context, [token.data.identity], 1);
 });
 
-test("Parse a 'TOKEN' pattern referencing a template alias token and passing itself as an argument", () => {
+test('Parse a TOKEN pattern referencing a template alias token and passing itself as an argument', () => {
   const { project, context } = Assert.lexer(
     'foofoo',
     `
@@ -142,7 +142,7 @@ test("Parse a 'TOKEN' pattern referencing a template alias token and passing its
   Assert.tokens(context, [token.data.identity], 2);
 });
 
-test("Parse a 'TOKEN' pattern referencing a template alias token that has a reference to itself", () => {
+test('Parse a TOKEN pattern referencing a template alias token that has a reference to itself', () => {
   const { project, context } = Assert.lexer(
     'foofoo',
     `
@@ -162,7 +162,7 @@ test("Parse a 'TOKEN' pattern referencing a template alias token that has a refe
   Assert.tokens(context, [token.data.identity], 1);
 });
 
-test("Parse a 'TOKEN' pattern with a whole token map reference", () => {
+test('Parse a TOKEN pattern with a whole token map reference', () => {
   const { project, context } = Assert.lexer(
     'a!b!',
     `
@@ -182,7 +182,7 @@ test("Parse a 'TOKEN' pattern with a whole token map reference", () => {
   Assert.tokens(context, [aliasA.data.identity, aliasB.data.identity], 2);
 });
 
-test("Parse a 'TOKEN' pattern with an imported token alias token directive", () => {
+test('Parse a TOKEN pattern with an imported token alias token directive', () => {
   const { project, context } = Assert.lexer(
     'token1token1',
     `

@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test('Parse a range pattern', () => {
+test('Parse a RANGE pattern', () => {
   Assert.lexer(
     '0123456789',
     `

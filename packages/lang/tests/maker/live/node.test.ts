@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'NODE' pattern with zero identity", () => {
+test('Parse a NODE pattern with zero identity', () => {
   const { project, context } = Assert.parser(
     'aa',
     `
@@ -18,7 +18,7 @@ test("Parse a 'NODE' pattern with zero identity", () => {
   Assert.nodes(context, [node.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with a loose token reference", () => {
+test('Parse a NODE pattern with a loose token reference', () => {
   const { project, context } = Assert.parser(
     '@@@',
     `
@@ -36,7 +36,7 @@ test("Parse a 'NODE' pattern with a loose token reference", () => {
   Assert.nodes(context, [node.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with a loose token range reference", () => {
+test('Parse a NODE pattern with a loose token range reference', () => {
   const { project, context } = Assert.parser(
     '0123456789',
     `
@@ -54,7 +54,7 @@ test("Parse a 'NODE' pattern with a loose token range reference", () => {
   Assert.nodes(context, [node.data.identity], 10);
 });
 
-test("Parse a 'NODE' pattern with a loose token map reference", () => {
+test('Parse a NODE pattern with a loose token map reference', () => {
   const { project, context } = Assert.parser(
     'abba',
     `
@@ -78,7 +78,7 @@ test("Parse a 'NODE' pattern with a loose token map reference", () => {
   Assert.nodes(context, [node.data.identity], 4);
 });
 
-test("Parse a 'NODE' pattern with a pre-declared token reference", () => {
+test('Parse a NODE pattern with a pre-declared token reference', () => {
   const { project, context } = Assert.parser(
     'foofoo',
     `
@@ -97,7 +97,7 @@ test("Parse a 'NODE' pattern with a pre-declared token reference", () => {
   Assert.nodes(context, [node.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with a post-declared token reference", () => {
+test('Parse a NODE pattern with a post-declared token reference', () => {
   const { project, context } = Assert.parser(
     'foofoo',
     `
@@ -116,7 +116,7 @@ test("Parse a 'NODE' pattern with a post-declared token reference", () => {
   Assert.nodes(context, [node.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with an alias node reference", () => {
+test('Parse a NODE pattern with an alias node reference', () => {
   const { project, context } = Assert.parser(
     '@@@',
     `
@@ -135,7 +135,7 @@ test("Parse a 'NODE' pattern with an alias node reference", () => {
   Assert.nodes(context, [node.data.identity], 3);
 });
 
-test("Parse a 'NODE' pattern with a template alias node reference", () => {
+test('Parse a NODE pattern with a template alias node reference', () => {
   const { project, context } = Assert.parser(
     'foofoo',
     `
@@ -156,7 +156,7 @@ test("Parse a 'NODE' pattern with a template alias node reference", () => {
   Assert.nodes(context, [node.data.identity], 1);
 });
 
-test("Parse a 'NODE' pattern with multiple template alias node references", () => {
+test('Parse a NODE pattern with multiple template alias node references', () => {
   const { project, context } = Assert.parser(
     'foofoo',
     `
@@ -180,7 +180,7 @@ test("Parse a 'NODE' pattern with multiple template alias node references", () =
   Assert.nodes(context, [node1.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with a reference to itself", () => {
+test('Parse a NODE pattern with a reference to itself', () => {
   const { project, context } = Assert.parser(
     '@@@',
     `
@@ -198,7 +198,7 @@ test("Parse a 'NODE' pattern with a reference to itself", () => {
   Assert.nodes(context, [node.data.identity], 3);
 });
 
-test("Parse a 'NODE' pattern with an alias node that has a reference to itself", () => {
+test('Parse a NODE pattern with an alias node that has a reference to itself', () => {
   const { project, context } = Assert.parser(
     '@@@',
     `
@@ -217,7 +217,7 @@ test("Parse a 'NODE' pattern with an alias node that has a reference to itself",
   Assert.nodes(context, [node.data.identity], 1);
 });
 
-test("Parse a 'NODE' pattern referencing a template alias node and passing itself as an argument", () => {
+test('Parse a NODE pattern referencing a template alias node and passing itself as an argument', () => {
   const { project, context } = Assert.parser(
     'foofoo',
     `
@@ -237,7 +237,7 @@ test("Parse a 'NODE' pattern referencing a template alias node and passing itsel
   Assert.nodes(context, [node.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern referencing a template alias node that has a reference to itself", () => {
+test('Parse a NODE pattern referencing a template alias node that has a reference to itself', () => {
   const { project, context } = Assert.parser(
     'foofoo',
     `
@@ -257,7 +257,7 @@ test("Parse a 'NODE' pattern referencing a template alias node that has a refere
   Assert.nodes(context, [node.data.identity], 1);
 });
 
-test("Parse a 'NODE' pattern with token map entry references", () => {
+test('Parse a NODE pattern with token map entry references', () => {
   const { project, context } = Assert.parser(
     'abab',
     `
@@ -288,7 +288,7 @@ test("Parse a 'NODE' pattern with token map entry references", () => {
   Assert.nodes(context, [nodeA.data.identity, nodeB.data.identity], 4);
 });
 
-test("Parse a 'NODE' pattern with a whole node map reference", () => {
+test('Parse a NODE pattern with a whole node map reference', () => {
   const { project, context } = Assert.parser(
     'a!b!',
     `
@@ -319,7 +319,7 @@ test("Parse a 'NODE' pattern with a whole node map reference", () => {
   Assert.nodes(context, [aliasA.data.identity, aliasB.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with an imported alias node directive", () => {
+test('Parse a NODE pattern with an imported alias node directive', () => {
   const { project, context } = Assert.parser(
     'node1node1',
     `
@@ -333,7 +333,7 @@ test("Parse a 'NODE' pattern with an imported alias node directive", () => {
   Assert.nodes(context, [node.data.identity], 2);
 });
 
-test("Parse a 'NODE' pattern with an imported token directive", () => {
+test('Parse a NODE pattern with an imported token directive', () => {
   const { project, context } = Assert.parser(
     'token2token2',
     `

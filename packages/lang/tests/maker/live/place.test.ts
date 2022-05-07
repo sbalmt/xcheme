@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'PLACE NEXT' pattern", () => {
+test("Parse a PLACE NEXT pattern", () => {
   Assert.lexer(
     '@@@',
     `
@@ -8,7 +8,7 @@ test("Parse a 'PLACE NEXT' pattern", () => {
   );
 });
 
-test("Parse a 'PLACE LEFT' pattern", () => {
+test("Parse a PLACE LEFT pattern", () => {
   Assert.lexer(
     '@@@',
     `
@@ -16,7 +16,7 @@ test("Parse a 'PLACE LEFT' pattern", () => {
   );
 });
 
-test("Parse a 'PLACE RIGHT' pattern", () => {
+test("Parse a PLACE RIGHT pattern", () => {
   Assert.lexer(
     '@@@',
     `
@@ -24,7 +24,7 @@ test("Parse a 'PLACE RIGHT' pattern", () => {
   );
 });
 
-test("Parse a 'PLACE' pattern", () => {
+test("Parse a PLACE pattern", () => {
   Assert.lexer(
     '@@@',
     `

@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse a 'SET' pattern", () => {
+test("Parse a SET pattern", () => {
   Assert.lexer(
     '@@@',
     `

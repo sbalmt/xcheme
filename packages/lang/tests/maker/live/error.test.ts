@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Parse an 'ERROR' pattern", () => {
+test("Parse an ERROR pattern", () => {
   const { context } = Assert.lexer(
     '@',
     `

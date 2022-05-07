@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output a 'THEN' pattern", () => {
+test('Output a THEN pattern', () => {
   Assert.output(
     `
     skip '\\\\' then *;`,
@@ -10,7 +10,7 @@ test("Output a 'THEN' pattern", () => {
   );
 });
 
-test("Output a 'THEN/ELSE' pattern", () => {
+test('Output a THEN/ELSE pattern', () => {
   Assert.output(
     `
     skip '\\\\' then * else '@';`,

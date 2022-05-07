@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output a 'NOT' pattern", () => {
+test('Output a NOT pattern', () => {
   Assert.output(
     `
     skip not '@' then * else '@!';`,

@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
-test("Output a 'PIVOT' pattern without a self identity", () => {
+test('Output a PIVOT pattern without a self identity', () => {
   Assert.output(
     `
     token <50> TOKEN as pivot '@';`,
@@ -15,7 +15,7 @@ test("Output a 'PIVOT' pattern without a self identity", () => {
   );
 });
 
-test("Output a 'PIVOT' pattern with an identity", () => {
+test('Output a PIVOT pattern with an identity', () => {
   Assert.output(
     `
     skip pivot <50> '@';`,
@@ -25,7 +25,7 @@ test("Output a 'PIVOT' pattern with an identity", () => {
   );
 });
 
-test("Output a 'PIVOT' pattern with an auto identity", () => {
+test('Output a PIVOT pattern with an auto identity', () => {
   Assert.output(
     `
     alias token <50> ALIAS as '@';
@@ -39,7 +39,7 @@ test("Output a 'PIVOT' pattern with an auto identity", () => {
   );
 });
 
-test("Output a 'PIVOT' pattern with multiple patterns", () => {
+test('Output a PIVOT pattern with multiple patterns', () => {
   Assert.output(
     `
     skip pivot <50> ('@' | '*');`,
@@ -49,7 +49,7 @@ test("Output a 'PIVOT' pattern with multiple patterns", () => {
   );
 });
 
-test("Output a 'PIVOT' pattern with chained patterns", () => {
+test('Output a PIVOT pattern with chained patterns', () => {
   Assert.output(
     `
     skip pivot <50> ('@' & '*' & '*' & opt '!');`,

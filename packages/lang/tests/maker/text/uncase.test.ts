@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test("Output an 'UNCASE' pattern", () => {
+test('Output an UNCASE pattern', () => {
   Assert.output(
     `
     skip uncase 'A';`,
