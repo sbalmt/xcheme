@@ -84,7 +84,7 @@ const tokens = [
   ]
 ];
 
-test('Consume expected tokens', () => {
+test('Consume all expected tokens', () => {
   const context = new Core.Context<Types.Metadata>('test');
   const text = tokens.map((token) => token.name).join(' ');
 
@@ -103,7 +103,7 @@ test('Consume expected tokens', () => {
   }
 });
 
-test('Consume unexpected token', () => {
+test('Consume an unexpected token', () => {
   const context = new Core.Context<Types.Metadata>('test');
   const text = 'any @ any';
 
@@ -133,7 +133,7 @@ test('Consume unexpected token', () => {
   expect(location.line.end).toBe(0);
 });
 
-test('Consume unexpected token (empty string)', () => {
+test('Consume an unexpected token (empty string)', () => {
   const context = new Core.Context<Types.Metadata>('test');
   const text = "token '' any";
 
