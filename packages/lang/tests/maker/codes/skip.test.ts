@@ -22,3 +22,25 @@ test('SKIP and TOKEN directives precedence', () => {
       `);`
   );
 });
+
+test('SKIP and NODE directives precedence', () => {
+  const project = Helper.makeParser(
+    new Lang.TextCoder(),
+    `
+    node <200> NODE as 'foo';
+    skip 'bar';`
+  );
+  expect(project.lexer).toBe(
+    `exports.Lexer = new Core.ExpectFlowPattern(` +
+      /**/ `new Core.OptFlowPattern(` +
+      /******/ `new Core.RepeatFlowPattern(` +
+      /**********/ `new Core.ChooseFlowPattern(` +
+      /**************/ `new Core.ExpectUnitPattern('b', 'a', 'r'), ` +
+      /**************/ `new Core.EmitTokenPattern(0, new Core.ExpectUnitPattern('f', 'o', 'o'))` +
+      /**********/ `)` +
+      /******/ `)` +
+      /**/ `), ` +
+      /**/ `new Core.EndFlowPattern()` +
+      `);`
+  );
+});
