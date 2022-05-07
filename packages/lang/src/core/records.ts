@@ -72,6 +72,16 @@ export const isReferenced = (record: Types.Record, ...types: Types.Directives[])
 };
 
 /**
+ * Determines whether or not the given records are from the same location.
+ * @param source Source record.
+ * @param target Target record.
+ * @returns Returns true when both records are from the same location.
+ */
+export const fromSameLocation = (source: Types.Record, target: Types.Record): boolean => {
+  return source.fragment.location.name === target.fragment.location.name;
+};
+
+/**
  * Connect the given source as a dependency of the target and the given target as a dependent of the source.
  * @param project Project context.
  * @param identifier Target identifier.

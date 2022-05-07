@@ -20,9 +20,10 @@ const template = (project: Project.Context, node: Types.Node, record: Types.Reco
   let identifier = node.fragment.data;
   const action = () => {
     if (record.data.template) {
-      Generic.Template.consume(project, node, record, state);
-      identifier = node.fragment.data;
+      const reference = Generic.Template.consume(project, node, record, state);
+      identifier = reference.fragment.data;
       record = node.table.find(identifier)!;
+      node.swap(reference);
     }
     Records.connect(project, identifier, record, state.record!);
   };

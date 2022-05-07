@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 
 import * as Nodes from '../../../core/nodes';
+import * as Records from '../../../core/records';
 import * as Project from '../../../core/project';
 import * as Types from '../../../core/types';
 import * as Parser from '../../../parser';
@@ -129,24 +130,25 @@ const resolve = (
   args: Arguments,
   state: Context.State
 ): void => {
+  const table = state.anchor.table;
   const template = record.node!;
   const location = template.fragment.location;
-  const expression = clone(project, template.right!, args, { table: template.right!.table });
-  const identity = template.left ? clone(project, template.left, args, { table: template.left.table }) : void 0;
+  const expression = clone(project, template.right!, args, { table });
+  const identity = template.left ? clone(project, template.left, args, { table }) : void 0;
   const type = record.data.type === Types.Directives.Token ? Tree.Directives.AliasToken : Tree.Directives.AliasNode;
-  const identifier = Tree.getIdentifier(type, location, template.table, name, identity?.left?.fragment.data);
-  const directive = Tree.getDirective(type, template.table, identifier, expression);
+  const identifier = Tree.getIdentifier(type, location, table, name, identity?.left?.fragment.data);
+  const directive = Tree.getDirective(type, table, identifier, expression);
   const temp = Context.getNewState(state.anchor);
   if (record.data.type === Types.Directives.Token) {
     Token.consume(project, directive.right!, temp);
   } else {
     Node.consume(project, directive.right!, temp);
   }
-  if (record.data.order > state.record!.data.order) {
+  if (Records.fromSameLocation(record, state.record!) && record.data.order > state.record!.data.order) {
     directive.set(Core.Nodes.Next, state.anchor.next!.next);
     state.anchor.next!.set(Core.Nodes.Next, directive);
   } else {
-    template.table.get(name)!.data.order = record.data.order;
+    table.get(name)!.data.order = record.data.order;
     directive.set(Core.Nodes.Next, state.anchor.next);
     state.anchor.set(Core.Nodes.Next, directive);
     state.anchor = directive;
@@ -159,13 +161,14 @@ const resolve = (
  * @param node Reference node.
  * @param record Reference record.
  * @param state Consumption state.
+ * @returns Returns a new node reference to the generated template.
  */
 export const consume = (
   project: Project.Context,
   node: Types.Node,
   record: Types.Record,
   state: Context.State
-): void => {
+): Types.Node => {
   const args = getArguments(project, node, getParameters(record.link!));
   if (!args) {
     project.addError(node.fragment, Errors.ARGUMENTS_MISSING);
@@ -176,6 +179,7 @@ export const consume = (
     if (!project.symbols.has(identifier)) {
       resolve(project, identifier, record, args, state);
     }
-    node.swap(reference);
+    return reference;
   }
+  return node;
 };

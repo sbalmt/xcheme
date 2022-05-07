@@ -1,0 +1,3 @@
+// Export an alias template token.
+export alias <ID, DIRECTIVE> token ALIAS_TOKEN
+  as append <ID> 'foo' & DIRECTIVE;

@@ -23,6 +23,35 @@ test('IMPORT directive with dependent references', () => {
   );
 });
 
+test('IMPORT directive with a dependent template reference', () => {
+  const project = Helper.makeParser(
+    new Lang.TextCoder(),
+    `
+    import './codes/modules/template';
+
+    alias token ALIAS as '!';
+    token <100> TOKEN as ALIAS_TOKEN <200, ALIAS>;`
+  );
+  expect(project.lexer).toBe(
+    `const L0_ALIAS = new Core.ExpectUnitPattern('!');` +
+      `exports.Lexer = new Core.ExpectFlowPattern(` +
+      /**/ `new Core.OptFlowPattern(` +
+      /******/ `new Core.RepeatFlowPattern(` +
+      /**********/ `new Core.ChooseFlowPattern(` +
+      /**************/ `new Core.EmitTokenPattern(100, ` +
+      /******************/ `new Core.ExpectFlowPattern(` +
+      /**********************/ `new Core.AppendNodePattern(200, 1, 1, new Core.ExpectUnitPattern('f', 'o', 'o')), ` +
+      /**********************/ `L0_ALIAS` +
+      /******************/ `)` +
+      /**************/ `)` +
+      /**********/ `)` +
+      /******/ `)` +
+      /**/ `), ` +
+      /**/ `new Core.EndFlowPattern()` +
+      `);`
+  );
+});
+
 test('IMPORT directive with dependent and purged references', () => {
   const project = Helper.makeParser(
     new Lang.TextCoder(),
