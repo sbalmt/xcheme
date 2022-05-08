@@ -17,7 +17,7 @@ import { Errors } from '../../core/errors';
 /**
  * Cache of imported files.
  */
-const cache = new Cache.Context<string>();
+const importedFiles = new Cache.Context<string>();
 
 /**
  * Purge from the specified record list all the dependent records that's not in use.
@@ -75,11 +75,11 @@ const integrate = (project: Project.Context, table: Types.Table, source: Symbols
       if (current) {
         project.addError(current.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
-        list.push(record);
-        table.add(record);
-        project.symbols.add(record);
         record.data.exported = false;
         record.data.imported = true;
+        project.symbols.add(record);
+        table.add(record);
+        list.push(record);
       }
     }
   }
@@ -114,7 +114,7 @@ export const consume = (project: Project.Context, node: Types.Node): void => {
   } else {
     const file = `${String.extract(location.fragment.data)}.xcm`;
     const path = Path.join(project.options.directory ?? './', file);
-    if (cache.has(project.coder, path)) {
+    if (importedFiles.has(project.coder, path)) {
       project.addError(location.fragment, Errors.IMPORT_CYCLIC);
     } else {
       const content = project.options.loadFileHook(path);
@@ -126,7 +126,7 @@ export const consume = (project: Project.Context, node: Types.Node): void => {
           ...project.options,
           directory: Path.dirname(path)
         });
-        cache.add(project.coder, path);
+        importedFiles.add(project.coder, path);
         if (compile(extProject, extContext, content)) {
           const records = integrate(project, node.table, extProject.symbols);
           const removal = collect(records);
@@ -135,7 +135,7 @@ export const consume = (project: Project.Context, node: Types.Node): void => {
           project.addError(location.fragment, Errors.IMPORT_FAILURE);
           project.errors.push(...extProject.errors);
         }
-        cache.delete(project.coder, path);
+        importedFiles.delete(project.coder, path);
       }
     }
   }
