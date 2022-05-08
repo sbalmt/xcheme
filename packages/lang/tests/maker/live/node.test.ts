@@ -54,7 +54,7 @@ test('Parse a NODE pattern with a loose token range reference', () => {
   Assert.nodes(context, [node.data.identity], 10);
 });
 
-test('Parse a NODE pattern with a loose token map reference', () => {
+test('Parse a NODE pattern with a loose TOKEN map reference', () => {
   const { project, context } = Assert.parser(
     'abba',
     `
@@ -257,7 +257,7 @@ test('Parse a NODE pattern referencing a template alias node that has a referenc
   Assert.nodes(context, [node.data.identity], 1);
 });
 
-test('Parse a NODE pattern with token map entry references', () => {
+test('Parse a NODE pattern with TOKEN map entry references', () => {
   const { project, context } = Assert.parser(
     'abab',
     `
@@ -292,7 +292,7 @@ test('Parse a NODE pattern with a whole node map reference', () => {
   const { project, context } = Assert.parser(
     'a!b!',
     `
-    alias node ALIAS as map {
+    alias node <auto> ALIAS as map {
         <200> A as 'a',
         <201> B as 'b'
     };

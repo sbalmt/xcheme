@@ -35,7 +35,7 @@ export const consume = (
   project: Project.Context,
   node: Types.Node | undefined,
   template: boolean,
-  value: number = NaN
+  value?: (() => number) | number
 ): number => {
   const identity = node?.left;
   if (identity) {
@@ -48,6 +48,12 @@ export const consume = (
     if (!template) {
       project.addError(identity.fragment, Errors.UNEXPECTED_ARGUMENT);
     }
+  }
+  if (value instanceof Function) {
+    return value();
+  }
+  if (value === void 0) {
+    return NaN;
   }
   return value;
 };

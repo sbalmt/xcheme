@@ -1,8 +1,6 @@
-import * as Core from '@xcheme/core';
-
 import * as Assert from './utils/assert';
 
-test("Parse a MAP pattern", () => {
+test('Parse a MAP pattern', () => {
   Assert.lexer(
     'abc',
     `
@@ -14,7 +12,7 @@ test("Parse a MAP pattern", () => {
   );
 });
 
-test("Parse a MAP pattern using multiple optimized nodes", () => {
+test('Parse a MAP pattern using multiple optimized nodes', () => {
   Assert.lexer(
     'abc',
     `
@@ -24,7 +22,7 @@ test("Parse a MAP pattern using multiple optimized nodes", () => {
   );
 });
 
-test("Parse a MAP pattern with compound patterns", () => {
+test('Parse a MAP pattern with compound patterns', () => {
   Assert.lexer(
     'abcaccde',
     `
@@ -36,7 +34,7 @@ test("Parse a MAP pattern with compound patterns", () => {
   );
 });
 
-test("Parse a MAP pattern with nested map patterns", () => {
+test('Parse a MAP pattern with nested map patterns', () => {
   Assert.lexer(
     'a1ba2c',
     `
@@ -51,7 +49,7 @@ test("Parse a MAP pattern with nested map patterns", () => {
   );
 });
 
-test("Parse a MAP pattern with a template reference", () => {
+test('Parse a MAP pattern with a template reference', () => {
   Assert.lexer(
     'barfoo',
     `
@@ -64,31 +62,37 @@ test("Parse a MAP pattern with a template reference", () => {
   );
 });
 
-test("Parse a MAP pattern in a token directive", () => {
+test('Parse a MAP pattern in a dynamic TOKEN directive', () => {
   const { project, context } = Assert.lexer(
     'abc',
     `
     token <auto> TOKEN as map {
       <100> A as 'a',
-                 'b',
-                 'c'
+            B as 'b',
+            C as 'c'
     };`
   );
   // Assert tokens.
   const tokenA = project.symbols.get('TOKEN@A')!;
+  const tokenB = project.symbols.get('TOKEN@B')!;
+  const tokenC = project.symbols.get('TOKEN@C')!;
   expect(tokenA).toBeDefined();
+  expect(tokenB).toBeDefined();
+  expect(tokenC).toBeDefined();
   expect(tokenA.data.identity).toBe(100);
-  Assert.tokens(context, [tokenA.data.identity, 0, 1], 3);
+  expect(tokenB.data.identity).toBe(0);
+  expect(tokenC.data.identity).toBe(1);
+  Assert.tokens(context, [tokenA.data.identity, tokenB.data.identity, tokenC.data.identity], 3);
 });
 
-test("Parse a MAP pattern in a node directive", () => {
+test('Parse a MAP pattern in a NODE directive', () => {
   const { project, context } = Assert.parser(
     'abc',
     `
     node <auto> NODE as map {
       <100> A as 'a',
-                 'b',
-                 'c'
+            B as 'b',
+            C as 'c'
     };`
   );
   // Assert tokens.
@@ -101,23 +105,29 @@ test("Parse a MAP pattern in a node directive", () => {
   Assert.tokens(context, [ref0.data.identity, ref2.data.identity, ref4.data.identity], 3);
   // Assert nodes.
   const nodeA = project.symbols.get('NODE@A')!;
+  const nodeB = project.symbols.get('NODE@B')!;
+  const nodeC = project.symbols.get('NODE@C')!;
   expect(nodeA).toBeDefined();
+  expect(nodeB).toBeDefined();
+  expect(nodeC).toBeDefined();
   expect(nodeA.data.identity).toBe(100);
-  Assert.nodes(context, [nodeA.data.identity, 1, 3], 3);
+  expect(nodeB.data.identity).toBe(1);
+  expect(nodeC.data.identity).toBe(3);
+  Assert.nodes(context, [nodeA.data.identity, nodeB.data.identity, nodeC.data.identity], 3);
 });
 
-test("Parse a MAP pattern in a node directive using access expressions", () => {
+test('Parse a MAP pattern in a NODE directive using access expressions', () => {
   const { project, context } = Assert.parser(
     'acbc',
     `
     token <auto> TOKEN as map {
       <100> A as 'a',
       <101> B as 'b',
-      <102> C as 'c'
+            C as 'c'
     };
     node <auto> NODE as map {
       <200> A as TOKEN.A & TOKEN.C,
-      TOKEN.B & TOKEN.C
+      <201> B as TOKEN.B & TOKEN.C
     };`
   );
   // Assert tokens.
@@ -130,10 +140,10 @@ test("Parse a MAP pattern in a node directive using access expressions", () => {
   Assert.tokens(context, [tokenA.data.identity, tokenB.data.identity, tokenC.data.identity], 4);
   // Assert nodes.
   const nodeA = project.symbols.get('NODE@A')!;
-  const node = project.symbols.get('NODE')!;
+  const nodeB = project.symbols.get('NODE@B')!;
   expect(nodeA).toBeDefined();
-  expect(node).toBeDefined();
+  expect(nodeB).toBeDefined();
   expect(nodeA.data.identity).toBe(200);
-  expect(node.data.identity).toBe(Core.Source.Output);
-  Assert.nodes(context, [nodeA.data.identity, node.data.identity], 2);
+  expect(nodeB.data.identity).toBe(201);
+  Assert.nodes(context, [nodeA.data.identity, nodeB.data.identity], 2);
 });

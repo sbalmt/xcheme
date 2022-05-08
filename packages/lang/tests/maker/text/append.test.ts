@@ -49,6 +49,23 @@ test('Output an APPEND pattern with an expression', () => {
   );
 });
 
+test('Output a APPEND without a self identity in a MAP operand', () => {
+  Assert.output(
+    `
+    alias token <auto> ALIAS as map {
+      ENTRY as 'foo' & append 'bar'
+    };`,
+    {
+      ALIAS:
+        `new Core.MapFlowPattern(` +
+        /**/ `new Core.SetValueRoute(0, ` +
+        /******/ `new Core.AppendNodePattern(0, 1, 1, new Core.ExpectUnitPattern('b', 'a', 'r')), 'f', 'o', 'o'` +
+        /**/ `)` +
+        `)`
+    }
+  );
+});
+
 test('Output an APPEND pattern with chained expressions', () => {
   Assert.output(
     `

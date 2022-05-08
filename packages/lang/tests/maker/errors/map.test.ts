@@ -1,12 +1,29 @@
 import * as Lang from '../../../src/index';
 import * as Assert from './utils/assert';
 
+test('Dynamic MAP containing an unidentified entry', () => {
+  Assert.error(
+    `
+    token <auto> TOKEN as map {
+      <0> A as 'a',
+               'b'
+    };`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTITY,
+        column: [15, 18],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
 test('Dynamic MAP with a duplicate entry identifier', () => {
   Assert.error(
     `
     token <auto> TOKEN as map {
       <0> A as 'a',
-      <0> A as 'b'
+      <1> A as 'b'
     };`,
     [
       {
@@ -18,15 +35,15 @@ test('Dynamic MAP with a duplicate entry identifier', () => {
   );
 });
 
-test('Dynamic MAP without an auto identity', () => {
+test('Dynamic MAP without a main identity', () => {
   Assert.error(
     `
-    token <100> TOKEN as map {
+    alias token TOKEN as map {
       <0> A as 'a'
     };`,
     [
       {
-        code: Lang.Errors.UNDEFINED_AUTO_IDENTITY,
+        code: Lang.Errors.UNDEFINED_IDENTITY,
         column: [16, 21],
         line: [1, 1]
       },
@@ -71,23 +88,29 @@ test('Dynamic MAP with an unexpected extra argument', () => {
   );
 });
 
-test('SKIP with a dynamic MAP', () => {
+test('SKIP with a MAP containing identified entries', () => {
   Assert.error(
     `
     skip map {
-      <100> A as 'a'
+      <100> A as 'a',
+            B as 'b'
     };`,
     [
       {
         code: Lang.Errors.UNSUPPORTED_IDENTITY,
         column: [12, 13],
         line: [2, 2]
+      },
+      {
+        code: Lang.Errors.UNSUPPORTED_IDENTITY,
+        column: [12, 13],
+        line: [3, 3]
       }
     ]
   );
 });
 
-test('SKIP referring a token map entry (reference error)', () => {
+test('SKIP referring a TOKEN map entry (reference error)', () => {
   Assert.error(
     `
     token <auto> TOKEN as map {
@@ -104,10 +127,10 @@ test('SKIP referring a token map entry (reference error)', () => {
   );
 });
 
-test('SKIP referring an alias token map entry (reference error)', () => {
+test('SKIP referring an ALIAS TOKEN map entry (reference error)', () => {
   Assert.error(
     `
-    alias token TOKEN as map {
+    alias token <auto> TOKEN as map {
       <100> A as 'a'
     };
     skip TOKEN.A;`,
@@ -121,7 +144,7 @@ test('SKIP referring an alias token map entry (reference error)', () => {
   );
 });
 
-test('SKIP referring a node map entry (reference error)', () => {
+test('SKIP referring a NODE map entry (reference error)', () => {
   Assert.error(
     `
     node <auto> NODE as map {
@@ -138,7 +161,7 @@ test('SKIP referring a node map entry (reference error)', () => {
   );
 });
 
-test('SKIP referring an alias node map entry (reference error)', () => {
+test('SKIP referring an ALIAS NODE map entry (reference error)', () => {
   Assert.error(
     `
     alias node <auto> NODE as map {
@@ -155,7 +178,7 @@ test('SKIP referring an alias node map entry (reference error)', () => {
   );
 });
 
-test('TOKEN referring a token map entry (reference error)', () => {
+test('TOKEN referring a TOKEN map entry (reference error)', () => {
   Assert.error(
     `
     token <auto> TOKEN1 as map {
@@ -172,10 +195,10 @@ test('TOKEN referring a token map entry (reference error)', () => {
   );
 });
 
-test('TOKEN referring an alias token map entry (reference error)', () => {
+test('TOKEN referring an ALIAS TOKEN map entry (reference error)', () => {
   Assert.error(
     `
-    alias token TOKEN1 as map {
+    alias token <auto> TOKEN1 as map {
       <100> A as 'a'
     };
     token <100> TOKEN2 as TOKEN1.A;`,
@@ -189,7 +212,7 @@ test('TOKEN referring an alias token map entry (reference error)', () => {
   );
 });
 
-test('TOKEN referring a node map entry (reference error)', () => {
+test('TOKEN referring a NODE map entry (reference error)', () => {
   Assert.error(
     `
     node <auto> NODE as map {
@@ -206,7 +229,7 @@ test('TOKEN referring a node map entry (reference error)', () => {
   );
 });
 
-test('TOKEN referring an alias node map entry (reference error)', () => {
+test('TOKEN referring an ALIAS NODE map entry (reference error)', () => {
   Assert.error(
     `
     alias node <auto> NODE as map {
@@ -240,7 +263,7 @@ test('TOKEN map entry already defined (token collision)', () => {
   );
 });
 
-test('Loose token map entry already defined (token collision)', () => {
+test('Loose TOKEN map entry already defined (token collision)', () => {
   Assert.error(
     `
     node <200> NODE as map {
@@ -257,7 +280,7 @@ test('Loose token map entry already defined (token collision)', () => {
   );
 });
 
-test('NODE referring an undefined token map entry (reference error)', () => {
+test('NODE referring an undefined TOKEN map entry (reference error)', () => {
   Assert.error(
     `
     token <100> TOKEN as map {
@@ -274,7 +297,7 @@ test('NODE referring an undefined token map entry (reference error)', () => {
   );
 });
 
-test('NODE referring a node map entry (reference error)', () => {
+test('NODE referring a NODE map entry (reference error)', () => {
   Assert.error(
     `
     node <auto> NODE1 as map {
@@ -291,7 +314,7 @@ test('NODE referring a node map entry (reference error)', () => {
   );
 });
 
-test('NODE referring an alias node map entry (reference error)', () => {
+test('NODE referring an ALIAS NODE map entry (reference error)', () => {
   Assert.error(
     `
     alias node <auto> NODE1 as map {
@@ -308,10 +331,10 @@ test('NODE referring an alias node map entry (reference error)', () => {
   );
 });
 
-test('NODE referring an alias token map entry (reference error)', () => {
+test('NODE referring an ALIAS TOKEN map entry (reference error)', () => {
   Assert.error(
     `
-    alias token TOKEN as map {
+    alias token <auto> TOKEN as map {
       A as 'a'
     };
     node <200> NODE as TOKEN.A;`,
@@ -325,7 +348,7 @@ test('NODE referring an alias token map entry (reference error)', () => {
   );
 });
 
-test('NODE referring a whole dynamic token map (reference error)', () => {
+test('NODE referring a whole dynamic TOKEN map (reference error)', () => {
   Assert.error(
     `
     token <auto> TOKEN as map {
@@ -342,7 +365,7 @@ test('NODE referring a whole dynamic token map (reference error)', () => {
   );
 });
 
-test('NODE referring a whole dynamic nested token map entry (reference error)', () => {
+test('NODE referring a whole dynamic nested TOKEN map entry (reference error)', () => {
   Assert.error(
     `
     token <auto> TOKEN as map {
@@ -361,7 +384,7 @@ test('NODE referring a whole dynamic nested token map entry (reference error)', 
   );
 });
 
-test('NODE referring a loose token map already defined (token collision)', () => {
+test('NODE referring a loose TOKEN map already defined (token collision)', () => {
   Assert.error(
     `
     token <100> TOKEN as 'a';

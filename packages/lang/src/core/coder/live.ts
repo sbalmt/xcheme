@@ -45,7 +45,7 @@ export class Live extends Base {
    */
   getRoute(path: (string | number)[], value?: number, pattern?: Types.Pattern): Types.Route {
     const [test, ...remaining] = path;
-    if (value) {
+    if (value !== void 0) {
       if (pattern) {
         return new Core.SetValueRoute(value, pattern, ...path);
       }

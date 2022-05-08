@@ -14,6 +14,15 @@ export const isAlias = (record: Types.Record): boolean => {
 };
 
 /**
+ * Determines whether or not the given record has an identity.
+ * @param record Symbol record.
+ * @returns Returns the true when the record has an identity, false otherwise.
+ */
+export const hasIdentity = (record: Types.Record): boolean => {
+  return !!record.data.identity;
+};
+
+/**
  * Determines whether or not the given record has a dynamic identity.
  * @param record Symbol record.
  * @returns Returns true when the record has a dynamic identity, false otherwise.

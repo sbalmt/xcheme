@@ -104,7 +104,9 @@ const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state:
   } else {
     const previousRecord = state.record!;
     const template = previousRecord.data.template;
-    const identity = Identity.consume(project, member.left, template);
+    const identity = Identity.consume(project, member.left, template, () =>
+      Project.Context.identity.increment(project.coder, project.options.identity)
+    );
     state.record = entry.table.get(member.fragment.data)!;
     Types.assignRecord(project, state.record, {
       type: state.type,
@@ -130,19 +132,23 @@ const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state:
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const record = state.record!;
   let entry = node.right;
+  let error = false;
   while (entry) {
     const member = entry.right!;
     if (member.value !== Parser.Nodes.Identifier) {
+      if (Records.isDynamic(record)) {
+        project.addError(member.fragment, Errors.UNDEFINED_IDENTITY);
+      }
       consumeAnonymous(project, entry, state);
     } else {
       if (state.type === Types.Directives.Skip) {
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
-        break;
-      }
-      if (!Records.isDynamic(record) && !Records.isAlias(record)) {
-        project.addError(record.fragment, Errors.UNDEFINED_AUTO_IDENTITY);
+      } else if (!Records.isDynamic(record) && !Records.hasIdentity(record)) {
+        if (!error) {
+          project.addError(record.fragment, Errors.UNDEFINED_IDENTITY);
+          error = true;
+        }
         project.addError(member.fragment, Errors.UNSUPPORTED_IDENTITY);
-        break;
       }
       consumeIdentifiable(project, entry, state);
     }

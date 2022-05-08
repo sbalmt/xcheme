@@ -22,12 +22,12 @@ test('PIVOT without an identity in an ALIAS TOKEN directive', () => {
     [
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [25, 30],
+        column: [16, 21],
         line: [1, 1]
       },
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [16, 21],
+        column: [25, 30],
         line: [1, 1]
       }
     ]
@@ -38,17 +38,17 @@ test('PIVOT without an identity in a MAP operand', () => {
   Assert.error(
     `
     alias token ALIAS as map {
-      ENTRY as 'a' & pivot 'b'
+      'a' & pivot 'b'
     };`,
     [
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [21, 26],
-        line: [2, 2]
+        column: [16, 21],
+        line: [1, 1]
       },
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [6, 11],
+        column: [12, 17],
         line: [2, 2]
       }
     ]

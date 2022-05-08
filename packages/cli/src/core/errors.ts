@@ -16,7 +16,6 @@ const errorMessages = {
   [Lang.Errors.UNSUPPORTED_IDENTITY]: "Unsupported identity '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNDEFINED_IDENTIFIER]: "Undefined identifiers cannot be referenced, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNDEFINED_IDENTITY]: "Undefined identity, '{0}' at line {1}, column {2}.",
-  [Lang.Errors.UNDEFINED_AUTO_IDENTITY]: "Undefined auto identity, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNRESOLVED_IDENTIFIER]: "Unresolved identifiers cannot be referenced, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNRESOLVED_TOKEN_REFERENCE]: "Token reference is not resolved yet, '{0}' at line {1}, column {2}.",
   [Lang.Errors.UNRESOLVED_NODE_REFERENCE]: "Node reference is not resolved yet, '{0}' at line {1}, column {2}.",

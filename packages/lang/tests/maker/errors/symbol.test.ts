@@ -22,12 +22,12 @@ test('SYMBOL without an identity in an ALIAS TOKEN directive', () => {
     [
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [25, 31],
+        column: [16, 21],
         line: [1, 1]
       },
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [16, 21],
+        column: [25, 31],
         line: [1, 1]
       }
     ]
@@ -38,17 +38,17 @@ test('SYMBOL without an identity in a MAP operand', () => {
   Assert.error(
     `
     alias token ALIAS as map {
-      ENTRY as 'a' & symbol 'b'
+      'a' & symbol 'b'
     };`,
     [
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [21, 27],
-        line: [2, 2]
+        column: [16, 21],
+        line: [1, 1]
       },
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [6, 11],
+        column: [12, 18],
         line: [2, 2]
       }
     ]

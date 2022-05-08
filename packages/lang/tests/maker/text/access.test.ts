@@ -2,7 +2,7 @@ import * as Core from '@xcheme/core';
 
 import * as Assert from './utils/assert';
 
-test('Output an ACCESS pattern in a token map', () => {
+test('Output an ACCESS pattern in a TOKEN map', () => {
   Assert.output(
     `
     token <auto> TOKEN as map {
@@ -21,7 +21,7 @@ test('Output an ACCESS pattern in a token map', () => {
   );
 });
 
-test('Output an ACCESS pattern in a nested token map', () => {
+test('Output an ACCESS pattern in a nested TOKEN map', () => {
   Assert.output(
     `
     token <auto> TOKEN as map {
@@ -50,7 +50,7 @@ test('Output an ACCESS pattern in a nested token map', () => {
   );
 });
 
-test('Output an ACCESS pattern in a post-declared token map', () => {
+test('Output an ACCESS pattern in a post-declared TOKEN map', () => {
   Assert.output(
     `
     node <200> NODE as TOKEN.A;

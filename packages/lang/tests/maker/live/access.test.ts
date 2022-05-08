@@ -1,6 +1,6 @@
 import * as Assert from './utils/assert';
 
-test('Parse an ACCESS pattern in a token map', () => {
+test('Parse an ACCESS pattern in a TOKEN map', () => {
   const { project, context } = Assert.parser(
     'aaaa',
     `
@@ -21,7 +21,7 @@ test('Parse an ACCESS pattern in a token map', () => {
   Assert.nodes(context, [node.data.identity], 4);
 });
 
-test('Parse an ACCESS pattern in a nested token map', () => {
+test('Parse an ACCESS pattern in a nested TOKEN map', () => {
   const { project, context } = Assert.parser(
     'abac',
     `
@@ -52,7 +52,7 @@ test('Parse an ACCESS pattern in a nested token map', () => {
   Assert.nodes(context, [nodeAB.data.identity, nodeAC.data.identity], 2);
 });
 
-test('Parse an ACCESS pattern in a post-declared token map', () => {
+test('Parse an ACCESS pattern in a post-declared TOKEN map', () => {
   const { project, context } = Assert.parser(
     'aaaa',
     `

@@ -40,7 +40,7 @@ test('Output a NODE pattern with a loose token range reference', () => {
   );
 });
 
-test('Output a NODE pattern with a loose token map reference', () => {
+test('Output a NODE pattern with a loose TOKEN map reference', () => {
   Assert.output(
     `
     node <200> NODE as map {
@@ -200,7 +200,7 @@ test('Output a NODE pattern referencing a template alias node that has a referen
   );
 });
 
-test('Output a NODE pattern with token map entry references', () => {
+test('Output a NODE pattern with TOKEN map entry references', () => {
   Assert.output(
     `
     token <auto> TOKEN as map {
@@ -230,10 +230,10 @@ test('Output a NODE pattern with token map entry references', () => {
   );
 });
 
-test('Output a NODE pattern with a whole node map reference', () => {
+test('Output a NODE pattern with a whole ALIAS NODE map reference', () => {
   Assert.output(
     `
-    alias node ALIAS as map {
+    alias node <auto> ALIAS as map {
       <200> A as 'a',
       <201> B as 'b'
     };

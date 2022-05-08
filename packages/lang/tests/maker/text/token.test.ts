@@ -176,10 +176,10 @@ test('Output a TOKEN pattern referencing a template alias token that has a refer
   );
 });
 
-test('Output a TOKEN pattern with a whole token map reference', () => {
+test('Output a TOKEN pattern with a whole ALIAS TOKEN map reference', () => {
   Assert.output(
     `
-    alias token ALIAS as map {
+    alias token <auto> ALIAS as map {
       <100> A as 'a',
       <101> B as 'b'
     };

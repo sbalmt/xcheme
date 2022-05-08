@@ -22,33 +22,33 @@ test('PREPEND without an identity in an ALIAS TOKEN directive', () => {
     [
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [25, 32],
+        column: [16, 21],
         line: [1, 1]
       },
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [16, 21],
+        column: [25, 32],
         line: [1, 1]
       }
     ]
   );
 });
 
-test('PREPEND without an identity in a MAP operand', () => {
+test('', () => {
   Assert.error(
     `
     alias token ALIAS as map {
-      ENTRY as 'a' & prepend 'b'
+      'a' & prepend 'b'
     };`,
     [
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [21, 28],
-        line: [2, 2]
+        column: [16, 21],
+        line: [1, 1]
       },
       {
         code: Lang.Errors.UNDEFINED_IDENTITY,
-        column: [6, 11],
+        column: [12, 19],
         line: [2, 2]
       }
     ]
