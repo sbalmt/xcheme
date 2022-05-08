@@ -70,4 +70,16 @@ export default class Record<T extends Metadata.Types> extends Metadata.Container
   get link(): Table<T> | undefined {
     return this.#link;
   }
+
+  /**
+   * Get a shallow copy of the record.
+   * @returns Returns the generated record.
+   */
+  clone(): Record<T> {
+    const result = new Record(this.#fragment, this.#value, this.#node, this.#link);
+    if (this.assigned) {
+      result.assign(this.data);
+    }
+    return result;
+  }
 }
