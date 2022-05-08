@@ -1,0 +1,3 @@
+// This module will be imported in the reimport2.xcm and reimported in the test function.
+// The purpose of the test is to test the cyclic dependency importation cache for each import.
+// So in this case, it shouldn't generate a cyclic dependency error.

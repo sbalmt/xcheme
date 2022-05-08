@@ -1,0 +1,4 @@
+import './shared1';
+
+// Export the shared node.
+export node <200> SHARED_NODE as SHARED_TOKEN;

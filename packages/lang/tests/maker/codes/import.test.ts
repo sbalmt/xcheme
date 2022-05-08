@@ -23,6 +23,29 @@ test('IMPORT directive with dependent references', () => {
   );
 });
 
+test('IMPORT directive with shared dependent references', () => {
+  const project = Helper.makeParser(
+    new Lang.TextCoder(),
+    `
+    import './codes/modules/shared1';
+    import './codes/modules/shared2';
+    
+    node <201> NODE as SHARED_TOKEN;`
+  );
+  expect(project.lexer).toBe(
+    `exports.Lexer = new Core.ExpectFlowPattern(` +
+      /**/ `new Core.OptFlowPattern(` +
+      /******/ `new Core.RepeatFlowPattern(` +
+      /**********/ `new Core.ChooseFlowPattern(` +
+      /**************/ `new Core.EmitTokenPattern(100, new Core.ExpectUnitPattern('t', 'o', 'k', 'e', 'n'))` +
+      /**********/ `)` +
+      /******/ `)` +
+      /**/ `), ` +
+      /**/ `new Core.EndFlowPattern()` +
+      `);`
+  );
+});
+
 test('IMPORT directive with a dependent template reference', () => {
   const project = Helper.makeParser(
     new Lang.TextCoder(),
@@ -78,12 +101,12 @@ test('IMPORT directive with dependent and purged references', () => {
   );
 });
 
-test('IMPORT directive with multiple re-importation', () => {
+test('IMPORT directive with shared re-importation', () => {
   const project = Helper.makeParser(
     new Lang.TextCoder(),
     `
-    import './module5';
-    import './module6';`
+    import './codes/modules/reimport1';
+    import './codes/modules/reimport2';`
   );
   expect(project.lexer).toBe(
     `exports.Lexer = new Core.ExpectFlowPattern(` +
