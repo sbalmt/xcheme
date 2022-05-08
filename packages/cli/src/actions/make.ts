@@ -119,7 +119,7 @@ export const perform = (
   initialize(source);
   if (Lexer.tokenize(Lang.Lexer, text, context, !run && state.tokens!)) {
     if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
-      const path = source.toString();
+      const path = Path.join('', source.toString());
       if (run) {
         const project = new Lang.Project.Context(path, new Lang.LiveCoder(), globalOptions);
         if (optimize(project, context.node) && make(project, context.node)) {

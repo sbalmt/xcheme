@@ -113,7 +113,7 @@ export const consume = (project: Project.Context, node: Types.Node): void => {
     project.addError(location.fragment, Errors.IMPORT_DISABLED);
   } else {
     const file = `${String.extract(location.fragment.data)}.xcm`;
-    const path = Path.join(project.options.directory ?? './', file);
+    const path = Path.join(project.options.directory ?? '', file);
     if (importedFiles.has(project.coder, path)) {
       project.addError(location.fragment, Errors.IMPORT_CYCLIC);
     } else {
@@ -121,8 +121,8 @@ export const consume = (project: Project.Context, node: Types.Node): void => {
       if (!content) {
         project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
       } else {
-        const extContext = new Core.Context<Types.Metadata>(file);
-        const extProject = new Project.Context(file, project.coder, {
+        const extContext = new Core.Context<Types.Metadata>(path);
+        const extProject = new Project.Context(path, project.coder, {
           ...project.options,
           directory: Path.dirname(path)
         });

@@ -94,11 +94,13 @@ export class Context {
    */
   #getFlattenRecordsByType(records: Types.Record[], ...types: Parser.Symbols[]): Types.Record[] {
     const list: Types.Record[] = [];
-    const cache = new WeakSet<Types.Record>();
+    const cache = new Set<string>();
     const action = (records: Types.Record[]): void => {
       for (const record of records) {
-        if (!cache.has(record)) {
-          cache.add(record);
+        const { identifier, location } = record.data;
+        const address = `${location}:${identifier}`;
+        if (!cache.has(address)) {
+          cache.add(address);
           action(record.data.dependencies);
           if (types.includes(record.value as Parser.Symbols)) {
             list.push(record);
