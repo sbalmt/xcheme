@@ -3,7 +3,6 @@ module.exports = {
   testEnvironment: 'node',
   coverageDirectory: './coverage',
   collectCoverage: true,
-  rootDir: './tests',
   moduleNameMapper: {
     "/^@xcheme\/core$/": "./core/src"
   }
