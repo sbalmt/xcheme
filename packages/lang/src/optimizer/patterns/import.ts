@@ -15,29 +15,36 @@ import * as Optimizer from '../index';
 import { Errors } from '../../core/errors';
 
 /**
- * Cache of imported files.
+ * Cache of processed files.
  */
-const importedFiles = new Cache.Context<string>();
+const processedFiles = new Cache.Context<string, Project.Context>();
 
 /**
- * Purge from the specified record list all the dependent records that's not in use.
- * @param records Record list.
- * @param unused Unused record set.
+ * Cache of files in the current importation step.
  */
-const purge = (records: Types.Record[], unused: WeakSet<Types.Record>): void => {
-  for (const record of records) {
-    const { dependents, dependencies } = record.data;
-    record.data.dependents = dependents.filter((dependent: Types.Record) => !unused.has(dependent));
-    purge(dependencies, unused);
+const importingFiles = new Cache.Context<string>();
+
+/**
+ * Get all the exported records from the given source.
+ * @param source Source records aggregator.
+ * @returns Returns an array containing all the exported records.
+ */
+const getExportedRecords = (source: Symbols.Aggregator): Types.Record[] => {
+  const exported = [];
+  for (const record of source) {
+    if (record.data.exported) {
+      exported.push(record);
+    }
   }
+  return exported;
 };
 
 /**
- * Collect all the records that's not in use from the specified record list.
+ * Get all the records that are not in use (referenced) in the specified record list.
  * @param records Record list.
- * @returns Returns the unused record set.
+ * @returns Returns a new record set containing all the unused records.
  */
-const collect = (records: Types.Record[]): WeakSet<Types.Record> => {
+const getUnreferencedRecords = (records: Types.Record[]): WeakSet<Types.Record> => {
   const unused = new WeakSet<Types.Record>();
   const cache = new WeakSet<Types.Record>();
   const action = (records: Types.Record[]): void => {
@@ -60,14 +67,25 @@ const collect = (records: Types.Record[]): WeakSet<Types.Record> => {
 };
 
 /**
- * Integrate all directives from the given source into the specified project context.
- * @param project Project context.
- * @param table Root symbol table.
- * @param source Source records.
- * @returns Returns an array containing all imported record.
+ * Purge from the specified record list all the dependent records that doesn't exists in the ignored record set.
+ * @param records Record list.
+ * @param ignored Ignored record set.
  */
-const integrate = (project: Project.Context, table: Types.Table, source: Symbols.Aggregator): Types.Record[] => {
-  const list = [];
+const purgeRecords = (records: Types.Record[], ignored: WeakSet<Types.Record>): void => {
+  for (const record of records) {
+    const { dependents, dependencies } = record.data;
+    record.data.dependents = dependents.filter((dependent) => !ignored.has(dependent));
+    purgeRecords(dependencies, ignored);
+  }
+};
+
+/**
+ * Integrate all the exported directives from the given source into the current project.
+ * @param project Project context.
+ * @param table Global symbol table.
+ * @param source Source records aggregator.
+ */
+const integrate = (project: Project.Context, table: Types.Table, source: Symbols.Aggregator): void => {
   for (const record of source) {
     const { identifier, exported } = record.data;
     if (exported) {
@@ -75,19 +93,17 @@ const integrate = (project: Project.Context, table: Types.Table, source: Symbols
       if (current) {
         project.addError(current.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
-        record.data.exported = false;
-        record.data.imported = true;
-        project.symbols.add(record);
-        table.add(record);
-        list.push(record);
+        const integration = new Core.Record(record.fragment, record.value, record.node, record.link);
+        integration.assign({ ...record.data, exported: false, imported: true });
+        project.symbols.add(integration);
+        table.add(integration);
       }
     }
   }
-  return list;
 };
 
 /**
- * Compile the given source for the specified project.
+ * Compile the given source content for the specified project and context.
  * @param project Project context.
  * @param context Source context.
  * @param content Source input.
@@ -103,7 +119,59 @@ const compile = (project: Project.Context, context: Types.Context, content: stri
 };
 
 /**
- * Consume the given node and optimize the IMPORT pattern.
+ * Process the importation content based on the given parameters.
+ * @param project Project context.
+ * @param location Import location.
+ * @param table Global symbol table.
+ * @param path Full importation path.
+ * @param content Imported content.
+ */
+const process = (
+  project: Project.Context,
+  location: Types.Node,
+  table: Types.Table,
+  path: string,
+  content: string
+): void => {
+  const directory = Path.dirname(path);
+  const external = new Project.Context(path, project.coder, { ...project.options, directory });
+  const context = new Core.Context<Types.Metadata>(path);
+  importingFiles.add(project.coder, path);
+  if (!compile(external, context, content)) {
+    project.addError(location.fragment, Errors.IMPORT_FAILURE);
+    project.errors.push(...external.errors);
+  } else {
+    const exported = getExportedRecords(external.symbols);
+    const unreferenced = getUnreferencedRecords(exported);
+    purgeRecords(exported, unreferenced);
+    integrate(project, table, external.symbols);
+    processedFiles.add(project.coder, path, external);
+  }
+  importingFiles.delete(project.coder, path);
+};
+
+/**
+ * Resolve the given IMPORT location pattern and process the importation.
+ * @param project Project context.
+ * @param location Import location.
+ * @param table Global symbol table.
+ * @param path Full importation path.
+ */
+const resolve = (project: Project.Context, location: Types.Node, table: Types.Table, path: string): void => {
+  if (importingFiles.has(project.coder, path)) {
+    project.addError(location.fragment, Errors.IMPORT_CYCLIC);
+  } else {
+    const content = project.options.loadFileHook!(path);
+    if (!content) {
+      project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
+    } else {
+      process(project, location, table, path, content);
+    }
+  }
+};
+
+/**
+ * Consume the given node, optimize the IMPORT pattern and process the importation.
  * @param project Project context.
  * @param node Import node.
  */
@@ -112,31 +180,13 @@ export const consume = (project: Project.Context, node: Types.Node): void => {
   if (!project.options.loadFileHook) {
     project.addError(location.fragment, Errors.IMPORT_DISABLED);
   } else {
-    const file = `${String.extract(location.fragment.data)}.xcm`;
-    const path = Path.join(project.options.directory ?? '', file);
-    if (importedFiles.has(project.coder, path)) {
-      project.addError(location.fragment, Errors.IMPORT_CYCLIC);
+    const filePath = `${String.extract(location.fragment.data)}.xcm`;
+    const fullPath = Path.join(project.options.directory ?? '', filePath);
+    const external = processedFiles.get(project.coder, fullPath);
+    if (external) {
+      integrate(project, node.table, external.symbols);
     } else {
-      const content = project.options.loadFileHook(path);
-      if (!content) {
-        project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
-      } else {
-        const extContext = new Core.Context<Types.Metadata>(path);
-        const extProject = new Project.Context(path, project.coder, {
-          ...project.options,
-          directory: Path.dirname(path)
-        });
-        importedFiles.add(project.coder, path);
-        if (compile(extProject, extContext, content)) {
-          const records = integrate(project, node.table, extProject.symbols);
-          const removal = collect(records);
-          purge(records, removal);
-        } else {
-          project.addError(location.fragment, Errors.IMPORT_FAILURE);
-          project.errors.push(...extProject.errors);
-        }
-        importedFiles.delete(project.coder, path);
-      }
+      resolve(project, location, node.table, fullPath);
     }
   }
 };
