@@ -125,37 +125,53 @@ map {
 Example:
 
 ```xcm
-token <0> T_FOOBAR as map {
+token <0> T_FOO_OR_BAR as map {
   'foo',
   'bar'
 };
 ```
 
-> For each `'foo'` or `'bar'` a new `T_FOOBAR` token will be generated.
+> For each `'foo'` or `'bar'` occurrence, a new `T_FOO_OR_BAR` token will be generated with the same identity.
 
-Maps can perform better than sequences of _token_ directives and can be useful to combine multiple directives into a single one, but in some cases, we would like to define an individual identity for each map entry as we can do in directives, let's see down below how to achieve that.
+Maps can perform better than sequences of _token_ directives and can be useful to combine multiple directives into a single one, but in some cases, we would like to define an individual identity for each map entry as we can do with multiple directives, let's see down below how to achieve that.
 
 ```xcm
-token <auto> T_FOOBAR as map {
+token <auto> T_FOO_OR_BAR as map {
   <0> FOO as 'foo',
   <1> BAR as 'bar'
 };
 ```
 
-> For each `'foo'` or `'bar'` a new `T_FOOBAR` token will be generated, and the `auto` identity in the _token_ directive ensures that every token generated will assume the identity provided in the respective entry.
+> For each `'foo'` or `'bar'` occurrence, a new `T_FOO_OR_BAR` token will be generated, and the `auto` identity in the _token_ directive ensures that every token generated will assume the identity provided in the respective map entry.
 
-Now that we've added identities and identifier for each map entry, it's also possible to use an individual reference for each entry, as we will see below.
+Now that we've added identities and identifier to each map entry, it's also possible to use an individual reference for each one, as we will see below.
 
 ```xcm
-token <auto> T_FOOBAR as map {
+token <auto> T_FOO_OR_BAR as map {
   <0> FOO as 'foo',
   <1> BAR as 'bar'
 };
 
-node <0> N_FOOBAR as T_FOOBAR.FOO & T_FOOBAR.BAR;
+node <0> N_FOOBAR as T_FOO_OR_BAR.FOO & T_FOO_OR_BAR.BAR;
 ```
 
-> A new `N_FOOBAR` node will be generated for each occurrence of `T_FOOBAR.FOO` and `T_FOOBAR.BAR`.
+> A new `N_FOOBAR` node will be generated for each occurrence of `T_FOO_OR_BAR.FOO` and `T_FOO_OR_BAR.BAR`.
+
+For node directives we may also not use identifiers as we cannot reference node map entries in other directives, in this case, we can omit the identifier for the map entry as shown below.
+
+```xcm
+token <auto> T_FOO_OR_BAR as map {
+  <0> FOO as 'foo',
+  <1> BAR as 'bar'
+};
+
+node <auto> N_FOO_OR_BAR as map {
+  <0> T_FOO_OR_BAR.FOO,
+  <1> T_FOO_OR_BAR.BAR
+};
+```
+
+> A new node will be generated for each occurrence of its respective token.
 
 ## Next steps
 
