@@ -8,8 +8,9 @@ test('Consume an expected MAP pattern', () => {
     skip map {
       <50> A as 'a',
            B as 'b',
-                'c',
-                D
+           <60> 'c',
+                'd',
+                 E
     };`,
     {
       type: Lang.Parser.Nodes.Skip,
@@ -45,14 +46,28 @@ test('Consume an expected MAP pattern', () => {
             next: {
               type: Lang.Parser.Nodes.MapMember,
               right: {
-                type: Lang.Parser.Nodes.String,
-                value: "'c'"
+                type: Lang.Parser.Nodes.Arguments,
+                left: {
+                  type: Lang.Parser.Nodes.Identity,
+                  value: '60'
+                },
+                right: {
+                  type: Lang.Parser.Nodes.String,
+                  value: "'c'"
+                }
               },
               next: {
                 type: Lang.Parser.Nodes.MapMember,
                 right: {
-                  type: Lang.Parser.Nodes.Reference,
-                  value: 'D'
+                  type: Lang.Parser.Nodes.String,
+                  value: "'d'"
+                },
+                next: {
+                  type: Lang.Parser.Nodes.MapMember,
+                  right: {
+                    type: Lang.Parser.Nodes.Reference,
+                    value: 'E'
+                  }
                 }
               }
             }

@@ -21,10 +21,10 @@ export default class Directive extends Core.Pattern<Types.Metadata> {
    * @param identity Identity pattern.
    * @param expression Expression pattern.
    */
-  constructor(symbol: Symbols, identity: Types.Pattern, expression: Types.Pattern) {
+  constructor(symbol: Symbols, identity: Types.Pattern | undefined, expression: Types.Pattern) {
     super();
     this.#pattern = new Core.ExpectFlowPattern(
-      new Core.OptFlowPattern(identity),
+      identity ? new Core.OptFlowPattern(identity) : new Core.StaticFlowPattern(true),
       new Core.EmitSymbolPattern(
         symbol,
         new Core.PivotNodePattern(
