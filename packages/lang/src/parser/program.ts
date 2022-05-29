@@ -150,7 +150,7 @@ const mapMemberList: Types.Pattern = new Core.ExpectFlowPattern(
         argumentExpression,
         new Core.ChooseFlowPattern(
           new DirectiveExpression(Symbols.MapMember, void 0, new Core.RunFlowPattern(() => expression)),
-          new Core.RunFlowPattern(() => expression)
+          new Core.PlaceNodePattern(Core.Nodes.Right, new Core.RunFlowPattern(() => expression))
         )
       ),
       new DirectiveExpression(Symbols.MapMember, void 0, new Core.RunFlowPattern(() => expression)),

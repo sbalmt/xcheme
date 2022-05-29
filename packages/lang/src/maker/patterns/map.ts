@@ -53,7 +53,7 @@ const resolveRoute = (
   const { type } = Nodes.getRecord(directive).data;
   const { route, identity } = entry.data;
   const dynamic = Nodes.isDynamic(entry);
-  const expression = member.value !== Parser.Nodes.Identifier ? member : member.right!;
+  const expression = ![Parser.Nodes.Identifier, Parser.Nodes.Arguments].includes(member.value) ? member : member.right!;
   if (route !== expression) {
     const current = state.dynamic;
     state.dynamic = dynamic;

@@ -83,11 +83,21 @@ const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.
  * @param state Consumption state.
  */
 const consumeAnonymous = (project: Project.Context, entry: Types.Node, state: Context.State): void => {
-  const identity = Records.isDynamic(state.record!)
-    ? Project.Context.identity.increment(project.coder, project.options.identity)
-    : Core.Source.Output;
-  Expression.consume(project, entry.right!, state);
-  assignRoute(project, entry, entry, identity);
+  const member = entry.right!;
+  if (member.value === Parser.Nodes.Arguments) {
+    const template = state.record!.data.template;
+    const identity = Identity.consume(project, member, template, () =>
+      Project.Context.identity.increment(project.coder, project.options.identity)
+    );
+    Expression.consume(project, member.right!, state);
+    assignRoute(project, entry, member, identity);
+  } else {
+    const identity = Records.isDynamic(state.record!)
+      ? Project.Context.identity.increment(project.coder, project.options.identity)
+      : Core.Source.Output;
+    Expression.consume(project, member, state);
+    assignRoute(project, entry, entry, identity);
+  }
 };
 
 /**
@@ -136,7 +146,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   while (entry) {
     const member = entry.right!;
     if (member.value !== Parser.Nodes.Identifier) {
-      if (Records.isDynamic(record)) {
+      if (member.value !== Parser.Nodes.Arguments && Records.isDynamic(record)) {
         project.addError(member.fragment, Errors.UNDEFINED_IDENTITY);
       }
       consumeAnonymous(project, entry, state);
