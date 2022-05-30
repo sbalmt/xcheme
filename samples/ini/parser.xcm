@@ -15,7 +15,7 @@ token <auto> T_MAP as map {
   <104> ASSIGNMENT    as '='
 };
 
-token <105> T_IDENTIFIER  as repeat (not (WHITESPACE | '=' | '[' | ']') then *);
+token <105> T_IDENTIFIER as repeat (not (WHITESPACE | '=' | '[' | ']') then *);
 
 // Parser
 alias node LITERAL  as append <205> T_IDENTIFIER;
@@ -23,5 +23,5 @@ alias node STRING   as append <204> (T_MAP.DQ_STRING | T_MAP.SQ_STRING);
 alias node ENTRY    as append <203> (T_IDENTIFIER & T_MAP.ASSIGNMENT & (LITERAL | STRING));
 alias node ENTRIES  as ENTRY & opt place next ENTRIES;
 
-node <200> SECTION   as T_MAP.SECTION_OPEN & append <202> (T_IDENTIFIER & T_MAP.SECTION_CLOSE & opt ENTRIES);
-node <201> GLOBAL    as ENTRY;
+node <200> SECTION  as T_MAP.SECTION_OPEN & append <202> (T_IDENTIFIER & T_MAP.SECTION_CLOSE & opt ENTRIES);
+node <201> GLOBAL   as ENTRY;
