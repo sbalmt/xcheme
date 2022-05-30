@@ -8,11 +8,11 @@ token <auto> T_KWD as uncase map {
   <11> WORLD as 'world'
 };
 
-token <auto> T_SBL as map {
+token <auto> T_SYM as map {
   <12> EXC as '!',
   <13> PRD as '.'
 };
 
 node <auto> N_KWD as map {
-  <20> HELLO_WORLD as T_KWD.HELLO & T_KWD.WORLD & opt (T_SBL.EXC | T_SBL.PRD)
+  <20> T_KWD.HELLO & T_KWD.WORLD & opt (T_SYM.EXC | T_SYM.PRD)
 };
