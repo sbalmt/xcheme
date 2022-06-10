@@ -1,6 +1,6 @@
 {
 	"name": "@xcheme/cli",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"description": "XCHEME command line interface.",
 	"license": "MIT",
 	"keywords": [
@@ -33,6 +33,6 @@
 	},
 	"dependencies": {
 		"@xcheme/core": "^0.0.8",
-		"@xcheme/lang": "^0.0.9"
+		"@xcheme/lang": "^0.0.10"
 	}
 }
