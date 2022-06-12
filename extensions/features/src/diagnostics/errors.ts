@@ -13,6 +13,7 @@ const errorMessages = {
   [Lang.Errors.UNEXPECTED_ARGUMENT]: 'Unexpected argument.',
   [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT]: 'Unexpected extra argument.',
   [Lang.Errors.UNSUPPORTED_IDENTITY]: 'Unsupported identity.',
+  [Lang.Errors.UNSUPPORTED_ARGUMENT]: 'Unsupported argument.',
   [Lang.Errors.UNDEFINED_IDENTIFIER]: 'Undefined identifiers cannot be referenced.',
   [Lang.Errors.UNDEFINED_IDENTITY]: 'Undefined identity.',
   [Lang.Errors.UNRESOLVED_IDENTIFIER]: 'Unresolved identifiers cannot be referenced.',

@@ -13,6 +13,7 @@ const errorMessages = {
   [Lang.Errors.UNEXPECTED_ARGUMENT]: 'Unexpected argument "{0}" at line {1}, column {2}.',
   [Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT]: 'Unexpected extra argument "{0}" at line {1}, column {2}.',
   [Lang.Errors.UNSUPPORTED_IDENTITY]: 'Unsupported identity "{0}" at line {1}, column {2}.',
+  [Lang.Errors.UNSUPPORTED_ARGUMENT]: 'Unsupported argument "{0}" at line {1}, column {2}.',
   [Lang.Errors.UNDEFINED_IDENTIFIER]: 'Undefined identifiers cannot be referenced, "{0}" at line {1}, column {2}.',
   [Lang.Errors.UNDEFINED_IDENTITY]: 'Undefined identity, "{0}" at line {1}, column {2}.',
   [Lang.Errors.UNRESOLVED_IDENTIFIER]: 'Unresolved identifiers cannot be referenced, "{0}" at line {1}, column {2}.',

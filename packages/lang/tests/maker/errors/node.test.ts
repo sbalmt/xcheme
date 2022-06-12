@@ -37,7 +37,7 @@ test('NODE with an unexpected argument', () => {
 test('NODE with an unexpected extra argument', () => {
   Assert.error(
     `
-    node <100, auto> NODE as 'a';`,
+    node <200, auto> NODE as 'a';`,
     [
       {
         code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
@@ -88,11 +88,28 @@ test('NODE with an alias node template using extra arguments', () => {
     alias <X>
     node TEMPLATE as set <X> 'foo';
 
-    node <100> NODE as TEMPLATE <50, NODE>;`,
+    node <200> NODE as TEMPLATE <50, NODE>;`,
     [
       {
         code: Lang.Errors.UNEXPECTED_EXTRA_ARGUMENT,
         column: [37, 41],
+        line: [4, 4]
+      }
+    ]
+  );
+});
+
+test('NODE with an alias node template using wrong argument', () => {
+  Assert.error(
+    `
+    alias <X>
+    node TEMPLATE as X;
+
+    node <200> NODE as TEMPLATE <50>;`,
+    [
+      {
+        code: Lang.Errors.UNSUPPORTED_ARGUMENT,
+        column: [33, 35],
         line: [4, 4]
       }
     ]

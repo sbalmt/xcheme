@@ -3,6 +3,8 @@ import * as Types from '../../core/types';
 import * as Parser from '../../parser';
 import * as Context from '../context';
 
+import { Errors } from '../../core/errors';
+
 import * as Range from './range';
 import * as Reference from './reference';
 import * as String from './string';
@@ -18,22 +20,20 @@ import * as Generic from './generic';
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   switch (node.value) {
-    case Parser.Nodes.Any:
-      break;
-    case Parser.Nodes.Range:
-      Range.consume(project, node, state);
-      break;
     case Parser.Nodes.Reference:
       Reference.consume(project, node, state);
+      break;
+    case Parser.Nodes.Identity:
+      project.addError(node.fragment, Errors.UNSUPPORTED_ARGUMENT);
       break;
     case Parser.Nodes.String:
       String.consume(project, node, state);
       break;
+    case Parser.Nodes.Range:
+      Range.consume(project, node, state);
+      break;
     case Parser.Nodes.Map:
       Map.consume(project, node, state);
-      break;
-    case Parser.Nodes.Access:
-      Access.consume(project, node, state);
       break;
     case Parser.Nodes.Or:
       Generic.Sequence.consume(project, node, Parser.Nodes.Or, state);
@@ -68,7 +68,12 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     case Parser.Nodes.Set:
       Generic.State.consume(project, node, state);
       break;
+    case Parser.Nodes.Access:
+      Access.consume(project, node, state);
+      break;
     default:
-      consume(project, node.right!, state);
+      if (node.right) {
+        consume(project, node.right, state);
+      }
   }
 };

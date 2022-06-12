@@ -99,6 +99,23 @@ test('TOKEN with an alias token template using extra arguments', () => {
   );
 });
 
+test('TOKEN with an alias token template using wrong argument', () => {
+  Assert.error(
+    `
+    alias <X>
+    token TEMPLATE as X;
+
+    token <100> TOKEN as TEMPLATE <50>;`,
+    [
+      {
+        code: Lang.Errors.UNSUPPORTED_ARGUMENT,
+        column: [35, 37],
+        line: [4, 4]
+      }
+    ]
+  );
+});
+
 test('TOKEN with a duplicate identifier', () => {
   Assert.error(
     `
