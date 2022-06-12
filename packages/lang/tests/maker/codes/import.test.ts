@@ -50,7 +50,7 @@ test('IMPORT directive with a dependent template reference', () => {
   const project = Helper.makeParser(
     new Lang.TextCoder(),
     `
-    import './codes/modules/template';
+    import './codes/modules/template1';
 
     alias token ALIAS as '!';
     token <100> TOKEN as ALIAS_TOKEN <200, ALIAS>;`
@@ -65,6 +65,34 @@ test('IMPORT directive with a dependent template reference', () => {
       /******************/ `new Core.ExpectFlowPattern(` +
       /**********************/ `new Core.AppendNodePattern(200, 1, 1, new Core.ExpectUnitPattern('f', 'o', 'o')), ` +
       /**********************/ `L0_ALIAS` +
+      /******************/ `)` +
+      /**************/ `)` +
+      /**********/ `)` +
+      /******/ `)` +
+      /**/ `), ` +
+      /**/ `new Core.EndFlowPattern()` +
+      `);`
+  );
+});
+
+test('IMPORT directive with a dependent template map reference', () => {
+  const project = Helper.makeParser(
+    new Lang.TextCoder(),
+    `
+    import './codes/modules/template2';
+
+    alias token ALIAS as '!';
+    token <100> TOKEN as ALIAS_TOKEN <ALIAS>;`
+  );
+  expect(project.lexer).toBe(
+    `const L0_ALIAS = new Core.ExpectUnitPattern('!');` +
+      `exports.Lexer = new Core.ExpectFlowPattern(` +
+      /**/ `new Core.OptFlowPattern(` +
+      /******/ `new Core.RepeatFlowPattern(` +
+      /**********/ `new Core.ChooseFlowPattern(` +
+      /**************/ `new Core.EmitTokenPattern(100, ` +
+      /******************/ `new Core.MapFlowPattern(` +
+      /**********************/ `new Core.FlowRoute(L0_ALIAS, 'f', 'o', 'o')` +
       /******************/ `)` +
       /**************/ `)` +
       /**********/ `)` +

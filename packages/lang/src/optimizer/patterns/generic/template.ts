@@ -87,13 +87,18 @@ const clone = (
   args: Arguments,
   state: { table: Types.Table; link?: Types.Table }
 ): Types.Node => {
-  const table = state.table;
+  const previous = state.table;
+  let current = previous;
   if (node.value === Parser.Nodes.Map) {
-    state.table = new Core.Table<Types.Metadata>(node.table.parent);
+    state.table = new Core.Table<Types.Metadata>(previous.parent);
   } else if (node.value === Parser.Nodes.Reference) {
-    node = args[node.fragment.data] ?? node;
+    const argument = args[node.fragment.data];
+    if (argument) {
+      node = argument;
+      current = node.table;
+    }
   }
-  const result = new Core.Node<Types.Metadata>(node.fragment, node.value, table ?? state.table);
+  const result = new Core.Node<Types.Metadata>(node.fragment, node.value, current);
   for (const direction of [Core.Nodes.Left, Core.Nodes.Right, Core.Nodes.Next]) {
     const child = node.get(direction);
     if (child) {
@@ -108,10 +113,10 @@ const clone = (
       state.link = void 0;
     }
   }
-  if (state.table !== table) {
+  if (state.table !== previous) {
     state.link = state.table;
   }
-  state.table = table;
+  state.table = previous;
   return result;
 };
 
