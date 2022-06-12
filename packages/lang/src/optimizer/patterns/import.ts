@@ -72,11 +72,18 @@ const getUnreferencedRecords = (records: Types.Record[]): WeakSet<Types.Record> 
  * @param ignored Ignored record set.
  */
 const purgeRecords = (records: Types.Record[], ignored: WeakSet<Types.Record>): void => {
-  for (const record of records) {
-    const { dependents, dependencies } = record.data;
-    record.data.dependents = dependents.filter((dependent) => !ignored.has(dependent));
-    purgeRecords(dependencies, ignored);
-  }
+  const cache = new WeakSet<Types.Record>();
+  const action = (records: Types.Record[]): void => {
+    for (const record of records) {
+      if (!cache.has(record)) {
+        cache.add(record);
+        const { dependents, dependencies } = record.data;
+        record.data.dependents = dependents.filter((dependent) => !ignored.has(dependent));
+        action(dependencies);
+      }
+    }
+  };
+  action(records);
 };
 
 /**
