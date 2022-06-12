@@ -1,2 +1,2 @@
-// Export the shared.
+// Export the shared token.
 export token <100> SHARED_TOKEN as 'token';
