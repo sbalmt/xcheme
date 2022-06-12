@@ -90,7 +90,7 @@ const clone = (
   const previous = state.table;
   let current = previous;
   if (node.value === Parser.Nodes.Map) {
-    state.table = new Core.Table<Types.Metadata>(previous.parent);
+    state.table = new Core.Table<Types.Metadata>(node.table.parent);
   } else if (node.value === Parser.Nodes.Reference) {
     const argument = args[node.fragment.data];
     if (argument) {

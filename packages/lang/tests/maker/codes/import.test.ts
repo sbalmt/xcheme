@@ -1,3 +1,5 @@
+import * as Core from '@xcheme/core';
+
 import * as Lang from '../../../src/index';
 import * as Helper from '../helper';
 
@@ -81,19 +83,22 @@ test('IMPORT directive with a dependent template map reference', () => {
     `
     import './codes/modules/template2';
 
-    alias token ALIAS as '!';
-    token <100> TOKEN as ALIAS_TOKEN <ALIAS>;`
+    token <103> ARGUMENT as '!';
+    node  <200> NODE     as ALIAS_NODE <ARGUMENT>;`
   );
   expect(project.lexer).toBe(
-    `const L0_ALIAS = new Core.ExpectUnitPattern('!');` +
-      `exports.Lexer = new Core.ExpectFlowPattern(` +
+    `exports.Lexer = new Core.ExpectFlowPattern(` +
       /**/ `new Core.OptFlowPattern(` +
       /******/ `new Core.RepeatFlowPattern(` +
       /**********/ `new Core.ChooseFlowPattern(` +
-      /**************/ `new Core.EmitTokenPattern(100, ` +
+      /**************/ `new Core.EmitTokenPattern(${Core.Source.Output}, ` +
       /******************/ `new Core.MapFlowPattern(` +
-      /**********************/ `new Core.FlowRoute(L0_ALIAS, 'f', 'o', 'o')` +
+      /**********************/ `new Core.SetValueRoute(100, 'f', 'o', 'o'), ` +
+      /**********************/ `new Core.SetValueRoute(101, 'b', 'a', 'r')` +
       /******************/ `)` +
+      /**************/ `), ` +
+      /**************/ `new Core.EmitTokenPattern(103, ` +
+      /******************/ `new Core.ExpectUnitPattern('!')` +
       /**************/ `)` +
       /**********/ `)` +
       /******/ `)` +

@@ -1,4 +1,5 @@
-// Export an alias template token.
 // The purpose of it is to test the right referencing of the symbol table for template arguments.
+
+// Export an alias template token.
 export alias <ID, DIRECTIVE> token ALIAS_TOKEN
   as append <ID> 'foo' & DIRECTIVE;

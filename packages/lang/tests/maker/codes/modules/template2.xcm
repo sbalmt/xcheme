@@ -1,5 +1,12 @@
-// Export an alias template token map.
 // The purpose of it is to test the right referencing of the symbol table for template arguments inside map contexts.
-export alias <EXPRESSION> token ALIAS_TOKEN as map {
-  'foo' & EXPRESSION
+
+token <auto> WORDS as map {
+  <100> FOO as 'foo',
+  <101> BAR as 'bar'
+};
+
+// Export an alias template node map.
+export alias <EXPRESSION> node ALIAS_NODE as map {
+  WORDS.FOO & EXPRESSION,
+  WORDS.BAR
 };
