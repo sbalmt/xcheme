@@ -1,11 +1,6 @@
-// Local directives.
-alias token ALIAS_TOKEN1 as 'token1';
-alias token ALIAS_TOKEN2 as 'token2' & ALIAS_TOKEN1;
-
-// This directive will be purged from the reference dependents during the importation,
-// because it's not in use in the new context.
-token <0> TOKEN1 as ALIAS_TOKEN1;
-
 // Exported directives.
-export token <1> EXPORTED_TOKEN1 as ALIAS_TOKEN1;
-export token <2> EXPORTED_TOKEN2 as ALIAS_TOKEN2;
+export token <0> EXPORTED_TOKEN as 'token';
+
+// This directive will be purged as a dependency of ALIAS_TOKEN1 during the importation,
+// because it's not in use in the new context.
+token <1> TOKEN as EXPORTED_TOKEN;

@@ -115,16 +115,12 @@ test('IMPORT directive with dependent and purged references', () => {
     import './module4';`
   );
   expect(project.lexer).toBe(
-    `const L1_ALIAS_TOKEN1 = new Core.ExpectUnitPattern('t', 'o', 'k', 'e', 'n', '1');` +
-      `exports.Lexer = new Core.ExpectFlowPattern(` +
+    `exports.Lexer = new Core.ExpectFlowPattern(` +
       /**/ `new Core.OptFlowPattern(` +
       /******/ `new Core.RepeatFlowPattern(` +
       /**********/ `new Core.ChooseFlowPattern(` +
-      /**************/ `new Core.EmitTokenPattern(1, L1_ALIAS_TOKEN1), ` +
-      /**************/ `new Core.EmitTokenPattern(2, ` +
-      /******************/ `new Core.ExpectFlowPattern(` +
-      /**********************/ `new Core.ExpectUnitPattern('t', 'o', 'k', 'e', 'n', '2'), ` +
-      /**********************/ `L1_ALIAS_TOKEN1)` +
+      /**************/ `new Core.EmitTokenPattern(0, ` +
+      /******************/ `new Core.ExpectUnitPattern('t', 'o', 'k', 'e', 'n')` +
       /******************/ `)` +
       /**********/ `)` +
       /******/ `)` +
