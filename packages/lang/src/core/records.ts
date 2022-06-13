@@ -104,12 +104,16 @@ export const connect = (
   target: Types.Record
 ): void => {
   if (source.assigned) {
-    target.data.dependencies.push(source);
-    source.data.dependents.push(target);
-  } else {
-    project.symbols.listen(identifier, () => {
+    if (!target.data.dependencies.includes(source)) {
       target.data.dependencies.push(source);
       source.data.dependents.push(target);
+    }
+  } else {
+    project.symbols.listen(identifier, () => {
+      if (!target.data.dependencies.includes(source)) {
+        target.data.dependencies.push(source);
+        source.data.dependents.push(target);
+      }
     });
   }
 };
