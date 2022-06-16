@@ -2,6 +2,7 @@ import * as VSCode from 'vscode';
 import * as Path from 'path';
 
 import * as Lang from '@xcheme/lang';
+import * as Lexer from '@xcheme/lexer';
 
 import * as Utils from '../utils';
 import * as Diagnostics from '../diagnostics';
@@ -30,8 +31,8 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   #isIdentity(tokens: Lang.Types.Token[], offset: number): boolean {
     const value = tokens[offset]?.value;
     return (
-      (value === Lang.Lexer.Tokens.Number || value === Lang.Lexer.Tokens.Auto) &&
-      tokens[offset - 1]?.value === Lang.Lexer.Tokens.OpenChevron
+      (value === Lexer.Tokens.Number || value === Lexer.Tokens.Auto) &&
+      tokens[offset - 1]?.value === Lexer.Tokens.OpenChevron
     );
   }
 
@@ -44,9 +45,9 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   #isIdentifier(tokens: Lang.Types.Token[], offset: number): boolean {
     const value = tokens[offset]?.value;
     return (
-      (value === Lang.Lexer.Tokens.CloseChevron && this.#isIdentity(tokens, offset - 1)) ||
-      value === Lang.Lexer.Tokens.Token ||
-      value === Lang.Lexer.Tokens.Node
+      (value === Lexer.Tokens.CloseChevron && this.#isIdentity(tokens, offset - 1)) ||
+      value === Lexer.Tokens.Token ||
+      value === Lexer.Tokens.Node
     );
   }
 
@@ -59,11 +60,11 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   #getSymbolFilters(tokens: Lang.Types.Token[], offset: number): Lang.Parser.Symbols[] {
     while (offset >= 0) {
       switch (tokens[offset--].value) {
-        case Lang.Lexer.Tokens.Skip:
+        case Lexer.Tokens.Skip:
           return [Lang.Parser.Symbols.AliasToken];
-        case Lang.Lexer.Tokens.Token:
+        case Lexer.Tokens.Token:
           return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.AliasToken];
-        case Lang.Lexer.Tokens.Node:
+        case Lexer.Tokens.Node:
           return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.Node, Lang.Parser.Symbols.AliasNode];
       }
     }
@@ -80,10 +81,10 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
     const records = [];
     do {
       const token = tokens[offset--];
-      if (token?.value === Lang.Lexer.Tokens.Identifier) {
+      if (token?.value === Lexer.Tokens.Identifier) {
         records.unshift(token.fragment.data);
       }
-    } while (tokens[offset--]?.value === Lang.Lexer.Tokens.Period);
+    } while (tokens[offset--]?.value === Lexer.Tokens.Period);
     return records;
   }
 
@@ -206,77 +207,77 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   ): CompletionItems | undefined {
     if (offset > -1) {
       switch (tokens[offset--].value) {
-        case Lang.Lexer.Tokens.Import:
+        case Lexer.Tokens.Import:
           return this.#getFileList(document);
-        case Lang.Lexer.Tokens.Export:
+        case Lexer.Tokens.Export:
           return [Items.aliasItem, Items.tokenItem, Items.nodeItem];
-        case Lang.Lexer.Tokens.CloseChevron:
+        case Lexer.Tokens.CloseChevron:
           return this.#isIdentity(tokens, offset) ? [Items.identifierItem] : [];
-        case Lang.Lexer.Tokens.Identifier:
+        case Lexer.Tokens.Identifier:
           return this.#isIdentifier(tokens, offset) ? [Items.asItem] : Items.binaryOperatorList;
-        case Lang.Lexer.Tokens.Skip:
+        case Lexer.Tokens.Skip:
           return Items.operandList;
-        case Lang.Lexer.Tokens.Alias:
+        case Lexer.Tokens.Alias:
           return [Items.tokenItem, Items.nodeItem];
-        case Lang.Lexer.Tokens.Token:
-        case Lang.Lexer.Tokens.Node:
+        case Lexer.Tokens.Token:
+        case Lexer.Tokens.Node:
           return [Items.identityItem, Items.identifierItem];
-        case Lang.Lexer.Tokens.From:
+        case Lexer.Tokens.From:
           return [Items.wordItem];
-        case Lang.Lexer.Tokens.To:
-        case Lang.Lexer.Tokens.String:
-        case Lang.Lexer.Tokens.Any:
-        case Lang.Lexer.Tokens.Asterisk:
-        case Lang.Lexer.Tokens.CloseBraces:
-        case Lang.Lexer.Tokens.CloseParenthesis:
+        case Lexer.Tokens.To:
+        case Lexer.Tokens.String:
+        case Lexer.Tokens.Any:
+        case Lexer.Tokens.Asterisk:
+        case Lexer.Tokens.CloseBraces:
+        case Lexer.Tokens.CloseParenthesis:
           return Items.binaryOperatorList;
-        case Lang.Lexer.Tokens.Comma:
-        case Lang.Lexer.Tokens.OpenBraces:
+        case Lexer.Tokens.Comma:
+        case Lexer.Tokens.OpenBraces:
           return [Items.identityItem, Items.identifierItem, Items.wordItem];
-        case Lang.Lexer.Tokens.Period:
+        case Lexer.Tokens.Period:
           const result = this.#getSymbolTableFromPath(table, this.#getSymbolTablePath(tokens, offset));
           return result ? this.#getSymbolList(result, [Lang.Parser.Symbols.MapMember]) : [];
-        case Lang.Lexer.Tokens.As:
-        case Lang.Lexer.Tokens.Then:
-        case Lang.Lexer.Tokens.Else:
-        case Lang.Lexer.Tokens.Or:
-        case Lang.Lexer.Tokens.VerticalBar:
-        case Lang.Lexer.Tokens.And:
-        case Lang.Lexer.Tokens.Ampersand:
+        case Lexer.Tokens.As:
+        case Lexer.Tokens.Then:
+        case Lexer.Tokens.Else:
+        case Lexer.Tokens.Or:
+        case Lexer.Tokens.VerticalBar:
+        case Lexer.Tokens.And:
+        case Lexer.Tokens.Ampersand:
           return [
             ...this.#getSymbolList(table, this.#getSymbolFilters(tokens, offset)),
             ...Items.operandList,
             ...Items.unaryOperatorList
           ];
-        case Lang.Lexer.Tokens.Not:
-        case Lang.Lexer.Tokens.Opt:
-        case Lang.Lexer.Tokens.Repeat:
-        case Lang.Lexer.Tokens.Left:
-        case Lang.Lexer.Tokens.Right:
-        case Lang.Lexer.Tokens.Next:
-        case Lang.Lexer.Tokens.Pivot:
-        case Lang.Lexer.Tokens.Symbol:
-        case Lang.Lexer.Tokens.Scope:
-        case Lang.Lexer.Tokens.Error:
-        case Lang.Lexer.Tokens.Has:
-        case Lang.Lexer.Tokens.Set:
-        case Lang.Lexer.Tokens.OpenParenthesis:
+        case Lexer.Tokens.Not:
+        case Lexer.Tokens.Opt:
+        case Lexer.Tokens.Repeat:
+        case Lexer.Tokens.Left:
+        case Lexer.Tokens.Right:
+        case Lexer.Tokens.Next:
+        case Lexer.Tokens.Pivot:
+        case Lexer.Tokens.Symbol:
+        case Lexer.Tokens.Scope:
+        case Lexer.Tokens.Error:
+        case Lexer.Tokens.Has:
+        case Lexer.Tokens.Set:
+        case Lexer.Tokens.OpenParenthesis:
           return [
             ...this.#getSymbolList(table, this.#getSymbolFilters(tokens, offset)),
             ...Items.operandList,
             ...Items.unaryOperatorList
           ];
-        case Lang.Lexer.Tokens.Place:
-        case Lang.Lexer.Tokens.Append:
-        case Lang.Lexer.Tokens.Prepend:
+        case Lexer.Tokens.Place:
+        case Lexer.Tokens.Append:
+        case Lexer.Tokens.Prepend:
           return [
             ...this.#getSymbolList(table, this.#getSymbolFilters(tokens, offset)),
             ...Items.operandList,
             ...Items.directionList,
             ...Items.unaryOperatorList
           ];
-        case Lang.Lexer.Tokens.Map:
-        case Lang.Lexer.Tokens.OpenChevron:
+        case Lexer.Tokens.Map:
+        case Lexer.Tokens.OpenChevron:
           return [];
       }
     }

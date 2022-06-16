@@ -5,10 +5,30 @@
     "outDir": "./out",
     "declarationDir": "./types",
     "paths": {
-      "@xcheme/core": ["../../packages/core/src"],
-      "@xcheme/lang": ["../../packages/lang/src"]
+      "@xcheme/core": [
+        "../../packages/core/src"
+      ],
+      "@xcheme/lexer": [
+        "../../packages/lexer/src"
+      ],
+      "@xcheme/lang": [
+        "../../packages/lang/src"
+      ]
     }
   },
-  "exclude": ["node_modules/**/*", "types/**/*"],
-  "references": [{ "path": "../../packages/core" }, { "path": "../../packages/lang" }]
+  "exclude": [
+    "node_modules/**/*",
+    "types/**/*"
+  ],
+  "references": [
+    {
+      "path": "../../packages/core"
+    },
+    {
+      "path": "../../packages/lexer"
+    },
+    {
+      "path": "../../packages/lang"
+    }
+  ]
 }

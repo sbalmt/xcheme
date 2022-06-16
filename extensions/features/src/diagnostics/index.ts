@@ -2,6 +2,7 @@ import * as VSCode from 'vscode';
 import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
+import * as Lexer from '@xcheme/lexer';
 import * as Lang from '@xcheme/lang';
 
 import * as Utils from '../utils';
@@ -50,7 +51,7 @@ const getSource = (document: VSCode.TextDocument): Lang.Types.Context => {
   const end = document.lineAt(document.lineCount - 1).range.end;
   const text = document.getText(new VSCode.Range(begin, end));
   const source = new Core.Context<Lang.Types.Metadata>(document.uri.path);
-  Lang.Lexer.consumeText(text, source);
+  Lexer.consumeText(text, source);
   Lang.Parser.consumeTokens(source.tokens, source);
   return source;
 };
