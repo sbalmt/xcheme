@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
+import * as Lexer from '@xcheme/lexer';
 
-import * as Lexer from '../../lexer';
 import * as Types from '../../core/types';
 
 import { Nodes } from '../nodes';

@@ -1,4 +1,5 @@
 import * as Core from '@xcheme/core';
+import * as Lexer from '@xcheme/lexer';
 
 import * as Lang from '../../../src/index';
 
@@ -29,19 +30,6 @@ export type Tree = {
 };
 
 /**
- * Assert the specified source code can generate the specified tree structure.
- * @param code Source code.
- * @param tree Tree structure.
- */
-export const tree = (code: string, tree: Tree): void => {
-  const context = new Core.Context<Lang.Types.Metadata>('test');
-  expect(Lang.Lexer.consumeText(code, context)).toBeTruthy();
-  expect(Lang.Parser.consumeTokens(context.tokens, context)).toBeTruthy();
-  expect(context.node.next).toBeDefined();
-  match(context.node.next!, tree);
-};
-
-/**
  * Check whether or not the specified input node matches the specified tree structure.
  * @param node Input node.
  * @param tree Tree structure.
@@ -69,4 +57,17 @@ const match = (node: Lang.Types.Node, tree: Tree): void => {
   } else {
     expect(node.next).toBeUndefined();
   }
+};
+
+/**
+ * Assert the specified source code can generate the specified tree structure.
+ * @param code Source code.
+ * @param tree Tree structure.
+ */
+export const tree = (code: string, tree: Tree): void => {
+  const context = new Core.Context<Lang.Types.Metadata>('test');
+  expect(Lexer.consumeText(code, context)).toBeTruthy();
+  expect(Lang.Parser.consumeTokens(context.tokens, context)).toBeTruthy();
+  expect(context.node.next).toBeDefined();
+  match(context.node.next!, tree);
 };

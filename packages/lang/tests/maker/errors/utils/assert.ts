@@ -1,4 +1,5 @@
 import * as Core from '@xcheme/core';
+import * as Lexer from '@xcheme/lexer';
 
 import * as Lang from '../../../../src/index';
 import * as Helper from '../../helper';
@@ -32,7 +33,7 @@ export const error = (code: string, errors: Error[]): void => {
   const context = new Core.Context<Lang.Types.Metadata>('make');
 
   // Consume input text, tokens and optimize the generated AST.
-  expect(Lang.Lexer.consumeText(code, context)).toBeTruthy();
+  expect(Lexer.consumeText(code, context)).toBeTruthy();
   expect(Lang.Parser.consumeTokens(context.tokens, context)).toBeTruthy();
   expect(Lang.Optimizer.consumeNodes(project, context.node)).toBeFalsy();
 

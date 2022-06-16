@@ -8,7 +8,6 @@ export * as Project from './core/project';
 export * as Symbols from './core/symbols';
 export * as Types from './core/types';
 
-export * as Lexer from './lexer';
 export * as Parser from './parser';
 export * as Optimizer from './optimizer';
 export * as Maker from './maker';

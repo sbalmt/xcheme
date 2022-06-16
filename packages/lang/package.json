@@ -27,11 +27,10 @@
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.1",
+		"@xcheme/core": "^0.0.9",
+		"@xcheme/lexer": "^0.0.1",
 		"jest": "^27.0.6",
 		"ts-jest": "^27.0.5",
 		"typescript": "^4.3.5"
-	},
-	"dependencies": {
-		"@xcheme/core": "^0.0.8"
 	}
 }

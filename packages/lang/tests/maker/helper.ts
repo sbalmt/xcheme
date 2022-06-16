@@ -2,6 +2,7 @@ import * as Path from 'path';
 import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
+import * as Lexer from '@xcheme/lexer';
 
 import * as Lang from '../../src/index';
 
@@ -44,7 +45,7 @@ export const makeParser = (coder: Lang.Coder, text: string): Lang.Project.Contex
   let status: boolean;
 
   // Consume input text.
-  if (!(status = Lang.Lexer.consumeText(text, context))) {
+  if (!(status = Lexer.consumeText(text, context))) {
     printErrors(context.errors);
   }
   expect(status).toBeTruthy();

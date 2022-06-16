@@ -5,8 +5,20 @@
     "outDir": "./dist",
     "declarationDir": "./types",
     "paths": {
-      "@xcheme/core": ["../core/src"]
+      "@xcheme/core": [
+        "../core/src"
+      ],
+      "@xcheme/lexer": [
+        "../lexer/src"
+      ],
     }
   },
-  "references": [{ "path": "../core" }]
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../lexer"
+    },
+  ]
 }

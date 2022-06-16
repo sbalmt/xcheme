@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
+import * as Lexer from '@xcheme/lexer';
 
 import * as Types from '../core/types';
-import * as Lexer from '../lexer';
 
 import UnaryExpression from './patterns/unary';
 import BinaryExpression from './patterns/binary';
