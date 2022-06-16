@@ -1,3 +1,5 @@
+export * as Metadata from './core/metadata';
+
 export { default as Context } from './core/context';
 export { default as Error, Errors } from './core/error';
 export { default as Node, Nodes } from './core/node';
