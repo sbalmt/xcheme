@@ -1,0 +1,34 @@
+{
+	"name": "@xcheme/lexer",
+	"version": "0.0.1",
+	"description": "Lexer component for XCHEME Lang",
+	"license": "MIT",
+	"keywords": [
+		"xcheme",
+		"lexer"
+	],
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/balmanth/xcheme.git",
+		"directory": "packages/lexer"
+	},
+	"main": "./dist/index.js",
+	"types": "./types/index.d.ts",
+	"exports": {
+		".": "./dist/index.js",
+		"./package.json": "./package.json"
+	},
+	"scripts": {
+		"prepublishOnly": "npm run clean && npm run build && npm run test",
+    "test": "jest --runInBand --config=./jest.config.js",
+    "build": "tsc --build ./tsconfig.json",
+    "clean": "tsc --build --clean ./tsconfig.json"
+	},
+	"devDependencies": {
+		"@types/jest": "^27.0.1",
+		"@xcheme/core": "^0.0.9",
+		"jest": "^27.0.6",
+		"ts-jest": "^27.0.5",
+		"typescript": "^4.3.5"
+	}
+}
