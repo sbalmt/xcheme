@@ -3,6 +3,7 @@ import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
+import * as LangLexer from '@xcheme/lexer';
 
 import * as Lexer from '../core/lexer';
 import * as Parser from '../core/parser';
@@ -117,7 +118,7 @@ export const perform = (
   const text = FS.readFileSync(source).toString();
   const context = new Core.Context<Lang.Types.Metadata>('maker');
   initialize(source);
-  if (Lexer.tokenize(Lang.Lexer, text, context, !run && state.tokens!)) {
+  if (Lexer.tokenize(LangLexer, text, context, !run && state.tokens!)) {
     if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
       const path = Path.join('', source.toString());
       if (run) {
