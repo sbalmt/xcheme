@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "declarationDir": "./types",
+    "paths": {
+      "@xcheme/core": [
+        "../core/src"
+      ],
+      "@xcheme/lexer": [
+        "../lexer/src"
+      ]
+    }
+  },
+  "references": [
+    {
+      "path": "../core"
+    },
+    {
+      "path": "../lexer"
+    }
+  ]
+}

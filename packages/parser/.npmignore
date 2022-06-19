@@ -1,0 +1,9 @@
+jest.config.js
+tsconfig.json
+*.log
+*.map
+*.tsbuildinfo
+**/src
+**/tests
+**/coverage
+**/node_modules
