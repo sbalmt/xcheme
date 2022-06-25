@@ -1,6 +1,6 @@
 import * as Core from '@xcheme/core';
+import * as Parser from '@xcheme/parser';
 
-import * as Parser from '../parser';
 import * as Coder from './coder/base';
 import * as Records from './records';
 import * as Counter from './counter';

@@ -1,7 +1,8 @@
+import * as Parser from '@xcheme/parser';
+
 import * as Coder from '../../core/coder/base';
 import * as Project from '../../core/project';
 import * as Types from '../../core/types';
-import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import * as Expression from './expression';

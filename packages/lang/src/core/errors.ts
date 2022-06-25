@@ -1,13 +1,14 @@
 import * as Core from '@xcheme/core';
 import * as Lexer from '@xcheme/lexer';
+import * as Parser from '@xcheme/parser';
 
 /**
- * All errors in the language.
+ * All language errors.
  */
 export const enum Errors {
   DUPLICATE_IDENTIFIER = Core.Errors.DUPLICATE_IDENTIFIER,
   UNEXPECTED_TOKEN = Lexer.Errors.UNEXPECTED_TOKEN,
-  UNEXPECTED_SYNTAX,
+  UNEXPECTED_SYNTAX = Parser.Errors.UNEXPECTED_SYNTAX,
   UNEXPECTED_ARGUMENT,
   UNEXPECTED_EXTRA_ARGUMENT,
   UNSUPPORTED_IDENTITY,

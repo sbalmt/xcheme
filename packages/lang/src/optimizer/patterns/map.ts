@@ -1,9 +1,9 @@
 import * as Core from '@xcheme/core';
+import * as Parser from '@xcheme/parser';
 
 import * as Records from '../../core/records';
 import * as Project from '../../core/project';
 import * as Types from '../../core/types';
-import * as Parser from '../../parser';
 import * as Identity from '../identity';
 import * as Context from '../context';
 import * as Loose from '../loose';

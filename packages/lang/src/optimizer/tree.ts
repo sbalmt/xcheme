@@ -1,7 +1,7 @@
 import * as Core from '@xcheme/core';
+import * as Parser from '@xcheme/parser';
 
 import * as Types from '../core/types';
-import * as Parser from '../parser';
 
 /**
  * Allowed directive types.

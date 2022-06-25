@@ -2,12 +2,13 @@ import * as Path from 'path';
 
 import * as Core from '@xcheme/core';
 import * as Lexer from '@xcheme/lexer';
+import * as Parser from '@xcheme/parser';
 
 import * as String from '../../core/string';
 import * as Project from '../../core/project';
 import * as Symbols from '../../core/symbols';
 import * as Types from '../../core/types';
-import * as Parser from '../../parser';
+
 import * as Maker from '../../maker';
 import * as Cache from '../cache';
 import * as Optimizer from '../index';

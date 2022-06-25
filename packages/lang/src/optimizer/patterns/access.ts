@@ -1,8 +1,9 @@
+import * as Parser from '@xcheme/parser';
+
 import * as Nodes from '../../core/nodes';
 import * as Records from '../../core/records';
 import * as Project from '../../core/project';
 import * as Types from '../../core/types';
-import * as Parser from '../../parser';
 import * as Context from '../context';
 
 import { Errors } from '../../core/errors';

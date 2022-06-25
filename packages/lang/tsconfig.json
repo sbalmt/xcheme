@@ -11,6 +11,9 @@
       "@xcheme/lexer": [
         "../lexer/src"
       ],
+      "@xcheme/parser": [
+        "../parser/src"
+      ]
     }
   },
   "references": [
@@ -20,5 +23,8 @@
     {
       "path": "../lexer"
     },
+    {
+      "path": "../parser"
+    }
   ]
 }

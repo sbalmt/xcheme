@@ -6,5 +6,6 @@ module.exports = {
   moduleNameMapper: {
     "/^@xcheme\/core$/": "./core/src",
     "/^@xcheme\/lexer$/": "./lexer/src",
+    "/^@xcheme\/parser$/": "./parser/src"
   }
 };
