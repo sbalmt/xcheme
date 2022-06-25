@@ -8,7 +8,6 @@
       "type": "extensionHost",
       "request": "launch",
       "name": "Run Basics (Extension)",
-      "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/basics", "--disable-extensions", "${workspaceFolder}/samples"]
     },
@@ -16,7 +15,6 @@
       "type": "extensionHost",
       "request": "launch",
       "name": "Run Features (Extension)",
-      "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "preLaunchTask": "Build Features",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}/extensions/features", "${workspaceFolder}/samples"],
@@ -48,6 +46,26 @@
       "runtimeArgs": ["--inspect-brk", "${workspaceFolder}/node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
       "skipFiles": ["<node_internals>/**"],
       "cwd": "${workspaceFolder}/packages/core"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Test Lexer",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeArgs": ["--inspect-brk", "${workspaceFolder}/node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/packages/lexer"
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Test Parser",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "runtimeArgs": ["--inspect-brk", "${workspaceFolder}/node_modules/jest/bin/jest.js", "--runInBand", "--coverage=false"],
+      "skipFiles": ["<node_internals>/**"],
+      "cwd": "${workspaceFolder}/packages/parser"
     },
     {
       "type": "node",
