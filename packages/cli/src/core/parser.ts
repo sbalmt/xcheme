@@ -6,15 +6,16 @@ import * as Symbols from './symbols';
 import * as Nodes from './nodes';
 
 /**
- * Parse the given input tokens.
+ * Parse the given input tokens into the specified consumption context.
+ * @param parser Main parser pattern.
  * @param tokens Input tokens.
  * @param context Consumption context.
  * @param symbols Determines whether or not the debug mode is active.
  * @param nodes Determines whether or not the debug mode is active.
  * @returns Returns true in case of success, false otherwise.
  */
-export const parse = (
-  program: Lang.Types.Pattern,
+export const consume = (
+  parser: Lang.Types.Pattern,
   tokens: Lang.Types.Token[],
   context: Lang.Types.Context,
   symbols: boolean,
@@ -22,7 +23,7 @@ export const parse = (
 ): boolean => {
   const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
   Console.printLine('Parsing...');
-  if (!program.consume(source)) {
+  if (!parser.consume(source)) {
     const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
     context.addError(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
   } else {
@@ -34,5 +35,5 @@ export const parse = (
   if (nodes) {
     Nodes.print(context.node);
   }
-  return context.errors.length === 0;
+  return !context.errors.length;
 };

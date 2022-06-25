@@ -5,21 +5,22 @@ import * as Console from './console';
 import * as Tokens from './tokens';
 
 /**
- * Tokenize the given input source.
+ * Tokenize the given input source into the specified consumption context.
+ * @param lexer Main lexer pattern.
  * @param text Input text.
  * @param context Consumption context.
  * @param tokens Determines whether or not the debug mode is active for tokens.
  * @returns Returns true in case of success, false otherwise.
  */
-export const tokenize = (
-  program: Lang.Types.Pattern,
+export const consume = (
+  lexer: Lang.Types.Pattern,
   text: string,
   context: Lang.Types.Context,
   tokens: boolean
 ): boolean => {
   const source = new Core.TextSource<Lang.Types.Metadata>(text, context);
   Console.printLine('Tokenizing...');
-  if (!program.consume(source)) {
+  if (!lexer.consume(source)) {
     context.addError(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
   } else {
     Console.clearLine();
@@ -27,5 +28,5 @@ export const tokenize = (
   if (tokens) {
     Tokens.print(context.tokens);
   }
-  return context.errors.length === 0;
+  return !context.errors.length;
 };

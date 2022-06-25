@@ -2,11 +2,12 @@ import * as Path from 'path';
 import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
+import * as Lexer from '@xcheme/lexer';
+import * as Parser from '@xcheme/parser';
 import * as Lang from '@xcheme/lang';
-import * as LangLexer from '@xcheme/lexer';
 
-import * as Lexer from '../core/lexer';
-import * as Parser from '../core/parser';
+import * as GenericLexer from '../core/lexer';
+import * as GenericParser from '../core/parser';
 
 import * as Options from '../core/options';
 import * as Console from '../core/console';
@@ -66,8 +67,10 @@ const make = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => 
  */
 const test = (project: Lang.Project.Context, source: string, state: Options.Debug): boolean => {
   const context = new Core.Context<Lang.Types.Metadata>('runner');
-  if (Lexer.tokenize(project.lexer as Lang.Types.Pattern, source, context, state.tokens!)) {
-    if (Parser.parse(project.parser as Lang.Types.Pattern, context.tokens, context, state.symbols!, state.nodes!)) {
+  if (GenericLexer.consume(project.lexer as Lang.Types.Pattern, source, context, state.tokens!)) {
+    if (
+      GenericParser.consume(project.parser as Lang.Types.Pattern, context.tokens, context, state.symbols!, state.nodes!)
+    ) {
       Console.printLine('Done!');
       return true;
     }
@@ -118,8 +121,8 @@ export const perform = (
   const text = FS.readFileSync(source).toString();
   const context = new Core.Context<Lang.Types.Metadata>('maker');
   initialize(source);
-  if (Lexer.tokenize(LangLexer, text, context, !run && state.tokens!)) {
-    if (Parser.parse(Lang.Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
+  if (GenericLexer.consume(Lexer, text, context, !run && state.tokens!)) {
+    if (GenericParser.consume(Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
       const path = Path.join('', source.toString());
       if (run) {
         const project = new Lang.Project.Context(path, new Lang.LiveCoder(), globalOptions);
