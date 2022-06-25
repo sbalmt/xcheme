@@ -4,7 +4,7 @@ module.exports = {
   coverageDirectory: './coverage',
   collectCoverage: true,
   moduleNameMapper: {
-    "/^@xcheme\/core$/": "./core/src",
-    "/^@xcheme\/lexer$/": "./lexer/src",
+    '/^@xcheme/core$/': './core/src',
+    '/^@xcheme/lexer$/': './lexer/src'
   }
 };
