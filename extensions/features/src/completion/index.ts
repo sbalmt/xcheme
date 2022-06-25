@@ -3,6 +3,7 @@ import * as Path from 'path';
 
 import * as Lang from '@xcheme/lang';
 import * as Lexer from '@xcheme/lexer';
+import * as Parser from '@xcheme/parser';
 
 import * as Utils from '../utils';
 import * as Diagnostics from '../diagnostics';
@@ -57,15 +58,15 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Token offset.
    * @returns Returns the corresponding filters.
    */
-  #getSymbolFilters(tokens: Lang.Types.Token[], offset: number): Lang.Parser.Symbols[] {
+  #getSymbolFilters(tokens: Lang.Types.Token[], offset: number): Parser.Symbols[] {
     while (offset >= 0) {
       switch (tokens[offset--].value) {
         case Lexer.Tokens.Skip:
-          return [Lang.Parser.Symbols.AliasToken];
+          return [Parser.Symbols.AliasToken];
         case Lexer.Tokens.Token:
-          return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.AliasToken];
+          return [Parser.Symbols.Token, Parser.Symbols.AliasToken];
         case Lexer.Tokens.Node:
-          return [Lang.Parser.Symbols.Token, Lang.Parser.Symbols.Node, Lang.Parser.Symbols.AliasNode];
+          return [Parser.Symbols.Token, Parser.Symbols.Node, Parser.Symbols.AliasNode];
       }
     }
     return [];
@@ -115,12 +116,12 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
       return VSCode.CompletionItemKind.Class;
     } else {
       switch (record.value) {
-        case Lang.Parser.Symbols.Node:
-        case Lang.Parser.Symbols.Token:
+        case Parser.Symbols.Node:
+        case Parser.Symbols.Token:
           return VSCode.CompletionItemKind.Method;
-        case Lang.Parser.Symbols.AliasNode:
-        case Lang.Parser.Symbols.AliasToken:
-        case Lang.Parser.Symbols.MapMember:
+        case Parser.Symbols.AliasNode:
+        case Parser.Symbols.AliasToken:
+        case Parser.Symbols.MapMember:
           return VSCode.CompletionItemKind.Field;
       }
     }
@@ -155,11 +156,11 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param types Symbol types for filtering.
    * @returns Returns the completion items list.
    */
-  #getSymbolList(table: Lang.Types.Table, types: Lang.Parser.Symbols[]): VSCode.CompletionItem[] {
+  #getSymbolList(table: Lang.Types.Table, types: Parser.Symbols[]): VSCode.CompletionItem[] {
     const list = [];
     for (const name of table.names) {
       const record = table.get(name)!;
-      if (record.data.origin === Lang.Types.Origins.User && types.includes(record.value as Lang.Parser.Symbols)) {
+      if (record.data.origin === Lang.Types.Origins.User && types.includes(record.value as Parser.Symbols)) {
         const link = !!record.link;
         const item = Items.getItem(name, `Insert the ${name} reference.`, {
           kind: this.#getItemKind(record),
@@ -236,7 +237,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
           return [Items.identityItem, Items.identifierItem, Items.wordItem];
         case Lexer.Tokens.Period:
           const result = this.#getSymbolTableFromPath(table, this.#getSymbolTablePath(tokens, offset));
-          return result ? this.#getSymbolList(result, [Lang.Parser.Symbols.MapMember]) : [];
+          return result ? this.#getSymbolList(result, [Parser.Symbols.MapMember]) : [];
         case Lexer.Tokens.As:
         case Lexer.Tokens.Then:
         case Lexer.Tokens.Else:

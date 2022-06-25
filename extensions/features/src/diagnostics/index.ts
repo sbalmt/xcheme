@@ -3,6 +3,7 @@ import * as FS from 'fs';
 
 import * as Core from '@xcheme/core';
 import * as Lexer from '@xcheme/lexer';
+import * as Parser from '@xcheme/parser';
 import * as Lang from '@xcheme/lang';
 
 import * as Utils from '../utils';
@@ -52,7 +53,7 @@ const getSource = (document: VSCode.TextDocument): Lang.Types.Context => {
   const text = document.getText(new VSCode.Range(begin, end));
   const source = new Core.Context<Lang.Types.Metadata>(document.uri.path);
   Lexer.consumeText(text, source);
-  Lang.Parser.consumeTokens(source.tokens, source);
+  Parser.consumeTokens(source.tokens, source);
   return source;
 };
 
