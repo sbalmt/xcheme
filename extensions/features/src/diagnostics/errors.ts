@@ -42,14 +42,14 @@ const errorMessages = {
 const getMessage = (error: Core.Error): string => {
   const message = errorMessages[error.value as Core.Errors];
   if (!message) {
-    throw new Error(`Error value ${error.value} is not supported.`);
+    throw new Error(`Error value (${error.value}) is not supported.`);
   }
   return message;
 };
 
 /**
  * Get a new diagnostics list based on the specified errors list.
- * @param error Errors list.
+ * @param errors Error list.
  * @returns Returns the diagnostics list.
  */
 export const getDiagnostics = (errors: Core.Error[]): VSCode.Diagnostic[] => {
