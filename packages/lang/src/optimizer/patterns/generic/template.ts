@@ -101,7 +101,7 @@ const clone = (
   const result = new Core.Node<Types.Metadata>(node.fragment, node.value, current);
   for (const direction of [Core.Nodes.Left, Core.Nodes.Right, Core.Nodes.Next]) {
     const child = node.get(direction);
-    if (child) {
+    if (child && child.value !== Parser.Nodes.Parameters) {
       result.set(direction, clone(project, child, args, state));
     }
   }

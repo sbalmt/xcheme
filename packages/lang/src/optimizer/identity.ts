@@ -37,16 +37,18 @@ export const consume = (
   template: boolean,
   value?: (() => number) | number
 ): number => {
-  const identity = node?.left;
-  if (identity) {
-    if (identity.next) {
-      project.addError(identity.next.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
-    }
-    if (identity.value === Parser.Nodes.Identity) {
-      return resolve(identity);
-    }
-    if (!template) {
-      project.addError(identity.fragment, Errors.UNEXPECTED_ARGUMENT);
+  if (node?.value === Parser.Nodes.Arguments) {
+    const identity = node.left;
+    if (identity) {
+      if (identity.next) {
+        project.addError(identity.next.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
+      }
+      if (identity.value === Parser.Nodes.Identity) {
+        return resolve(identity);
+      }
+      if (!template) {
+        project.addError(identity.fragment, Errors.UNEXPECTED_ARGUMENT);
+      }
     }
   }
   if (value instanceof Function) {
