@@ -36,3 +36,13 @@ test('Consume the ALIAS NODE directive pattern with an auto identity', () => {
 test('Consume the ALIAS NODE directive pattern without an identity', () => {
   Assert.aliasNode(`alias node ALIAS_NODE as REF;`, 'ALIAS_NODE', void 0, expression);
 });
+
+// ALIAS TEMPLATE NODE
+
+test('Consume the ALIAS TEMPLATE NODE directive pattern', () => {
+  Assert.aliasNode(`alias <ID, REF> node <ID> ALIAS_NODE as REF;`, 'ALIAS_NODE', 'ID', expression, ['ID', 'REF']);
+});
+
+test('Consume the ALIAS TEMPLATE NODE directive pattern without an identity', () => {
+  Assert.aliasNode(`alias <REF> node ALIAS_NODE as REF;`, 'ALIAS_NODE', void 0, expression, ['REF']);
+});

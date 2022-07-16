@@ -36,3 +36,13 @@ test('Consume the ALIAS TOKEN directive pattern with an auto identity', () => {
 test('Consume the ALIAS TOKEN directive pattern without an identity', () => {
   Assert.aliasToken(`alias token ALIAS_TOKEN as REF;`, 'ALIAS_TOKEN', void 0, expression);
 });
+
+// ALIAS TEMPLATE TOKEN
+
+test('Consume the ALIAS TEMPLATE TOKEN directive pattern', () => {
+  Assert.aliasToken(`alias <ID, REF> token <ID> ALIAS_TOKEN as REF;`, 'ALIAS_TOKEN', 'ID', expression, ['ID', 'REF']);
+});
+
+test('Consume the ALIAS TEMPLATE TOKEN directive pattern without an identity', () => {
+  Assert.aliasToken(`alias <REF> token ALIAS_TOKEN as REF;`, 'ALIAS_TOKEN', void 0, expression, ['REF']);
+});

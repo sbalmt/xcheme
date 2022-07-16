@@ -36,3 +36,9 @@ test('Consume the EXPORT ALIAS TOKEN directive pattern with an auto identity', (
 test('Consume the EXPORT ALIAS TOKEN directive pattern without an identity', () => {
   Assert.exportAliasToken(`export alias token ALIAS_TOKEN as REF;`, 'ALIAS_TOKEN', void 0, expression);
 });
+
+// ALIAS TEMPLATE TOKEN
+
+test('Consume the ALIAS TEMPLATE TOKEN directive pattern without an identity', () => {
+  Assert.exportAliasToken(`export alias <REF> token ALIAS_TOKEN as REF;`, 'ALIAS_TOKEN', void 0, expression, ['REF']);
+});

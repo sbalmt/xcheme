@@ -30,14 +30,58 @@ export type Tree = {
 };
 
 /**
- * Get the expression tree for a directive statement.
+ * Get a new parameter list tree for the given parameters list.
+ * @param parameters Parameters list.
+ * @returns Returns the generated parameter list tree.
+ */
+const getParametersList = (parameters: string[]): Tree | undefined => {
+  let first: Tree | undefined, previous: Tree | undefined;
+  for (const name of parameters) {
+    const current = {
+      type: Parser.Nodes.Identifier,
+      value: name
+    };
+    if (previous) {
+      previous.next = current;
+    } else {
+      first = current;
+    }
+    previous = current;
+  }
+  return first;
+};
+
+/**
+ * Get a new parameters tree for the given parameters list.
+ * @param parameters Parameters list.
+ * @returns Returns the generated parameters tree.
+ */
+const getParameters = (parameters?: string[]): Tree | undefined => {
+  if (parameters && parameters.length > 0) {
+    return {
+      type: Parser.Nodes.Parameters,
+      left: getParametersList(parameters)
+    };
+  }
+  return void 0;
+};
+
+/**
+ * Get a new expression tree for the given directive statement.
  * @param type Directive type.
  * @param expression Expression tree structure.
  * @param identifier Optional directive identifier.
  * @param identity Optional directive identity.
- * @returns Returns the expression tree.
+ * @param parameters Optional parameters.
+ * @returns Returns the generated expression tree.
  */
-const getDirective = (type: Parser.Nodes, expression: Tree, identifier?: string, identity?: string): Tree => {
+const getDirective = (
+  type: Parser.Nodes,
+  expression: Tree,
+  identifier?: string,
+  identity?: string,
+  parameters?: string[]
+): Tree => {
   return {
     type,
     right: identifier
@@ -48,11 +92,12 @@ const getDirective = (type: Parser.Nodes, expression: Tree, identifier?: string,
             ? {
                 type: Parser.Nodes.Arguments,
                 left: {
-                  type: Parser.Nodes.Identity,
+                  type: parameters?.includes(identity) ? Parser.Nodes.Reference : Parser.Nodes.Identity,
                   value: identity
-                }
+                },
+                next: getParameters(parameters)
               }
-            : void 0,
+            : getParameters(parameters),
           right: expression
         }
       : expression
@@ -149,14 +194,16 @@ export const node = (
  * @param identifier Directive identifier.
  * @param identity Directive identity.
  * @param expression Expression tree.
+ * @param parameters Optional parameters.
  */
 export const aliasToken = (
   code: string,
   identifier: string | undefined,
   identity: string | undefined,
-  expression: Tree
+  expression: Tree,
+  parameters?: string[]
 ): void => {
-  tree(code, getDirective(Parser.Nodes.AliasToken, expression, identifier, identity));
+  tree(code, getDirective(Parser.Nodes.AliasToken, expression, identifier, identity, parameters));
 };
 
 /**
@@ -165,14 +212,16 @@ export const aliasToken = (
  * @param identifier Directive identifier.
  * @param identity Directive identity.
  * @param expression Expression tree.
+ * @param parameters Optional parameters.
  */
 export const aliasNode = (
   code: string,
   identifier: string | undefined,
   identity: string | undefined,
-  expression: Tree
+  expression: Tree,
+  parameters?: string[]
 ): void => {
-  tree(code, getDirective(Parser.Nodes.AliasNode, expression, identifier, identity));
+  tree(code, getDirective(Parser.Nodes.AliasNode, expression, identifier, identity, parameters));
 };
 
 /**
@@ -225,14 +274,16 @@ export const exportNode = (
  * @param identifier Directive identifier.
  * @param identity Directive identity.
  * @param expression Expression tree.
+ * @param parameters Optional parameters.
  */
 export const exportAliasToken = (
   code: string,
   identifier: string | undefined,
   identity: string | undefined,
-  expression: Tree
+  expression: Tree,
+  parameters?: string[]
 ): void => {
-  exportExpression(code, getDirective(Parser.Nodes.AliasToken, expression, identifier, identity));
+  exportExpression(code, getDirective(Parser.Nodes.AliasToken, expression, identifier, identity, parameters));
 };
 
 /**
@@ -241,12 +292,14 @@ export const exportAliasToken = (
  * @param identifier Directive identifier.
  * @param identity Directive identity.
  * @param expression Expression tree.
+ * @param parameters Optional parameters.
  */
 export const exportAliasNode = (
   code: string,
   identifier: string | undefined,
   identity: string | undefined,
-  expression: Tree
+  expression: Tree,
+  parameters?: string[]
 ): void => {
-  exportExpression(code, getDirective(Parser.Nodes.AliasNode, expression, identifier, identity));
+  exportExpression(code, getDirective(Parser.Nodes.AliasNode, expression, identifier, identity, parameters));
 };
