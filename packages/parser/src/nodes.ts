@@ -47,6 +47,7 @@ export const enum Nodes {
   Uncase,
   Peek,
   Access,
+  Parameters,
   Arguments,
   Skip,
   Token,

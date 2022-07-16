@@ -12,7 +12,12 @@ import { getDirectiveExpression } from './expression-directive';
  * Alias parameters list pattern.
  */
 const AliasParameterList: Core.Pattern<Core.Metadata.Types> = new Core.ExpectFlowPattern(
-  new Core.EmitSymbolPattern(Symbols.AliasParameter, new Core.ExpectUnitPattern(Lexer.Tokens.Identifier)),
+  new Core.AppendNodePattern(
+    Nodes.Identifier,
+    Core.Nodes.Right,
+    Core.Nodes.Next,
+    new Core.EmitSymbolPattern(Symbols.AliasParameter, new Core.ExpectUnitPattern(Lexer.Tokens.Identifier))
+  ),
   new Core.OptFlowPattern(
     new Core.ExpectUnitPattern(Lexer.Tokens.Comma),
     new Core.RunFlowPattern(() => AliasParameterList)
@@ -26,9 +31,16 @@ export const AliasDirectives = new Core.FlowRoute(
   new Core.ExpectFlowPattern(
     new Core.OptFlowPattern(
       new Core.ScopeSymbolPattern(
-        new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
-        AliasParameterList,
-        new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
+        new Core.AppendNodePattern(
+          Nodes.Parameters,
+          Core.Nodes.Left,
+          Core.Nodes.Right,
+          new Core.ExpectFlowPattern(
+            new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
+            AliasParameterList,
+            new Core.ExpectUnitPattern(Lexer.Tokens.CloseChevron)
+          )
+        )
       )
     ),
     new Core.MapFlowPattern(

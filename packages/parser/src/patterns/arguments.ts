@@ -23,10 +23,10 @@ const ArgumentList: Core.Pattern<Core.Metadata.Types> = new Core.ExpectFlowPatte
 /**
  * Arguments pattern.
  */
-export const Arguments = new Core.AppendNodePattern(
+export const Arguments = new Core.PrependNodePattern(
   Nodes.Arguments,
   Core.Nodes.Left,
-  Core.Nodes.Left,
+  Core.Nodes.Next,
   new Core.ExpectFlowPattern(
     new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
     ArgumentList,
