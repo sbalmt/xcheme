@@ -9,6 +9,18 @@ import * as Context from '../context';
 import { Errors } from '../../core/errors';
 
 /**
+ * Assign the given reference record to the specified reference node.
+ * @param node Reference node.
+ * @param record Reference record.
+ */
+const assign = (node: Types.Node, record: Types.Record): void => {
+  Types.assignNode(node, {
+    type: Types.Nodes.Reference,
+    record
+  });
+};
+
+/**
  * Get all member nodes from the given ACCESS node.
  * @param node Access node.
  * @returns Returns an array containing all the member nodes.
@@ -27,51 +39,28 @@ const getAllNodes = (node: Types.Node): Types.Node[] => {
 /**
  * Get the record that corresponds to the path in the given member nodes.
  * @param project Project context.
- * @param source Source record.
- * @param nodes Members nodes.
+ * @param record Source record.
+ * @param nodes Member nodes.
  * @returns Returns the corresponding record or undefined when the path wasn't found.
  */
-const getRecord = (project: Project.Context, source: Types.Record, nodes: Types.Node[]): Types.Record | undefined => {
-  let member: Types.Record | undefined = source;
-  for (let index = 1; index < nodes.length; index++) {
+const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.Node[]): Types.Record | undefined => {
+  let member: Types.Record | undefined = record;
+  for (let index = 0; index < nodes.length; index++) {
     const node = nodes[index];
     if (!(member = member.link?.get(node.fragment.data))) {
       project.addError(node.fragment, Errors.UNDEFINED_IDENTIFIER);
       break;
     }
+    if (member.assigned) {
+      assign(node, member);
+    } else {
+      const previous = nodes.slice(0, index + 1);
+      const identifier = Nodes.getPath([record.node!, ...previous], '@');
+      const current = member;
+      project.symbols.listen(identifier, () => assign(node, current));
+    }
   }
   return member;
-};
-
-/**
- * Upgrade the specified node for an optimized one after resolving its reference.
- * @param project Project context.
- * @param node Access node.
- * @param source Source record.
- * @param target Target record.
- * @param nodes Member nodes.
- * @param state Consumption state.
- */
-const upgrade = (
-  project: Project.Context,
-  node: Types.Node,
-  source: Types.Record,
-  target: Types.Record,
-  nodes: Types.Node[],
-  state: Context.State
-): void => {
-  if (state.type !== Types.Directives.Node || target.data.type === Types.Directives.Node) {
-    project.addError(nodes[nodes.length - 1].fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-  } else if (Records.isDynamic(target)) {
-    project.addError(nodes[nodes.length - 1].fragment, Errors.INVALID_MAP_REFERENCE);
-  } else if (source.value === Parser.Symbols.AliasToken) {
-    project.addError(nodes[0].fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-  } else {
-    Types.assignNode(node, {
-      type: Types.Nodes.Reference,
-      record: target
-    });
-  }
 };
 
 /**
@@ -82,20 +71,23 @@ const upgrade = (
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const nodes = getAllNodes(node);
-  const source = node.table.find(nodes[0].fragment.data);
-  if (!source) {
-    project.addError(nodes[0].fragment, Errors.UNDEFINED_IDENTIFIER);
+  const [firstNode, ...members] = nodes;
+  const firstRecord = node.table.find(firstNode.fragment.data);
+  if (!firstRecord) {
+    project.addError(firstNode.fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
-    const record = getRecord(project, source, nodes);
-    if (record) {
-      const identifier = Nodes.getPath(nodes, '@');
-      Records.connect(project, identifier, source, state.record!);
-      if (record.assigned) {
-        upgrade(project, node, source, record, nodes, state);
+    const lastNode = members[members.length - 1];
+    const lastRecord = getRecord(project, firstRecord, members);
+    if (lastRecord) {
+      if (state.type !== Types.Directives.Node || lastRecord.data.type === Types.Directives.Node) {
+        project.addError(lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+      } else if (Records.isDynamic(lastRecord)) {
+        project.addError(lastNode.fragment, Errors.INVALID_MAP_REFERENCE);
+      } else if (firstRecord.value === Parser.Symbols.AliasToken) {
+        project.addError(firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
       } else {
-        project.symbols.listen(identifier, () => {
-          upgrade(project, node, source, record, nodes, state);
-        });
+        const identifier = Nodes.getPath(nodes, '@');
+        Records.connect(project, identifier, firstRecord, state.record!);
       }
     }
   }
