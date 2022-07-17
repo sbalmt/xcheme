@@ -1,5 +1,7 @@
 import type * as Metadata from '../../core/metadata';
 
+import Exception from '../../core/exception';
+
 import Base from '../../source/base';
 import Node, { Nodes } from '../../core/node';
 import Expect from '../flow/expect';
@@ -46,7 +48,7 @@ export default class Pivot<T extends Metadata.Types> extends Pattern<T> {
   constructor(value: number, output: Nodes, current: Nodes, head: Pattern<T>, ...patterns: Pattern<T>[]) {
     super();
     if (current === output) {
-      throw "Current and Output destinations can't have the same value.";
+      throw new Exception(`Current and Output destination can't have the same value.`);
     }
     this.#head = head;
     this.#target = new Expect<T>(...patterns);

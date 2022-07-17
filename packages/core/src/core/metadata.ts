@@ -1,3 +1,5 @@
+import Exception from './exception';
+
 /**
  * Metadata types.
  */
@@ -46,7 +48,7 @@ export class Container<T> {
    */
   get data(): T {
     if (!this.#data) {
-      throw "Container data isn't assigned yet.";
+      throw new Exception(`Container data isn't assigned yet.`);
     }
     return this.#data;
   }
@@ -65,7 +67,7 @@ export class Container<T> {
    */
   assign(data: T): void {
     if (this.#data) {
-      throw 'Container data is already assigned.';
+      throw new Exception(`Container data is already assigned.`);
     }
     this.#data = data;
   }

@@ -2,6 +2,8 @@ import type * as Metadata from '../core/metadata';
 import type Context from '../core/context';
 import type Fragment from '../core/fragment';
 
+import Exception from '../core/exception';
+
 import Error from '../core/error';
 import Token from '../core/token';
 import Node, { Nodes } from '../core/node';
@@ -95,56 +97,56 @@ export default class Base<T extends Metadata.Types> {
    * Should be implemented to return the current source offset.
    */
   get offset(): number {
-    throw "Property doesn't implemented.";
+    throw new Exception(`Offset property doesn't implemented.`);
   }
 
   /**
    * Should be implemented to return the current source length.
    */
   get length(): number {
-    throw "Property doesn't implemented.";
+    throw new Exception(`Length property doesn't implemented.`);
   }
 
   /**
    * Should be implemented to return the current source value.
    */
   get value(): string | number {
-    throw "Property doesn't implemented.";
+    throw new Exception(`Value property doesn't implemented.`);
   }
 
   /**
    * Should be implemented to return the current source fragment.
    */
   get fragment(): Fragment {
-    throw "Property doesn't implemented.";
+    throw new Exception(`Fragment property doesn't implemented.`);
   }
 
   /**
    * Should be implement to push the current source state.
    */
   save(): void {
-    throw "Method doesn't implemented.";
+    throw new Exception(`Save method doesn't implemented.`);
   }
 
   /**
    * Should be implemented to restore the previous source state.
    */
   restore(): void {
-    throw "Method doesn't implemented.";
+    throw new Exception(`Restore method doesn't implemented.`);
   }
 
   /**
    * Should be implemented to pop the previous source state.
    */
   discard(): void {
-    throw "Method doesn't implemented.";
+    throw new Exception(`Discard method doesn't implemented.`);
   }
 
   /**
    * Should be implemented to move to the next source state.
    */
   next(): void {
-    throw "Move method doesn't implemented.";
+    throw new Exception(`Next method doesn't implemented.`);
   }
 
   /**
@@ -163,7 +165,7 @@ export default class Base<T extends Metadata.Types> {
     } else if (product instanceof Record) {
       this.#table.add(product);
     } else {
-      throw 'Unsupported product type.';
+      throw new Exception(`Unsupported product type.`);
     }
   }
 
@@ -181,7 +183,7 @@ export default class Base<T extends Metadata.Types> {
    */
   collapse(): void {
     if (!this.#table.parent) {
-      throw "There's no table to collapse.";
+      throw new Exception(`There's no table to collapse.`);
     }
     if (this.#table.length > 0) {
       this.#output.link = this.#table;

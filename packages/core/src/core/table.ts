@@ -1,5 +1,7 @@
 import type * as Metadata from './metadata';
 
+import Exception from './exception';
+
 import Fragment from './fragment';
 import Record from './record';
 
@@ -85,7 +87,7 @@ export default class Table<T extends Metadata.Types> {
   add(record: Record<T>): Record<T> {
     const name = record.fragment.data;
     if (this.#records[name]) {
-      throw 'Unable to add records with duplicate name.';
+      throw new Exception(`Unable to add records with duplicate name.`);
     }
     this.#records[name] = record;
     this.#length++;

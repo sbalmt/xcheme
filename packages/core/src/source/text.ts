@@ -1,6 +1,8 @@
 import type * as Metadata from '../core/metadata';
 import type Context from '../core/context';
 
+import Exception from '../core/exception';
+
 import Fragment from '../core/fragment';
 import Location from '../core/location';
 import Range from '../core/range';
@@ -81,7 +83,7 @@ export default class Text<T extends Metadata.Types> extends Base<T> {
   get value(): string {
     const value = this.#data[this.offset];
     if (!value) {
-      throw "There's no value to get.";
+      throw new Exception(`There's no value to get.`);
     }
     return value;
   }
@@ -134,7 +136,7 @@ export default class Text<T extends Metadata.Types> extends Base<T> {
    */
   restore(): void {
     if (!(this.#current = this.#states[this.#states.length - 1])) {
-      throw "There's no state to restore.";
+      throw new Exception(`There's no state to restore.`);
     }
   }
 

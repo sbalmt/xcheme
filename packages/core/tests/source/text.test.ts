@@ -1,4 +1,4 @@
-import { Context, TextSource, Token, Node, Record } from '../../src/index';
+import { Exception, Context, TextSource, Token, Node, Record } from '../../src/index';
 
 test('Default source state', () => {
   const context = new Context('test');
@@ -92,7 +92,7 @@ test('Next source state', () => {
 
   expect(source.offset).toBe(3);
   expect(source.length).toBe(0);
-  expect(() => source.value).toThrow("There's no value to get.");
+  expect(() => source.value).toThrow(new Exception("There's no value to get."));
 
   fragment = source.fragment;
   expect(fragment.data).toBe('');
@@ -188,7 +188,7 @@ test('Save/Restore/Discard source state', () => {
   source.discard();
 
   // Test no more states to restore.
-  expect(() => source.restore()).toThrow("There's no state to restore.");
+  expect(() => source.restore()).toThrow(new Exception("There's no state to restore."));
 });
 
 test('Open/Close symbol table', () => {
@@ -221,7 +221,7 @@ test('Open/Close symbol table', () => {
   expect(table.names).toHaveLength(0);
 
   // Test no more symbol tabes to close.
-  expect(() => source.collapse()).toThrow("There's no table to collapse.");
+  expect(() => source.collapse()).toThrow(new Exception("There's no table to collapse."));
 });
 
 test('Emit token', () => {
@@ -311,5 +311,7 @@ test('Emit record', () => {
   expect(location.column.end).toBe(0);
 
   // Test duplicate record.
-  expect(() => source.emit(new Record(source.fragment, 123, context.node))).toThrow('Unable to add records with duplicate name.');
+  expect(() => source.emit(new Record(source.fragment, 123, context.node))).toThrow(
+    new Exception('Unable to add records with duplicate name.')
+  );
 });
