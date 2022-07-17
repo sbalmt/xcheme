@@ -3,6 +3,7 @@
 - **Library**
 
   - Add support for getting all the next possible tokens.
+  - Detect semantic errors in alias templates without needing to reference them.
   - Improve and split coder classes.
 
 - **Runtime**
@@ -17,3 +18,4 @@
 - **Extension**
 
   - Add errors/warnings for ambiguous syntax.
+  - Add semantic highlight for alias templates.
