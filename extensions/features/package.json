@@ -21,7 +21,48 @@
 		"onLanguage:xcheme"
 	],
 	"capabilities": {},
-	"contributes": {},
+	"contributes": {
+		"semanticTokenTypes": [
+			{
+				"id": "token",
+				"superType": "class",
+				"description": "A token directive type."
+			},
+			{
+				"id": "node",
+				"superType": "class",
+				"description": "A node directive type."
+			},
+			{
+				"id": "parameter",
+				"superType": "typeParameter",
+				"description": "A parameter type."
+			},
+			{
+				"id": "member",
+				"superType": "enumMember",
+				"description": "A map member type."
+			}
+		],
+		"semanticTokenModifiers": [
+			{
+				"id": "alias",
+				"description": "An alias directive."
+			},
+			{
+				"id": "template",
+				"description": "A template directive."
+			},
+			{
+				"id": "import",
+				"description": "An imported directive."
+			},
+			{
+				"id": "export",
+				"description": "An exported directive."
+			}
+		]
+	},
 	"scripts": {
 		"vscode:prepublish": "npm run package",
 		"clean": "tsc --build --clean ./tsconfig.json",
@@ -32,7 +73,7 @@
 	"devDependencies": {
 		"@types/node": "14.x",
 		"@types/vscode": "^1.30.0",
-		"@xcheme/core": "^0.0.9",
+		"@xcheme/core": "^0.0.10",
 		"@xcheme/lang": "^0.0.11",
 		"@xcheme/lexer": "^0.0.1",
 		"@xcheme/parser": "^0.0.1",

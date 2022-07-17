@@ -2,6 +2,7 @@ import * as VSCode from 'vscode';
 
 import * as Completion from './completion';
 import * as Diagnostics from './diagnostics';
+import * as Tokens from './tokens';
 
 /**
  * Extension language Id.
@@ -26,11 +27,21 @@ const updateDiagnostics = (document: VSCode.TextDocument, collection: VSCode.Dia
 };
 
 /**
- * Returns a new disposable with an auto completion provider.
+ * Returns a new disposable for an auto completion provider.
  * @returns Returns the disposable.
  */
 const registerAutoCompletion = (): VSCode.Disposable => {
   return VSCode.languages.registerCompletionItemProvider(LanguageId, new Completion.Provider(DiagnosticCache), '.');
+};
+
+/**
+ * Returns a new disposable for an semantic tokens provider.
+ * @returns Return the disposable.
+ */
+const registerSemanticTokens = (): VSCode.Disposable => {
+  const selector = { language: LanguageId };
+  const provider = new Tokens.Provider(DiagnosticCache);
+  return VSCode.languages.registerDocumentSemanticTokensProvider(selector, provider, Tokens.Legend);
 };
 
 /**
@@ -67,6 +78,7 @@ export function activate(context: VSCode.ExtensionContext) {
   const collection = VSCode.languages.createDiagnosticCollection(LanguageId);
   context.subscriptions.push(detectTextChanges(collection), detectEditorChanges(collection));
   context.subscriptions.push(registerAutoCompletion());
+  context.subscriptions.push(registerSemanticTokens());
   const editor = VSCode.window.activeTextEditor;
   if (editor && editor.document) {
     updateDiagnostics(editor.document, collection);
