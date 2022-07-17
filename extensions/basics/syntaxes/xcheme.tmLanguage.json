@@ -310,7 +310,7 @@
 			]
 		},
 		"reference-expression": {
-			"name": "entity.name.type.xcheme",
+			"name": "entity.name.variable.xcheme",
 			"match": "[_[:alpha:]][_[:alnum:]]*"
 		},
 		"group-expression": {
