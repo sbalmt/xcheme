@@ -27,7 +27,7 @@
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.1",
-		"@xcheme/core": "^0.0.9",
+		"@xcheme/core": "^0.0.10",
 		"@xcheme/lexer": "^0.0.1",
 		"@xcheme/parser": "^0.0.1",
 		"jest": "^27.0.6",
