@@ -3,6 +3,8 @@ import * as VSCode from 'vscode';
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
+import * as Utils from '../utils';
+
 /**
  * All error messages.
  */
@@ -55,12 +57,8 @@ const getMessage = (error: Core.Error): string => {
 export const getDiagnostics = (errors: Core.Error[]): VSCode.Diagnostic[] => {
   const list = [];
   for (const error of errors) {
-    const location = error.fragment.location;
     const severity = VSCode.DiagnosticSeverity.Error;
-    const range = new VSCode.Range(
-      new VSCode.Position(location.line.begin, location.column.begin),
-      new VSCode.Position(location.line.end, location.column.end)
-    );
+    const range = Utils.getRange(error.fragment.location);
     list.push(new VSCode.Diagnostic(range, getMessage(error), severity));
   }
   return list;
