@@ -19,7 +19,9 @@ import * as Expression from './expression';
  */
 const isRoutable = (node: Types.Node): boolean => {
   return (
+    node.value === Parser.Nodes.Reference ||
     node.value === Parser.Nodes.String ||
+    node.value === Parser.Nodes.Access ||
     (node.assigned && (node.data.record !== void 0 || node.data.sequence !== void 0))
   );
 };
@@ -125,7 +127,7 @@ const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state:
       identifier,
       template
     });
-    Records.connect(project, identifier, state.record, previousRecord);
+    Records.resolve(project, identifier, state.record, () => Records.connect(state.record!, previousRecord));
     project.symbols.add(state.record);
     Expression.consume(project, member.right!, state);
     assignRoute(project, entry, member, identity);

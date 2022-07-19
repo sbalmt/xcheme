@@ -1,6 +1,7 @@
 import * as Core from '@xcheme/core';
 import * as Parser from '@xcheme/parser';
 
+import * as Symbols from './symbols';
 import * as Project from './project';
 import * as Types from './types';
 
@@ -58,7 +59,7 @@ export const isTemplate = (record: Types.Record): boolean => {
 
 /**
  * Determines whether or not the given record is referenced.
- * @param record System record.
+ * @param record Symbol record.
  * @param types Symbol types.
  * @returns Returns true when the record is referenced, false otherwise.
  * @throws Throws an exception when the given error has no metadata.
@@ -91,29 +92,35 @@ export const fromSameLocation = (source: Types.Record, target: Types.Record): bo
 };
 
 /**
+ * Resolve the symbol record assignment before using it.
+ * @param project Project context.
+ * @param identifier Target identifier.
+ * @param record Symbol record.
+ * @param callback Callback for using the record.
+ */
+export const resolve = (
+  project: Project.Context,
+  identifier: string,
+  record: Types.Record,
+  callback: Symbols.EventCallback
+): void => {
+  if (!record.assigned) {
+    project.symbols.listen(identifier, callback);
+  } else {
+    callback(record);
+  }
+};
+
+/**
  * Connect the given source as a dependency of the target and the given target as a dependent of the source.
  * @param project Project context.
  * @param identifier Target identifier.
  * @param source Target record.
  * @param target Source record.
  */
-export const connect = (
-  project: Project.Context,
-  identifier: string,
-  source: Types.Record,
-  target: Types.Record
-): void => {
-  if (source.assigned) {
-    if (!target.data.dependencies.includes(source)) {
-      target.data.dependencies.push(source);
-      source.data.dependents.push(target);
-    }
-  } else {
-    project.symbols.listen(identifier, () => {
-      if (!target.data.dependencies.includes(source)) {
-        target.data.dependencies.push(source);
-        source.data.dependents.push(target);
-      }
-    });
+export const connect = (source: Types.Record, target: Types.Record): void => {
+  if (!target.data.dependencies.includes(source)) {
+    target.data.dependencies.push(source);
+    source.data.dependents.push(target);
   }
 };

@@ -79,16 +79,18 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     const lastNode = members[members.length - 1];
     const lastRecord = getRecord(project, firstRecord, members);
     if (lastRecord) {
-      if (state.type !== Types.Directives.Node || lastRecord.data.type === Types.Directives.Node) {
-        project.addError(lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-      } else if (Records.isDynamic(lastRecord)) {
-        project.addError(lastNode.fragment, Errors.INVALID_MAP_REFERENCE);
-      } else if (firstRecord.value === Parser.Symbols.AliasToken) {
-        project.addError(firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-      } else {
-        const identifier = Nodes.getPath(nodes, '@');
-        Records.connect(project, identifier, firstRecord, state.record!);
-      }
+      const identifier = Nodes.getPath(nodes, '@');
+      Records.resolve(project, identifier, lastRecord, () => {
+        if (state.type !== Types.Directives.Node || lastRecord.data.type === Types.Directives.Node) {
+          project.addError(lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+        } else if (Records.isDynamic(lastRecord)) {
+          project.addError(lastNode.fragment, Errors.INVALID_MAP_REFERENCE);
+        } else if (firstRecord.value === Parser.Symbols.AliasToken) {
+          project.addError(firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+        } else {
+          Records.connect(firstRecord, state.record!);
+        }
+      });
     }
   }
 };

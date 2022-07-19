@@ -1,3 +1,4 @@
+import * as Core from '@xcheme/core';
 import * as Parser from '@xcheme/parser';
 
 import * as Coder from '../../core/coder/base';
@@ -20,17 +21,36 @@ import * as Expression from './expression';
 const resolveUnits = (node: Types.Node): (string | number)[] => {
   if (node.value === Parser.Nodes.String) {
     return String.extract(node.fragment.data).split('');
-  } else if (node.data.record !== void 0) {
+  } else if (node.value === Parser.Nodes.Access) {
+    return [Nodes.getIdentity(node.lowest(Core.Nodes.Right)!)];
+  } else if (node.value === Parser.Nodes.Reference) {
     return [Nodes.getIdentity(node)];
-  } else if (node.data.sequence !== void 0) {
+  } else if (node.value === Parser.Nodes.And) {
     if (node.data.type === Types.Nodes.ReferenceSequence) {
-      return node.data.sequence.map((node) => Nodes.getIdentity(node));
+      return node.data.sequence!.map((node) => {
+        if (node.value === Parser.Nodes.Access) {
+          return Nodes.getIdentity(node.lowest(Core.Nodes.Right)!);
+        }
+        return Nodes.getIdentity(node);
+      });
     }
-    const data = node.data.sequence.map((node) => String.extract(node.fragment.data));
+    const data = node.data.sequence!.map((node) => String.extract(node.fragment.data));
     return data.join('').split('');
   } else {
     throw new Exception('MAP entries must be instance of sequential or identified nodes.');
   }
+};
+
+/**
+ * Get the route expression according to the given member node.
+ * @param member Member node.
+ * @returns Returns the route expression.
+ */
+const getRouteExpression = (member: Types.Node): Types.Node => {
+  if (member.value === Parser.Nodes.Identifier || member.value === Parser.Nodes.Arguments) {
+    return member.right!;
+  }
+  return member;
 };
 
 /**
@@ -54,7 +74,7 @@ const resolveRoute = (
   const { type } = Nodes.getRecord(directive).data;
   const { route, identity } = entry.data;
   const dynamic = Nodes.isDynamic(entry);
-  const expression = ![Parser.Nodes.Identifier, Parser.Nodes.Arguments].includes(member.value) ? member : member.right!;
+  const expression = getRouteExpression(member);
   if (route !== expression) {
     const current = state.dynamic;
     state.dynamic = dynamic;

@@ -5,7 +5,7 @@ import { Exception } from './exception';
 /**
  * Event callback.
  */
-type EventCallback = (record: Types.Record) => void;
+export type EventCallback = (record: Types.Record) => void;
 
 /**
  * Map of events.

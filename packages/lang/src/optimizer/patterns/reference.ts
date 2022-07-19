@@ -26,7 +26,7 @@ const template = (project: Project.Context, node: Types.Node, record: Types.Reco
       record = node.table.find(identifier)!;
       node.swap(reference);
     }
-    Records.connect(project, identifier, record, state.record!);
+    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
   };
   if (!record.assigned) {
     project.symbols.listen(identifier, action);
@@ -48,7 +48,7 @@ const upgrade = (project: Project.Context, node: Types.Node, record: Types.Recor
     if (Records.isDynamic(record)) {
       project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
     } else {
-      Records.connect(project, identifier, record, state.record!);
+      Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
       Types.assignNode(node, { type: Types.Nodes.Reference, record });
     }
   };
@@ -92,7 +92,7 @@ const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.R
 const resolveToken = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Token) {
-    Records.connect(project, identifier, record, state.record!);
+    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
   } else if (record.value === Parser.Symbols.AliasToken) {
     template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Node) {
@@ -115,7 +115,7 @@ const resolveToken = (project: Project.Context, node: Types.Node, record: Types.
 const resolveNode = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Node) {
-    Records.connect(project, identifier, record, state.record!);
+    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
   } else if (record.value === Parser.Symbols.AliasNode) {
     template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {

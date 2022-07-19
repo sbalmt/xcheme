@@ -35,7 +35,7 @@ const isReferenceSequence = (node: Types.Node, operator: Parser.Nodes): boolean 
     }
     return true;
   }
-  return node.assigned && node.data.type === Types.Nodes.Reference;
+  return node.value === Parser.Nodes.Access || node.assigned && node.data.type === Types.Nodes.Reference;
 };
 
 /**
