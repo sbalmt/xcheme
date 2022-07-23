@@ -12,9 +12,13 @@ try {
   } else if (flags.version) {
     Version.print();
   } else {
+    const run = !!flags.run;
+    if (run && !flags.source) {
+      throw new Error(`Option '--run' must have a xcheme source file.`);
+    }
     const source = flags.source ?? 0;
-    const target = flags.target ?? 1;
-    Make.perform(source, target, !!flags.run, flags.debug);
+    const target = flags.target ?? run ? 0 : 1;
+    Make.perform(source, target, run, flags.debug);
   }
 } catch (ex: any) {
   console.log(ex.message ?? ex);
