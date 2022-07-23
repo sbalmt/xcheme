@@ -27,12 +27,12 @@ const isRoutable = (node: Types.Node): boolean => {
 };
 
 /**
- * Get the corresponding route from the child node in the given parent.
+ * Extract the corresponding route from the given direction and member node.
  * @param direction Child node direction.
- * @param parent Parent node.
+ * @param member Member node.
  * @returns Returns the corresponding route or undefined when there's no route.
  */
-const getRoute = (direction: Core.Nodes, parent: Types.Node): Types.Node | undefined => {
+const extractRoute = (direction: Core.Nodes, member: Types.Node): Types.Node | undefined => {
   const action = (
     direction: Core.Nodes,
     parent: Types.Node,
@@ -52,7 +52,7 @@ const getRoute = (direction: Core.Nodes, parent: Types.Node): Types.Node | undef
     }
     return void 0;
   };
-  return action(direction, parent);
+  return action(direction, member);
 };
 
 /**
@@ -63,16 +63,20 @@ const getRoute = (direction: Core.Nodes, parent: Types.Node): Types.Node | undef
  * @param identity Route identity.
  */
 const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.Node, identity: number): void => {
-  const route = getRoute(Core.Nodes.Right, member);
+  const route = extractRoute(Core.Nodes.Right, member);
   if (!route) {
     project.addError(entry.fragment, Errors.INVALID_MAP_ENTRY);
   } else {
     if (route.value === Parser.Nodes.String) {
       Loose.collision(project, route.fragment.data, route);
     }
+    if (route !== member.right) {
+      route.set(Core.Nodes.Next, member.right);
+      member.set(Core.Nodes.Right, route);
+    }
     Types.assignNode(entry, {
       type: Types.Nodes.MemberRoute,
-      identity: identity,
+      identity,
       route
     });
   }

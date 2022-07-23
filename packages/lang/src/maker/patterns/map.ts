@@ -13,9 +13,22 @@ import { Exception } from '../../core/exception';
 import * as Expression from './expression';
 
 /**
+ * Resolve the route expression according to the given route node.
+ * @param route Route node.
+ * @returns Returns the route expression.
+ */
+const resolveExpression = (route: Types.Node): Types.Node => {
+  const expression = route.next ?? route;
+  if (expression.value === Parser.Nodes.Identifier || expression.value === Parser.Nodes.Arguments) {
+    return expression.right!;
+  }
+  return expression;
+};
+
+/**
  * Resolve all units for the given map entry node.
  * @param node Map entry node.
- * @returns Returns an array containing all the entry units.
+ * @returns Returns an array containing all entry units.
  * @throws Throws an exception when the given node isn't valid.
  */
 const resolveUnits = (node: Types.Node): (string | number)[] => {
@@ -42,39 +55,23 @@ const resolveUnits = (node: Types.Node): (string | number)[] => {
 };
 
 /**
- * Get the route expression according to the given member node.
- * @param member Member node.
- * @returns Returns the route expression.
- */
-const getRouteExpression = (member: Types.Node): Types.Node => {
-  if (member.value === Parser.Nodes.Identifier || member.value === Parser.Nodes.Arguments) {
-    return member.right!;
-  }
-  return member;
-};
-
-/**
- * Resolve the corresponding route for the given map entry member.
+ * Resolve the corresponding route for the given map entry node.
  * @param project Project context.
- * @param directive Directive node.
+ * @param type Directive type.
  * @param entry Map entry node.
- * @param member Map entry member node.
  * @param state Consumption state.
- * @param units Route units.
  * @returns Returns the resolved route.
  */
 const resolveRoute = (
   project: Project.Context,
-  directive: Types.Node,
+  type: Types.Directives,
   entry: Types.Node,
-  member: Types.Node,
-  state: Context.State,
-  units: (string | number)[]
+  state: Context.State
 ): Coder.Route => {
-  const { type } = Nodes.getRecord(directive).data;
   const { route, identity } = entry.data;
   const dynamic = Nodes.isDynamic(entry);
-  const expression = getRouteExpression(member);
+  const expression = resolveExpression(route!.next ?? route!);
+  const units = resolveUnits(route!);
   if (route !== expression) {
     const current = state.dynamic;
     state.dynamic = dynamic;
@@ -104,14 +101,14 @@ export const consume = (
   node: Types.Node,
   state: Context.State
 ): Coder.Pattern | undefined => {
-  let entry = node.right!;
+  const { type } = Nodes.getRecord(state.directive).data;
   const routes = [];
+  let entry = node.right!;
   while (entry) {
     if (!entry.assigned || !entry.data.route) {
       throw new Exception('The MAP entry node must be an assigned node.');
     }
-    const units = resolveUnits(entry.data.route!);
-    const route = resolveRoute(project, state.directive, entry, entry.right!, state, units);
+    const route = resolveRoute(project, type, entry, state);
     routes.push(route);
     entry = entry.next!;
   }
