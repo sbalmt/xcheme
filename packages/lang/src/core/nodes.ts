@@ -1,4 +1,5 @@
 import * as Core from '@xcheme/core';
+import * as Parser from '@xcheme/parser';
 
 import * as Records from './records';
 import * as Types from './types';
@@ -42,6 +43,9 @@ export const hasIdentity = (node: Types.Node): boolean => {
  * @returns Returns the corresponding node identity.
  */
 export const getIdentity = (node: Types.Node): number => {
+  if (node.value === Parser.Nodes.Access) {
+    node = node.lowest(Core.Nodes.Right)!;
+  }
   return node.data.identity ?? getRecord(node).data.identity;
 };
 

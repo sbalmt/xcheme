@@ -40,12 +40,7 @@ const resolveUnits = (node: Types.Node): (string | number)[] => {
     return [Nodes.getIdentity(node)];
   } else if (node.value === Parser.Nodes.And) {
     if (node.data.type === Types.Nodes.ReferenceSequence) {
-      return node.data.sequence!.map((node) => {
-        if (node.value === Parser.Nodes.Access) {
-          return Nodes.getIdentity(node.lowest(Core.Nodes.Right)!);
-        }
-        return Nodes.getIdentity(node);
-      });
+      return node.data.sequence!.map(Nodes.getIdentity);
     }
     const data = node.data.sequence!.map((node) => String.extract(node.fragment.data));
     return data.join('').split('');

@@ -32,7 +32,7 @@ export const resolve = (
       const words = node.data.sequence.map((node) => String.extract(node.fragment.data));
       units = words.join('').split('');
     } else {
-      units = node.data.sequence.map((node) => Nodes.getIdentity(node));
+      units = node.data.sequence.map(Nodes.getIdentity);
     }
     return [project.coder.emitExpectUnitsPattern(units)];
   } else {
