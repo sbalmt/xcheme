@@ -74,7 +74,7 @@
 		"@types/node": "14.x",
 		"@types/vscode": "^1.30.0",
 		"@xcheme/core": "^0.0.10",
-		"@xcheme/lang": "^0.0.11",
+		"@xcheme/lang": "^0.0.12",
 		"@xcheme/lexer": "^0.0.1",
 		"@xcheme/parser": "^0.0.2",
 		"ts-loader": "^9.2.2",
