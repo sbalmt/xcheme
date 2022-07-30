@@ -68,23 +68,25 @@ const buildToken = (
  * Build all tokens for the given node.
  * @param builder Token builder.
  * @param node Node tree.
+ * @param name Context name.
  */
-const buildAllTokens = (builder: VSCode.SemanticTokensBuilder, node: Lang.Types.Node): void => {
-  if (node.value === Parser.Nodes.Identifier || node.value === Parser.Nodes.Reference) {
-    const fragment = node.fragment;
+const buildAllTokens = (builder: VSCode.SemanticTokensBuilder, node: Lang.Types.Node, name: string): void => {
+  const fragment = node.fragment;
+  const location = fragment.location;
+  if (location.name === name && (node.value === Parser.Nodes.Identifier || node.value === Parser.Nodes.Reference)) {
     const record = node.assigned ? node.data.record : node.table.find(fragment.data);
     if (record) {
-      buildToken(builder, fragment.location, record);
+      buildToken(builder, location, record);
     }
   }
   if (node.left) {
-    buildAllTokens(builder, node.left);
+    buildAllTokens(builder, node.left, name);
   }
   if (node.right) {
-    buildAllTokens(builder, node.right);
+    buildAllTokens(builder, node.right, name);
   }
   if (node.next) {
-    buildAllTokens(builder, node.next);
+    buildAllTokens(builder, node.next, name);
   }
 };
 
@@ -117,7 +119,7 @@ export class Provider implements VSCode.DocumentSemanticTokensProvider {
       const builder = new VSCode.SemanticTokensBuilder(Legend);
       const node = last.source.node;
       if (node) {
-        buildAllTokens(builder, node);
+        buildAllTokens(builder, node, last.source.name);
         return builder.build();
       }
     }
