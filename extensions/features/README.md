@@ -6,25 +6,25 @@ This extension provides rich support for XCHEME Lang in VS Code.
 
 Use logical colors for XCHEME syntax.
 
-<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/semantic-highlight.png" alt="XCHEME Semantic Highlight" width="700"/>
+<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/semantic-highlight.png" alt="XCHEME Semantic Highlight" width="600"/>
 
 ### Error Detection
 
 See any syntactic and semantic errors before running the CLI.
 
-<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/error-detection.png" alt="XCHEME Error Detection" width="700"/>
+<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/error-detection.png" alt="XCHEME Error Detection" width="600"/>
 
 ### Auto Completion
 
 Auto complete any reference for local or imported directives.
 
-<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/auto-completion.png" alt="XCHEME Auto Completion" width="700"/>
+<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/auto-completion.png" alt="XCHEME Auto Completion" width="600"/>
 
 ### Easy Importation
 
 See all XCHEME files in the current workspace and auto complete the `import` directive.
 
-<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/easy-importation.png" alt="XCHEME Import Completion" width="700"/>
+<img src="https://github.com/balmanth/xcheme/raw/master/extensions/features/media/readme/easy-importation.png" alt="XCHEME Import Completion" width="600"/>
 
 ## What is XCHEME
 
