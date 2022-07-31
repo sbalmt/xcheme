@@ -4,7 +4,7 @@
 	"description": "Provides rich language support for XCHEME Lang.",
 	"icon": "media/icon.png",
 	"publisher": "balmanth",
-	"version": "0.0.14",
+	"version": "0.0.15",
 	"main": "./dist/extension.js",
 	"engines": {
 		"vscode": "^1.30.0"
@@ -77,10 +77,10 @@
 		"@xcheme/lang": "^0.0.12",
 		"@xcheme/lexer": "^0.0.1",
 		"@xcheme/parser": "^0.0.2",
-		"ts-loader": "^9.2.2",
-		"typescript": "^4.3.2",
+		"ts-loader": "^9.2.5",
+		"typescript": "^4.3.5",
 		"vscode-test": "^1.5.2",
-		"webpack": "^5.38.1",
-		"webpack-cli": "^4.7.0"
+		"webpack": "^5.51.1",
+		"webpack-cli": "^4.8.0"
 	}
 }
