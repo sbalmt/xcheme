@@ -34,7 +34,7 @@ export const enum Nodes {
 /**
  * A node element for the abstract syntax tree (AST) generated in the analysis process.
  */
-export class Node<T extends Types> extends Data<NodeType<T>> {
+export class Node<T extends Types> extends Data<NodeType<T>> implements Iterable<Node<T>> {
   /**
    * Node children.
    */
@@ -170,7 +170,7 @@ export class Node<T extends Types> extends Data<NodeType<T>> {
   /**
    * Iterable generator.
    */
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<Node<T>> {
     let node: Node<T> | undefined = this;
     do {
       yield node;

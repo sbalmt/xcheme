@@ -14,7 +14,7 @@ type RecordMap<T extends Types> = {
 /**
  * A symbol table for storing symbol records generated during the analysis process.
  */
-export default class Table<T extends Types> {
+export default class Table<T extends Types> implements Iterable<Record<T>> {
   /**
    * Map of records.
    */
@@ -122,7 +122,7 @@ export default class Table<T extends Types> {
   /**
    * Iterable generator.
    */
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<Record<T>> {
     for (const name in this.#records) {
       yield this.#records[name];
     }

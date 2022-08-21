@@ -24,7 +24,7 @@ type RecordMap = {
 /**
  * Symbol aggregator class.
  */
-export class Aggregator {
+export class Aggregator implements Iterable<Types.Record> {
   /**
    * Symbol records.
    */
@@ -126,7 +126,7 @@ export class Aggregator {
   /**
    * Iterable generator.
    */
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<Types.Record> {
     for (const name in this.#records) {
       yield this.#records[name];
     }

@@ -88,7 +88,7 @@ export class List<T> implements Iterable<T> {
   /**
    * Iterable generator.
    */
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<T> {
     for (const token of this.#elements) {
       yield token;
     }
@@ -158,7 +158,7 @@ export class ReadOnlyList<T> implements Iterable<T> {
   /**
    * Iterable generator.
    */
-  *[Symbol.iterator]() {
+  *[Symbol.iterator](): Iterator<T> {
     for (const token of this.#list) {
       yield token;
     }
