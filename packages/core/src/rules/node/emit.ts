@@ -1,8 +1,8 @@
 import type { Types } from '../../core/types';
 
 import { Node, NodeDirection } from '../../core/nodes';
+import { Source } from '../../sources';
 
-import Base from '../../source/base';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
@@ -45,12 +45,12 @@ export default class Emit<T extends Types> extends Pattern<T> {
    * @returns Returns true when the source was consumed, otherwise returns false.
    * @throws Throws an error when there's no node to emit.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     source.save();
     const status = this.#target.consume(source);
     if (status) {
       const { table, value } = source.output;
-      const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+      const result = this.#value === Source.Output ? value ?? -1 : this.#value;
       const node = new Node<T>(source.fragment, result, table);
       node.set(this.#output, source.output.node);
       source.output.node = void 0;

@@ -1,5 +1,5 @@
 import type { Types } from '../../core/types';
-import type Base from '../../source/base';
+import type { Source } from '../../sources';
 
 import Pattern from '../pattern';
 import Try from './try';
@@ -27,7 +27,7 @@ export default class Opt<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true anyways.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     this.#target.consume(source);
     return true;
   }

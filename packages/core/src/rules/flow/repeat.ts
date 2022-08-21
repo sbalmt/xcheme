@@ -1,5 +1,5 @@
 import type { Types } from '../../core/types';
-import type Base from '../../source/base';
+import type { Source } from '../../sources';
 
 import Pattern from '../pattern';
 import Expect from './expect';
@@ -34,7 +34,7 @@ export default class Repeat<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     if (this.#target.consume(source)) {
       while (this.#triable.consume(source));
       return true;

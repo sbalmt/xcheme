@@ -1,6 +1,6 @@
 import type { Types } from '../../core/types';
+import type { Source } from '../../sources';
 
-import Base from '../../source/base';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
@@ -27,7 +27,7 @@ export default class Uncase<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     const current = Uncase.#state;
     Uncase.#state = true;
     const result = this.#target.consume(source);

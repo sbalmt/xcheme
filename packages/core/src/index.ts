@@ -5,15 +5,12 @@ export { InternalErrors, ErrorList, ReadOnlyErrorList, Error } from './core/erro
 export { TokenList, ReadOnlyTokenList, Token } from './core/tokens';
 export { NodeDirection, Node } from './core/nodes';
 export { SymbolTable, SymbolRecord } from './core/symbols';
+export { Source, TextSource, TokenSource } from './sources';
 
 export { default as Exception } from './core/exception';
 export { default as Context } from './core/context';
 export { default as Pattern } from './rules/pattern';
 export { default as Route } from './rules/route';
-
-export { default as Source } from './source/base';
-export { default as TextSource } from './source/text';
-export { default as TokenSource } from './source/token';
 
 export { default as UnitRoute } from './rules/unit/route';
 export { default as AnyUnitPattern } from './rules/unit/any';

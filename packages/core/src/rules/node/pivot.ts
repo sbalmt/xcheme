@@ -1,9 +1,9 @@
 import type { Types } from '../../core/types';
 
 import { Node, NodeDirection } from '../../core/nodes';
+import { Source } from '../../sources';
 
 import Exception from '../../core/exception';
-import Base from '../../source/base';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
@@ -68,7 +68,7 @@ export default class Pivot<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     source.save();
     let status = this.#head.consume(source);
     if (status) {
@@ -80,7 +80,7 @@ export default class Pivot<T extends Types> extends Pattern<T> {
       if (!(status = this.#target.consume(source))) {
         output.node = current;
       } else {
-        const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+        const result = this.#value === Source.Output ? value ?? -1 : this.#value;
         const child = new Node<T>(fragment, result, table);
         child.set(this.#output, output.node);
         child.set(this.#current, current);

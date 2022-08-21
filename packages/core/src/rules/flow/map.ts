@@ -1,5 +1,5 @@
 import type { Types } from '../../core/types';
-import type Base from '../../source/base';
+import type { Source } from '../../sources';
 import type Route from '../route';
 
 import Pattern from '../pattern';
@@ -133,7 +133,7 @@ export default class Map<T extends Types> extends Pattern<T> {
    * @param current Current node.
    * @returns Returns the corresponding node or undefined when it wasn't found.
    */
-  #findNode(source: Base<T>, current: Node<T> | undefined): Node<T> | undefined {
+  #findNode(source: Source<T>, current: Node<T> | undefined): Node<T> | undefined {
     source.save();
     while (current && source.length > 0) {
       const unit = Uncase.transform(source.value);
@@ -161,7 +161,7 @@ export default class Map<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns the consumption node or undefined when the given source doesn't match any route.
    */
-  #getLongestConsumptionNode(source: Base<T>): Node<T> | undefined {
+  #getLongestConsumptionNode(source: Source<T>): Node<T> | undefined {
     let current = this.#root;
     let longest;
     while ((current = this.#findNode(source, current))) {
@@ -189,7 +189,7 @@ export default class Map<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     const node = this.#getLongestConsumptionNode(source);
     if (node) {
       if (node.pattern) {

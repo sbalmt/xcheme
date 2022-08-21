@@ -1,8 +1,8 @@
 import type { Types } from '../../core/types';
 
 import { Error } from '../../core/errors';
+import { Source } from '../../sources';
 
-import Base from '../../source/base';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
@@ -36,12 +36,12 @@ export default class Emit<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     source.save();
     const status = this.#target.consume(source);
     if (status) {
       const { value } = source.output;
-      const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+      const result = this.#value === Source.Output ? value ?? -1 : this.#value;
       const error = new Error(source.fragment, result);
       source.emit(error);
     }

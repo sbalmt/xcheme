@@ -2,8 +2,8 @@ import type { Types } from '../../core/types';
 
 import { Error, InternalErrors } from '../../core/errors';
 import { SymbolRecord } from '../../core/symbols';
+import { Source } from '../../sources';
 
-import Base from '../../source/base';
 import Pattern from '../pattern';
 import Expect from '../flow/expect';
 
@@ -44,7 +44,7 @@ export default class Emit<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     source.save();
     let link = source.output.link;
     source.output.link = void 0;
@@ -62,7 +62,7 @@ export default class Emit<T extends Types> extends Pattern<T> {
           const error = new Error(fragment, InternalErrors.DUPLICATE_IDENTIFIER);
           source.emit(error);
         } else {
-          const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+          const result = this.#value === Source.Output ? value ?? -1 : this.#value;
           const record = new SymbolRecord<T>(fragment, result, node, link);
           source.output.link = void 0;
           source.emit(record);

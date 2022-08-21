@@ -1,5 +1,5 @@
 import type { Types } from '../../core/types';
-import type Base from '../../source/base';
+import type { Source } from '../../sources';
 
 import Pattern from '../pattern';
 import Expect from '../flow/expect';
@@ -27,7 +27,7 @@ export default class Scope<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     const link = source.output.link;
     source.expand();
     if (link) {

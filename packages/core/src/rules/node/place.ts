@@ -1,6 +1,6 @@
 import type { Types } from '../../core/types';
 import type { NodeDirection } from '../../core/nodes';
-import type Base from '../../source/base';
+import type { Source } from '../../sources';
 
 import Pattern from '../pattern';
 import Expect from '../flow/expect';
@@ -36,7 +36,7 @@ export default class Place<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     const output = source.output;
     let current = output.node;
     output.node = void 0;

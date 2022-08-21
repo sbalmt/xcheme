@@ -1,6 +1,6 @@
 import type { Types } from '../../core/types';
+import type { Source } from '../../sources';
 
-import Base from '../../source/base';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
@@ -34,7 +34,7 @@ export default class Set<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     if (this.#target.consume(source)) {
       source.output.value = this.#value;
       return true;

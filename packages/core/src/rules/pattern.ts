@@ -1,5 +1,5 @@
 import type { Types } from '../core/types';
-import type Base from '../source/base';
+import type { Source } from '../sources/source';
 
 import Exception from '../core/exception';
 
@@ -12,7 +12,7 @@ export default abstract class Pattern<T extends Types> {
    * @param source Should receive the data source.
    * @returns Should returns true when the data source was consumed, otherwise should return false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     throw new Exception(`Consume method doesn't implemented.`);
   }
 }

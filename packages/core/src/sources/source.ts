@@ -42,7 +42,7 @@ type Output<T extends Types> = {
 /**
  * Base of any data source for the analysis process.
  */
-export default class Base<T extends Types> {
+export class Source<T extends Types> {
   /**
    * Source context.
    */

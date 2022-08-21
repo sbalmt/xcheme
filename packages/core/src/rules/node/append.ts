@@ -1,8 +1,8 @@
 import type { Types } from '../../core/types';
 
 import { Node, NodeDirection } from '../../core/nodes';
+import { Source } from '../../sources';
 
-import Base from '../../source/base';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
@@ -64,7 +64,7 @@ export default class Append<T extends Types> extends Pattern<T> {
    * @param source Data source.
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
-  consume(source: Base<T>): boolean {
+  consume(source: Source<T>): boolean {
     source.save();
     const output = source.output;
     let current = output.node;
@@ -74,7 +74,7 @@ export default class Append<T extends Types> extends Pattern<T> {
       const fragment = source.fragment;
       if ((status = this.#target.consume(source))) {
         const { table, value } = output;
-        const result = this.#value === Base.Output ? value ?? -1 : this.#value;
+        const result = this.#value === Source.Output ? value ?? -1 : this.#value;
         const child = new Node<T>(fragment, result, table);
         child.set(this.#output, output.node);
         if (current) {
