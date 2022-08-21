@@ -41,4 +41,13 @@ export class Token<T extends Types> extends Data<TokenType<T>> {
   get value(): number {
     return this.#value;
   }
+
+  /**
+   * Swap all contents of the given token.
+   * @param token Token instance.
+   */
+  swap(token: Token<T>): void {
+    [this.#fragment, token.#fragment] = [token.#fragment, this.#fragment];
+    [this.#value, token.#value] = [token.#value, this.#value];
+  }
 }

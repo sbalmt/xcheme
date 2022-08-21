@@ -37,4 +37,13 @@ export class Error {
   get value(): number {
     return this.#value;
   }
+
+  /**
+   * Swap all contents of the given error.
+   * @param error Error instance.
+   */
+  swap(error: Error): void {
+    [this.#fragment, error.#fragment] = [error.#fragment, this.#fragment];
+    [this.#value, error.#value] = [error.#value, this.#value];
+  }
 }

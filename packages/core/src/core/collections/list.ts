@@ -100,23 +100,23 @@ export class List<T> implements Iterable<T> {
  */
 export class ReadOnlyList<T> implements Iterable<T> {
   /**
-   * Original element list.
+   * Target element list.
    */
-  #list: List<T>;
+  #target: List<T>;
 
   /**
    * Default constructor.
    * @param list Original element list.
    */
   constructor(list: List<T>) {
-    this.#list = list;
+    this.#target = list;
   }
 
   /**
    * Get the list length.
    */
   get length(): number {
-    return this.#list.length;
+    return this.#target.length;
   }
 
   /**
@@ -125,7 +125,7 @@ export class ReadOnlyList<T> implements Iterable<T> {
    * @returns Return the corresponding element or undefined when the element doesn't exists.
    */
   at(index: number): T | undefined {
-    return this.#list.at(index);
+    return this.#target.at(index);
   }
 
   /**
@@ -134,7 +134,7 @@ export class ReadOnlyList<T> implements Iterable<T> {
    * @returns Returns true when the element exists, false otherwise.
    */
   has(index: number): boolean {
-    return this.#list.has(index);
+    return this.#target.has(index);
   }
 
   /**
@@ -144,7 +144,7 @@ export class ReadOnlyList<T> implements Iterable<T> {
    * @throws Throws an exception when the element for the given index doesn't exists.
    */
   get(index: number): T {
-    return this.#list.get(index);
+    return this.#target.get(index);
   }
 
   /**
@@ -152,14 +152,14 @@ export class ReadOnlyList<T> implements Iterable<T> {
    * @param list Input list.
    */
   swap(list: ReadOnlyList<T>): void {
-    [this.#list, list.#list] = [list.#list, this.#list];
+    [this.#target, list.#target] = [list.#target, this.#target];
   }
 
   /**
    * Iterable generator.
    */
   *[Symbol.iterator](): Iterator<T> {
-    for (const token of this.#list) {
+    for (const token of this.#target) {
       yield token;
     }
   }

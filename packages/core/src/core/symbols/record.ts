@@ -15,11 +15,6 @@ export class SymbolRecord<T extends Types> extends Data<RecordType<T>> {
   #fragment: Fragment;
 
   /**
-   * Record value.
-   */
-  #value: number;
-
-  /**
    * Record node.
    */
   #node: Node<T> | undefined;
@@ -28,6 +23,11 @@ export class SymbolRecord<T extends Types> extends Data<RecordType<T>> {
    * Linked symbol table.
    */
   #table: SymbolTable<T> | undefined;
+
+  /**
+   * Record value.
+   */
+  #value: number;
 
   /**
    * Default constructor.
@@ -82,5 +82,17 @@ export class SymbolRecord<T extends Types> extends Data<RecordType<T>> {
       result.assign(this.data);
     }
     return result;
+  }
+
+  /**
+   * Swap all contents of the given record.
+   * @param record Symbol record instance.
+   */
+  swap(record: SymbolRecord<T>): void {
+    super.swap(record);
+    [this.#fragment, record.#fragment] = [record.#fragment, this.#fragment];
+    [this.#value, record.#value] = [record.#value, this.#value];
+    [this.#node, record.#node] = [record.#node, this.#node];
+    [this.#table, record.#table] = [record.#table, this.#table];
   }
 }

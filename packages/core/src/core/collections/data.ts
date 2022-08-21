@@ -41,7 +41,7 @@ export class Data<T> {
 
   /**
    * Swap all contents of the given data.
-   * @param data Input data.
+   * @param data Data object instance.
    */
   swap(data: Data<T>): void {
     [this.#object, data.#object] = [data.#object, this.#object];

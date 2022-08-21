@@ -120,6 +120,16 @@ export class SymbolTable<T extends Types> implements Iterable<SymbolRecord<T>> {
   }
 
   /**
+   * Swap all contents of the given table.
+   * @param table Symbol table instance.
+   */
+  swap(table: SymbolTable<T>): void {
+    [this.#records, table.#records] = [table.#records, this.#records];
+    [this.#parent, table.#parent] = [table.#parent, this.#parent];
+    [this.#length, table.#length] = [table.#length, this.#length];
+  }
+
+  /**
    * Iterable generator.
    */
   *[Symbol.iterator](): Iterator<SymbolRecord<T>> {

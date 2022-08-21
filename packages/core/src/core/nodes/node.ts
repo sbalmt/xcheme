@@ -149,7 +149,7 @@ export class Node<T extends Types> extends Data<NodeType<T>> implements Iterable
 
   /**
    * Swap all contents of the given node.
-   * @param node Input node.
+   * @param node Node instance.
    */
   swap(node: Node<T>): void {
     super.swap(node);
