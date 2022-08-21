@@ -1,5 +1,5 @@
 /**
- * A range class.
+ * Data location range class.
  */
 export default class Range {
   /**

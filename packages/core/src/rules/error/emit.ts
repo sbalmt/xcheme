@@ -1,7 +1,7 @@
 import type * as Metadata from '../../core/metadata';
+import { Error } from '../../core/error';
 
 import Base from '../../source/base';
-import Error from '../../core/error';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 

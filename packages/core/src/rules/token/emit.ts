@@ -1,7 +1,7 @@
 import type * as Metadata from '../../core/metadata';
+import { Token } from '../../core/token';
 
 import Base from '../../source/base';
-import Token from '../../core/token';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 

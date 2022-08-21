@@ -23,13 +23,13 @@ export const consume = <T extends Core.Metadata.Types>(source: Core.Source<T>): 
  * @returns Returns true when the consumption was successful, false otherwise.
  */
 export const consumeTokens = <T extends Core.Metadata.Types>(
-  tokens: Core.Token<T>[],
+  tokens: Core.TokenList<T>,
   context: Core.Context<T>
 ): boolean => {
   const source = new Core.TokenSource<T>(tokens, context);
   if (!consume(source)) {
-    const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
-    context.addError(fragment, Errors.UNEXPECTED_SYNTAX);
+    const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
+    context.errors.emplace(fragment, Errors.UNEXPECTED_SYNTAX);
     return false;
   }
   return true;

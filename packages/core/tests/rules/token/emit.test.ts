@@ -17,8 +17,7 @@ test('Consume success', () => {
   // Check the token list.
   expect(context.tokens).toHaveLength(1);
 
-  const token = context.tokens[0];
-  expect(token).toBeDefined();
+  const token = context.tokens.get(0);
   expect(token.value).toBe(0xabc);
 });
 

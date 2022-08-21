@@ -1,7 +1,7 @@
 import Range from './range';
 
 /**
- * A location class.
+ * Data location class.
  */
 export default class Location {
   /**

@@ -61,9 +61,9 @@ export const getMessage = (error: Core.Error): string => {
 
 /**
  * Print all the given errors.
- * @param errors Error list.
+ * @param errors List of errors.
  */
-export const print = (errors: Core.Error[]): void => {
+export const print = (errors: Core.ErrorList): void => {
   Console.printLine('Errors:');
   for (const error of errors) {
     Console.printLine(`  ${error.fragment.location.name}: ${getMessage(error)}`);

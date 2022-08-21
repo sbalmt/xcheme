@@ -15,6 +15,6 @@ import { Errors } from '../../../core/errors';
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   Argument.consume(project, node, state);
   if (Nodes.isDynamic(node)) {
-    project.addError(node.fragment, Errors.INVALID_AUTO_IDENTITY);
+    project.errors.emplace(node.fragment, Errors.INVALID_AUTO_IDENTITY);
   }
 };

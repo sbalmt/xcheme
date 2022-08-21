@@ -1,11 +1,13 @@
-import type Fragment from './fragment';
+import type Fragment from './data/fragment';
 
 import * as Metadata from './metadata';
 
+import { List, ReadOnlyList } from './collections/list';
+
 /**
- * A token product to compose the token list generated in the analysis process.
+ * Token element class.
  */
-export default class Token<T extends Metadata.Types> extends Metadata.Container<Metadata.Token<T>> {
+export class Token<T extends Metadata.Types> extends Metadata.Container<Metadata.Token<T>> {
   /**
    * Token fragment.
    */
@@ -41,3 +43,25 @@ export default class Token<T extends Metadata.Types> extends Metadata.Container<
     return this.#value;
   }
 }
+
+/**
+ * A token element for the token list generated in the analysis process.
+ */
+export class TokenList<T extends Metadata.Types> extends List<Token<T>> {
+  /**
+   * Construct and add a new token for the given fragment and value.
+   * @param fragment Token fragment.
+   * @param value Token value.
+   * @returns Returns the new token.
+   */
+  emplace(fragment: Fragment, value: number): Token<T> {
+    const token = new Token(fragment, value);
+    this.insert(token);
+    return token;
+  }
+}
+
+/**
+ * Read-only token list class.
+ */
+export class ReadOnlyTokenList<T extends Metadata.Types> extends ReadOnlyList<Token<T>> {}

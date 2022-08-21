@@ -1,7 +1,7 @@
 import type Location from './location';
 
 /**
- * A data fragment with its precise location.
+ * Data fragment with its precise location.
  */
 export default class Fragment {
   /**
@@ -10,7 +10,7 @@ export default class Fragment {
   #source: string;
 
   /**
-   * Beginning of the fragment offset.
+   * Begin of the fragment offset.
    */
   #begin: number;
 
@@ -27,8 +27,8 @@ export default class Fragment {
   /**
    * Default constructor.
    * @param source Fragment source.
-   * @param offset Fragment offset.
-   * @param length Fragment length.
+   * @param begin Fragment begin.
+   * @param end Fragment end.
    * @param location Fragment location.
    */
   constructor(source: string, begin: number, end: number, location: Location) {
@@ -53,7 +53,7 @@ export default class Fragment {
   }
 
   /**
-   * Get the beginning of the fragment offset.
+   * Get the begin of the fragment offset.
    */
   get begin(): number {
     return this.#begin;
@@ -74,7 +74,7 @@ export default class Fragment {
   }
 
   /**
-   * Get the fragment location in terms of lines and columns.
+   * Get the fragment location.
    */
   get location(): Location {
     return this.#location;

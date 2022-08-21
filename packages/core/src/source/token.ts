@@ -1,12 +1,12 @@
 import type * as Metadata from '../core/metadata';
 import type Context from '../core/context';
 
-import Exception from '../core/exception';
+import { TokenList } from '../core/token';
 
-import Token from '../core/token';
-import Fragment from '../core/fragment';
-import Location from '../core/location';
-import Range from '../core/range';
+import Exception from '../core/exception';
+import Fragment from '../core/data/fragment';
+import Location from '../core/data/location';
+import Range from '../core/data/range';
 import Base from './base';
 
 /**
@@ -24,9 +24,9 @@ type State = {
  */
 export default class TokenSource<T extends Metadata.Types> extends Base<T> {
   /**
-   * Source data.
+   * Source tokens.
    */
-  #data: Token<T>[];
+  #tokens: TokenList<T>;
 
   /**
    * Source states.
@@ -45,12 +45,12 @@ export default class TokenSource<T extends Metadata.Types> extends Base<T> {
 
   /**
    * Default constructor.
-   * @param data Source data.
+   * @param tokens Source tokens.
    * @param context Source context.
    */
-  constructor(data: Token<T>[], context: Context<T>) {
+  constructor(tokens: TokenList<T>, context: Context<T>) {
     super(context);
-    this.#data = data;
+    this.#tokens = tokens;
   }
 
   /**
@@ -61,10 +61,10 @@ export default class TokenSource<T extends Metadata.Types> extends Base<T> {
   }
 
   /**
-   * Get the current source length.
+   * Get the available source length.
    */
   get length(): number {
-    return this.#data.length - this.offset;
+    return this.#tokens.length - this.offset;
   }
 
   /**
@@ -72,11 +72,11 @@ export default class TokenSource<T extends Metadata.Types> extends Base<T> {
    * @throws Throws an error when the source is empty.
    */
   get value(): string | number {
-    const value = this.#data[this.offset];
-    if (!value) {
-      throw new Exception(`There's no value to get.`);
+    const token = this.#tokens.at(this.offset);
+    if (!token) {
+      throw new Exception(`There's no token to get.`);
     }
-    return value.value;
+    return token.value;
   }
 
   /**
@@ -86,16 +86,16 @@ export default class TokenSource<T extends Metadata.Types> extends Base<T> {
     if (this.#states.length > 0) {
       const state = this.#states[this.#states.length - 1];
       if (this.offset > state.offset) {
-        const first = this.#data[state.offset].fragment;
-        const last = this.#data[Math.max(0, this.offset - 1)].fragment;
+        const first = this.#tokens.at(state.offset)!.fragment;
+        const last = this.#tokens.at(this.offset - 1)!.fragment;
         const line = new Range(first.location.line.begin, last.location.line.end);
         const column = new Range(first.location.column.begin, last.location.column.end);
         const location = new Location(first.location.name, line, column);
         return new Fragment(first.source, first.begin, last.end, location);
       }
     }
-    const offset = Math.min(this.offset, this.#data.length - 1);
-    return this.#data[offset].fragment;
+    const offset = Math.min(this.offset, this.#tokens.length - 1);
+    return this.#tokens.get(offset).fragment;
   }
 
   /**
@@ -106,7 +106,7 @@ export default class TokenSource<T extends Metadata.Types> extends Base<T> {
   }
 
   /**
-   * Get the longest state.
+   * Get the current longest state.
    */
   get longestState(): State {
     return this.#longest;
@@ -140,9 +140,12 @@ export default class TokenSource<T extends Metadata.Types> extends Base<T> {
    * Move to the next source state.
    */
   next(): void {
+    if (!this.#tokens.has(this.#current.offset)) {
+      throw new Exception(`Token at index ${this.#current.offset} not found.`);
+    }
     this.#current.offset++;
     if (this.#current.offset > this.#longest.offset) {
-      this.#longest = { ...this.#current };
+      Object.assign(this.#longest, this.#current);
     }
   }
 }

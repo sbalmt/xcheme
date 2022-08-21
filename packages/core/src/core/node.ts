@@ -1,4 +1,4 @@
-import type Fragment from './fragment';
+import type Fragment from './data/fragment';
 import type Table from './table';
 
 import * as Metadata from './metadata';
@@ -31,9 +31,9 @@ export const enum Nodes {
 }
 
 /**
- * A node product to compose the AST generated in the analysis process.
+ * A node element for the abstract syntax tree (AST) generated in the analysis process.
  */
-export default class Node<T extends Metadata.Types> extends Metadata.Container<Metadata.Node<T>> {
+export class Node<T extends Metadata.Types> extends Metadata.Container<Metadata.Node<T>> {
   /**
    * Node children.
    */
@@ -82,7 +82,7 @@ export default class Node<T extends Metadata.Types> extends Metadata.Container<M
   }
 
   /**
-   * Get the symbol table associated to the node.
+   * Get the symbol table for the node.
    */
   get table(): Table<T> {
     return this.#table;
@@ -103,14 +103,14 @@ export default class Node<T extends Metadata.Types> extends Metadata.Container<M
   }
 
   /**
-   * Get the child node on the next.
+   * Get the next child node.
    */
   get next(): Node<T> | undefined {
     return this.#children[Nodes.Next];
   }
 
   /**
-   * Swap all the node properties by all properties in the given node.
+   * Swap all node properties in the given node.
    * @param node Input node.
    */
   swap(node: Node<T>): void {
@@ -123,7 +123,7 @@ export default class Node<T extends Metadata.Types> extends Metadata.Container<M
 
   /**
    * Get a shallow copy of the node.
-   * @returns Returns the generated node.
+   * @returns Returns the node copy.
    */
   clone(): Node<T> {
     const result = new Node(this.#fragment, this.#value, this.#table);
@@ -135,16 +135,16 @@ export default class Node<T extends Metadata.Types> extends Metadata.Container<M
   }
 
   /**
-   * Get a child node in the specified direction.
+   * Get the corresponding child node for the given direction.
    * @param child Child node direction.
-   * @returns Return the corresponding child node.
+   * @returns Return the corresponding child node or undefined when the child isn't set.
    */
   get(child: Nodes): Node<T> | undefined {
     return this.#children[child];
   }
 
   /**
-   * Set the specified child node in the given direction.
+   * Set the given child node for the specified direction.
    * @param child Child node direction.
    * @param node New child node.
    */
@@ -153,9 +153,9 @@ export default class Node<T extends Metadata.Types> extends Metadata.Container<M
   }
 
   /**
-   * Get the lowest child node in the given direction.
+   * Get the lowest child node for the given direction.
    * @param child Child node direction.
-   * @returns Returns the corresponding child node.
+   * @returns Returns the corresponding child node or undefined when the child isn't set.
    */
   lowest(child: Nodes): Node<T> | undefined {
     let current: Node<T> | undefined = this;

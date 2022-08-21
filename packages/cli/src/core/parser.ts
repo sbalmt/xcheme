@@ -16,7 +16,7 @@ import * as Nodes from './nodes';
  */
 export const consume = (
   parser: Lang.Types.Pattern,
-  tokens: Lang.Types.Token[],
+  tokens: Lang.Types.TokenList,
   context: Lang.Types.Context,
   symbols: boolean,
   nodes: boolean
@@ -24,8 +24,8 @@ export const consume = (
   const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
   Console.printLine('Parsing...');
   if (!parser.consume(source)) {
-    const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
-    context.addError(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
+    const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
+    context.errors.emplace(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
   } else {
     Console.clearLine();
   }

@@ -41,12 +41,12 @@ const assign = (project: Project.Context, node: Types.Node, record: Types.Record
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (project.symbols.has(identifier)) {
-    project.addError(node.fragment, Errors.DUPLICATE_IDENTIFIER);
+    project.errors.emplace(node.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
     const record = node.table.get(identifier)!;
     assign(project, node, record, state);
     if (!Records.isAlias(record) && Records.isEmpty(record)) {
-      project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
+      project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTITY);
     } else {
       project.symbols.add(record);
       if (!record.data.template) {

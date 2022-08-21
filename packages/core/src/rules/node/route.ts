@@ -1,8 +1,8 @@
 import type * as Metadata from '../../core/metadata';
+import { Nodes } from '../../core/node';
 
 import Base from '../route';
 import Pattern from '../pattern';
-import { Nodes } from '../../core/node';
 import Emit from './emit';
 
 /**

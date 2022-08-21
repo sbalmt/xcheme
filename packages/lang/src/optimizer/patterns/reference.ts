@@ -46,7 +46,7 @@ const upgrade = (project: Project.Context, node: Types.Node, record: Types.Recor
   const identifier = node.fragment.data;
   const action = () => {
     if (Records.isDynamic(record)) {
-      project.addError(node.fragment, Errors.INVALID_MAP_REFERENCE);
+      project.errors.emplace(node.fragment, Errors.INVALID_MAP_REFERENCE);
     } else {
       Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
       Types.assignNode(node, { type: Types.Nodes.Reference, record });
@@ -71,13 +71,13 @@ const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.R
   if (record.value === Parser.Symbols.AliasToken) {
     template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
-    project.addError(node.fragment, Errors.INVALID_TOKEN_REFERENCE);
+    project.errors.emplace(node.fragment, Errors.INVALID_TOKEN_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
-    project.addError(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
+    project.errors.emplace(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.Node) {
-    project.addError(node.fragment, Errors.INVALID_NODE_REFERENCE);
+    project.errors.emplace(node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else {
-    project.addError(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
+    project.errors.emplace(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -96,11 +96,11 @@ const resolveToken = (project: Project.Context, node: Types.Node, record: Types.
   } else if (record.value === Parser.Symbols.AliasToken) {
     template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Node) {
-    project.addError(node.fragment, Errors.INVALID_NODE_REFERENCE);
+    project.errors.emplace(node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
-    project.addError(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
+    project.errors.emplace(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
   } else {
-    project.addError(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
+    project.errors.emplace(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -121,9 +121,9 @@ const resolveNode = (project: Project.Context, node: Types.Node, record: Types.R
   } else if (record.value === Parser.Symbols.Token) {
     upgrade(project, node, record, state);
   } else if (record.value === Parser.Symbols.AliasToken) {
-    project.addError(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
+    project.errors.emplace(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
   } else {
-    project.addError(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
+    project.errors.emplace(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -138,7 +138,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   const identifier = node.fragment.data;
   const record = node.table.find(identifier);
   if (!record) {
-    project.addError(node.fragment, Errors.UNDEFINED_IDENTIFIER);
+    project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
     switch (state.type) {
       case Types.Directives.Skip:

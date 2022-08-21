@@ -1,12 +1,13 @@
 import type * as Metadata from './metadata';
-import type Token from './token';
 
-import Error from './error';
-import Fragment from './fragment';
-import Location from './location';
-import Range from './range';
+import { ErrorList } from './error';
+import { TokenList } from './token';
+import { Node } from './node';
+
+import Fragment from './data/fragment';
+import Location from './data/location';
+import Range from './data/range';
 import Table from './table';
-import Node from './node';
 
 /**
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
@@ -16,12 +17,12 @@ export default class Context<T extends Metadata.Types> {
   /**
    * Context errors.
    */
-  #errors: Error[] = [];
+  #errors = new ErrorList();
 
   /**
    * Context tokens.
    */
-  #tokens: Token<T>[] = [];
+  #tokens = new TokenList<T>();
 
   /**
    * Context symbol table.
@@ -53,14 +54,14 @@ export default class Context<T extends Metadata.Types> {
   /**
    * Get the error list.
    */
-  get errors(): Error[] {
+  get errors(): ErrorList {
     return this.#errors;
   }
 
   /**
    * Get the token list.
    */
-  get tokens(): Token<T>[] {
+  get tokens(): TokenList<T> {
     return this.#tokens;
   }
 
@@ -83,14 +84,5 @@ export default class Context<T extends Metadata.Types> {
    */
   get name(): string {
     return this.#name;
-  }
-
-  /**
-   * Add a new error in the context.
-   * @param fragment Error fragment.
-   * @param value Error value.
-   */
-  addError(fragment: Fragment, value: number): void {
-    this.#errors.push(new Error(fragment, value));
   }
 }

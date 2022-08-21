@@ -17,8 +17,7 @@ test('Consume success', () => {
   // Check the error list.
   expect(context.errors).toHaveLength(1);
 
-  const error = context.errors[0];
-  expect(error).toBeDefined();
+  const error = context.errors.get(0);
   expect(error.value).toBe(0xabc);
 });
 

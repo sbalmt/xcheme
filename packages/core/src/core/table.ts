@@ -1,8 +1,7 @@
 import type * as Metadata from './metadata';
 
+import Fragment from './data/fragment';
 import Exception from './exception';
-
-import Fragment from './fragment';
 import Record from './record';
 
 /**

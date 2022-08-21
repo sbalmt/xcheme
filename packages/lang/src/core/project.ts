@@ -7,8 +7,6 @@ import * as Counter from './counter';
 import * as Symbols from './symbols';
 import * as Types from './types';
 
-import { Errors } from './errors';
-
 /**
  * Project options.
  */
@@ -69,7 +67,7 @@ export class Context {
   /**
    * Project errors.
    */
-  #errors: Core.Error[] = [];
+  #errors = new Core.ErrorList();
 
   /**
    * Get an array of records that corresponds to the specified record type.
@@ -210,7 +208,7 @@ export class Context {
   /**
    * Get the project errors.
    */
-  get errors(): Core.Error[] {
+  get errors(): Core.ErrorList {
     return this.#errors;
   }
 
@@ -243,14 +241,5 @@ export class Context {
       this.#getReferences(references),
       this.#getPatterns(nodes, Types.Directives.Node)
     );
-  }
-
-  /**
-   * Add a new error in the project.
-   * @param fragment Error fragment.
-   * @param value Error value.
-   */
-  addError(fragment: Core.Fragment, value: Errors): void {
-    this.#errors.push(new Core.Error(fragment, value));
   }
 }

@@ -25,7 +25,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
       Reference.consume(project, node, state);
       break;
     case Parser.Nodes.Identity:
-      project.addError(node.fragment, Errors.UNSUPPORTED_ARGUMENT);
+      project.errors.emplace(node.fragment, Errors.UNSUPPORTED_ARGUMENT);
       break;
     case Parser.Nodes.String:
       String.consume(project, node, state);

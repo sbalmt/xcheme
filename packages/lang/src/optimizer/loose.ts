@@ -39,7 +39,7 @@ const emit = (project: Project.Context, node: Types.Node, state: Context.State):
  */
 export const collision = (project: Project.Context, identifier: string, node: Types.Node): boolean => {
   if (project.symbols.has(identifier)) {
-    project.addError(node.fragment, Errors.TOKEN_COLLISION);
+    project.errors.emplace(node.fragment, Errors.TOKEN_COLLISION);
     return true;
   }
   return false;
@@ -62,7 +62,7 @@ export const resolve = (
   const record = project.symbols.get(identifier);
   if (record) {
     if (record.data.origin === Types.Origins.User) {
-      project.addError(node.fragment, Errors.TOKEN_COLLISION);
+      project.errors.emplace(node.fragment, Errors.TOKEN_COLLISION);
     }
     return record;
   }

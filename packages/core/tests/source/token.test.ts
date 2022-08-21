@@ -1,12 +1,13 @@
-import { Exception, Context, Fragment, Location, Range, TokenSource, Token, Node, Record } from '../../src/index';
+import { Exception, Context, Fragment, Location, Range } from '../../src/index';
+import { TokenSource, TokenList, Token, Node, Record } from '../../src/index';
 
 const text = 'abc';
 
-const tokens = [
+const tokens = new TokenList([
   new Token(new Fragment(text, 0, 1, new Location('', new Range(0, 0), new Range(0, 1))), 0x1a),
   new Token(new Fragment(text, 1, 2, new Location('', new Range(0, 1), new Range(0, 1))), 0x2b),
   new Token(new Fragment(text, 2, 3, new Location('', new Range(1, 1), new Range(1, 2))), 0x3c)
-];
+]);
 
 test('Default source state', () => {
   const context = new Context('test');
@@ -100,7 +101,7 @@ test('Next source state', () => {
 
   expect(source.offset).toBe(3);
   expect(source.length).toBe(0);
-  expect(() => source.value).toThrow(new Exception("There's no value to get."));
+  expect(() => source.value).toThrow(new Exception("There's no token to get."));
 
   fragment = source.fragment;
   expect(fragment.data).toBe('c');
@@ -239,10 +240,9 @@ test('Emit token', () => {
   // Test token emission.
   source.emit(new Token(source.fragment, 123));
   expect(context.tokens).toHaveLength(1);
-  expect(context.tokens[0]).toBeDefined();
 
   // Test resulting token.
-  const token = context.tokens[0];
+  const token = context.tokens.get(0);
   expect(token.value).toBe(123);
 
   // Test resulting token fragment.

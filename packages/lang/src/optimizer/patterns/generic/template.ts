@@ -52,7 +52,7 @@ const getArguments = (project: Project.Context, node: Types.Node, parameters: st
       const parameter = parameters[index++];
       const next = current.next;
       if (!parameter) {
-        project.addError(current.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
+        project.errors.emplace(current.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
       } else {
         switch (node.value) {
           case Parser.Nodes.Reference:
@@ -176,7 +176,7 @@ export const consume = (
 ): Types.Node => {
   const args = getArguments(project, node, getParameters(record.link!));
   if (!args) {
-    project.addError(node.fragment, Errors.ARGUMENTS_MISSING);
+    project.errors.emplace(node.fragment, Errors.ARGUMENTS_MISSING);
   } else {
     const location = node.fragment.location;
     const identifier = `@${Nodes.getPath([node, ...Object.values(args)], ':')}`;

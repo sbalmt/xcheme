@@ -1,16 +1,18 @@
-import type Fragment from './fragment';
+import type Fragment from './data/fragment';
+
+import { List, ReadOnlyList } from './collections/list';
 
 /**
- * All default errors.
+ * Default errors.
  */
 export const enum Errors {
   DUPLICATE_IDENTIFIER = 0x1000
 }
 
 /**
- * An error product to compose the error list generated in the analysis process.
+ * An error element for the error list generated in the analysis process.
  */
-export default class Error {
+export class Error {
   /**
    * Error fragment.
    */
@@ -45,3 +47,25 @@ export default class Error {
     return this.#value;
   }
 }
+
+/**
+ * Error list class.
+ */
+export class ErrorList extends List<Error> {
+  /**
+   * Construct and add a new error for the given fragment and value.
+   * @param fragment Error fragment.
+   * @param value Error value.
+   * @returns Returns the new error.
+   */
+  emplace(fragment: Fragment, value: number): Error {
+    const error = new Error(fragment, value);
+    this.insert(error);
+    return error;
+  }
+}
+
+/**
+ * Read-only error list class.
+ */
+export class ReadOnlyErrorList extends ReadOnlyList<Error> {}

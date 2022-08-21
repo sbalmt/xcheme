@@ -91,7 +91,7 @@ const integrate = (project: Project.Context, table: Types.Table, source: Symbols
     if (exported) {
       const current = table.find(identifier);
       if (current) {
-        project.addError(current.fragment, Errors.DUPLICATE_IDENTIFIER);
+        project.errors.emplace(current.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
         const integration = new Core.Record(record.fragment, record.value, record.node, record.link);
         integration.assign({ ...record.data, exported: false, imported: true });
@@ -138,8 +138,8 @@ const process = (
   const context = new Core.Context<Types.Metadata>(path);
   importingFiles.add(project.coder, path);
   if (!compile(external, context, content)) {
-    project.addError(location.fragment, Errors.IMPORT_FAILURE);
-    project.errors.push(...external.errors);
+    project.errors.emplace(location.fragment, Errors.IMPORT_FAILURE);
+    project.errors.insert(...external.errors);
   } else {
     const exported = getExportedRecords(external.symbols);
     const unreferenced = getUnreferencedRecords(exported);
@@ -159,11 +159,11 @@ const process = (
  */
 const resolve = (project: Project.Context, location: Types.Node, table: Types.Table, path: string): void => {
   if (importingFiles.has(project.coder, path)) {
-    project.addError(location.fragment, Errors.IMPORT_CYCLIC);
+    project.errors.emplace(location.fragment, Errors.IMPORT_CYCLIC);
   } else {
     const content = project.options.loadFileHook!(path);
     if (!content) {
-      project.addError(location.fragment, Errors.IMPORT_NOT_FOUND);
+      project.errors.emplace(location.fragment, Errors.IMPORT_NOT_FOUND);
     } else {
       process(project, location, table, path, content);
     }
@@ -178,7 +178,7 @@ const resolve = (project: Project.Context, location: Types.Node, table: Types.Ta
 export const consume = (project: Project.Context, node: Types.Node): void => {
   const location = node.right!;
   if (!project.options.loadFileHook) {
-    project.addError(location.fragment, Errors.IMPORT_DISABLED);
+    project.errors.emplace(location.fragment, Errors.IMPORT_DISABLED);
   } else {
     const filePath = `${String.extract(location.fragment.data)}.xcm`;
     const fullPath = Path.join(project.options.directory ?? '', filePath);

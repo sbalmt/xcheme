@@ -1,12 +1,12 @@
 import type * as Metadata from '../core/metadata';
+import type Fragment from '../core/data/fragment';
 import type Context from '../core/context';
-import type Fragment from '../core/fragment';
+
+import { Error } from '../core/error';
+import { Token } from '../core/token';
+import { Node, Nodes } from '../core/node';
 
 import Exception from '../core/exception';
-
-import Error from '../core/error';
-import Token from '../core/token';
-import Node, { Nodes } from '../core/node';
 import Record from '../core/record';
 import Table from '../core/table';
 
@@ -156,9 +156,9 @@ export default class Base<T extends Metadata.Types> {
    */
   emit(product: Error | Token<T> | Node<T> | Record<T>): void {
     if (product instanceof Error) {
-      this.#context.errors.push(product);
+      this.#context.errors.insert(product);
     } else if (product instanceof Token) {
-      this.#context.tokens.push(product);
+      this.#context.tokens.insert(product);
     } else if (product instanceof Node) {
       const root = this.#context.node.lowest(Nodes.Next) ?? this.#context.node;
       root.set(Nodes.Next, product);

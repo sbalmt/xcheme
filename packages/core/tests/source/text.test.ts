@@ -92,7 +92,7 @@ test('Next source state', () => {
 
   expect(source.offset).toBe(3);
   expect(source.length).toBe(0);
-  expect(() => source.value).toThrow(new Exception("There's no value to get."));
+  expect(() => source.value).toThrow(new Exception("There's no character to get."));
 
   fragment = source.fragment;
   expect(fragment.data).toBe('');
@@ -231,10 +231,9 @@ test('Emit token', () => {
   // Test token emission.
   source.emit(new Token(source.fragment, 123));
   expect(context.tokens).toHaveLength(1);
-  expect(context.tokens[0]).toBeDefined();
 
   // Test resulting token.
-  const token = context.tokens[0];
+  const token = context.tokens.get(0);
   expect(token.value).toBe(123);
 
   // Test resulting token fragment.

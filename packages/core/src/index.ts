@@ -2,15 +2,15 @@ export * as Metadata from './core/metadata';
 
 export { default as Exception } from './core/exception';
 
-export { default as Context } from './core/context';
-export { default as Error, Errors } from './core/error';
-export { default as Node, Nodes } from './core/node';
-export { default as Token } from './core/token';
+export { default as Fragment } from './core/data/fragment';
+export { default as Location } from './core/data/location';
+export { default as Range } from './core/data/range';
+export { Errors, Error, ErrorList, ReadOnlyErrorList } from './core/error';
+export { Token, TokenList, ReadOnlyTokenList } from './core/token';
+export { Nodes, Node } from './core/node';
 export { default as Table } from './core/table';
 export { default as Record } from './core/record';
-export { default as Fragment } from './core/fragment';
-export { default as Location } from './core/location';
-export { default as Range } from './core/range';
+export { default as Context } from './core/context';
 export { default as Pattern } from './rules/pattern';
 export { default as Route } from './rules/route';
 

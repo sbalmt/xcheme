@@ -3,9 +3,9 @@ import type Context from '../core/context';
 
 import Exception from '../core/exception';
 
-import Fragment from '../core/fragment';
-import Location from '../core/location';
-import Range from '../core/range';
+import Fragment from '../core/data/fragment';
+import Location from '../core/data/location';
+import Range from '../core/data/range';
 import Base from './base';
 
 /**
@@ -31,11 +31,11 @@ type State = {
 /**
  * Data source for processing texts during the analysis process.
  */
-export default class Text<T extends Metadata.Types> extends Base<T> {
+export default class TextSource<T extends Metadata.Types> extends Base<T> {
   /**
-   * Source data.
+   * Source text.
    */
-  #data: string;
+  #text: string;
 
   /**
    * Source states.
@@ -54,12 +54,12 @@ export default class Text<T extends Metadata.Types> extends Base<T> {
 
   /**
    * Default constructor.
-   * @param data Source data.
+   * @param text Source text.
    * @param context Source context.
    */
-  constructor(data: string, context: Context<T>) {
+  constructor(text: string, context: Context<T>) {
     super(context);
-    this.#data = data;
+    this.#text = text;
   }
 
   /**
@@ -73,7 +73,7 @@ export default class Text<T extends Metadata.Types> extends Base<T> {
    * Get the available source length.
    */
   get length(): number {
-    return this.#data.length - this.offset;
+    return this.#text.length - this.offset;
   }
 
   /**
@@ -81,9 +81,9 @@ export default class Text<T extends Metadata.Types> extends Base<T> {
    * @throws Throws an error when the source is empty.
    */
   get value(): string {
-    const value = this.#data[this.offset];
+    const value = this.#text[this.offset];
     if (!value) {
-      throw new Exception(`There's no value to get.`);
+      throw new Exception(`There's no character to get.`);
     }
     return value;
   }
@@ -99,14 +99,14 @@ export default class Text<T extends Metadata.Types> extends Base<T> {
         const line = new Range(state.line, this.#current.line);
         const column = new Range(state.column, this.#current.column);
         const location = new Location(this.name, line, column);
-        return new Fragment(this.#data, state.offset, this.offset, location);
+        return new Fragment(this.#text, state.offset, this.offset, location);
       }
     }
     const line = new Range(this.#current.line, this.#current.line);
     const column = new Range(this.#current.column, this.#current.column);
     const location = new Location(this.name, line, column);
     const length = this.offset + (this.length > 0 ? 1 : 0);
-    return new Fragment(this.#data, this.offset, length, location);
+    return new Fragment(this.#text, this.offset, length, location);
   }
 
   /**
@@ -159,7 +159,7 @@ export default class Text<T extends Metadata.Types> extends Base<T> {
     }
     this.#current.offset++;
     if (this.#current.offset > this.#longest.offset) {
-      this.#longest = { ...this.#current };
+      Object.assign(this.#longest, this.#current);
     }
   }
 }

@@ -1,6 +1,6 @@
 import type * as Metadata from '../../core/metadata';
-import type Base from '../../source/base';
 import type { Nodes } from '../../core/node';
+import type Base from '../../source/base';
 
 import Pattern from '../pattern';
 import Expect from '../flow/expect';

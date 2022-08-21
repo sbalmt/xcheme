@@ -18,8 +18,8 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   Argument.consume(project, node, state);
   if (Records.isEmpty(record) && Nodes.isEmpty(node)) {
     if (record.data.type !== Types.Directives.Skip) {
-      project.addError(record.fragment, Errors.UNDEFINED_IDENTITY);
+      project.errors.emplace(record.fragment, Errors.UNDEFINED_IDENTITY);
     }
-    project.addError(node.fragment, Errors.UNDEFINED_IDENTITY);
+    project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTITY);
   }
 };

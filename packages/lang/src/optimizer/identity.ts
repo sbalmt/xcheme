@@ -41,13 +41,13 @@ export const consume = (
     const identity = node.left;
     if (identity) {
       if (identity.next) {
-        project.addError(identity.next.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
+        project.errors.emplace(identity.next.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
       }
       if (identity.value === Parser.Nodes.Identity) {
         return resolve(identity);
       }
       if (!template) {
-        project.addError(identity.fragment, Errors.UNEXPECTED_ARGUMENT);
+        project.errors.emplace(identity.fragment, Errors.UNEXPECTED_ARGUMENT);
       }
     }
   }

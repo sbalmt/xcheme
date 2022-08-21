@@ -17,7 +17,7 @@ export const consume = (project: Project.Context, node: Types.Node): boolean => 
     const identifier = current.fragment.data;
     const record = node.table.find(identifier);
     if (!record) {
-      project.addError(current.fragment, Errors.UNDEFINED_IDENTIFIER);
+      project.errors.emplace(current.fragment, Errors.UNDEFINED_IDENTIFIER);
     } else {
       record.data.exported = true;
     }

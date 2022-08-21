@@ -24,7 +24,7 @@ export const loadFileHook = (file: string): string | undefined => {
  * Print all errors in the given list.
  * @param errors Error list.
  */
-const printErrors = (errors: Core.Error[]): void => {
+const printErrors = (errors: Core.ErrorList): void => {
   for (const error of errors) {
     const fragment = error.fragment;
     const location = fragment.location;
@@ -85,7 +85,7 @@ export const testLexer = (project: Lang.Project.Context, context: Lang.Types.Con
   // Parse the given input text.
   const status = lexer.consume(source);
   if (!status) {
-    context.addError(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
+    context.errors.emplace(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
     printErrors(context.errors);
   }
 
@@ -103,7 +103,7 @@ export const testLexer = (project: Lang.Project.Context, context: Lang.Types.Con
 export const testParser = (
   project: Lang.Project.Context,
   context: Lang.Types.Context,
-  tokens: Lang.Types.Token[]
+  tokens: Lang.Types.TokenList
 ): void => {
   const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
   const parser = project.parser as Lang.Types.Pattern;
@@ -111,8 +111,8 @@ export const testParser = (
   // Parse the given input tokens.
   const status = parser.consume(source);
   if (!status) {
-    const fragment = tokens[source.longestState.offset]?.fragment ?? source.fragment;
-    context.addError(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
+    const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
+    context.errors.emplace(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
     printErrors(context.errors);
   }
 

@@ -5,9 +5,9 @@ import * as Fragment from './fragment';
 
 /**
  * Print a list for the given tokens.
- * @param tokens Input tokens.
+ * @param tokens List of tokens.
  */
-export const print = (tokens: Lang.Types.Token[]): void => {
+export const print = (tokens: Lang.Types.TokenList): void => {
   Console.printLine('Tokens:\n');
   Console.printLine('          Code Fragment');
   for (const token of tokens) {

@@ -1,10 +1,10 @@
 import type * as Metadata from '../../core/metadata';
+import { Error, Errors } from '../../core/error';
 
 import Base from '../../source/base';
 import Record from '../../core/record';
 import Pattern from '../pattern';
 import Expect from '../flow/expect';
-import Error, { Errors } from '../../core/error';
 
 /**
  * Consume all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.

@@ -97,7 +97,7 @@ test('Consume all expected tokens', () => {
   const length = tokens.length;
   for (let index = 0; index < length; ++index) {
     const input = tokens[index].value;
-    const output = context.tokens[index].value;
+    const output = context.tokens.get(index).value;
     expect(input).toBe(output);
   }
 });
@@ -115,8 +115,7 @@ test('Consume an unexpected token', () => {
   // Check the consumption errors.
   expect(context.errors).toHaveLength(1);
 
-  const error = context.errors[0];
-  expect(error).toBeDefined();
+  const error = context.errors.get(0);
   expect(error.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
 
   const fragment = error.fragment;
@@ -145,8 +144,7 @@ test('Consume an unexpected token (empty string)', () => {
   // Check the consumption errors.
   expect(context.errors).toHaveLength(1);
 
-  const error = context.errors[0];
-  expect(error).toBeDefined();
+  const error = context.errors.get(0);
   expect(error.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
 
   const fragment = error.fragment;

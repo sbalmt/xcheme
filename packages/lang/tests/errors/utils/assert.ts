@@ -42,16 +42,18 @@ export const error = (code: string, errors: Error[]): void => {
   expect(project.errors).toHaveLength(errors.length);
 
   for (let index = 0; index < errors.length; ++index) {
-    const source = project.errors[index];
+    const source = project.errors.at(index)!;
     const target = errors[index];
     expect(source.value).toBe(target.code);
     if (target.line) {
-      expect(source.fragment.location.line.begin).toBe(target.line[0]);
-      expect(source.fragment.location.line.end).toBe(target.line[1]);
+      const line = source.fragment.location.line;
+      expect(line.begin).toBe(target.line[0]);
+      expect(line.end).toBe(target.line[1]);
     }
     if (target.column) {
-      expect(source.fragment.location.column.begin).toBe(target.column[0]);
-      expect(source.fragment.location.column.end).toBe(target.column[1]);
+      const column = source.fragment.location.column;
+      expect(column.begin).toBe(target.column[0]);
+      expect(column.end).toBe(target.column[1]);
     }
   }
 };

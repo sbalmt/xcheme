@@ -24,6 +24,11 @@ export type Table = Core.Table<Metadata>;
 export type Token = Core.Token<Metadata>;
 
 /**
+ * Core token list type.
+ */
+export type TokenList = Core.TokenList<Metadata>;
+
+/**
  * Core node type.
  */
 export type Node = Core.Node<Metadata>;
