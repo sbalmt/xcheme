@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 
 import Base from '../../source/base';
 import Expect from '../flow/expect';
@@ -7,7 +7,7 @@ import Pattern from '../pattern';
 /**
  * Consumes all the given patterns with the uncase transformation.
  */
-export default class Uncase<T extends Metadata.Types> extends Pattern<T> {
+export default class Uncase<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

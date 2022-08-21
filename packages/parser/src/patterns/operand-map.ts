@@ -12,7 +12,7 @@ import { getDirectiveExpression } from './expression-directive';
  * @param expression Expression pattern.
  * @returns Returns the generated pattern.
  */
-const getMapMemberList = <T extends Core.Metadata.Types>(expression: Core.Pattern<T>): Core.Pattern<T> => {
+const getMapMemberList = <T extends Core.Types>(expression: Core.Pattern<T>): Core.Pattern<T> => {
   const pattern: Core.Pattern<T> = new Core.ExpectFlowPattern(
     new Core.AppendNodePattern(
       Nodes.MapMember,
@@ -40,7 +40,7 @@ const getMapMemberList = <T extends Core.Metadata.Types>(expression: Core.Patter
  * @param expression Expression pattern.
  * @returns Returns the generated pattern.
  */
-export const getMapOperand = <T extends Core.Metadata.Types>(expression: Core.Pattern<T>): Core.Pattern<T> =>
+export const getMapOperand = <T extends Core.Types>(expression: Core.Pattern<T>): Core.Pattern<T> =>
   new Core.ScopeSymbolPattern(
     new Core.ExpectUnitPattern(Lexer.Tokens.Map),
     new Core.AppendNodePattern(

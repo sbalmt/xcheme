@@ -1,13 +1,15 @@
 import type Fragment from './data/fragment';
 import type Table from './table';
+
+import type { Types, RecordType } from './types';
 import type { Node } from './node';
 
-import * as Metadata from './metadata';
+import { Data } from './collections/data';
 
 /**
  * A symbol record generated in the analysis process to be stored into the symbol table.
  */
-export default class Record<T extends Metadata.Types> extends Metadata.Container<Metadata.Record<T>> {
+export default class Record<T extends Types> extends Data<RecordType<T>> {
   /**
    * Record fragment.
    */

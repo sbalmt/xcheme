@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -7,7 +7,7 @@ import Try from './try';
 /**
  * Consume all the given patterns and invert the consumption state.
  */
-export default class Not<T extends Metadata.Types> extends Pattern<T> {
+export default class Not<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

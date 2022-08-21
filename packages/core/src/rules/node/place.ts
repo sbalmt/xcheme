@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type { Nodes } from '../../core/node';
 import type Base from '../../source/base';
 
@@ -9,7 +9,7 @@ import Expect from '../flow/expect';
  * Consume all the given patterns and, in case of success,
  * it places the resulting node into the source output node.
  */
-export default class Place<T extends Metadata.Types> extends Pattern<T> {
+export default class Place<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import { Error } from '../../core/error';
 
 import Base from '../../source/base';
@@ -8,7 +8,7 @@ import Pattern from '../pattern';
 /**
  * Consume all the given patterns and, in case of success, it will emit a new error into the current error list.
  */
-export default class Emit<T extends Metadata.Types> extends Pattern<T> {
+export default class Emit<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

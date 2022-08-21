@@ -1,4 +1,4 @@
-import type * as Metadata from '../core/metadata';
+import type { Types } from '../core/types';
 import type Context from '../core/context';
 
 import Exception from '../core/exception';
@@ -31,7 +31,7 @@ type State = {
 /**
  * Data source for processing texts during the analysis process.
  */
-export default class TextSource<T extends Metadata.Types> extends Base<T> {
+export default class TextSource<T extends Types> extends Base<T> {
   /**
    * Source text.
    */

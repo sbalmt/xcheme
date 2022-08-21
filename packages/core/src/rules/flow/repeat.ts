@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -8,7 +8,7 @@ import Try from './try';
 /**
  * Consume all the given patterns in this pattern and, in case of success, retry the consumption.
  */
-export default class Repeat<T extends Metadata.Types> extends Pattern<T> {
+export default class Repeat<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

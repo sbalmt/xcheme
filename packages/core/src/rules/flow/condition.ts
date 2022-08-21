@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -8,7 +8,7 @@ import Try from './try';
  * Consume the test pattern and, in case of success, it also consumes the success pattern.
  * Otherwise, it will consume the failure pattern (when specified).
  */
-export default class Condition<T extends Metadata.Types> extends Pattern<T> {
+export default class Condition<T extends Types> extends Pattern<T> {
   /**
    * Test pattern.
    */

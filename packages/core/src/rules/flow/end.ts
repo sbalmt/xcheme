@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -6,7 +6,7 @@ import Pattern from '../pattern';
 /**
  * Doesn't consume anything, but it expects the end of the given data source.
  */
-export default class End<T extends Metadata.Types> extends Pattern<T> {
+export default class End<T extends Types> extends Pattern<T> {
   /**
    * Consume the given source.
    * @param source Data source.

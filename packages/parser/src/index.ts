@@ -12,7 +12,7 @@ export { Errors } from './errors';
  * @param source Data source.
  * @returns Returns true when the source was consumed without errors, otherwise returns false.
  */
-export const consume = <T extends Core.Metadata.Types>(source: Core.Source<T>): boolean => {
+export const consume = <T extends Core.Types>(source: Core.Source<T>): boolean => {
   return Parser.consume(source);
 };
 
@@ -22,10 +22,7 @@ export const consume = <T extends Core.Metadata.Types>(source: Core.Source<T>): 
  * @param context Output context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeTokens = <T extends Core.Metadata.Types>(
-  tokens: Core.TokenList<T>,
-  context: Core.Context<T>
-): boolean => {
+export const consumeTokens = <T extends Core.Types>(tokens: Core.TokenList<T>, context: Core.Context<T>): boolean => {
   const source = new Core.TokenSource<T>(tokens, context);
   if (!consume(source)) {
     const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;

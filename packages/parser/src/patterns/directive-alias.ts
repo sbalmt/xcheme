@@ -11,7 +11,7 @@ import { getDirectiveExpression } from './expression-directive';
 /**
  * Alias parameters list pattern.
  */
-const AliasParameterList: Core.Pattern<Core.Metadata.Types> = new Core.ExpectFlowPattern(
+const AliasParameterList: Core.Pattern<Core.Types> = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
     Nodes.Identifier,
     Core.Nodes.Right,

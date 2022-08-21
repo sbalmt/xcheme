@@ -11,7 +11,7 @@ export { Errors } from './errors';
  * @param source Data source.
  * @returns Returns true when the source was consumed without errors, otherwise returns false.
  */
-export const consume = <T extends Core.Metadata.Types>(source: Core.Source<T>): boolean => {
+export const consume = <T extends Core.Types>(source: Core.Source<T>): boolean => {
   return Lexer.consume(source);
 };
 
@@ -21,7 +21,7 @@ export const consume = <T extends Core.Metadata.Types>(source: Core.Source<T>): 
  * @param context Input context.
  * @returns Returns true when the consumption was successful, false otherwise.
  */
-export const consumeText = <T extends Core.Metadata.Types>(text: string, context: Core.Context<T>): boolean => {
+export const consumeText = <T extends Core.Types>(text: string, context: Core.Context<T>): boolean => {
   const source = new Core.TextSource<T>(text, context);
   if (!consume(source)) {
     context.errors.emplace(source.fragment, Errors.UNEXPECTED_TOKEN);

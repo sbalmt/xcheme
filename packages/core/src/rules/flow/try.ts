@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -7,7 +7,7 @@ import Expect from './expect';
 /**
  * Consume all the given patterns and, in case of failure, it preserves the current source state.
  */
-export default class Try<T extends Metadata.Types> extends Pattern<T> {
+export default class Try<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

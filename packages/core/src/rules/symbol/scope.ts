@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -7,7 +7,7 @@ import Expect from '../flow/expect';
 /**
  * Consume all the given patterns behind a new symbol table.
  */
-export default class Scope<T extends Metadata.Types> extends Pattern<T> {
+export default class Scope<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

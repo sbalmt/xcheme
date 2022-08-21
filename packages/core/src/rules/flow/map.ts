@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 import type Route from '../route';
 
@@ -8,7 +8,7 @@ import Uncase from '../transform/uncase';
 /**
  * Internal map node.
  */
-type Node<T extends Metadata.Types> = {
+type Node<T extends Types> = {
   /**
    * Node value.
    */
@@ -34,7 +34,7 @@ type Node<T extends Metadata.Types> = {
 /**
  * Consume the first route that match in the list of routes given for this pattern.
  */
-export default class Map<T extends Metadata.Types> extends Pattern<T> {
+export default class Map<T extends Types> extends Pattern<T> {
   /**
    * Root node.
    */

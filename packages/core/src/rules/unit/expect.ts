@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -7,7 +7,7 @@ import Uncase from '../transform/uncase';
 /**
  * Consume all the units that are expected by the pattern.
  */
-export default class Expect<T extends Metadata.Types> extends Pattern<T> {
+export default class Expect<T extends Types> extends Pattern<T> {
   /**
    * Array of units.
    */

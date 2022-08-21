@@ -1,4 +1,4 @@
-import type * as Metadata from '../core/metadata';
+import type { Types } from '../core/types';
 import type Context from '../core/context';
 
 import { TokenList } from '../core/token';
@@ -22,7 +22,7 @@ type State = {
 /**
  * Data source for processing tokens during the analysis.
  */
-export default class TokenSource<T extends Metadata.Types> extends Base<T> {
+export default class TokenSource<T extends Types> extends Base<T> {
   /**
    * Source tokens.
    */

@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 
 import Base from '../route';
 import Pattern from '../pattern';
@@ -7,7 +7,7 @@ import Uncase from './uncase';
 /**
  * Produce a route to consume all the given patterns with the uncase transformation.
  */
-export default class Route<T extends Metadata.Types> extends Base<T> {
+export default class Route<T extends Types> extends Base<T> {
   /**
    * Default constructor.
    * @param pattern Route pattern.

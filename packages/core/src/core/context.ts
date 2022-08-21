@@ -1,4 +1,4 @@
-import type * as Metadata from './metadata';
+import type { Types } from './types';
 
 import { ErrorList } from './error';
 import { TokenList } from './token';
@@ -13,7 +13,7 @@ import Table from './table';
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
  * nodes from the current consumption.
  */
-export default class Context<T extends Metadata.Types> {
+export default class Context<T extends Types> {
   /**
    * Context errors.
    */

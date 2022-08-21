@@ -1,12 +1,13 @@
 import type Fragment from './data/fragment';
 import type Table from './table';
 
-import * as Metadata from './metadata';
+import { Data } from './collections/data';
+import { Types, NodeType } from './types';
 
 /**
  * Internal children nodes.
  */
-type Children<T extends Metadata.Types> = {
+type Children<T extends Types> = {
   /**
    * Left child node.
    */
@@ -33,7 +34,7 @@ export const enum Nodes {
 /**
  * A node element for the abstract syntax tree (AST) generated in the analysis process.
  */
-export class Node<T extends Metadata.Types> extends Metadata.Container<Metadata.Node<T>> {
+export class Node<T extends Types> extends Data<NodeType<T>> {
   /**
    * Node children.
    */
@@ -110,7 +111,7 @@ export class Node<T extends Metadata.Types> extends Metadata.Container<Metadata.
   }
 
   /**
-   * Swap all node properties in the given node.
+   * Swap all contents of the given node.
    * @param node Input node.
    */
   swap(node: Node<T>): void {

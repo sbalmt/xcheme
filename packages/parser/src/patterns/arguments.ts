@@ -6,7 +6,7 @@ import { Nodes } from '../nodes';
 /**
  * Argument list pattern.
  */
-const ArgumentList: Core.Pattern<Core.Metadata.Types> = new Core.ExpectFlowPattern(
+const ArgumentList: Core.Pattern<Core.Types> = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
     Core.Source.Output,
     Core.Nodes.Right,

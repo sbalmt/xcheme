@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import { Node, Nodes } from '../../core/node';
 
 import Base from '../../source/base';
@@ -9,7 +9,7 @@ import Pattern from '../pattern';
  * Consume all the given patterns in this pattern and, in case of success,
  * it prepends a new node in the source output node.
  */
-export default class Prepend<T extends Metadata.Types> extends Pattern<T> {
+export default class Prepend<T extends Types> extends Pattern<T> {
   /**
    * Head pattern.
    */

@@ -6,7 +6,7 @@ import * as Lexer from '@xcheme/lexer';
  * @param expression Expression pattern.
  * @returns Returns the generated pattern.
  */
-export const getGroupOperand = <T extends Core.Metadata.Types>(expression: Core.Pattern<T>): Core.Pattern<T> =>
+export const getGroupOperand = <T extends Core.Types>(expression: Core.Pattern<T>): Core.Pattern<T> =>
   new Core.PlaceNodePattern(
     Core.Nodes.Right,
     new Core.ExpectFlowPattern(

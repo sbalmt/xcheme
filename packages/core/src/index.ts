@@ -1,7 +1,6 @@
-export * as Metadata from './core/metadata';
+export { Types, TokenType, NodeType, RecordType } from './core/types';
 
 export { default as Exception } from './core/exception';
-
 export { default as Fragment } from './core/data/fragment';
 export { default as Location } from './core/data/location';
 export { default as Range } from './core/data/range';

@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 
 import Base from '../../source/base';
 import Expect from '../flow/expect';
@@ -7,7 +7,7 @@ import Pattern from '../pattern';
 /**
  * Consume all the given patterns and, in case of success, it will change the current output value.
  */
-export default class Set<T extends Metadata.Types> extends Pattern<T> {
+export default class Set<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

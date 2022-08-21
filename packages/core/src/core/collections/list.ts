@@ -78,6 +78,14 @@ export class List<T> implements Iterable<T> {
   }
 
   /**
+   * Swap all contents of the given list.
+   * @param list Input list.
+   */
+  swap(list: List<T>): void {
+    [this.#elements, list.#elements] = [list.#elements, this.#elements];
+  }
+
+  /**
    * Iterable generator.
    */
   *[Symbol.iterator]() {
@@ -137,6 +145,14 @@ export class ReadOnlyList<T> implements Iterable<T> {
    */
   get(index: number): T {
     return this.#list.get(index);
+  }
+
+  /**
+   * Swap all contents of the given list.
+   * @param list Input list.
+   */
+  swap(list: ReadOnlyList<T>): void {
+    [this.#list, list.#list] = [list.#list, this.#list];
   }
 
   /**

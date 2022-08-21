@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import { Node, Nodes } from '../../core/node';
 
 import Exception from '../../core/exception';
@@ -10,7 +10,7 @@ import Pattern from '../pattern';
  * Consume all the given patterns in this pattern and, in case of success,
  * it creates a new node in the source output and pivot current ones.
  */
-export default class Pivot<T extends Metadata.Types> extends Pattern<T> {
+export default class Pivot<T extends Types> extends Pattern<T> {
   /**
    * Head pattern.
    */

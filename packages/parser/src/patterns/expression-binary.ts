@@ -6,7 +6,7 @@ import * as Core from '@xcheme/core';
  * @param expression Preceded expression.
  * @returns Returns the generated pattern.
  */
-export const getBinaryExpression = <T extends Core.Metadata.Types>(
+export const getBinaryExpression = <T extends Core.Types>(
   operator: Core.Pattern<T>,
   expression: Core.Pattern<T>
 ): Core.Pattern<T> =>

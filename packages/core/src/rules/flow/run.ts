@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -6,7 +6,7 @@ import Pattern from '../pattern';
 /**
  * Consume the pattern object returned by the callback given for this pattern.
  */
-export default class Run<T extends Metadata.Types> extends Pattern<T> {
+export default class Run<T extends Types> extends Pattern<T> {
   /**
    * Callback for the pattern.
    */

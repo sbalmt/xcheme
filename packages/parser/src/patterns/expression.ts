@@ -21,7 +21,7 @@ import { getMapOperand } from './operand-map';
  * @param next Next route value.
  * @returns Returns the generated pattern.
  */
-const getDirectionPrefix = <T extends Core.Metadata.Types>(
+const getDirectionPrefix = <T extends Core.Types>(
   expression: Core.Pattern<T>,
   ready: Nodes,
   left: Nodes,
@@ -162,7 +162,7 @@ const ConditionExpression = new Core.OptFlowPattern(
 /**
  * Expression pattern.
  */
-export const Expression: Core.Pattern<Core.Metadata.Types> = new Core.ExpectFlowPattern(
+export const Expression: Core.Pattern<Core.Types> = new Core.ExpectFlowPattern(
   getBinaryExpression(
     new Core.SetValuePattern(Nodes.Or, new Core.ChooseUnitPattern(Lexer.Tokens.Or, Lexer.Tokens.VerticalBar)),
     getBinaryExpression(

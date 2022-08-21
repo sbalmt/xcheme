@@ -1,13 +1,13 @@
 import type Fragment from './data/fragment';
+import type { Types, TokenType } from './types';
 
-import * as Metadata from './metadata';
-
+import { Data } from './collections/data';
 import { List, ReadOnlyList } from './collections/list';
 
 /**
  * Token element class.
  */
-export class Token<T extends Metadata.Types> extends Metadata.Container<Metadata.Token<T>> {
+export class Token<T extends Types> extends Data<TokenType<T>> {
   /**
    * Token fragment.
    */
@@ -47,7 +47,7 @@ export class Token<T extends Metadata.Types> extends Metadata.Container<Metadata
 /**
  * A token element for the token list generated in the analysis process.
  */
-export class TokenList<T extends Metadata.Types> extends List<Token<T>> {
+export class TokenList<T extends Types> extends List<Token<T>> {
   /**
    * Construct and add a new token for the given fragment and value.
    * @param fragment Token fragment.
@@ -64,4 +64,4 @@ export class TokenList<T extends Metadata.Types> extends List<Token<T>> {
 /**
  * Read-only token list class.
  */
-export class ReadOnlyTokenList<T extends Metadata.Types> extends ReadOnlyList<Token<T>> {}
+export class ReadOnlyTokenList<T extends Types> extends ReadOnlyList<Token<T>> {}

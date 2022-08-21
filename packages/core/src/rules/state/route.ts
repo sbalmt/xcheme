@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 
 import Base from '../route';
 import Pattern from '../pattern';
@@ -7,7 +7,7 @@ import Set from './set';
 /**
  * Produce a route to consume units and, in case of success, it set a new state value.
  */
-export default class Route<T extends Metadata.Types> extends Base<T> {
+export default class Route<T extends Types> extends Base<T> {
   /**
    * Default constructor.
    * @param value State value.

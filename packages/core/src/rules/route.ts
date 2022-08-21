@@ -1,10 +1,10 @@
-import type * as Metadata from '../core/metadata';
+import type { Types } from '../core/types';
 import type Pattern from './pattern';
 
 /**
  * Base of any route for using together with map patterns.
  */
-export default class Route<T extends Metadata.Types> {
+export default class Route<T extends Types> {
   /**
    * Route pattern.
    */

@@ -109,7 +109,7 @@ const getDirective = (
  * @param node Input node.
  * @param tree Tree structure.
  */
-const matchTree = <T extends Core.Metadata.Types>(node: Core.Node<T>, tree: Tree): void => {
+const matchTree = <T extends Core.Types>(node: Core.Node<T>, tree: Tree): void => {
   expect(node.value).toBe(tree.type);
   if (tree.value) {
     expect(node.fragment.data).toBe(tree.value);

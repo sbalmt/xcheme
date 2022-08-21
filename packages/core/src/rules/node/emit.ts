@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import { Node, Nodes } from '../../core/node';
 
 import Base from '../../source/base';
@@ -9,7 +9,7 @@ import Pattern from '../pattern';
  * Consume all the given patterns and, in case of success, it will emit a new node as the next child of the current one.
  * Any working node in the source output will be attached as the left child from the new node.
  */
-export default class Emit<T extends Metadata.Types> extends Pattern<T> {
+export default class Emit<T extends Types> extends Pattern<T> {
   /**
    * Target pattern.
    */

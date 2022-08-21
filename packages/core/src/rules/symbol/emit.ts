@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import { Error, Errors } from '../../core/error';
 
 import Base from '../../source/base';
@@ -9,7 +9,7 @@ import Expect from '../flow/expect';
 /**
  * Consume all the given patterns and, in case of success, it will emit a new symbol into the current symbol table.
  */
-export default class Emit<T extends Metadata.Types> extends Pattern<T> {
+export default class Emit<T extends Types> extends Pattern<T> {
   /**
    * Test pattern.
    */

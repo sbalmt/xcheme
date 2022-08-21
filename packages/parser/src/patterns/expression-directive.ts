@@ -11,7 +11,7 @@ import { Symbols } from '../symbols';
  * @param expression Expression pattern.
  * @returns Returns the generated pattern.
  */
-export const getDirectiveExpression = <T extends Core.Metadata.Types>(
+export const getDirectiveExpression = <T extends Core.Types>(
   symbol: Symbols,
   identity: Core.Pattern<T> | undefined,
   expression: Core.Pattern<T>

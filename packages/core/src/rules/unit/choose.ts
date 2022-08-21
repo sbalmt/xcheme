@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -7,7 +7,7 @@ import Uncase from '../transform/uncase';
 /**
  * Consume one unit that is between all the acceptable units in the pattern.
  */
-export default class Choose<T extends Metadata.Types> extends Pattern<T> {
+export default class Choose<T extends Types> extends Pattern<T> {
   /**
    * Set of units.
    */

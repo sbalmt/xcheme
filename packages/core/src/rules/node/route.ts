@@ -1,4 +1,4 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 import { Nodes } from '../../core/node';
 
 import Base from '../route';
@@ -9,7 +9,7 @@ import Emit from './emit';
  * Produce a route to consume units and, in case of success, it emits a new node.
  * Any working node in the source output will be attached as the left child from the new node.
  */
-export default class Route<T extends Metadata.Types> extends Base<T> {
+export default class Route<T extends Types> extends Base<T> {
   /**
    * Default constructor.
    * @param value Node value.

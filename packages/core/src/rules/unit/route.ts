@@ -1,11 +1,11 @@
-import type * as Metadata from '../../core/metadata';
+import type { Types } from '../../core/types';
 
 import Base from '../route';
 
 /**
  * Produce a route to consume units.
  */
-export default class Route<T extends Metadata.Types> extends Base<T> {
+export default class Route<T extends Types> extends Base<T> {
   /**
    * Default constructor.
    * @param first First route unit.

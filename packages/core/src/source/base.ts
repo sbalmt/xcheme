@@ -1,4 +1,5 @@
-import type * as Metadata from '../core/metadata';
+import type { Types } from '../core/types';
+
 import type Fragment from '../core/data/fragment';
 import type Context from '../core/context';
 
@@ -13,7 +14,7 @@ import Table from '../core/table';
 /**
  * Source output structure.
  */
-type Output<T extends Metadata.Types> = {
+type Output<T extends Types> = {
   /**
    * Output state.
    */
@@ -43,7 +44,7 @@ type Output<T extends Metadata.Types> = {
 /**
  * Base of any data source for the analysis process.
  */
-export default class Base<T extends Metadata.Types> {
+export default class Base<T extends Types> {
   /**
    * Source context.
    */

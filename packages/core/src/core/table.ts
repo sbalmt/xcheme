@@ -1,4 +1,4 @@
-import type * as Metadata from './metadata';
+import { Types } from './types';
 
 import Fragment from './data/fragment';
 import Exception from './exception';
@@ -7,14 +7,14 @@ import Record from './record';
 /**
  * Internal record map.
  */
-type RecordMap<T extends Metadata.Types> = {
+type RecordMap<T extends Types> = {
   [name: string]: Record<T>;
 };
 
 /**
  * A symbol table for storing symbol records generated during the analysis process.
  */
-export default class Table<T extends Metadata.Types> {
+export default class Table<T extends Types> {
   /**
    * Map of records.
    */
