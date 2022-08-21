@@ -54,7 +54,7 @@ const getMessage = (error: Core.Error): string => {
  * @param errors Error list.
  * @returns Returns the diagnostics list.
  */
-export const getDiagnostics = (errors: Core.Error[]): VSCode.Diagnostic[] => {
+export const getDiagnostics = (errors: Core.ErrorList): VSCode.Diagnostic[] => {
   const list = [];
   for (const error of errors) {
     const severity = VSCode.DiagnosticSeverity.Error;

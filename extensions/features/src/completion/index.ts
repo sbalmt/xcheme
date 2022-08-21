@@ -29,11 +29,11 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
    */
-  #isIdentity(tokens: Lang.Types.Token[], offset: number): boolean {
-    const value = tokens[offset]?.value;
+  #isIdentity(tokens: Lang.Types.TokenList, offset: number): boolean {
+    const value = tokens.at(offset)?.value;
     return (
       (value === Lexer.Tokens.Number || value === Lexer.Tokens.Auto) &&
-      tokens[offset - 1]?.value === Lexer.Tokens.OpenChevron
+      tokens.at(offset - 1)?.value === Lexer.Tokens.OpenChevron
     );
   }
 
@@ -43,8 +43,8 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Current offset.
    * @returns Returns true in case of success, false otherwise.
    */
-  #isIdentifier(tokens: Lang.Types.Token[], offset: number): boolean {
-    const value = tokens[offset]?.value;
+  #isIdentifier(tokens: Lang.Types.TokenList, offset: number): boolean {
+    const value = tokens.at(offset)?.value;
     return (
       (value === Lexer.Tokens.CloseChevron && this.#isIdentity(tokens, offset - 1)) ||
       value === Lexer.Tokens.Token ||
@@ -58,9 +58,9 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Token offset.
    * @returns Returns the corresponding filters.
    */
-  #getSymbolFilters(tokens: Lang.Types.Token[], offset: number): Parser.Symbols[] {
+  #getSymbolFilters(tokens: Lang.Types.TokenList, offset: number): Parser.Symbols[] {
     while (offset >= 0) {
-      switch (tokens[offset--].value) {
+      switch (tokens.at(offset--)!.value) {
         case Lexer.Tokens.Skip:
           return [Parser.Symbols.AliasToken];
         case Lexer.Tokens.Token:
@@ -78,14 +78,14 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param offset Token offset.
    * @returns Returns an array containing all records for the corresponding path.
    */
-  #getSymbolTablePath(tokens: Lang.Types.Token[], offset: number): string[] {
+  #getSymbolTablePath(tokens: Lang.Types.TokenList, offset: number): string[] {
     const records = [];
     do {
-      const token = tokens[offset--];
+      const token = tokens.at(offset--);
       if (token?.value === Lexer.Tokens.Identifier) {
         records.unshift(token.fragment.data);
       }
-    } while (tokens[offset--]?.value === Lexer.Tokens.Period);
+    } while (tokens.at(offset--)?.value === Lexer.Tokens.Period);
     return records;
   }
 
@@ -179,10 +179,10 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param position Offset position.
    * @returns Returns the best token offset.
    */
-  #findBestOffset(tokens: Lang.Types.Token[], position: number): number {
+  #findBestOffset(tokens: Lang.Types.TokenList, position: number): number {
     let best = -1;
     for (let index = 0; index < tokens.length; ++index) {
-      const token = tokens[index];
+      const token = tokens.at(index)!;
       if (token.fragment.end === position) {
         return index;
       }
@@ -203,11 +203,11 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
   #getCompletionItems(
     document: VSCode.TextDocument,
     table: Lang.Types.Table,
-    tokens: Lang.Types.Token[],
+    tokens: Lang.Types.TokenList,
     offset: number
   ): CompletionItems | undefined {
     if (offset > -1) {
-      switch (tokens[offset--].value) {
+      switch (tokens.at(offset--)!.value) {
         case Lexer.Tokens.Import:
           return this.#getFileList(document);
         case Lexer.Tokens.Export:
