@@ -16,14 +16,14 @@ const getMapMemberList = <T extends Core.Types>(expression: Core.Pattern<T>): Co
   const pattern: Core.Pattern<T> = new Core.ExpectFlowPattern(
     new Core.AppendNodePattern(
       Nodes.MapMember,
-      Core.Nodes.Right,
-      Core.Nodes.Next,
+      Core.NodeDirection.Right,
+      Core.NodeDirection.Next,
       new Core.ChooseFlowPattern(
         new Core.ExpectFlowPattern(
           Arguments,
           new Core.ChooseFlowPattern(
             getDirectiveExpression(Symbols.MapMember, void 0, expression),
-            new Core.PlaceNodePattern(Core.Nodes.Right, expression)
+            new Core.PlaceNodePattern(Core.NodeDirection.Right, expression)
           )
         ),
         getDirectiveExpression(Symbols.MapMember, void 0, expression),
@@ -45,8 +45,8 @@ export const getMapOperand = <T extends Core.Types>(expression: Core.Pattern<T>)
     new Core.ExpectUnitPattern(Lexer.Tokens.Map),
     new Core.AppendNodePattern(
       Nodes.Map,
-      Core.Nodes.Right,
-      Core.Nodes.Right,
+      Core.NodeDirection.Right,
+      Core.NodeDirection.Right,
       new Core.ExpectFlowPattern(
         new Core.ExpectUnitPattern(Lexer.Tokens.OpenBraces),
         new Core.OptFlowPattern(getMapMemberList(expression)),

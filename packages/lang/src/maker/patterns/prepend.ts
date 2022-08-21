@@ -21,8 +21,8 @@ export const consume = (
   project: Project.Context,
   node: Types.Node,
   state: Context.State,
-  left: Core.Nodes,
-  right: Core.Nodes
+  left: Core.NodeDirection,
+  right: Core.NodeDirection
 ): Coder.Pattern | undefined => {
   const patterns = Generic.Identity.consume(project, node, state);
   if (patterns) {

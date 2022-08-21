@@ -1,5 +1,6 @@
 import type { Types } from '../../core/types';
-import { Nodes } from '../../core/node';
+
+import { NodeDirection } from '../../core/nodes';
 
 import Base from '../route';
 import Pattern from '../pattern';
@@ -13,11 +14,16 @@ export default class Route<T extends Types> extends Base<T> {
   /**
    * Default constructor.
    * @param value Node value.
-   * @param output Output node destination.
+   * @param output Output node direction.
    * @param first Route pattern or first route unit.
    * @param units Route units.
    */
-  constructor(value: number, output: Nodes, first: Pattern<T> | string | number, ...units: (string | number)[]) {
+  constructor(
+    value: number,
+    output: NodeDirection,
+    first: Pattern<T> | string | number,
+    ...units: (string | number)[]
+  ) {
     if (first instanceof Pattern) {
       super(new Emit<T>(value, output, first), units[0], ...units.splice(1));
     } else {

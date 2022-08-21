@@ -26,7 +26,7 @@ export type Arguments = {
  * @param table Symbol table.
  * @returns Returns the parameters list.
  */
-const getParameters = (table: Types.Table): string[] => {
+const getParameters = (table: Types.SymbolTable): string[] => {
   const list = [];
   for (const record of table) {
     if (record.value === Parser.Symbols.AliasParameter) {
@@ -63,7 +63,7 @@ const getArguments = (project: Project.Context, node: Types.Node, parameters: st
             throw new Exception(`Unsupported argument node: ${current.value}`);
         }
       }
-      current.set(Core.Nodes.Next, void 0);
+      current.set(Core.NodeDirection.Next, void 0);
       current = next!;
     }
     if (!parameters[index]) {
@@ -85,12 +85,12 @@ const clone = (
   project: Project.Context,
   node: Types.Node,
   args: Arguments,
-  state: { table: Types.Table; link?: Types.Table }
+  state: { table: Types.SymbolTable; link?: Types.SymbolTable }
 ): Types.Node => {
   const previous = state.table;
   let current = previous;
   if (node.value === Parser.Nodes.Map) {
-    state.table = new Core.Table<Types.Metadata>(node.table.parent);
+    state.table = new Core.SymbolTable<Types.Metadata>(node.table.parent);
   } else if (node.value === Parser.Nodes.Reference) {
     const argument = args[node.fragment.data];
     if (argument) {
@@ -99,7 +99,7 @@ const clone = (
     }
   }
   const result = new Core.Node<Types.Metadata>(node.fragment, node.value, current);
-  for (const direction of [Core.Nodes.Left, Core.Nodes.Right, Core.Nodes.Next]) {
+  for (const direction of [Core.NodeDirection.Left, Core.NodeDirection.Right, Core.NodeDirection.Next]) {
     const child = node.get(direction);
     if (child && child.value !== Parser.Nodes.Parameters) {
       result.set(direction, clone(project, child, args, state));
@@ -108,8 +108,8 @@ const clone = (
   if (result.value === Parser.Nodes.MapMember) {
     const identifier = result.right!;
     if (identifier.value === Parser.Nodes.Identifier) {
-      const record = new Core.Record(identifier.fragment, Parser.Symbols.MapMember, identifier, state.link);
-      state.table.add(record);
+      const record = new Core.SymbolRecord(identifier.fragment, Parser.Symbols.MapMember, identifier, state.link);
+      state.table.insert(record);
       state.link = void 0;
     }
   }
@@ -131,7 +131,7 @@ const clone = (
 const resolve = (
   project: Project.Context,
   name: string,
-  record: Types.Record,
+  record: Types.SymbolRecord,
   args: Arguments,
   state: Context.State
 ): void => {
@@ -150,12 +150,12 @@ const resolve = (
     Node.consume(project, directive.right!, temp);
   }
   if (Records.fromSameLocation(record, state.record!) && record.data.order > state.record!.data.order) {
-    directive.set(Core.Nodes.Next, state.anchor.next!.next);
-    state.anchor.next!.set(Core.Nodes.Next, directive);
+    directive.set(Core.NodeDirection.Next, state.anchor.next!.next);
+    state.anchor.next!.set(Core.NodeDirection.Next, directive);
   } else {
     table.get(name)!.data.order = record.data.order;
-    directive.set(Core.Nodes.Next, state.anchor.next);
-    state.anchor.set(Core.Nodes.Next, directive);
+    directive.set(Core.NodeDirection.Next, state.anchor.next);
+    state.anchor.set(Core.NodeDirection.Next, directive);
     state.anchor = directive;
   }
 };
@@ -171,10 +171,10 @@ const resolve = (
 export const consume = (
   project: Project.Context,
   node: Types.Node,
-  record: Types.Record,
+  record: Types.SymbolRecord,
   state: Context.State
 ): Types.Node => {
-  const args = getArguments(project, node, getParameters(record.link!));
+  const args = getArguments(project, node, getParameters(record.table!));
   if (!args) {
     project.errors.emplace(node.fragment, Errors.ARGUMENTS_MISSING);
   } else {

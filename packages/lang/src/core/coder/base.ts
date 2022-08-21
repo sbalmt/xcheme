@@ -80,7 +80,7 @@ export class Base {
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitNodePattern(identity: string | number, output: Core.Nodes, ...patterns: Pattern[]): Pattern {
+  emitNodePattern(identity: string | number, output: Core.NodeDirection, ...patterns: Pattern[]): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
 
@@ -170,11 +170,11 @@ export class Base {
 
   /**
    * Should be implemented to return a place node pattern.
-   * @param current Current node destination.
+   * @param current Current node direction.
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
    */
-  emitPlacePattern(current: Core.Nodes, ...patterns: Pattern[]): Pattern {
+  emitPlacePattern(current: Core.NodeDirection, ...patterns: Pattern[]): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
 
@@ -189,8 +189,8 @@ export class Base {
    */
   emitAppendPattern(
     identity: string | number,
-    left: Core.Nodes,
-    right: Core.Nodes,
+    left: Core.NodeDirection,
+    right: Core.NodeDirection,
     head: Pattern,
     ...patterns: Pattern[]
   ): Pattern {
@@ -208,8 +208,8 @@ export class Base {
    */
   emitPrependPattern(
     identity: string | number,
-    left: Core.Nodes,
-    right: Core.Nodes,
+    left: Core.NodeDirection,
+    right: Core.NodeDirection,
     head: Pattern,
     ...patterns: Pattern[]
   ): Pattern {
@@ -299,7 +299,7 @@ export class Base {
    * @param record Referenced record.
    * @returns Should return the pattern.
    */
-  emitReferencePattern(record: Types.Record): Pattern {
+  emitReferencePattern(record: Types.SymbolRecord): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
 

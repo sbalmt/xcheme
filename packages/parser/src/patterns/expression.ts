@@ -143,15 +143,15 @@ const UnaryOperators = new Core.MapFlowPattern(
 const ConditionExpression = new Core.OptFlowPattern(
   new Core.PivotNodePattern(
     Nodes.Then,
-    Core.Nodes.Right,
-    Core.Nodes.Left,
+    Core.NodeDirection.Right,
+    Core.NodeDirection.Left,
     new Core.ExpectUnitPattern(Lexer.Tokens.Then),
     new Core.RunFlowPattern(() => Expression),
     new Core.OptFlowPattern(
       new Core.PivotNodePattern(
         Nodes.Else,
-        Core.Nodes.Right,
-        Core.Nodes.Left,
+        Core.NodeDirection.Right,
+        Core.NodeDirection.Left,
         new Core.ExpectUnitPattern(Lexer.Tokens.Else),
         new Core.RunFlowPattern(() => Expression)
       )
@@ -170,7 +170,7 @@ export const Expression: Core.Pattern<Core.Types> = new Core.ExpectFlowPattern(
       getUnaryExpression(
         UnaryOperators,
         new Core.PlaceNodePattern(
-          Core.Nodes.Right,
+          Core.NodeDirection.Right,
           getBinaryExpression(
             new Core.SetValuePattern(Nodes.Access, new Core.ExpectUnitPattern(Lexer.Tokens.Period)),
             new Core.ChooseFlowPattern(

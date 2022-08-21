@@ -19,7 +19,7 @@ type SemanticTokensResult = VSCode.ProviderResult<VSCode.SemanticTokens>;
  * @param record Token record.
  * @returns Returns an array containing all the corresponding modifiers.
  */
-const getTokenModifiers = (record: Lang.Types.Record): string[] => {
+const getTokenModifiers = (record: Lang.Types.SymbolRecord): string[] => {
   const modifiers = [];
   if (record.value === Parser.Symbols.AliasToken || record.value === Parser.Symbols.AliasNode) {
     modifiers.push('alias');
@@ -42,7 +42,7 @@ const getTokenModifiers = (record: Lang.Types.Record): string[] => {
 const buildToken = (
   builder: VSCode.SemanticTokensBuilder,
   location: Core.Location,
-  record: Lang.Types.Record
+  record: Lang.Types.SymbolRecord
 ): void => {
   const range = Utils.getRange(location);
   const modifiers = getTokenModifiers(record);

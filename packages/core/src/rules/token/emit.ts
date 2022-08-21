@@ -1,5 +1,6 @@
 import type { Types } from '../../core/types';
-import { Token } from '../../core/token';
+
+import { Token } from '../../core/tokens';
 
 import Base from '../../source/base';
 import Expect from '../flow/expect';

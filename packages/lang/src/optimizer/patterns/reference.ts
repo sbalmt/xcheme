@@ -17,7 +17,12 @@ import * as Generic from './generic';
  * @param record Reference record.
  * @param state Consumption state.
  */
-const template = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+const template = (
+  project: Project.Context,
+  node: Types.Node,
+  record: Types.SymbolRecord,
+  state: Context.State
+): void => {
   let identifier = node.fragment.data;
   const action = () => {
     if (record.data.template) {
@@ -42,7 +47,12 @@ const template = (project: Project.Context, node: Types.Node, record: Types.Reco
  * @param record Reference record.
  * @param state Consumption state.
  */
-const upgrade = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+const upgrade = (
+  project: Project.Context,
+  node: Types.Node,
+  record: Types.SymbolRecord,
+  state: Context.State
+): void => {
   const identifier = node.fragment.data;
   const action = () => {
     if (Records.isDynamic(record)) {
@@ -67,7 +77,12 @@ const upgrade = (project: Project.Context, node: Types.Node, record: Types.Recor
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+const resolveSkip = (
+  project: Project.Context,
+  node: Types.Node,
+  record: Types.SymbolRecord,
+  state: Context.State
+): void => {
   if (record.value === Parser.Symbols.AliasToken) {
     template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
@@ -89,7 +104,12 @@ const resolveSkip = (project: Project.Context, node: Types.Node, record: Types.R
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveToken = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+const resolveToken = (
+  project: Project.Context,
+  node: Types.Node,
+  record: Types.SymbolRecord,
+  state: Context.State
+): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Token) {
     Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
@@ -112,7 +132,12 @@ const resolveToken = (project: Project.Context, node: Types.Node, record: Types.
  * @param record Reference record.
  * @param state Consumption state.
  */
-const resolveNode = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+const resolveNode = (
+  project: Project.Context,
+  node: Types.Node,
+  record: Types.SymbolRecord,
+  state: Context.State
+): void => {
   const identifier = node.fragment.data;
   if (record.value === Parser.Symbols.Node) {
     Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));

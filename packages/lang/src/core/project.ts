@@ -74,7 +74,7 @@ export class Context {
    * @param types Record types.
    * @returns Returns an array containing all the corresponding records.
    */
-  #getRecordsByType(...types: Parser.Symbols[]): Types.Record[] {
+  #getRecordsByType(...types: Parser.Symbols[]): Types.SymbolRecord[] {
     const list = [];
     for (const record of this.#symbols) {
       if (types.includes(record.value as Parser.Symbols)) {
@@ -90,10 +90,10 @@ export class Context {
    * @param types Record types.
    * @returns Returns an array containing all the corresponding records.
    */
-  #getFlattenRecordsByType(records: Types.Record[], ...types: Parser.Symbols[]): Types.Record[] {
-    const list: Types.Record[] = [];
+  #getFlattenRecordsByType(records: Types.SymbolRecord[], ...types: Parser.Symbols[]): Types.SymbolRecord[] {
+    const list: Types.SymbolRecord[] = [];
     const cache = new Set<string>();
-    const action = (records: Types.Record[]): void => {
+    const action = (records: Types.SymbolRecord[]): void => {
       for (const record of records) {
         const { identifier, location } = record.data;
         const address = `${location}:${identifier}`;
@@ -115,7 +115,7 @@ export class Context {
    * @param record Record list.
    * @returns Returns an array containing the sorted records.
    */
-  #getSortedRecords(record: Types.Record[]): Types.Record[] {
+  #getSortedRecords(record: Types.SymbolRecord[]): Types.SymbolRecord[] {
     return record.sort((a, b) => {
       return a.data.order <= b.data.order ? -1 : 1;
     });
@@ -126,7 +126,7 @@ export class Context {
    * @param records Record list.
    * @returns Returns an array containing all the references.
    */
-  #getReferences(records: Types.Record[]): Coder.Reference[] {
+  #getReferences(records: Types.SymbolRecord[]): Coder.Reference[] {
     return records.map((record) => {
       return {
         name: record.data.name,
@@ -141,7 +141,7 @@ export class Context {
    * @param types Symbol types.
    * @returns Returns an array containing all the patterns.
    */
-  #getPatterns(records: Types.Record[], ...types: Types.Directives[]): Coder.Pattern[] {
+  #getPatterns(records: Types.SymbolRecord[], ...types: Types.Directives[]): Coder.Pattern[] {
     return records.map((current) => {
       if (Records.isReferenced(current, ...types)) {
         return this.#coder.emitReferencePattern(current);

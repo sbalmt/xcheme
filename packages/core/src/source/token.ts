@@ -1,12 +1,10 @@
 import type { Types } from '../core/types';
 import type Context from '../core/context';
 
-import { TokenList } from '../core/token';
+import { Fragment, Location, Range } from '../core/coordinates';
+import { TokenList } from '../core/tokens';
 
 import Exception from '../core/exception';
-import Fragment from '../core/data/fragment';
-import Location from '../core/data/location';
-import Range from '../core/data/range';
 import Base from './base';
 
 /**

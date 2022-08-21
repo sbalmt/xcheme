@@ -1,11 +1,12 @@
-import { Context, Nodes, Node, TextSource, PlaceNodePattern, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, NodeDirection, Node, TextSource } from '../../../src/index';
+import { PlaceNodePattern, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * It can consume a sequence of characters 'a', 'b' and 'c' and append a new node into the current AST.
  */
 const pattern = new PlaceNodePattern(
-  Nodes.Right,
-  new AppendNodePattern(0xabc, Nodes.Right, Nodes.Left, new ExpectUnitPattern('a', 'b', 'c'))
+  NodeDirection.Right,
+  new AppendNodePattern(0xabc, NodeDirection.Right, NodeDirection.Left, new ExpectUnitPattern('a', 'b', 'c'))
 );
 
 test('Consume success', () => {

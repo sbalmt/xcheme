@@ -29,11 +29,11 @@ const getRecordType = (type: Directives): Parser.Symbols => {
  * @param table Active symbol table.
  * @returns Returns the generated node.
  */
-const getIdentity = (name: string, location: Core.Location, table: Types.Table): Types.Node => {
+const getIdentity = (name: string, location: Core.Location, table: Types.SymbolTable): Types.Node => {
   const fragment = new Core.Fragment(name, 0, name.length, location);
   const argument = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Arguments, table);
   const identity = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Identity, table);
-  argument.set(Core.Nodes.Left, identity);
+  argument.set(Core.NodeDirection.Left, identity);
   return argument;
 };
 
@@ -49,18 +49,18 @@ const getIdentity = (name: string, location: Core.Location, table: Types.Table):
 export const getIdentifier = (
   type: Directives,
   location: Core.Location,
-  table: Types.Table,
+  table: Types.SymbolTable,
   name: string,
   id?: string | number
 ): Types.Node => {
   const fragment = new Core.Fragment(name, 0, name.length, location);
   const identifier = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Identifier, table);
-  const record = new Core.Record<Types.Metadata>(fragment, getRecordType(type), identifier);
+  const record = new Core.SymbolRecord<Types.Metadata>(fragment, getRecordType(type), identifier);
   if (id !== void 0) {
     const identity = getIdentity(`${id}`, location, table);
-    identifier.set(Core.Nodes.Left, identity);
+    identifier.set(Core.NodeDirection.Left, identity);
   }
-  table.add(record);
+  table.insert(record);
   return identifier;
 };
 
@@ -74,14 +74,14 @@ export const getIdentifier = (
  */
 export const getDirective = (
   type: Directives,
-  table: Types.Table,
+  table: Types.SymbolTable,
   identifier: Types.Node,
   expression: Types.Node
 ): Types.Node => {
   const fragment = new Core.Fragment('directive', 0, 9, identifier.fragment.location);
   const directive = new Core.Node<Types.Metadata>(fragment, type, table);
-  directive.set(Core.Nodes.Right, identifier);
-  identifier.set(Core.Nodes.Right, expression);
+  directive.set(Core.NodeDirection.Right, identifier);
+  identifier.set(Core.NodeDirection.Right, expression);
   return directive;
 };
 
@@ -92,7 +92,7 @@ export const getDirective = (
  * @param table Active symbol table.
  * @returns Returns the generated node.
  */
-export const getReference = (name: string, location: Core.Location, table: Types.Table): Types.Node => {
+export const getReference = (name: string, location: Core.Location, table: Types.SymbolTable): Types.Node => {
   const fragment = new Core.Fragment(name, 0, name.length, location);
   const reference = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Reference, table);
   return reference;

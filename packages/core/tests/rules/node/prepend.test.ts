@@ -1,12 +1,12 @@
-import { Context, Nodes, Node, TextSource, PrependNodePattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, NodeDirection, Node, TextSource, PrependNodePattern, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * It can consume a sequence of characters '@', 'a' and 'b' and prepend a new node '@' into the current AST.
  */
 const pattern = new PrependNodePattern(
   0xabc,
-  Nodes.Right,
-  Nodes.Next,
+  NodeDirection.Right,
+  NodeDirection.Next,
   new ExpectUnitPattern('@'),
   new ExpectUnitPattern('a', 'b')
 );

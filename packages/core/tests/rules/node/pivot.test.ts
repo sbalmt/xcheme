@@ -1,14 +1,15 @@
-import { Context, Nodes, Node, TextSource, PivotNodePattern, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, NodeDirection, Node, TextSource } from '../../../src/index';
+import { PivotNodePattern, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * It can consume a sequence of characters 'a', 'b' and 'c' and append a new node into the current AST.
  */
-const node = new AppendNodePattern(0xabc, Nodes.Left, Nodes.Left, new ExpectUnitPattern('a', 'b', 'c'));
+const node = new AppendNodePattern(0xabc, NodeDirection.Left, NodeDirection.Left, new ExpectUnitPattern('a', 'b', 'c'));
 
 /**
  * It can consume  the character '@' and the 'node' pattern, then it pivots a new node into the current AST.
  */
-const pattern = new PivotNodePattern(0x123, Nodes.Right, Nodes.Left, new ExpectUnitPattern('@'), node);
+const pattern = new PivotNodePattern(0x123, NodeDirection.Right, NodeDirection.Left, new ExpectUnitPattern('@'), node);
 
 test('Consume success', () => {
   const context = new Context('test');

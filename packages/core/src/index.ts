@@ -1,14 +1,12 @@
 export { Types, TokenType, NodeType, RecordType } from './core/types';
 
+export { Fragment, Location, Range } from './core/coordinates';
+export { InternalErrors, ErrorList, ReadOnlyErrorList, Error } from './core/errors';
+export { TokenList, ReadOnlyTokenList, Token } from './core/tokens';
+export { NodeDirection, Node } from './core/nodes';
+export { SymbolTable, SymbolRecord } from './core/symbols';
+
 export { default as Exception } from './core/exception';
-export { default as Fragment } from './core/data/fragment';
-export { default as Location } from './core/data/location';
-export { default as Range } from './core/data/range';
-export { Errors, Error, ErrorList, ReadOnlyErrorList } from './core/error';
-export { Token, TokenList, ReadOnlyTokenList } from './core/token';
-export { Nodes, Node } from './core/node';
-export { default as Table } from './core/table';
-export { default as Record } from './core/record';
 export { default as Context } from './core/context';
 export { default as Pattern } from './rules/pattern';
 export { default as Route } from './rules/route';

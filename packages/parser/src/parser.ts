@@ -16,7 +16,7 @@ export const Parser = new Core.ExpectFlowPattern(
     new Core.RepeatFlowPattern(
       new Core.EmitNodePattern(
         Core.Source.Output,
-        Core.Nodes.Right,
+        Core.NodeDirection.Right,
         new Core.MapFlowPattern(
           SkipDirective,
           TokenDirective,

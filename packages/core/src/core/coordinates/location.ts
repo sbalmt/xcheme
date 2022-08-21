@@ -1,9 +1,9 @@
-import Range from './range';
+import type { Range } from './range';
 
 /**
  * Data location class.
  */
-export default class Location {
+export class Location {
   /**
    * Location name.
    */

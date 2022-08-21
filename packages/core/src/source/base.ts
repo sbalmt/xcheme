@@ -1,15 +1,13 @@
+import type { Fragment } from '../core/coordinates';
 import type { Types } from '../core/types';
-
-import type Fragment from '../core/data/fragment';
 import type Context from '../core/context';
 
-import { Error } from '../core/error';
-import { Token } from '../core/token';
-import { Node, Nodes } from '../core/node';
+import { Token } from '../core/tokens';
+import { Node, NodeDirection } from '../core/nodes';
+import { SymbolTable, SymbolRecord } from '../core/symbols';
+import { Error } from '../core/errors';
 
 import Exception from '../core/exception';
-import Record from '../core/record';
-import Table from '../core/table';
 
 /**
  * Source output structure.
@@ -21,14 +19,14 @@ type Output<T extends Types> = {
   state: number;
 
   /**
-   * Output table.
+   * Output symbol table.
    */
-  table: Table<T>;
+  table: SymbolTable<T>;
 
   /**
-   * Record link table.
+   * Linked symbol table.
    */
-  link?: Table<T>;
+  link?: SymbolTable<T>;
 
   /**
    * Output value.
@@ -51,9 +49,9 @@ export default class Base<T extends Types> {
   #context: Context<T>;
 
   /**
-   * Current symbol table manager.
+   * Current symbol table.
    */
-  #table: Table<T>;
+  #table: SymbolTable<T>;
 
   /**
    * Current output.
@@ -155,16 +153,16 @@ export default class Base<T extends Types> {
    * @param product Input product.
    * @throws Throws an error when the given product isn't supported.
    */
-  emit(product: Error | Token<T> | Node<T> | Record<T>): void {
+  emit(product: Error | Token<T> | Node<T> | SymbolRecord<T>): void {
     if (product instanceof Error) {
       this.#context.errors.insert(product);
     } else if (product instanceof Token) {
       this.#context.tokens.insert(product);
     } else if (product instanceof Node) {
-      const root = this.#context.node.lowest(Nodes.Next) ?? this.#context.node;
-      root.set(Nodes.Next, product);
-    } else if (product instanceof Record) {
-      this.#table.add(product);
+      const root = this.#context.node.lowest(NodeDirection.Next) ?? this.#context.node;
+      root.set(NodeDirection.Next, product);
+    } else if (product instanceof SymbolRecord) {
+      this.#table.insert(product);
     } else {
       throw new Exception(`Unsupported product type.`);
     }
@@ -174,7 +172,7 @@ export default class Base<T extends Types> {
    * Open a new symbol table.
    */
   expand(): void {
-    this.#table = new Table(this.#table);
+    this.#table = new SymbolTable(this.#table);
     this.#output.table = this.#table;
   }
 

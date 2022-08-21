@@ -19,7 +19,7 @@ export const consume = (
   project: Project.Context,
   node: Types.Node,
   state: Context.State,
-  direction: Core.Nodes
+  direction: Core.NodeDirection
 ): Coder.Pattern | undefined => {
   const patterns = And.resolve(project, node.right!, state);
   if (patterns) {

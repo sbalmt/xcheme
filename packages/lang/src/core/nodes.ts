@@ -12,7 +12,7 @@ import { Exception } from './exception';
  * @returns Returns the corresponding node record.
  * @throws Throws an error when the given node has no record assigned.
  */
-export const getRecord = (node: Types.Node): Types.Record => {
+export const getRecord = (node: Types.Node): Types.SymbolRecord => {
   if (!node.data.record) {
     throw new Exception('Node without a record assignment.');
   }
@@ -44,7 +44,7 @@ export const hasIdentity = (node: Types.Node): boolean => {
  */
 export const getIdentity = (node: Types.Node): number => {
   if (node.value === Parser.Nodes.Access) {
-    node = node.lowest(Core.Nodes.Right)!;
+    node = node.lowest(Core.NodeDirection.Right)!;
   }
   return node.data.identity ?? getRecord(node).data.identity;
 };

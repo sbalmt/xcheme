@@ -1,11 +1,12 @@
-import { Context, Nodes, TextSource, MapFlowPattern, EmitNodeRoute, ExpectUnitPattern } from '../../../src/index';
+import { Context, NodeDirection, TextSource } from '../../../src/index';
+import { MapFlowPattern, EmitNodeRoute, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * Routes map.
  */
 const pattern = new MapFlowPattern(
-  new EmitNodeRoute(0x1aa, Nodes.Right, 'a'),
-  new EmitNodeRoute(0x2bb, Nodes.Left, new ExpectUnitPattern('c'), 'b')
+  new EmitNodeRoute(0x1aa, NodeDirection.Right, 'a'),
+  new EmitNodeRoute(0x2bb, NodeDirection.Left, new ExpectUnitPattern('c'), 'b')
 );
 
 test('Consume success', () => {

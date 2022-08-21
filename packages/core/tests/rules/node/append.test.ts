@@ -1,9 +1,15 @@
-import { Context, Nodes, Node, TextSource, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, NodeDirection, Node, TextSource, AppendNodePattern, ExpectUnitPattern } from '../../../src/index';
 
 /**
  * It can consume a sequence of characters '@', 'a' and 'b' and append a new node '@' into the current AST.
  */
-const pattern = new AppendNodePattern(0xab, Nodes.Left, Nodes.Next, new ExpectUnitPattern('@'), new ExpectUnitPattern('a', 'b'));
+const pattern = new AppendNodePattern(
+  0xab,
+  NodeDirection.Left,
+  NodeDirection.Next,
+  new ExpectUnitPattern('@'),
+  new ExpectUnitPattern('a', 'b')
+);
 
 test('Consume success', () => {
   const context = new Context('test');

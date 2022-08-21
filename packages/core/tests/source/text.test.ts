@@ -1,4 +1,4 @@
-import { Exception, Context, TextSource, Token, Node, Record } from '../../src/index';
+import { Exception, Context, TextSource, Token, Node, SymbolRecord } from '../../src/index';
 
 test('Default source state', () => {
   const context = new Context('test');
@@ -205,7 +205,7 @@ test('Open/Close symbol table', () => {
   source.expand();
 
   // Emit a new record to the output symbol table.
-  source.emit(new Record(source.fragment, 123, context.node));
+  source.emit(new SymbolRecord(source.fragment, 123, context.node));
 
   // Test the output symbol table state.
   table = source.output.table!;
@@ -284,7 +284,7 @@ test('Emit record', () => {
   const source = new TextSource('abc', context);
 
   // Test record emission.
-  source.emit(new Record(source.fragment, 123, context.node));
+  source.emit(new SymbolRecord(source.fragment, 123, context.node));
 
   // Test symbol table state.
   const table = context.table;
@@ -310,7 +310,7 @@ test('Emit record', () => {
   expect(location.column.end).toBe(0);
 
   // Test duplicate record.
-  expect(() => source.emit(new Record(source.fragment, 123, context.node))).toThrow(
+  expect(() => source.emit(new SymbolRecord(source.fragment, 123, context.node))).toThrow(
     new Exception('Unable to add records with duplicate name.')
   );
 });

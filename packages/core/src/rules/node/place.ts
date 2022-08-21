@@ -1,5 +1,5 @@
 import type { Types } from '../../core/types';
-import type { Nodes } from '../../core/node';
+import type { NodeDirection } from '../../core/nodes';
 import type Base from '../../source/base';
 
 import Pattern from '../pattern';
@@ -16,16 +16,16 @@ export default class Place<T extends Types> extends Pattern<T> {
   #target: Pattern<T>;
 
   /**
-   * Child node destination.
+   * Current node direction.
    */
-  #current: Nodes;
+  #current: NodeDirection;
 
   /**
    * Default constructor.
-   * @param current Child destination in the current node.
+   * @param current Current node direction.
    * @param patterns Sequence of patterns.
    */
-  constructor(current: Nodes, ...patterns: Pattern<T>[]) {
+  constructor(current: NodeDirection, ...patterns: Pattern<T>[]) {
     super();
     this.#target = new Expect<T>(...patterns);
     this.#current = current;

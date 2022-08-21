@@ -16,7 +16,7 @@ import { Exception } from '../../core/exception';
  * @param state Consumption state.
  * @returns Returns the corresponding reference pattern.
  */
-const resolve = (project: Project.Context, record: Types.Record, state: Context.State): Coder.Pattern => {
+const resolve = (project: Project.Context, record: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
   const { identity } = record.data;
   const reference = project.coder.emitReferencePattern(record);
   if (state.dynamic && !Records.isEmpty(record) && !Records.isDynamic(record)) {
@@ -33,7 +33,7 @@ const resolve = (project: Project.Context, record: Types.Record, state: Context.
  * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveSkip = (project: Project.Context, target: Types.Record, state: Context.State): Coder.Pattern => {
+const resolveSkip = (project: Project.Context, target: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
   if (target.value !== Parser.Symbols.AliasToken) {
     throw new Exception('SKIP directive can only accept ALIAS TOKEN references.');
   }
@@ -48,7 +48,7 @@ const resolveSkip = (project: Project.Context, target: Types.Record, state: Cont
  * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveToken = (project: Project.Context, target: Types.Record, state: Context.State): Coder.Pattern => {
+const resolveToken = (project: Project.Context, target: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
   if (target.value !== Parser.Symbols.Token && target.value !== Parser.Symbols.AliasToken) {
     throw new Exception('TOKEN directive can only accept TOKEN and ALIAS TOKEN references.');
   }
@@ -67,7 +67,7 @@ const resolveToken = (project: Project.Context, target: Types.Record, state: Con
 const resolveNode = (
   project: Project.Context,
   node: Types.Node,
-  target: Types.Record,
+  target: Types.SymbolRecord,
   state: Context.State
 ): Coder.Pattern => {
   if (target.value !== Parser.Symbols.Node && target.value !== Parser.Symbols.AliasNode) {

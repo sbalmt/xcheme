@@ -10,8 +10,8 @@ export const ImportDirective = new Core.SetValueRoute(
   Nodes.Import,
   new Core.AppendNodePattern(
     Nodes.String,
-    Core.Nodes.Right,
-    Core.Nodes.Right,
+    Core.NodeDirection.Right,
+    Core.NodeDirection.Right,
     new Core.ExpectUnitPattern(Lexer.Tokens.String)
   ),
   Lexer.Tokens.Import

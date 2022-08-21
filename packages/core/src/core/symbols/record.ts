@@ -1,15 +1,14 @@
-import type Fragment from './data/fragment';
-import type Table from './table';
+import type { Types, RecordType } from '../types';
+import type { Fragment } from '../coordinates';
+import type { Node } from '../nodes';
+import type { SymbolTable } from './table';
 
-import type { Types, RecordType } from './types';
-import type { Node } from './node';
-
-import { Data } from './collections/data';
+import { Data } from '../collections/data';
 
 /**
  * A symbol record generated in the analysis process to be stored into the symbol table.
  */
-export default class Record<T extends Types> extends Data<RecordType<T>> {
+export class SymbolRecord<T extends Types> extends Data<RecordType<T>> {
   /**
    * Record fragment.
    */
@@ -26,23 +25,23 @@ export default class Record<T extends Types> extends Data<RecordType<T>> {
   #node: Node<T> | undefined;
 
   /**
-   * Record table link.
+   * Linked symbol table.
    */
-  #link: Table<T> | undefined;
+  #table: SymbolTable<T> | undefined;
 
   /**
    * Default constructor.
    * @param fragment Record fragment.
    * @param value Record value.
    * @param node Record node.
-   * @param link Record table link.
+   * @param table Linked symbol table.
    */
-  constructor(fragment: Fragment, value: number, node?: Node<T>, link?: Table<T>) {
+  constructor(fragment: Fragment, value: number, node?: Node<T>, table?: SymbolTable<T>) {
     super();
     this.#fragment = fragment;
     this.#value = value;
     this.#node = node;
-    this.#link = link;
+    this.#table = table;
   }
 
   /**
@@ -67,18 +66,18 @@ export default class Record<T extends Types> extends Data<RecordType<T>> {
   }
 
   /**
-   * Get the record table link.
+   * Get the linked symbol table.
    */
-  get link(): Table<T> | undefined {
-    return this.#link;
+  get table(): SymbolTable<T> | undefined {
+    return this.#table;
   }
 
   /**
    * Get a shallow copy of the record.
    * @returns Returns the generated record.
    */
-  clone(): Record<T> {
-    const result = new Record(this.#fragment, this.#value, this.#node, this.#link);
+  clone(): SymbolRecord<T> {
+    const result = new SymbolRecord(this.#fragment, this.#value, this.#node, this.#table);
     if (this.assigned) {
       result.assign(this.data);
     }

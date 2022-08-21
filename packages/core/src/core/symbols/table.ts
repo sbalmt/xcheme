@@ -1,24 +1,29 @@
-import { Types } from './types';
+import { Fragment } from '../coordinates';
+import { Types } from '../types';
+import { SymbolRecord } from './record';
 
-import Fragment from './data/fragment';
-import Exception from './exception';
-import Record from './record';
+import Exception from '../exception';
 
 /**
  * Internal record map.
  */
 type RecordMap<T extends Types> = {
-  [name: string]: Record<T>;
+  [name: string]: SymbolRecord<T>;
 };
 
 /**
  * A symbol table for storing symbol records generated during the analysis process.
  */
-export default class Table<T extends Types> implements Iterable<Record<T>> {
+export class SymbolTable<T extends Types> implements Iterable<SymbolRecord<T>> {
   /**
    * Map of records.
    */
   #records: RecordMap<T> = {};
+
+  /**
+   * Parent table.
+   */
+  #parent: SymbolTable<T> | undefined;
 
   /**
    * Table length.
@@ -26,15 +31,10 @@ export default class Table<T extends Types> implements Iterable<Record<T>> {
   #length = 0;
 
   /**
-   * Parent table.
-   */
-  #parent: Table<T> | undefined;
-
-  /**
    * Default constructor.
    * @param parent Parent table.
    */
-  constructor(parent?: Table<T>) {
+  constructor(parent?: SymbolTable<T>) {
     this.#parent = parent;
   }
 
@@ -55,7 +55,7 @@ export default class Table<T extends Types> implements Iterable<Record<T>> {
   /**
    * Get the parent table.
    */
-  get parent(): Table<T> | undefined {
+  get parent(): SymbolTable<T> | undefined {
     return this.#parent;
   }
 
@@ -73,17 +73,17 @@ export default class Table<T extends Types> implements Iterable<Record<T>> {
    * @param name Record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
-  get(name: Fragment | string): Record<T> | undefined {
+  get(name: Fragment | string): SymbolRecord<T> | undefined {
     return this.#records[name instanceof Fragment ? name.data : name];
   }
 
   /**
-   * Add a new record into the table.
+   * Insert a new record into the table.
    * @param record Symbol record.
    * @throw Throws an error when a record with the same name (fragment data) already exists.
    * @returns Returns the given record.
    */
-  add(record: Record<T>): Record<T> {
+  insert(record: SymbolRecord<T>): SymbolRecord<T> {
     const name = record.fragment.data;
     if (this.#records[name]) {
       throw new Exception(`Unable to add records with duplicate name.`);
@@ -94,11 +94,11 @@ export default class Table<T extends Types> implements Iterable<Record<T>> {
   }
 
   /**
-   * Find for a record that corresponds to the specified name in the current and all parent tables.
+   * Find for a record that corresponds to the specified name in the current or any parent table.
    * @param name Record name.
    * @returns Returns the corresponding record or undefined when the record wasn't found.
    */
-  find(name: Fragment | string): Record<T> | undefined {
+  find(name: Fragment | string): SymbolRecord<T> | undefined {
     const record = this.get(name);
     if (!record && this.#parent) {
       return this.#parent.find(name);
@@ -107,14 +107,14 @@ export default class Table<T extends Types> implements Iterable<Record<T>> {
   }
 
   /**
-   * Add all records from the given table into the table.
+   * Add all records from the given table into this table.
    * @param table Another table.
    */
-  assign(table: Table<T>): void {
+  assign(table: SymbolTable<T>): void {
     for (const record of table) {
-      this.add(record);
-      if (record.link) {
-        record.link.#parent = this;
+      this.insert(record);
+      if (record.table) {
+        record.table.#parent = this;
       }
     }
   }
@@ -122,7 +122,7 @@ export default class Table<T extends Types> implements Iterable<Record<T>> {
   /**
    * Iterable generator.
    */
-  *[Symbol.iterator](): Iterator<Record<T>> {
+  *[Symbol.iterator](): Iterator<SymbolRecord<T>> {
     for (const name in this.#records) {
       yield this.#records[name];
     }

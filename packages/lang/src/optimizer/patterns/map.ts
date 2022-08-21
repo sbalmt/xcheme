@@ -32,11 +32,11 @@ const isRoutable = (node: Types.Node): boolean => {
  * @param member Member node.
  * @returns Returns the corresponding route or undefined when there's no route.
  */
-const extractRoute = (direction: Core.Nodes, member: Types.Node): Types.Node | undefined => {
+const extractRoute = (direction: Core.NodeDirection, member: Types.Node): Types.Node | undefined => {
   const action = (
-    direction: Core.Nodes,
+    direction: Core.NodeDirection,
     parent: Types.Node,
-    ancestor?: { direction: Core.Nodes; parent: Types.Node }
+    ancestor?: { direction: Core.NodeDirection; parent: Types.Node }
   ): Types.Node | undefined => {
     const node = parent.get(direction)!;
     if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
@@ -47,7 +47,7 @@ const extractRoute = (direction: Core.Nodes, member: Types.Node): Types.Node | u
         return node;
       }
       if (node.left) {
-        return action(Core.Nodes.Left, node, { direction, parent });
+        return action(Core.NodeDirection.Left, node, { direction, parent });
       }
     }
     return void 0;
@@ -63,7 +63,7 @@ const extractRoute = (direction: Core.Nodes, member: Types.Node): Types.Node | u
  * @param identity Route identity.
  */
 const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.Node, identity: number): void => {
-  const route = extractRoute(Core.Nodes.Right, member);
+  const route = extractRoute(Core.NodeDirection.Right, member);
   if (!route) {
     project.errors.emplace(entry.fragment, Errors.INVALID_MAP_ENTRY);
   } else {
@@ -71,8 +71,8 @@ const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.
       Loose.collision(project, route.fragment.data, route);
     }
     if (route !== member.right) {
-      route.set(Core.Nodes.Next, member.right);
-      member.set(Core.Nodes.Right, route);
+      route.set(Core.NodeDirection.Next, member.right);
+      member.set(Core.NodeDirection.Right, route);
     }
     Types.assignNode(entry, {
       type: Types.Nodes.MemberRoute,

@@ -1,5 +1,5 @@
 import type { Types } from '../../core/types';
-import { Node, Nodes } from '../../core/node';
+import { Node, NodeDirection } from '../../core/nodes';
 
 import Base from '../../source/base';
 import Expect from '../flow/expect';
@@ -28,22 +28,28 @@ export default class Prepend<T extends Types> extends Pattern<T> {
   /**
    * Output node destination.
    */
-  #output: Nodes;
+  #output: NodeDirection;
 
   /**
    * Current node destination.
    */
-  #current: Nodes;
+  #current: NodeDirection;
 
   /**
    * Default constructor.
    * @param value Node value.
-   * @param output Output node destination.
-   * @param current Current node destination.
+   * @param output Output node direction.
+   * @param current Current node direction.
    * @param head Prepend head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, output: Nodes, current: Nodes, head: Pattern<T>, ...patterns: Pattern<T>[]) {
+  constructor(
+    value: number,
+    output: NodeDirection,
+    current: NodeDirection,
+    head: Pattern<T>,
+    ...patterns: Pattern<T>[]
+  ) {
     super();
     this.#head = head;
     this.#target = new Expect<T>(...patterns);

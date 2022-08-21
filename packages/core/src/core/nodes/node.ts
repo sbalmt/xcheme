@@ -1,8 +1,9 @@
-import type Fragment from './data/fragment';
-import type Table from './table';
+import type { Fragment } from '../coordinates';
+import type { SymbolTable } from '../symbols';
 
-import { Data } from './collections/data';
-import { Types, NodeType } from './types';
+import { Data } from '../collections';
+import { Types, NodeType } from '../types';
+import { NodeDirection } from './direction';
 
 /**
  * Internal children nodes.
@@ -11,25 +12,16 @@ type Children<T extends Types> = {
   /**
    * Left child node.
    */
-  [Nodes.Left]?: Node<T>;
+  [NodeDirection.Left]?: Node<T>;
   /**
    * Right child node.
    */
-  [Nodes.Right]?: Node<T>;
+  [NodeDirection.Right]?: Node<T>;
   /**
    * Next child node.
    */
-  [Nodes.Next]?: Node<T>;
+  [NodeDirection.Next]?: Node<T>;
 };
-
-/**
- * All children nodes.
- */
-export const enum Nodes {
-  Left,
-  Right,
-  Next
-}
 
 /**
  * A node element for the abstract syntax tree (AST) generated in the analysis process.
@@ -46,22 +38,22 @@ export class Node<T extends Types> extends Data<NodeType<T>> implements Iterable
   #fragment: Fragment;
 
   /**
+   * Node symbol table.
+   */
+  #table: SymbolTable<T>;
+
+  /**
    * Node value.
    */
   #value: number;
 
   /**
-   * Node symbol table.
-   */
-  #table: Table<T>;
-
-  /**
    * Default constructor
    * @param fragment Node fragment.
    * @param value Node value.
-   * @param table Node table.
+   * @param table Node symbol table.
    */
-  constructor(fragment: Fragment, value: number, table: Table<T>) {
+  constructor(fragment: Fragment, value: number, table: SymbolTable<T>) {
     super();
     this.#fragment = fragment;
     this.#table = table;
@@ -83,9 +75,9 @@ export class Node<T extends Types> extends Data<NodeType<T>> implements Iterable
   }
 
   /**
-   * Get the symbol table for the node.
+   * Get the node symbol table.
    */
-  get table(): Table<T> {
+  get table(): SymbolTable<T> {
     return this.#table;
   }
 
@@ -93,33 +85,53 @@ export class Node<T extends Types> extends Data<NodeType<T>> implements Iterable
    * Get the child node on the left.
    */
   get left(): Node<T> | undefined {
-    return this.#children[Nodes.Left];
+    return this.#children[NodeDirection.Left];
   }
 
   /**
    * Get the child node on the right.
    */
   get right(): Node<T> | undefined {
-    return this.#children[Nodes.Right];
+    return this.#children[NodeDirection.Right];
   }
 
   /**
    * Get the next child node.
    */
   get next(): Node<T> | undefined {
-    return this.#children[Nodes.Next];
+    return this.#children[NodeDirection.Next];
   }
 
   /**
-   * Swap all contents of the given node.
-   * @param node Input node.
+   * Get the corresponding child node for the given direction.
+   * @param child Child node direction.
+   * @returns Return the corresponding child node or undefined when the child isn't set.
    */
-  swap(node: Node<T>): void {
-    super.swap(node);
-    [this.#children, node.#children] = [node.#children, this.#children];
-    [this.#fragment, node.#fragment] = [node.#fragment, this.#fragment];
-    [this.#table, node.#table] = [node.#table, this.#table];
-    [this.#value, node.#value] = [node.#value, this.#value];
+  get(child: NodeDirection): Node<T> | undefined {
+    return this.#children[child];
+  }
+
+  /**
+   * Set the given child node for the specified direction.
+   * @param child Child node direction.
+   * @param node New child node.
+   */
+  set(child: NodeDirection, node: Node<T> | undefined): void {
+    this.#children[child] = node;
+  }
+
+  /**
+   * Get the lowest child node for the given direction.
+   * @param child Child node direction.
+   * @returns Returns the corresponding child node or undefined when the child isn't set.
+   */
+  lowest(child: NodeDirection): Node<T> | undefined {
+    let current: Node<T> | undefined = this;
+    let node;
+    while ((current = current.get(child))) {
+      node = current;
+    }
+    return node;
   }
 
   /**
@@ -136,35 +148,15 @@ export class Node<T extends Types> extends Data<NodeType<T>> implements Iterable
   }
 
   /**
-   * Get the corresponding child node for the given direction.
-   * @param child Child node direction.
-   * @returns Return the corresponding child node or undefined when the child isn't set.
+   * Swap all contents of the given node.
+   * @param node Input node.
    */
-  get(child: Nodes): Node<T> | undefined {
-    return this.#children[child];
-  }
-
-  /**
-   * Set the given child node for the specified direction.
-   * @param child Child node direction.
-   * @param node New child node.
-   */
-  set(child: Nodes, node: Node<T> | undefined): void {
-    this.#children[child] = node;
-  }
-
-  /**
-   * Get the lowest child node for the given direction.
-   * @param child Child node direction.
-   * @returns Returns the corresponding child node or undefined when the child isn't set.
-   */
-  lowest(child: Nodes): Node<T> | undefined {
-    let current: Node<T> | undefined = this;
-    let node;
-    while ((current = current.get(child))) {
-      node = current;
-    }
-    return node;
+  swap(node: Node<T>): void {
+    super.swap(node);
+    [this.#children, node.#children] = [node.#children, this.#children];
+    [this.#fragment, node.#fragment] = [node.#fragment, this.#fragment];
+    [this.#table, node.#table] = [node.#table, this.#table];
+    [this.#value, node.#value] = [node.#value, this.#value];
   }
 
   /**

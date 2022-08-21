@@ -19,7 +19,7 @@ export const consume = (project: Project.Context, state: Context.State): void =>
     let expression = Expression.consume(project, directive.right!, state);
     if (expression) {
       if (!Records.isAlias(record)) {
-        expression = project.coder.emitNodePattern(record.data.identity, Core.Nodes.Right, expression);
+        expression = project.coder.emitNodePattern(record.data.identity, Core.NodeDirection.Right, expression);
       }
       record.data.pattern = expression;
     }

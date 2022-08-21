@@ -142,7 +142,7 @@ export class Text extends Base {
    * @param patterns Node patterns.
    * @returns Returns the pattern.
    */
-  emitNodePattern(identity: number, output: Core.Nodes, ...patterns: string[]): string {
+  emitNodePattern(identity: number, output: Core.NodeDirection, ...patterns: string[]): string {
     return this.#getPattern('EmitNodePattern', identity, output, ...patterns);
   }
 
@@ -236,7 +236,7 @@ export class Text extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitPlacePattern(current: Core.Nodes, ...patterns: string[]): string {
+  emitPlacePattern(current: Core.NodeDirection, ...patterns: string[]): string {
     return this.#getPattern('PlaceNodePattern', current, ...patterns);
   }
 
@@ -251,8 +251,8 @@ export class Text extends Base {
    */
   emitAppendPattern(
     identity: number,
-    left: Core.Nodes,
-    right: Core.Nodes,
+    left: Core.NodeDirection,
+    right: Core.NodeDirection,
     head: string,
     ...patterns: string[]
   ): string {
@@ -270,8 +270,8 @@ export class Text extends Base {
    */
   emitPrependPattern(
     identity: number,
-    left: Core.Nodes,
-    right: Core.Nodes,
+    left: Core.NodeDirection,
+    right: Core.NodeDirection,
     head: string,
     ...patterns: string[]
   ): string {
@@ -286,7 +286,14 @@ export class Text extends Base {
    * @returns Returns the pattern.
    */
   emitPivotPattern(identity: number, pivot: string, ...patterns: string[]): string {
-    return this.#getPattern('PivotNodePattern', identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
+    return this.#getPattern(
+      'PivotNodePattern',
+      identity,
+      Core.NodeDirection.Right,
+      Core.NodeDirection.Left,
+      pivot,
+      ...patterns
+    );
   }
 
   /**
@@ -362,7 +369,7 @@ export class Text extends Base {
    * @param record Referenced record.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(record: Types.Record): string {
+  emitReferencePattern(record: Types.SymbolRecord): string {
     const data = record.data;
     if (!data.pattern) {
       return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(data.name)}`);

@@ -13,7 +13,7 @@ import { Errors } from '../../core/errors';
  * @param node Reference node.
  * @param record Reference record.
  */
-const assign = (node: Types.Node, record: Types.Record): void => {
+const assign = (node: Types.Node, record: Types.SymbolRecord): void => {
   Types.assignNode(node, {
     type: Types.Nodes.Reference,
     record
@@ -43,11 +43,15 @@ const getAllNodes = (node: Types.Node): Types.Node[] => {
  * @param nodes Member nodes.
  * @returns Returns the corresponding record or undefined when the path wasn't found.
  */
-const getRecord = (project: Project.Context, record: Types.Record, nodes: Types.Node[]): Types.Record | undefined => {
-  let member: Types.Record | undefined = record;
+const getRecord = (
+  project: Project.Context,
+  record: Types.SymbolRecord,
+  nodes: Types.Node[]
+): Types.SymbolRecord | undefined => {
+  let member: Types.SymbolRecord | undefined = record;
   for (let index = 0; index < nodes.length; index++) {
     const node = nodes[index];
-    if (!(member = member.link?.get(node.fragment.data))) {
+    if (!(member = member.table?.get(node.fragment.data))) {
       project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTIFIER);
       break;
     }

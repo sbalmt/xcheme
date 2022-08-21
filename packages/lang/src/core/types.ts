@@ -14,9 +14,14 @@ export type Source = Core.Source<Metadata>;
 export type Context = Core.Context<Metadata>;
 
 /**
- * Core table type.
+ * Core symbol table type.
  */
-export type Table = Core.Table<Metadata>;
+export type SymbolTable = Core.SymbolTable<Metadata>;
+
+/**
+ * Core symbol record type.
+ */
+export type SymbolRecord = Core.SymbolRecord<Metadata>;
 
 /**
  * Core token type.
@@ -32,11 +37,6 @@ export type TokenList = Core.TokenList<Metadata>;
  * Core node type.
  */
 export type Node = Core.Node<Metadata>;
-
-/**
- * Core record type.
- */
-export type Record = Core.Record<Metadata>;
 
 /**
  * Core pattern type.
@@ -91,9 +91,9 @@ export type Metadata = {
      */
     type: Nodes;
     /**
-     * Node record.
+     * Node symbol record.
      */
-    record?: Record;
+    record?: SymbolRecord;
     /**
      * Node identity.
      */
@@ -134,11 +134,11 @@ export type Metadata = {
     /**
      * Array of dependencies.
      */
-    dependencies: Record[];
+    dependencies: SymbolRecord[];
     /**
      * Array of dependents.
      */
-    dependents: Record[];
+    dependents: SymbolRecord[];
     /**
      * Record pattern.
      */
@@ -205,7 +205,7 @@ export const assignNode = (node: Node, data: Metadata['node']): Node => {
  * @param data Input metadata.
  * @returns Returns the given record.
  */
-export const assignRecord = (project: Project.Context, record: Record, data: RecordData): Record => {
+export const assignRecord = (project: Project.Context, record: SymbolRecord, data: RecordData): SymbolRecord => {
   record.assign({
     type: data.type,
     origin: data.origin,

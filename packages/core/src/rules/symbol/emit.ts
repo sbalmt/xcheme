@@ -1,8 +1,9 @@
 import type { Types } from '../../core/types';
-import { Error, Errors } from '../../core/error';
+
+import { Error, InternalErrors } from '../../core/errors';
+import { SymbolRecord } from '../../core/symbols';
 
 import Base from '../../source/base';
-import Record from '../../core/record';
 import Pattern from '../pattern';
 import Expect from '../flow/expect';
 
@@ -58,11 +59,11 @@ export default class Emit<T extends Types> extends Pattern<T> {
           link = source.output.link;
         }
         if (table.has(fragment)) {
-          const error = new Error(fragment, Errors.DUPLICATE_IDENTIFIER);
+          const error = new Error(fragment, InternalErrors.DUPLICATE_IDENTIFIER);
           source.emit(error);
         } else {
           const result = this.#value === Base.Output ? value ?? -1 : this.#value;
-          const record = new Record<T>(fragment, result, node, link);
+          const record = new SymbolRecord<T>(fragment, result, node, link);
           source.output.link = void 0;
           source.emit(record);
         }

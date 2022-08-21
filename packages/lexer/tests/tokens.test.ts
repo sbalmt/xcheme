@@ -116,7 +116,7 @@ test('Consume an unexpected token', () => {
   expect(context.errors).toHaveLength(1);
 
   const error = context.errors.get(0);
-  expect(error.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
+  expect(error.value).toBe(Lexer.InternalErrors.UNEXPECTED_TOKEN);
 
   const fragment = error.fragment;
   expect(fragment).toBeDefined();
@@ -145,7 +145,7 @@ test('Consume an unexpected token (empty string)', () => {
   expect(context.errors).toHaveLength(1);
 
   const error = context.errors.get(0);
-  expect(error.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
+  expect(error.value).toBe(Lexer.InternalErrors.UNEXPECTED_TOKEN);
 
   const fragment = error.fragment;
   expect(fragment).toBeDefined();

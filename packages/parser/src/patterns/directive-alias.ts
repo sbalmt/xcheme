@@ -14,8 +14,8 @@ import { getDirectiveExpression } from './expression-directive';
 const AliasParameterList: Core.Pattern<Core.Types> = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
     Nodes.Identifier,
-    Core.Nodes.Right,
-    Core.Nodes.Next,
+    Core.NodeDirection.Right,
+    Core.NodeDirection.Next,
     new Core.EmitSymbolPattern(Symbols.AliasParameter, new Core.ExpectUnitPattern(Lexer.Tokens.Identifier))
   ),
   new Core.OptFlowPattern(
@@ -33,8 +33,8 @@ export const AliasDirectives = new Core.FlowRoute(
       new Core.ScopeSymbolPattern(
         new Core.AppendNodePattern(
           Nodes.Parameters,
-          Core.Nodes.Left,
-          Core.Nodes.Right,
+          Core.NodeDirection.Left,
+          Core.NodeDirection.Right,
           new Core.ExpectFlowPattern(
             new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
             AliasParameterList,

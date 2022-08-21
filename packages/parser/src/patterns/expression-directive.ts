@@ -22,12 +22,12 @@ export const getDirectiveExpression = <T extends Core.Types>(
       symbol,
       new Core.PivotNodePattern(
         Nodes.Identifier,
-        Core.Nodes.Right,
-        Core.Nodes.Left,
+        Core.NodeDirection.Right,
+        Core.NodeDirection.Left,
         new Core.ExpectUnitPattern(Lexer.Tokens.Identifier),
         new Core.PeekFlowPattern(new Core.ExpectUnitPattern(Lexer.Tokens.As))
       ),
       new Core.ExpectUnitPattern(Lexer.Tokens.As),
-      new Core.PlaceNodePattern(Core.Nodes.Right, expression)
+      new Core.PlaceNodePattern(Core.NodeDirection.Right, expression)
     )
   );

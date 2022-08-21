@@ -14,7 +14,13 @@ export const getBinaryExpression = <T extends Core.Types>(
     expression,
     new Core.OptFlowPattern(
       new Core.RepeatFlowPattern(
-        new Core.PivotNodePattern(Core.Source.Output, Core.Nodes.Right, Core.Nodes.Left, operator, expression)
+        new Core.PivotNodePattern(
+          Core.Source.Output,
+          Core.NodeDirection.Right,
+          Core.NodeDirection.Left,
+          operator,
+          expression
+        )
       )
     )
   );

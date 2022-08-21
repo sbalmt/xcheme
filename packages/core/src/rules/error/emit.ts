@@ -1,5 +1,6 @@
 import type { Types } from '../../core/types';
-import { Error } from '../../core/error';
+
+import { Error } from '../../core/errors';
 
 import Base from '../../source/base';
 import Expect from '../flow/expect';

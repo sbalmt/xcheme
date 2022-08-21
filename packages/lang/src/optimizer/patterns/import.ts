@@ -30,7 +30,7 @@ const importingFiles = new Cache.Context<string>();
  * @param source Source records aggregator.
  * @returns Returns an array containing all the exported records.
  */
-const getExportedRecords = (source: Symbols.Aggregator): Types.Record[] => {
+const getExportedRecords = (source: Symbols.Aggregator): Types.SymbolRecord[] => {
   const exported = [];
   for (const record of source) {
     if (record.data.exported) {
@@ -45,10 +45,10 @@ const getExportedRecords = (source: Symbols.Aggregator): Types.Record[] => {
  * @param records Record list.
  * @returns Returns a new record set containing all the unused records.
  */
-const getUnreferencedRecords = (records: Types.Record[]): WeakSet<Types.Record> => {
-  const unused = new WeakSet<Types.Record>();
-  const cache = new WeakSet<Types.Record>();
-  const action = (records: Types.Record[]): void => {
+const getUnreferencedRecords = (records: Types.SymbolRecord[]): WeakSet<Types.SymbolRecord> => {
+  const unused = new WeakSet<Types.SymbolRecord>();
+  const cache = new WeakSet<Types.SymbolRecord>();
+  const action = (records: Types.SymbolRecord[]): void => {
     for (const record of records) {
       if (!cache.has(record)) {
         const { dependents, dependencies } = record.data;
@@ -72,7 +72,7 @@ const getUnreferencedRecords = (records: Types.Record[]): WeakSet<Types.Record> 
  * @param records Record list.
  * @param ignored Ignored record set.
  */
-const purgeRecords = (records: Types.Record[], ignored: WeakSet<Types.Record>): void => {
+const purgeRecords = (records: Types.SymbolRecord[], ignored: WeakSet<Types.SymbolRecord>): void => {
   for (const record of records) {
     const data = record.data;
     data.dependents = data.dependents.filter((dependent) => !ignored.has(dependent));
@@ -85,7 +85,7 @@ const purgeRecords = (records: Types.Record[], ignored: WeakSet<Types.Record>): 
  * @param table Global symbol table.
  * @param source Source records aggregator.
  */
-const integrate = (project: Project.Context, table: Types.Table, source: Symbols.Aggregator): void => {
+const integrate = (project: Project.Context, table: Types.SymbolTable, source: Symbols.Aggregator): void => {
   for (const record of source) {
     const { identifier, exported } = record.data;
     if (exported) {
@@ -93,10 +93,10 @@ const integrate = (project: Project.Context, table: Types.Table, source: Symbols
       if (current) {
         project.errors.emplace(current.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
-        const integration = new Core.Record(record.fragment, record.value, record.node, record.link);
+        const integration = new Core.SymbolRecord(record.fragment, record.value, record.node, record.table);
         integration.assign({ ...record.data, exported: false, imported: true });
         project.symbols.add(integration);
-        table.add(integration);
+        table.insert(integration);
       }
     }
   }
@@ -129,7 +129,7 @@ const compile = (project: Project.Context, context: Types.Context, content: stri
 const process = (
   project: Project.Context,
   location: Types.Node,
-  table: Types.Table,
+  table: Types.SymbolTable,
   path: string,
   content: string
 ): void => {
@@ -157,7 +157,7 @@ const process = (
  * @param table Global symbol table.
  * @param path Full importation path.
  */
-const resolve = (project: Project.Context, location: Types.Node, table: Types.Table, path: string): void => {
+const resolve = (project: Project.Context, location: Types.Node, table: Types.SymbolTable, path: string): void => {
   if (importingFiles.has(project.coder, path)) {
     project.errors.emplace(location.fragment, Errors.IMPORT_CYCLIC);
   } else {

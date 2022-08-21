@@ -1,9 +1,9 @@
-import type Location from './location';
+import type { Location } from './location';
 
 /**
  * Data fragment with its precise location.
  */
-export default class Fragment {
+export class Fragment {
   /**
    * Fragment source.
    */

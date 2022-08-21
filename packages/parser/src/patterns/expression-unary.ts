@@ -13,7 +13,7 @@ export const getUnaryExpression = <T extends Core.Types>(
   new Core.ExpectFlowPattern(
     new Core.OptFlowPattern(
       new Core.RepeatFlowPattern(
-        new Core.AppendNodePattern(Core.Source.Output, Core.Nodes.Right, Core.Nodes.Right, operator)
+        new Core.AppendNodePattern(Core.Source.Output, Core.NodeDirection.Right, Core.NodeDirection.Right, operator)
       )
     ),
     expression

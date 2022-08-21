@@ -1,11 +1,11 @@
 import * as Core from '@xcheme/core';
 
 import { Parser } from './parser';
-import { Errors } from './errors';
+import { InternalErrors } from './errors';
 
 export { Nodes } from './nodes';
 export { Symbols } from './symbols';
-export { Errors } from './errors';
+export { InternalErrors } from './errors';
 
 /**
  * Consume the given source and produce an AST.
@@ -26,7 +26,7 @@ export const consumeTokens = <T extends Core.Types>(tokens: Core.TokenList<T>, c
   const source = new Core.TokenSource<T>(tokens, context);
   if (!consume(source)) {
     const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
-    context.errors.emplace(fragment, Errors.UNEXPECTED_SYNTAX);
+    context.errors.emplace(fragment, InternalErrors.UNEXPECTED_SYNTAX);
     return false;
   }
   return true;

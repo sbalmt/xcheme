@@ -1,13 +1,10 @@
 import type { Types } from './types';
 
-import { ErrorList } from './error';
-import { TokenList } from './token';
-import { Node } from './node';
-
-import Fragment from './data/fragment';
-import Location from './data/location';
-import Range from './data/range';
-import Table from './table';
+import { Fragment, Location, Range } from './coordinates';
+import { ErrorList } from './errors';
+import { TokenList } from './tokens';
+import { Node } from './nodes/node';
+import { SymbolTable } from './symbols';
 
 /**
  * Contains the analysis context and depending on the solution, can store errors, tokens, symbols and
@@ -27,7 +24,7 @@ export default class Context<T extends Types> {
   /**
    * Context symbol table.
    */
-  #table = new Table<T>();
+  #table = new SymbolTable<T>();
 
   /**
    * Context main node.
@@ -68,7 +65,7 @@ export default class Context<T extends Types> {
   /**
    * Get the symbol table.
    */
-  get table(): Table<T> {
+  get table(): SymbolTable<T> {
     return this.#table;
   }
 

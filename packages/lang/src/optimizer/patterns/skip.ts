@@ -20,7 +20,7 @@ const counter = new Counter.Context();
  * @param record Input record.
  * @param state Consumption state.
  */
-const assign = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+const assign = (project: Project.Context, node: Types.Node, record: Types.SymbolRecord, state: Context.State): void => {
   state.type = Types.Directives.Skip;
   state.record = record;
   Types.assignRecord(project, record, {
@@ -43,13 +43,13 @@ const assign = (project: Project.Context, node: Types.Node, record: Types.Record
  * @param identifier Directive identifier.
  * @returns Returns the registered symbol record.
  */
-const register = (project: Project.Context, node: Types.Node, identifier: string): Types.Record => {
+const register = (project: Project.Context, node: Types.Node, identifier: string): Types.SymbolRecord => {
   const line = new Core.Range(0, 0);
   const column = new Core.Range(0, identifier.length);
   const location = new Core.Location(project.name, line, column);
   const fragment = new Core.Fragment(identifier, 0, identifier.length, location);
-  const record = new Core.Record(fragment, Parser.Symbols.Skip, node);
-  return node.table.add(record);
+  const record = new Core.SymbolRecord(fragment, Parser.Symbols.Skip, node);
+  return node.table.insert(record);
 };
 
 /**

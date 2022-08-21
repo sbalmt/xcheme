@@ -35,7 +35,7 @@ const resolveUnits = (node: Types.Node): (string | number)[] => {
   if (node.value === Parser.Nodes.String) {
     return String.extract(node.fragment.data).split('');
   } else if (node.value === Parser.Nodes.Access) {
-    return [Nodes.getIdentity(node.lowest(Core.Nodes.Right)!)];
+    return [Nodes.getIdentity(node.lowest(Core.NodeDirection.Right)!)];
   } else if (node.value === Parser.Nodes.Reference) {
     return [Nodes.getIdentity(node)];
   } else if (node.value === Parser.Nodes.And) {

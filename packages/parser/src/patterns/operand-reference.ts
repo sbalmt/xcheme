@@ -9,8 +9,8 @@ import { Arguments } from './arguments';
  */
 export const ReferenceOperand = new Core.AppendNodePattern(
   Nodes.Reference,
-  Core.Nodes.Right,
-  Core.Nodes.Right,
+  Core.NodeDirection.Right,
+  Core.NodeDirection.Right,
   new Core.ExpectUnitPattern(Lexer.Tokens.Identifier),
   new Core.OptFlowPattern(Arguments)
 );

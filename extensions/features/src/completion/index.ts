@@ -95,13 +95,13 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param path Symbol table path.
    * @returns Returns the corresponding symbol table or undefined when the given path doesn't exists.
    */
-  #getSymbolTableFromPath(table: Lang.Types.Table, path: string[]): Lang.Types.Table | undefined {
+  #getSymbolTableFromPath(table: Lang.Types.SymbolTable, path: string[]): Lang.Types.SymbolTable | undefined {
     for (const name of path) {
       const record = table.get(name);
-      if (!record || !record.link) {
+      if (!record || !record.table) {
         return void 0;
       }
-      table = record.link;
+      table = record.table;
     }
     return table;
   }
@@ -111,8 +111,8 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param record Symbol record.
    * @returns Returns the corresponding completion item kind.
    */
-  #getItemKind(record: Lang.Types.Record): VSCode.CompletionItemKind {
-    if (record.link) {
+  #getItemKind(record: Lang.Types.SymbolRecord): VSCode.CompletionItemKind {
+    if (record.table) {
       return VSCode.CompletionItemKind.Class;
     } else {
       switch (record.value) {
@@ -156,12 +156,12 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    * @param types Symbol types for filtering.
    * @returns Returns the completion items list.
    */
-  #getSymbolList(table: Lang.Types.Table, types: Parser.Symbols[]): VSCode.CompletionItem[] {
+  #getSymbolList(table: Lang.Types.SymbolTable, types: Parser.Symbols[]): VSCode.CompletionItem[] {
     const list = [];
     for (const name of table.names) {
       const record = table.get(name)!;
       if (record.data.origin === Lang.Types.Origins.User && types.includes(record.value as Parser.Symbols)) {
-        const link = !!record.link;
+        const link = !!record.table;
         const item = Items.getItem(name, `Insert the ${name} reference.`, {
           kind: this.#getItemKind(record),
           text: link ? `${name}.` : name,
@@ -202,7 +202,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
    */
   #getCompletionItems(
     document: VSCode.TextDocument,
-    table: Lang.Types.Table,
+    table: Lang.Types.SymbolTable,
     tokens: Lang.Types.TokenList,
     offset: number
   ): CompletionItems | undefined {

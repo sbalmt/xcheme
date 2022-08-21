@@ -83,7 +83,7 @@ export class Live extends Base {
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitNodePattern(identity: number, output: Core.Nodes, ...patterns: Types.Pattern[]): Types.Pattern {
+  emitNodePattern(identity: number, output: Core.NodeDirection, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.EmitNodePattern(identity, output, ...patterns);
   }
 
@@ -173,11 +173,11 @@ export class Live extends Base {
 
   /**
    * Get a new place node pattern.
-   * @param current Current node destination.
+   * @param current Current node direction.
    * @param patterns Expected patterns.
    * @returns Returns the pattern.
    */
-  emitPlacePattern(current: Core.Nodes, ...patterns: Types.Pattern[]): Types.Pattern {
+  emitPlacePattern(current: Core.NodeDirection, ...patterns: Types.Pattern[]): Types.Pattern {
     return new Core.PlaceNodePattern(current, ...patterns);
   }
 
@@ -192,8 +192,8 @@ export class Live extends Base {
    */
   emitAppendPattern(
     identity: number,
-    left: Core.Nodes,
-    right: Core.Nodes,
+    left: Core.NodeDirection,
+    right: Core.NodeDirection,
     head: Types.Pattern,
     ...patterns: Types.Pattern[]
   ): Types.Pattern {
@@ -211,8 +211,8 @@ export class Live extends Base {
    */
   emitPrependPattern(
     identity: number,
-    left: Core.Nodes,
-    right: Core.Nodes,
+    left: Core.NodeDirection,
+    right: Core.NodeDirection,
     head: Types.Pattern,
     ...patterns: Types.Pattern[]
   ): Types.Pattern {
@@ -227,7 +227,7 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   emitPivotPattern(identity: number, pivot: Types.Pattern, ...patterns: Types.Pattern[]): Types.Pattern {
-    return new Core.PivotNodePattern(identity, Core.Nodes.Right, Core.Nodes.Left, pivot, ...patterns);
+    return new Core.PivotNodePattern(identity, Core.NodeDirection.Right, Core.NodeDirection.Left, pivot, ...patterns);
   }
 
   /**
@@ -303,7 +303,7 @@ export class Live extends Base {
    * @param record Referenced record.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(record: Types.Record): Types.Pattern {
+  emitReferencePattern(record: Types.SymbolRecord): Types.Pattern {
     const data = record.data;
     if (!data.pattern) {
       return new Core.RunFlowPattern(() => data.pattern as Types.Pattern);

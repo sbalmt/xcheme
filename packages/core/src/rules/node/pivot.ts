@@ -1,5 +1,6 @@
 import type { Types } from '../../core/types';
-import { Node, Nodes } from '../../core/node';
+
+import { Node, NodeDirection } from '../../core/nodes';
 
 import Exception from '../../core/exception';
 import Base from '../../source/base';
@@ -27,24 +28,30 @@ export default class Pivot<T extends Types> extends Pattern<T> {
   #value: number;
 
   /**
-   * Output node destination.
+   * Output node direction.
    */
-  #output: Nodes;
+  #output: NodeDirection;
 
   /**
-   * Current node destination.
+   * Current node direction.
    */
-  #current: Nodes;
+  #current: NodeDirection;
 
   /**
    * Default constructor.
    * @param value Node value.
-   * @param output Output node destination.
-   * @param current Current node destination.
+   * @param output Output node direction.
+   * @param current Current node direction.
    * @param head Pivot head pattern.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, output: Nodes, current: Nodes, head: Pattern<T>, ...patterns: Pattern<T>[]) {
+  constructor(
+    value: number,
+    output: NodeDirection,
+    current: NodeDirection,
+    head: Pattern<T>,
+    ...patterns: Pattern<T>[]
+  ) {
     super();
     if (current === output) {
       throw new Exception(`Current and Output destination can't have the same value.`);

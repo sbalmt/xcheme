@@ -18,7 +18,7 @@ import * as Expression from './expression';
  * @param record Input record.
  * @param state Consumption state.
  */
-const assign = (project: Project.Context, node: Types.Node, record: Types.Record, state: Context.State): void => {
+const assign = (project: Project.Context, node: Types.Node, record: Types.SymbolRecord, state: Context.State): void => {
   const template = Records.isTemplate(record);
   state.type = Types.Directives.Token;
   state.record = record;

@@ -9,8 +9,8 @@ import { Nodes } from '../nodes';
 const ArgumentList: Core.Pattern<Core.Types> = new Core.ExpectFlowPattern(
   new Core.AppendNodePattern(
     Core.Source.Output,
-    Core.Nodes.Right,
-    Core.Nodes.Next,
+    Core.NodeDirection.Right,
+    Core.NodeDirection.Next,
     new Core.MapFlowPattern(
       new Core.SetValueRoute(Nodes.Identity, Lexer.Tokens.Auto),
       new Core.SetValueRoute(Nodes.Identity, Lexer.Tokens.Number),
@@ -25,8 +25,8 @@ const ArgumentList: Core.Pattern<Core.Types> = new Core.ExpectFlowPattern(
  */
 export const Arguments = new Core.PrependNodePattern(
   Nodes.Arguments,
-  Core.Nodes.Left,
-  Core.Nodes.Next,
+  Core.NodeDirection.Left,
+  Core.NodeDirection.Next,
   new Core.ExpectFlowPattern(
     new Core.ExpectUnitPattern(Lexer.Tokens.OpenChevron),
     ArgumentList,

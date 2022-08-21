@@ -21,7 +21,7 @@ const getPadding = (depth: boolean[]): string => {
  * @param table Symbol table.
  * @param depth Depth states.
  */
-const printTable = (table: Lang.Types.Table, ...depth: boolean[]): void => {
+const printTable = (table: Lang.Types.SymbolTable, ...depth: boolean[]): void => {
   const padding = getPadding(depth);
   let index = 1;
   for (const record of table) {
@@ -31,8 +31,8 @@ const printTable = (table: Lang.Types.Table, ...depth: boolean[]): void => {
     const connector = depth.length > 0 ? (ending ? '└─ ' : '├─ ') : '';
     const value = record.value.toString().padStart(4, '0');
     Console.printLine(`${location} ${value} ${padding}${connector}${fragment}`);
-    if (record.link) {
-      printTable(record.link, ...depth, !ending);
+    if (record.table) {
+      printTable(record.table, ...depth, !ending);
     }
     index++;
   }
@@ -42,7 +42,7 @@ const printTable = (table: Lang.Types.Table, ...depth: boolean[]): void => {
  * Print all the symbol for the given symbol table.
  * @param table Symbol table.
  */
-export const print = (table: Lang.Types.Table): void => {
+export const print = (table: Lang.Types.SymbolTable): void => {
   Console.printLine('Symbols:\n');
   Console.printLine('          Code Identifier');
   printTable(table);

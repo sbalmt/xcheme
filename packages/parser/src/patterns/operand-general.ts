@@ -8,8 +8,8 @@ import { Nodes } from '../nodes';
  */
 export const GeneralOperands = new Core.AppendNodePattern(
   Core.Source.Output,
-  Core.Nodes.Right,
-  Core.Nodes.Right,
+  Core.NodeDirection.Right,
+  Core.NodeDirection.Right,
   new Core.MapFlowPattern(
     new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Any),
     new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Asterisk),

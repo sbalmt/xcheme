@@ -19,7 +19,7 @@ export type State = {
   /**
    * Directive record.
    */
-  record?: Types.Record;
+  record?: Types.SymbolRecord;
 };
 
 /**

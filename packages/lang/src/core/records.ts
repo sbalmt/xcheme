@@ -10,7 +10,7 @@ import * as Types from './types';
  * @param record Symbol record.
  * @returns Returns true when the record is an alias, false otherwise.
  */
-export const isAlias = (record: Types.Record): boolean => {
+export const isAlias = (record: Types.SymbolRecord): boolean => {
   return record.value === Parser.Symbols.AliasToken || record.value === Parser.Symbols.AliasNode;
 };
 
@@ -19,7 +19,7 @@ export const isAlias = (record: Types.Record): boolean => {
  * @param record Symbol record.
  * @returns Returns the true when the record has an identity, false otherwise.
  */
-export const hasIdentity = (record: Types.Record): boolean => {
+export const hasIdentity = (record: Types.SymbolRecord): boolean => {
   return !!record.data.identity;
 };
 
@@ -28,7 +28,7 @@ export const hasIdentity = (record: Types.Record): boolean => {
  * @param record Symbol record.
  * @returns Returns true when the record has a dynamic identity, false otherwise.
  */
-export const isDynamic = (record: Types.Record): boolean => {
+export const isDynamic = (record: Types.SymbolRecord): boolean => {
   return record.data.identity === Core.Source.Output;
 };
 
@@ -37,7 +37,7 @@ export const isDynamic = (record: Types.Record): boolean => {
  * @param record Symbol record.
  * @returns Returns true when the record identity is empty, false otherwise.
  */
-export const isEmpty = (record: Types.Record): boolean => {
+export const isEmpty = (record: Types.SymbolRecord): boolean => {
   return Number.isNaN(record.data.identity);
 };
 
@@ -46,9 +46,9 @@ export const isEmpty = (record: Types.Record): boolean => {
  * @param record Symbol record.
  * @returns Returns true when the record is a template, false otherwise.
  */
-export const isTemplate = (record: Types.Record): boolean => {
-  if (record.link) {
-    for (const current of record.link) {
+export const isTemplate = (record: Types.SymbolRecord): boolean => {
+  if (record.table) {
+    for (const current of record.table) {
       if (current.value === Parser.Symbols.AliasParameter) {
         return true;
       }
@@ -64,7 +64,7 @@ export const isTemplate = (record: Types.Record): boolean => {
  * @returns Returns true when the record is referenced, false otherwise.
  * @throws Throws an exception when the given error has no metadata.
  */
-export const isReferenced = (record: Types.Record, ...types: Types.Directives[]): boolean => {
+export const isReferenced = (record: Types.SymbolRecord, ...types: Types.Directives[]): boolean => {
   const { order, dependents, dependencies } = record.data;
   let counter = 0;
   for (const dependent of dependents) {
@@ -87,7 +87,7 @@ export const isReferenced = (record: Types.Record, ...types: Types.Directives[])
  * @param target Target record.
  * @returns Returns true when both records are from the same location.
  */
-export const fromSameLocation = (source: Types.Record, target: Types.Record): boolean => {
+export const fromSameLocation = (source: Types.SymbolRecord, target: Types.SymbolRecord): boolean => {
   return source.fragment.location.name === target.fragment.location.name;
 };
 
@@ -101,7 +101,7 @@ export const fromSameLocation = (source: Types.Record, target: Types.Record): bo
 export const resolve = (
   project: Project.Context,
   identifier: string,
-  record: Types.Record,
+  record: Types.SymbolRecord,
   callback: Symbols.EventCallback
 ): void => {
   if (!record.assigned) {
@@ -118,7 +118,7 @@ export const resolve = (
  * @param source Target record.
  * @param target Source record.
  */
-export const connect = (source: Types.Record, target: Types.Record): void => {
+export const connect = (source: Types.SymbolRecord, target: Types.SymbolRecord): void => {
   if (!target.data.dependencies.includes(source)) {
     target.data.dependencies.push(source);
     source.data.dependents.push(target);

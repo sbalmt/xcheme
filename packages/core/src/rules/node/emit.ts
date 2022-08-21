@@ -1,5 +1,6 @@
 import type { Types } from '../../core/types';
-import { Node, Nodes } from '../../core/node';
+
+import { Node, NodeDirection } from '../../core/nodes';
 
 import Base from '../../source/base';
 import Expect from '../flow/expect';
@@ -21,17 +22,17 @@ export default class Emit<T extends Types> extends Pattern<T> {
   #value: number;
 
   /**
-   * Output node destination.
+   * Output node direction.
    */
-  #output: Nodes;
+  #output: NodeDirection;
 
   /**
    * Default constructor.
    * @param value Token value.
-   * @param output Output node destination.
+   * @param output Output node direction.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, output: Nodes, ...patterns: Pattern<T>[]) {
+  constructor(value: number, output: NodeDirection, ...patterns: Pattern<T>[]) {
     super();
     this.#target = new Expect<T>(...patterns);
     this.#value = value;

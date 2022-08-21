@@ -1,11 +1,9 @@
 import type { Types } from '../core/types';
 import type Context from '../core/context';
 
-import Exception from '../core/exception';
+import { Fragment, Location, Range } from '../core/coordinates';
 
-import Fragment from '../core/data/fragment';
-import Location from '../core/data/location';
-import Range from '../core/data/range';
+import Exception from '../core/exception';
 import Base from './base';
 
 /**

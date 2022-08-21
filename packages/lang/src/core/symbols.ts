@@ -5,7 +5,7 @@ import { Exception } from './exception';
 /**
  * Event callback.
  */
-export type EventCallback = (record: Types.Record) => void;
+export type EventCallback = (record: Types.SymbolRecord) => void;
 
 /**
  * Map of events.
@@ -18,13 +18,13 @@ type EventMap = {
  * Map of records.
  */
 type RecordMap = {
-  [identifier: string]: Types.Record;
+  [identifier: string]: Types.SymbolRecord;
 };
 
 /**
  * Symbol aggregator class.
  */
-export class Aggregator implements Iterable<Types.Record> {
+export class Aggregator implements Iterable<Types.SymbolRecord> {
   /**
    * Symbol records.
    */
@@ -46,7 +46,7 @@ export class Aggregator implements Iterable<Types.Record> {
    * @returns Returns the corresponding record.
    * @throws Throws an exception when the given record wasn't found.
    */
-  #get(identifier: string): Types.Record {
+  #get(identifier: string): Types.SymbolRecord {
     if (!this.has(identifier)) {
       throw new Exception(`A record named '${identifier}' doesn't exists.`);
     }
@@ -67,7 +67,7 @@ export class Aggregator implements Iterable<Types.Record> {
    * @param identifier Record identifier.
    * @returns Returns the corresponding record or undefined when it doesn't exists.
    */
-  get(identifier: string): Types.Record | undefined {
+  get(identifier: string): Types.SymbolRecord | undefined {
     return this.#records[identifier] ?? this.#links[identifier];
   }
 
@@ -77,7 +77,7 @@ export class Aggregator implements Iterable<Types.Record> {
    * @throws Throws an error when the specified record already exists.
    * @returns Returns the added record.
    */
-  add(record: Types.Record): Types.Record {
+  add(record: Types.SymbolRecord): Types.SymbolRecord {
     const { identifier } = record.data;
     if (!identifier || this.has(identifier)) {
       throw new Exception(`A record named '${identifier}' can't be added.`);
@@ -100,7 +100,7 @@ export class Aggregator implements Iterable<Types.Record> {
    * @throws Throws an error when the specified alias already exists or the given identifier doesn't exists.
    * @returns Returns the linked record.
    */
-  link(identifier: string, alias: string): Types.Record {
+  link(identifier: string, alias: string): Types.SymbolRecord {
     if (this.has(identifier)) {
       throw new Exception(`An entry named '${identifier}' already exists.`);
     }
@@ -126,7 +126,7 @@ export class Aggregator implements Iterable<Types.Record> {
   /**
    * Iterable generator.
    */
-  *[Symbol.iterator](): Iterator<Types.Record> {
+  *[Symbol.iterator](): Iterator<Types.SymbolRecord> {
     for (const name in this.#records) {
       yield this.#records[name];
     }

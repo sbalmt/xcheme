@@ -44,10 +44,10 @@ test('Consume success', () => {
   // Check the generated sub symbol table.
   const record = table.get('b')!;
   expect(record).toBeDefined();
-  expect(record.link).toBeDefined();
+  expect(record.table).toBeDefined();
 
   // Check the generated sub symbol records.
-  const link = record.link!;
+  const link = record.table!;
   expect(link).toBeDefined();
   expect(link).toHaveLength(2);
   expect(link.has('a')).toBeTruthy();

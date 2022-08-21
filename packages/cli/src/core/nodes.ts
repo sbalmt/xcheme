@@ -9,13 +9,13 @@ import * as Fragment from './fragment';
  * @param direction Direction value.
  * @returns Returns the direction name.
  */
-const getDirection = (direction: Core.Nodes): string => {
+const getDirection = (direction: Core.NodeDirection): string => {
   switch (direction) {
-    case Core.Nodes.Left:
+    case Core.NodeDirection.Left:
       return 'L';
-    case Core.Nodes.Right:
+    case Core.NodeDirection.Right:
       return 'R';
-    case Core.Nodes.Next:
+    case Core.NodeDirection.Next:
       return 'N';
   }
 };
@@ -40,7 +40,7 @@ const getPadding = (depth: boolean[]): string => {
  * @param parent Parent node.
  * @param depth Depth states.
  */
-const printTree = (direction: Core.Nodes, parent: Lang.Types.Node, ...depth: boolean[]): void => {
+const printTree = (direction: Core.NodeDirection, parent: Lang.Types.Node, ...depth: boolean[]): void => {
   const node = parent.get(direction)!;
   const padding = getPadding(depth);
   const children = depth.length > 0;
@@ -49,16 +49,16 @@ const printTree = (direction: Core.Nodes, parent: Lang.Types.Node, ...depth: boo
     const name = getDirection(direction);
     const location = Fragment.getLocation(current.fragment);
     const fragment = Fragment.getMessage(current.fragment);
-    const connector = children ? (direction === Core.Nodes.Next ? '   ' : connected ? '├─ ' : '└─ ') : '';
+    const connector = children ? (direction === Core.NodeDirection.Next ? '   ' : connected ? '├─ ' : '└─ ') : '';
     const value = current.value.toString();
     Console.printLine(` ${location} ${padding}${connector}${name} ${value} "${fragment}"`);
     if (current.left) {
-      printTree(Core.Nodes.Left, current, ...depth, current.right !== void 0 || current.next !== void 0);
+      printTree(Core.NodeDirection.Left, current, ...depth, current.right !== void 0 || current.next !== void 0);
     }
     if (current.right) {
-      printTree(Core.Nodes.Right, current, ...depth, current.next !== void 0);
+      printTree(Core.NodeDirection.Right, current, ...depth, current.next !== void 0);
     }
-    direction = Core.Nodes.Next;
+    direction = Core.NodeDirection.Next;
   }
 };
 
@@ -69,7 +69,7 @@ const printTree = (direction: Core.Nodes, parent: Lang.Types.Node, ...depth: boo
 export const print = (node: Lang.Types.Node): void => {
   if (node.next) {
     Console.printLine('Nodes:\n');
-    printTree(Core.Nodes.Next, node);
+    printTree(Core.NodeDirection.Next, node);
     Console.printLine('');
   }
 };

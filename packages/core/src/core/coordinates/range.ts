@@ -1,7 +1,7 @@
 /**
  * Data location range class.
  */
-export default class Range {
+export class Range {
   /**
    * Range begin.
    */

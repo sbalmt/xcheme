@@ -13,8 +13,8 @@ export const ExportDirective = new Core.SetValueRoute(
   Nodes.Export,
   new Core.AppendNodePattern(
     Core.Source.Output,
-    Core.Nodes.Right,
-    Core.Nodes.Right,
+    Core.NodeDirection.Right,
+    Core.NodeDirection.Right,
     new Core.MapFlowPattern(
       TokenDirective,
       NodeDirective,

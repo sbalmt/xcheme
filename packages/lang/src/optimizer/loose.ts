@@ -16,7 +16,7 @@ import * as Tree from './tree';
  * @param state Consumption state.
  * @returns Returns the generated record.
  */
-const emit = (project: Project.Context, node: Types.Node, state: Context.State): Types.Record => {
+const emit = (project: Project.Context, node: Types.Node, state: Context.State): Types.SymbolRecord => {
   const location = node.fragment.location;
   const identity = Project.Context.identity.increment(project.coder, project.options.identity);
   const identifier = Tree.getIdentifier(Tree.Directives.Token, location, node.table, `@REF${identity}`, identity);
@@ -24,8 +24,8 @@ const emit = (project: Project.Context, node: Types.Node, state: Context.State):
   const temp = Context.getNewState(state.anchor);
   temp.origin = Types.Origins.Loose;
   Token.consume(project, token.right!, temp);
-  token.set(Core.Nodes.Next, state.anchor.next);
-  state.anchor.set(Core.Nodes.Next, token);
+  token.set(Core.NodeDirection.Next, state.anchor.next);
+  state.anchor.set(Core.NodeDirection.Next, token);
   state.anchor = token;
   return temp.record!;
 };
@@ -58,7 +58,7 @@ export const resolve = (
   identifier: string,
   node: Types.Node,
   state: Context.State
-): Types.Record => {
+): Types.SymbolRecord => {
   const record = project.symbols.get(identifier);
   if (record) {
     if (record.data.origin === Types.Origins.User) {

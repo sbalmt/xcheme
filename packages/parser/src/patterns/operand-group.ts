@@ -8,7 +8,7 @@ import * as Lexer from '@xcheme/lexer';
  */
 export const getGroupOperand = <T extends Core.Types>(expression: Core.Pattern<T>): Core.Pattern<T> =>
   new Core.PlaceNodePattern(
-    Core.Nodes.Right,
+    Core.NodeDirection.Right,
     new Core.ExpectFlowPattern(
       new Core.ExpectUnitPattern(Lexer.Tokens.OpenParenthesis),
       expression,
