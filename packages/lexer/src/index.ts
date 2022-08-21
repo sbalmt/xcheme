@@ -1,10 +1,10 @@
 import * as Core from '@xcheme/core';
 
 import { Lexer } from './lexer';
-import { InternalErrors } from './errors';
+import { Errors } from './errors';
 
 export { Tokens } from './tokens';
-export { InternalErrors } from './errors';
+export { Errors } from './errors';
 
 /**
  * Consume the given source and produce a list of tokens.
@@ -24,7 +24,7 @@ export const consume = <T extends Core.Types>(source: Core.Source<T>): boolean =
 export const consumeText = <T extends Core.Types>(text: string, context: Core.Context<T>): boolean => {
   const source = new Core.TextSource<T>(text, context);
   if (!consume(source)) {
-    context.errors.emplace(source.fragment, InternalErrors.UNEXPECTED_TOKEN);
+    context.errors.emplace(source.fragment, Errors.UNEXPECTED_TOKEN);
     return false;
   }
   return true;
