@@ -22,4 +22,5 @@ try {
   }
 } catch (ex: any) {
   console.error(ex.message ?? ex);
+  process.exit(1);
 }
