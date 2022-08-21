@@ -17,9 +17,9 @@ try {
       throw new Error(`Option '--run' must have a xcheme source file.`);
     }
     const source = flags.source ?? 0;
-    const target = flags.target ?? run ? 0 : 1;
+    const target = flags.target ?? (run ? 0 : 1);
     Make.perform(source, target, run, flags.debug);
   }
 } catch (ex: any) {
-  console.log(ex.message ?? ex);
+  console.error(ex.message ?? ex);
 }
