@@ -237,7 +237,7 @@
 		},
 		"new-expressions": {
 			"name": "keyword.operator.new.xcheme",
-			"match": "\\b(place|append|prepend|pivot|symbol|scope|error|set)\\b"
+			"match": "\\b(place|append|prepend|pivot|symbol|scope|error|warn|set)\\b"
 		},
 		"direction-expressions": {
 			"name": "storage.modifier.xcheme",
@@ -253,7 +253,7 @@
 		},
 		"constant-expression": {
 			"name": "constant.language.xcheme",
-			"match": "\\b(any)\\b"
+			"match": "\\b(any|eos)\\b"
 		},
 		"map-expression": {
 			"begin": "\\b(map)\\b",
