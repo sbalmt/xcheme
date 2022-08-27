@@ -65,7 +65,7 @@ const extractRoute = (direction: Core.NodeDirection, member: Types.Node): Types.
 const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.Node, identity: number): void => {
   const route = extractRoute(Core.NodeDirection.Right, member);
   if (!route) {
-    project.errors.emplace(entry.fragment, Errors.INVALID_MAP_ENTRY);
+    project.logs.emplace(Core.LogType.ERROR, entry.fragment, Errors.INVALID_MAP_ENTRY);
   } else {
     if (route.value === Parser.Nodes.String) {
       Loose.collision(project, route.fragment.data, route);
@@ -116,7 +116,7 @@ const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state:
   const member = entry.right!;
   const identifier = `${state.record!.data.identifier}@${member.fragment.data}`;
   if (project.symbols.has(identifier)) {
-    project.errors.emplace(member.fragment, Errors.DUPLICATE_IDENTIFIER);
+    project.logs.emplace(Core.LogType.ERROR, member.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
     const previousRecord = state.record!;
     const template = previousRecord.data.template;
@@ -153,18 +153,18 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     const member = entry.right!;
     if (member.value !== Parser.Nodes.Identifier) {
       if (member.value !== Parser.Nodes.Arguments && Records.isDynamic(record)) {
-        project.errors.emplace(member.fragment, Errors.UNDEFINED_IDENTITY);
+        project.logs.emplace(Core.LogType.ERROR, member.fragment, Errors.UNDEFINED_IDENTITY);
       }
       consumeAnonymous(project, entry, state);
     } else {
       if (state.type === Types.Directives.Skip) {
-        project.errors.emplace(member.fragment, Errors.UNSUPPORTED_IDENTITY);
+        project.logs.emplace(Core.LogType.ERROR, member.fragment, Errors.UNSUPPORTED_IDENTITY);
       } else if (!Records.isDynamic(record) && !Records.hasIdentity(record)) {
         if (!error) {
-          project.errors.emplace(record.fragment, Errors.UNDEFINED_IDENTITY);
+          project.logs.emplace(Core.LogType.ERROR, record.fragment, Errors.UNDEFINED_IDENTITY);
           error = true;
         }
-        project.errors.emplace(member.fragment, Errors.UNSUPPORTED_IDENTITY);
+        project.logs.emplace(Core.LogType.ERROR, member.fragment, Errors.UNSUPPORTED_IDENTITY);
       }
       consumeIdentifiable(project, entry, state);
     }

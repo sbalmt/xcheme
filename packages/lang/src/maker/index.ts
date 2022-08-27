@@ -75,5 +75,5 @@ export const consumeNodes = (project: Project.Context, node: Types.Node): boolea
       resolveMain(project, node);
     }
   }
-  return project.errors.length === 0;
+  return project.logs.length === 0;
 };

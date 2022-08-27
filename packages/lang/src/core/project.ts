@@ -65,9 +65,9 @@ export class Context {
   #symbols = new Symbols.Aggregator();
 
   /**
-   * Project errors.
+   * Project logs.
    */
-  #errors = new Core.ErrorList();
+  #logs = new Core.LogList();
 
   /**
    * Get an array of records that corresponds to the specified record type.
@@ -206,10 +206,10 @@ export class Context {
   }
 
   /**
-   * Get the project errors.
+   * Get the project logs.
    */
-  get errors(): Core.ErrorList {
-    return this.#errors;
+  get logs(): Core.LogList {
+    return this.#logs;
   }
 
   /**

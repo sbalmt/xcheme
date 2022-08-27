@@ -1,3 +1,4 @@
+import * as Core from '@xcheme/core';
 import * as Parser from '@xcheme/parser';
 
 import * as Nodes from '../../core/nodes';
@@ -52,7 +53,7 @@ const getRecord = (
   for (let index = 0; index < nodes.length; index++) {
     const node = nodes[index];
     if (!(member = member.table?.get(node.fragment.data))) {
-      project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTIFIER);
+      project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTIFIER);
       break;
     }
     if (member.assigned) {
@@ -78,7 +79,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   const [firstNode, ...members] = nodes;
   const firstRecord = node.table.find(firstNode.fragment.data);
   if (!firstRecord) {
-    project.errors.emplace(firstNode.fragment, Errors.UNDEFINED_IDENTIFIER);
+    project.logs.emplace(Core.LogType.ERROR, firstNode.fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
     const lastNode = members[members.length - 1];
     const lastRecord = getRecord(project, firstRecord, members);
@@ -86,11 +87,11 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
       const identifier = Nodes.getPath(nodes, '@');
       Records.resolve(project, identifier, lastRecord, () => {
         if (state.type !== Types.Directives.Node || lastRecord.data.type === Types.Directives.Node) {
-          project.errors.emplace(lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+          project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
         } else if (Records.isDynamic(lastRecord)) {
-          project.errors.emplace(lastNode.fragment, Errors.INVALID_MAP_REFERENCE);
+          project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_REFERENCE);
         } else if (firstRecord.value === Parser.Symbols.AliasToken) {
-          project.errors.emplace(firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+          project.logs.emplace(Core.LogType.ERROR, firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
         } else {
           Records.connect(firstRecord, state.record!);
         }

@@ -32,7 +32,7 @@ export class Live extends Base {
   getEntry(identifier: string, references: Reference[], patterns: Types.Pattern[]): Types.Pattern {
     return new Core.ExpectFlowPattern(
       new Core.OptFlowPattern(new Core.RepeatFlowPattern(new Core.ChooseFlowPattern(...patterns))),
-      new Core.EndFlowPattern()
+      new Core.StopFlowPattern()
     );
   }
 
@@ -257,7 +257,17 @@ export class Live extends Base {
    * @returns Returns the pattern.
    */
   emitErrorPattern(value: number, ...patterns: Types.Pattern[]): Types.Pattern {
-    return new Core.EmitErrorPattern(value, ...patterns);
+    return new Core.EmitLogPattern(Core.LogType.ERROR, value, ...patterns);
+  }
+
+  /**
+   * Get a new warn pattern.
+   * @param value Warn value.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitWarnPattern(value: number, ...patterns: Types.Pattern[]): Types.Pattern {
+    return new Core.EmitLogPattern(Core.LogType.WARNING, value, ...patterns);
   }
 
   /**

@@ -90,7 +90,7 @@ export class Text extends Base {
             'OptFlowPattern',
             this.#getPattern('RepeatFlowPattern', this.#getPattern('ChooseFlowPattern', ...patterns))
           ),
-          this.#getPattern('EndFlowPattern')
+          this.#getPattern('StopFlowPattern')
         )
       )
     );
@@ -323,7 +323,17 @@ export class Text extends Base {
    * @returns Returns the pattern.
    */
   emitErrorPattern(value: number, ...patterns: string[]): string {
-    return this.#getPattern('EmitErrorPattern', value, ...patterns);
+    return this.#getPattern('EmitLogPattern', Core.LogType.ERROR, value, ...patterns);
+  }
+
+  /**
+   * Get a new warn pattern.
+   * @param value Warn value.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitWarnPattern(value: number, ...patterns: string[]): string {
+    return this.#getPattern('EmitLogPattern', Core.LogType.WARNING, value, ...patterns);
   }
 
   /**

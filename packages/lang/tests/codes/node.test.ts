@@ -29,7 +29,7 @@ test('NODE referencing a NODE that has a reference to itself', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -56,7 +56,7 @@ test('NODE referencing a pre-declared NODE (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -85,7 +85,7 @@ test('NODE referencing a pre-declared NODE (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -113,7 +113,7 @@ test('NODE referencing a post-declared NODE (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -142,7 +142,7 @@ test('NODE referencing a post-declared NODE (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -172,7 +172,7 @@ test('NODE referencing an ALIAS NODE that has a reference to itself', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -198,7 +198,7 @@ test('NODE referencing a pre-declared ALIAS NODE (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -226,7 +226,7 @@ test('NODE referencing a pre-declared ALIAS NODE (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -253,7 +253,7 @@ test('NODE referencing a post-declared ALIAS NODE (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -281,7 +281,7 @@ test('NODE referencing a post-declared ALIAS NODE (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -313,7 +313,7 @@ test('NODE referencing a template ALIAS NODE that has a reference to itself', ()
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -346,7 +346,7 @@ test('NODE referencing a template ALIAS NODE and passing itself as an argument',
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });

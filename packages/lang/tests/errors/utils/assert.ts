@@ -39,10 +39,10 @@ export const error = (code: string, errors: Error[]): void => {
   expect(Lang.Optimizer.consumeNodes(project, context.node)).toBeFalsy();
 
   // Assert all errors.
-  expect(project.errors).toHaveLength(errors.length);
+  expect(project.logs).toHaveLength(errors.length);
 
   for (let index = 0; index < errors.length; ++index) {
-    const source = project.errors.at(index)!;
+    const source = project.logs.at(index)!;
     const target = errors[index];
     expect(source.value).toBe(target.code);
     if (target.line) {

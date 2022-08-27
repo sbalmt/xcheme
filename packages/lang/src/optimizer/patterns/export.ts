@@ -1,3 +1,4 @@
+import * as Core from '@xcheme/core';
 import * as Parser from '@xcheme/parser';
 
 import * as Project from '../../core/project';
@@ -17,7 +18,7 @@ export const consume = (project: Project.Context, node: Types.Node): boolean => 
     const identifier = current.fragment.data;
     const record = node.table.find(identifier);
     if (!record) {
-      project.errors.emplace(current.fragment, Errors.UNDEFINED_IDENTIFIER);
+      project.logs.emplace(Core.LogType.ERROR, current.fragment, Errors.UNDEFINED_IDENTIFIER);
     } else {
       record.data.exported = true;
     }

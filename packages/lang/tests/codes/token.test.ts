@@ -29,7 +29,7 @@ test('TOKEN referencing a TOKEN that has a reference to itself', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -56,7 +56,7 @@ test('TOKEN referencing a pre-declared TOKEN (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -85,7 +85,7 @@ test('TOKEN referencing a pre-declared TOKEN (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -113,7 +113,7 @@ test('TOKEN referencing a post-declared TOKEN (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -142,7 +142,7 @@ test('TOKEN referencing a post-declared TOKEN (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -172,7 +172,7 @@ test('TOKEN referencing an ALIAS TOKEN that has a reference to itself', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -198,7 +198,7 @@ test('TOKEN referencing a pre-declared ALIAS TOKEN (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -226,7 +226,7 @@ test('TOKEN referencing a pre-declared ALIAS TOKEN (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -253,7 +253,7 @@ test('TOKEN referencing a post-declared ALIAS TOKEN (single time)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -281,7 +281,7 @@ test('TOKEN referencing a post-declared ALIAS TOKEN (multiple times)', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -313,7 +313,7 @@ test('TOKEN referencing a template ALIAS TOKEN that has a reference to itself', 
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -346,7 +346,7 @@ test('TOKEN referencing a template ALIAS TOKEN and passing itself as an argument
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });

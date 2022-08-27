@@ -20,7 +20,7 @@ test('IMPORT directive with dependent references', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -43,7 +43,7 @@ test('IMPORT directive with shared dependent references', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -72,7 +72,7 @@ test('IMPORT directive with a dependent template reference', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -103,7 +103,7 @@ test('IMPORT directive with a dependent template map reference', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -125,7 +125,7 @@ test('IMPORT directive with dependent and purged references', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -144,7 +144,7 @@ test('IMPORT directive with shared re-importation', () => {
       /**********/ `new Core.ChooseFlowPattern()` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });

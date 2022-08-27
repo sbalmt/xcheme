@@ -18,7 +18,7 @@ test('SKIP and TOKEN directives precedence', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });
@@ -40,7 +40,7 @@ test('SKIP and NODE directives precedence', () => {
       /**********/ `)` +
       /******/ `)` +
       /**/ `), ` +
-      /**/ `new Core.EndFlowPattern()` +
+      /**/ `new Core.StopFlowPattern()` +
       `);`
   );
 });

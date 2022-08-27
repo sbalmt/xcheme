@@ -1,3 +1,5 @@
+import * as Core from '@xcheme/core';
+
 import * as Records from '../../core/records';
 import * as Project from '../../core/project';
 import * as Types from '../../core/types';
@@ -41,12 +43,12 @@ const assign = (project: Project.Context, node: Types.Node, record: Types.Symbol
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const identifier = node.fragment.data;
   if (project.symbols.has(identifier)) {
-    project.errors.emplace(node.fragment, Errors.DUPLICATE_IDENTIFIER);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.DUPLICATE_IDENTIFIER);
   } else {
     const record = node.table.get(identifier)!;
     assign(project, node, record, state);
     if (!Records.isAlias(record) && Records.isEmpty(record)) {
-      project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTITY);
+      project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTITY);
     } else {
       project.symbols.add(record);
       if (!record.data.template) {

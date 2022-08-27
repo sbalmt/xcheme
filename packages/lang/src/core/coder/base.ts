@@ -257,6 +257,16 @@ export class Base {
   }
 
   /**
+   * Should be implemented to return a warn pattern.
+   * @param value Warn value.
+   * @param patterns Expected patterns.
+   * @returns Should return the pattern.
+   */
+  emitWarnPattern(value: number, ...patterns: Pattern[]): Pattern {
+    throw new Exception("Method doesn't implemented.");
+  }
+
+  /**
    * Should be implemented to return a has pattern.
    * @param state Expected state value.
    * @param patterns Expected patterns.

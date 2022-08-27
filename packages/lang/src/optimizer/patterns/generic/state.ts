@@ -1,3 +1,5 @@
+import * as Core from '@xcheme/core';
+
 import * as Nodes from '../../../core/nodes';
 import * as Project from '../../../core/project';
 import * as Types from '../../../core/types';
@@ -15,6 +17,6 @@ import { Errors } from '../../../core/errors';
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   Argument.consume(project, node, state);
   if (Nodes.isDynamic(node)) {
-    project.errors.emplace(node.fragment, Errors.INVALID_AUTO_IDENTITY);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_AUTO_IDENTITY);
   }
 };

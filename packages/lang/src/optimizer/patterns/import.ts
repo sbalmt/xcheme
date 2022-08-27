@@ -91,7 +91,7 @@ const integrate = (project: Project.Context, table: Types.SymbolTable, source: S
     if (exported) {
       const current = table.find(identifier);
       if (current) {
-        project.errors.emplace(current.fragment, Errors.DUPLICATE_IDENTIFIER);
+        project.logs.emplace(Core.LogType.ERROR, current.fragment, Errors.DUPLICATE_IDENTIFIER);
       } else {
         const integration = new Core.SymbolRecord(record.fragment, record.value, record.node, record.table);
         integration.assign({ ...record.data, exported: false, imported: true });
@@ -138,8 +138,8 @@ const process = (
   const context = new Core.Context<Types.Metadata>(path);
   importingFiles.add(project.coder, path);
   if (!compile(external, context, content)) {
-    project.errors.emplace(location.fragment, Errors.IMPORT_FAILURE);
-    project.errors.insert(...external.errors);
+    project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_FAILURE);
+    project.logs.insert(...external.logs);
   } else {
     const exported = getExportedRecords(external.symbols);
     const unreferenced = getUnreferencedRecords(exported);
@@ -159,11 +159,11 @@ const process = (
  */
 const resolve = (project: Project.Context, location: Types.Node, table: Types.SymbolTable, path: string): void => {
   if (importingFiles.has(project.coder, path)) {
-    project.errors.emplace(location.fragment, Errors.IMPORT_CYCLIC);
+    project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_CYCLIC);
   } else {
     const content = project.options.loadFileHook!(path);
     if (!content) {
-      project.errors.emplace(location.fragment, Errors.IMPORT_NOT_FOUND);
+      project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_NOT_FOUND);
     } else {
       process(project, location, table, path, content);
     }
@@ -178,7 +178,7 @@ const resolve = (project: Project.Context, location: Types.Node, table: Types.Sy
 export const consume = (project: Project.Context, node: Types.Node): void => {
   const location = node.right!;
   if (!project.options.loadFileHook) {
-    project.errors.emplace(location.fragment, Errors.IMPORT_DISABLED);
+    project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_DISABLED);
   } else {
     const filePath = `${String.extract(location.fragment.data)}.xcm`;
     const fullPath = Path.join(project.options.directory ?? '', filePath);

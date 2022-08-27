@@ -1,3 +1,5 @@
+import * as Core from '@xcheme/core';
+
 import * as Nodes from '../../../core/nodes';
 import * as Records from '../../../core/records';
 import * as Project from '../../../core/project';
@@ -18,8 +20,8 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   Argument.consume(project, node, state);
   if (Records.isEmpty(record) && Nodes.isEmpty(node)) {
     if (record.data.type !== Types.Directives.Skip) {
-      project.errors.emplace(record.fragment, Errors.UNDEFINED_IDENTITY);
+      project.logs.emplace(Core.LogType.ERROR, record.fragment, Errors.UNDEFINED_IDENTITY);
     }
-    project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTITY);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTITY);
   }
 };

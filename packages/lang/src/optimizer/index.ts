@@ -64,5 +64,5 @@ export const consumeNodes = (project: Project.Context, node: Types.Node): boolea
     }
     node = state.anchor.next!;
   }
-  return project.errors.length === 0;
+  return project.logs.length === 0;
 };

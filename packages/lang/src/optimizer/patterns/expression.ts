@@ -1,3 +1,4 @@
+import * as Core from '@xcheme/core';
 import * as Parser from '@xcheme/parser';
 
 import * as Project from '../../core/project';
@@ -25,7 +26,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
       Reference.consume(project, node, state);
       break;
     case Parser.Nodes.Identity:
-      project.errors.emplace(node.fragment, Errors.UNSUPPORTED_ARGUMENT);
+      project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNSUPPORTED_ARGUMENT);
       break;
     case Parser.Nodes.String:
       String.consume(project, node, state);
@@ -65,6 +66,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
       Generic.Identity.consume(project, node, state);
       break;
     case Parser.Nodes.Error:
+    case Parser.Nodes.Warn:
     case Parser.Nodes.Has:
     case Parser.Nodes.Set:
       Generic.State.consume(project, node, state);

@@ -26,6 +26,7 @@ import * as Prepend from './prepend';
 import * as Symbol from './symbol';
 import * as Scope from './scope';
 import * as Error from './error';
+import * as Warn from './warn';
 import * as Has from './has';
 import * as Set from './set';
 import * as Uncase from './uncase';
@@ -119,6 +120,8 @@ export const consume = (
       return Scope.consume(project, node, state);
     case Parser.Nodes.Error:
       return Error.consume(project, node, state);
+    case Parser.Nodes.Warn:
+      return Warn.consume(project, node, state);
     case Parser.Nodes.Has:
       return Has.consume(project, node, state);
     case Parser.Nodes.Set:

@@ -21,16 +21,18 @@ export const loadFileHook = (file: string): string | undefined => {
 };
 
 /**
- * Print all errors in the given list.
- * @param errors Error list.
+ * Print all errors in the given log list.
+ * @param logs Log list.
  */
-const printErrors = (errors: Core.ErrorList): void => {
-  for (const error of errors) {
-    const fragment = error.fragment;
-    const location = fragment.location;
-    const line = location.line.begin + 1;
-    const column = location.column.begin + 1;
-    console.log(`${location.name}: '${fragment.data}' (${error.value}) at line ${line}, column ${column}`);
+const printErrors = (logs: Core.LogList): void => {
+  for (const log of logs) {
+    if (log.type === Core.LogType.ERROR) {
+      const fragment = log.fragment;
+      const location = fragment.location;
+      const line = location.line.begin + 1;
+      const column = location.column.begin + 1;
+      console.log(`${location.name}: '${fragment.data}' (${log.value}) at line ${line}, column ${column}`);
+    }
   }
 };
 
@@ -47,25 +49,25 @@ export const makeParser = (coder: Lang.Coder, text: string): Lang.Project.Contex
 
   // Consume input text.
   if (!(status = Lexer.consumeText(text, context))) {
-    printErrors(context.errors);
+    printErrors(context.logs);
   }
   expect(status).toBeTruthy();
 
   // Consume input tokens.
   if (!(status = Parser.consumeTokens(context.tokens, context))) {
-    printErrors(context.errors);
+    printErrors(context.logs);
   }
   expect(status).toBeTruthy();
 
   // Consume input nodes and optimize its tree.
   if (!(status = Lang.Optimizer.consumeNodes(project, context.node))) {
-    printErrors(project.errors);
+    printErrors(project.logs);
   }
   expect(status).toBeTruthy();
 
   // Consume input nodes and make the output.
   if (!(status = Lang.Maker.consumeNodes(project, context.node))) {
-    printErrors(project.errors);
+    printErrors(project.logs);
   }
   expect(status).toBeTruthy();
 
@@ -85,8 +87,8 @@ export const testLexer = (project: Lang.Project.Context, context: Lang.Types.Con
   // Parse the given input text.
   const status = lexer.consume(source);
   if (!status) {
-    context.errors.emplace(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
-    printErrors(context.errors);
+    context.logs.emplace(Core.LogType.ERROR, source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
+    printErrors(context.logs);
   }
 
   expect(status).toBeTruthy();
@@ -112,8 +114,8 @@ export const testParser = (
   const status = parser.consume(source);
   if (!status) {
     const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
-    context.errors.emplace(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
-    printErrors(context.errors);
+    context.logs.emplace(Core.LogType.ERROR, fragment, Lang.Errors.UNEXPECTED_SYNTAX);
+    printErrors(context.logs);
   }
 
   expect(status).toBeTruthy();

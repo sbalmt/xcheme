@@ -1,3 +1,4 @@
+import * as Core from '@xcheme/core';
 import * as Parser from '@xcheme/parser';
 
 import * as Records from '../../core/records';
@@ -56,7 +57,7 @@ const upgrade = (
   const identifier = node.fragment.data;
   const action = () => {
     if (Records.isDynamic(record)) {
-      project.errors.emplace(node.fragment, Errors.INVALID_MAP_REFERENCE);
+      project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_MAP_REFERENCE);
     } else {
       Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
       Types.assignNode(node, { type: Types.Nodes.Reference, record });
@@ -86,13 +87,13 @@ const resolveSkip = (
   if (record.value === Parser.Symbols.AliasToken) {
     template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
-    project.errors.emplace(node.fragment, Errors.INVALID_TOKEN_REFERENCE);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_TOKEN_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
-    project.errors.emplace(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.Node) {
-    project.errors.emplace(node.fragment, Errors.INVALID_NODE_REFERENCE);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else {
-    project.errors.emplace(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -116,11 +117,11 @@ const resolveToken = (
   } else if (record.value === Parser.Symbols.AliasToken) {
     template(project, node, record, state);
   } else if (record.value === Parser.Symbols.Node) {
-    project.errors.emplace(node.fragment, Errors.INVALID_NODE_REFERENCE);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
-    project.errors.emplace(node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_ALIAS_NODE_REFERENCE);
   } else {
-    project.errors.emplace(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -146,9 +147,9 @@ const resolveNode = (
   } else if (record.value === Parser.Symbols.Token) {
     upgrade(project, node, record, state);
   } else if (record.value === Parser.Symbols.AliasToken) {
-    project.errors.emplace(node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
   } else {
-    project.errors.emplace(node.fragment, Errors.UNRESOLVED_IDENTIFIER);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNRESOLVED_IDENTIFIER);
   }
 };
 
@@ -163,7 +164,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   const identifier = node.fragment.data;
   const record = node.table.find(identifier);
   if (!record) {
-    project.errors.emplace(node.fragment, Errors.UNDEFINED_IDENTIFIER);
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTIFIER);
   } else {
     switch (state.type) {
       case Types.Directives.Skip:

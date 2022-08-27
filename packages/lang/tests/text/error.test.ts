@@ -5,7 +5,7 @@ test('Output an ERROR pattern', () => {
     `
     skip error <1> '@';`,
     {
-      '@SKIP0': `new Core.EmitErrorPattern(1, new Core.ExpectUnitPattern('@'))`
+      '@SKIP0': `new Core.EmitLogPattern(0, 1, new Core.ExpectUnitPattern('@'))`
     }
   );
 });
