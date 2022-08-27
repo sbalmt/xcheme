@@ -21,12 +21,12 @@ export const consume = (
   const source = new Core.TextSource<Lang.Types.Metadata>(text, context);
   Console.printLine('Tokenizing...');
   if (!lexer.consume(source)) {
-    context.errors.emplace(source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
+    context.logs.emplace(Core.LogType.ERROR, source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
   } else {
     Console.clearLine();
   }
   if (tokens) {
     Tokens.print(context.tokens);
   }
-  return !context.errors.length;
+  return !context.logs.length;
 };

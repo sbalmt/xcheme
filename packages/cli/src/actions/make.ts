@@ -11,7 +11,7 @@ import * as GenericParser from '../core/parser';
 
 import * as Options from '../core/options';
 import * as Console from '../core/console';
-import * as Errors from '../core/errors';
+import * as Logs from '../core/logs';
 
 /**
  * Global language options.
@@ -38,7 +38,7 @@ const optimize = (project: Lang.Project.Context, node: Lang.Types.Node): boolean
     Console.clearLine();
     return true;
   }
-  Errors.print(project.errors);
+  Logs.print(project.logs);
   return false;
 };
 
@@ -54,7 +54,7 @@ const make = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => 
     Console.clearLine();
     return true;
   }
-  Errors.print(project.errors);
+  Logs.print(project.logs);
   return false;
 };
 
@@ -75,7 +75,7 @@ const test = (project: Lang.Project.Context, source: string, state: Options.Debu
       return true;
     }
   }
-  Errors.print(context.errors);
+  Logs.print(context.logs);
   return false;
 };
 
@@ -140,6 +140,6 @@ export const perform = (
       }
     }
   }
-  Errors.print(context.errors);
+  Logs.print(context.logs);
   return false;
 };

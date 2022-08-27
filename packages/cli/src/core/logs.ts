@@ -4,9 +4,18 @@ import * as Lang from '@xcheme/lang';
 import * as Console from './console';
 
 /**
- * All supported errors.
+ * All supported log types.
  */
-const errorMessages = {
+const logTypes = {
+  [Core.LogType.ERROR]: 'ERROR',
+  [Core.LogType.WARNING]: 'WARNING',
+  [Core.LogType.INFORMATION]: 'INFORMATION'
+};
+
+/**
+ * All supported log messages.
+ */
+const logMessages = {
   [Lang.Errors.DUPLICATE_IDENTIFIER]: 'Duplicate identifier "{0}" at line {1}, column {2}.',
   [Lang.Errors.UNEXPECTED_TOKEN]: 'Unexpected token "{0}" at line {1}, column {2}.',
   [Lang.Errors.UNEXPECTED_SYNTAX]: 'Unexpected syntax "{0}" at line {1}, column {2}.',
@@ -34,17 +43,17 @@ const errorMessages = {
 };
 
 /**
- * Get the corresponding error message based on the given error object.
- * @param error Input error.
- * @returns Returns the corresponding error message.
- * @throws Throws an error when the specified error isn't supported.
+ * Get the corresponding log message based on the given log record.
+ * @param record Log record.
+ * @returns Returns the corresponding log message.
+ * @throws Throws an error when the specified log value isn't supported.
  */
-export const getMessage = (error: Core.Error): string => {
-  const template = errorMessages[error.value as Lang.Errors];
+export const getMessage = (record: Core.LogRecord): string => {
+  const template = logMessages[record.value as Lang.Errors];
   if (!template) {
-    throw `Error value ${error.value} is not supported.`;
+    throw `Log value '${record.value}' isn't supported.`;
   }
-  const fragment = error.fragment;
+  const fragment = record.fragment;
   const location = fragment.location;
   return template.replace(/(\{[0-2]\})/g, (match: string): string => {
     switch (match) {
@@ -60,13 +69,16 @@ export const getMessage = (error: Core.Error): string => {
 };
 
 /**
- * Print all the given errors.
- * @param errors List of errors.
+ * Print all the given log list.
+ * @param logs Log list.
  */
-export const print = (errors: Core.ErrorList): void => {
-  Console.printLine('Errors:');
-  for (const error of errors) {
-    Console.printLine(`  ${error.fragment.location.name}: ${getMessage(error)}`);
+export const print = (logs: Core.LogList): void => {
+  Console.printLine('Problems:');
+  for (const log of logs) {
+    const type = logTypes[log.type];
+    const location = log.fragment.location.name;
+    const message = getMessage(log);
+    Console.printLine(`  ${type}: [${location}] ${message}`);
   }
   Console.printLine('');
 };

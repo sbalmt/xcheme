@@ -25,7 +25,7 @@ export const consume = (
   Console.printLine('Parsing...');
   if (!parser.consume(source)) {
     const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
-    context.errors.emplace(fragment, Lang.Errors.UNEXPECTED_SYNTAX);
+    context.logs.emplace(Core.LogType.ERROR, fragment, Lang.Errors.UNEXPECTED_SYNTAX);
   } else {
     Console.clearLine();
   }
@@ -35,5 +35,5 @@ export const consume = (
   if (nodes) {
     Nodes.print(context.node);
   }
-  return !context.errors.length;
+  return !context.logs.length;
 };
