@@ -1,9 +1,9 @@
-import { Context, TextSource, EndFlowPattern } from '../../../src/index';
+import { Context, TextSource, StopFlowPattern } from '../../../src/index';
 
 /**
  * It can detect the end of the consumption source.
  */
-const pattern = new EndFlowPattern();
+const pattern = new StopFlowPattern();
 
 test('Consume success', () => {
   const context = new Context('test');

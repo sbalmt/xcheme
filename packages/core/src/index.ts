@@ -23,7 +23,7 @@ export { default as ChooseFlowPattern } from './rules/flow/choose';
 export { default as ConditionFlowPattern } from './rules/flow/condition';
 export { default as RunFlowPattern } from './rules/flow/run';
 export { default as ExpectFlowPattern } from './rules/flow/expect';
-export { default as EndFlowPattern } from './rules/flow/end';
+export { default as StopFlowPattern } from './rules/flow/stop';
 export { default as NotFlowPattern } from './rules/flow/not';
 export { default as OptFlowPattern } from './rules/flow/opt';
 export { default as RepeatFlowPattern } from './rules/flow/repeat';
