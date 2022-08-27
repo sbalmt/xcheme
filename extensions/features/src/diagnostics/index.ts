@@ -70,6 +70,6 @@ export const update = (document: VSCode.TextDocument, collection: VSCode.Diagnos
     directory
   });
   Lang.Optimizer.consumeNodes(project, source.node);
-  collection.set(document.uri, [...Errors.getDiagnostics(source.errors), ...Errors.getDiagnostics(project.errors)]);
+  collection.set(document.uri, [...Errors.getDiagnostics(source.logs), ...Errors.getDiagnostics(project.logs)]);
   return { project, source };
 };
