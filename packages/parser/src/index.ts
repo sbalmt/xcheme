@@ -26,7 +26,7 @@ export const consumeTokens = <T extends Core.Types>(tokens: Core.TokenList<T>, c
   const source = new Core.TokenSource<T>(tokens, context);
   if (!consume(source)) {
     const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
-    context.errors.emplace(fragment, Errors.UNEXPECTED_SYNTAX);
+    context.logs.emplace(Core.LogType.ERROR, fragment, Errors.UNEXPECTED_SYNTAX);
     return false;
   }
   return true;

@@ -131,6 +131,7 @@ const UnaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.Symbol, new Core.OptFlowPattern(Arguments), Lexer.Tokens.Symbol),
   new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
   new Core.SetValueRoute(Nodes.Error, Arguments, Lexer.Tokens.Error),
+  new Core.SetValueRoute(Nodes.Warn, Arguments, Lexer.Tokens.Warn),
   new Core.SetValueRoute(Nodes.Has, Arguments, Lexer.Tokens.Has),
   new Core.SetValueRoute(Nodes.Set, Arguments, Lexer.Tokens.Set),
   new Core.SetValueRoute(Nodes.Uncase, Lexer.Tokens.Uncase),

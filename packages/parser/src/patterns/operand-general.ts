@@ -13,6 +13,7 @@ export const GeneralOperands = new Core.AppendNodePattern(
   new Core.MapFlowPattern(
     new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Any),
     new Core.SetValueRoute(Nodes.Any, Lexer.Tokens.Asterisk),
-    new Core.SetValueRoute(Nodes.String, Lexer.Tokens.String)
+    new Core.SetValueRoute(Nodes.String, Lexer.Tokens.String),
+    new Core.SetValueRoute(Nodes.EoS, Lexer.Tokens.EoS)
   )
 );

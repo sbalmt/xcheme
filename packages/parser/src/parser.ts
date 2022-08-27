@@ -29,5 +29,5 @@ export const Parser = new Core.ExpectFlowPattern(
       )
     )
   ),
-  new Core.EndFlowPattern()
+  new Core.StopFlowPattern()
 );
