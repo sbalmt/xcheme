@@ -18,7 +18,9 @@ const tokens = [
     { name: 'from', value: Lexer.Tokens.From },
     { name: 'to', value: Lexer.Tokens.To },
     // Map
-    { name: 'map', value: Lexer.Tokens.Map }
+    { name: 'map', value: Lexer.Tokens.Map },
+    // End of Source
+    { name: 'eos', value: Lexer.Tokens.EoS }
   ],
   // Operators
   ...[
@@ -52,9 +54,7 @@ const tokens = [
     // Transformation
     { name: 'uncase', value: Lexer.Tokens.Uncase },
     // Test
-    { name: 'peek', value: Lexer.Tokens.Peek },
-    // Stop (End of Data Source)
-    { name: 'stop', value: Lexer.Tokens.Stop }
+    { name: 'peek', value: Lexer.Tokens.Peek }
   ],
   // Directives
   ...[
