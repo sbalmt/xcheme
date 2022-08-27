@@ -1,6 +1,6 @@
 import type { Types } from '../../core/types';
 
-import { Error, InternalErrors } from '../../core/errors';
+import { LogRecord, LogType } from '../../core/logs';
 import { SymbolRecord } from '../../core/symbols';
 import { Source } from '../../sources';
 
@@ -59,8 +59,9 @@ export default class Emit<T extends Types> extends Pattern<T> {
           link = source.output.link;
         }
         if (table.has(fragment)) {
-          const error = new Error(fragment, InternalErrors.DUPLICATE_IDENTIFIER);
-          source.emit(error);
+          const { errors } = source.options;
+          const record = new LogRecord(LogType.ERROR, fragment, errors.duplicateSymbolIdentifier);
+          source.emit(record);
         } else {
           const result = this.#value === Source.Output ? value ?? -1 : this.#value;
           const record = new SymbolRecord<T>(fragment, result, node, link);

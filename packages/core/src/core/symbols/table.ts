@@ -1,8 +1,7 @@
 import { Fragment } from '../coordinates';
+import { Exception } from '../exception';
 import { Types } from '../types';
 import { SymbolRecord } from './record';
-
-import Exception from '../exception';
 
 /**
  * Internal record map.

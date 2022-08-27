@@ -1,11 +1,10 @@
 import type { Types } from '../core/types';
-import type Context from '../core/context';
+import type { Context } from '../core/context';
 
 import { Fragment, Location, Range } from '../core/coordinates';
 import { TokenList } from '../core/tokens';
+import { Exception } from '../core/exception';
 import { Source } from './source';
-
-import Exception from '../core/exception';
 
 /**
  * Internal source state.

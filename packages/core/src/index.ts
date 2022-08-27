@@ -1,14 +1,15 @@
 export { Types, TokenType, NodeType, RecordType } from './core/types';
 
 export { Fragment, Location, Range } from './core/coordinates';
-export { InternalErrors, ErrorList, ReadOnlyErrorList, Error } from './core/errors';
+export { LogList, ReadOnlyLogList, LogRecord, LogType } from './core/logs';
 export { TokenList, ReadOnlyTokenList, Token } from './core/tokens';
 export { NodeDirection, Node } from './core/nodes';
 export { SymbolTable, SymbolRecord } from './core/symbols';
 export { Source, TextSource, TokenSource } from './sources';
 
-export { default as Exception } from './core/exception';
-export { default as Context } from './core/context';
+export { Exception } from './core/exception';
+export { Context } from './core/context';
+
 export { default as Pattern } from './rules/pattern';
 export { default as Route } from './rules/route';
 
@@ -40,8 +41,8 @@ export { default as SetStateRoute } from './rules/state/route';
 export { default as HasStatePattern } from './rules/state/has';
 export { default as SetStatePattern } from './rules/state/set';
 
-export { default as EmitErrorRoute } from './rules/error/route';
-export { default as EmitErrorPattern } from './rules/error/emit';
+export { default as EmitLogRoute } from './rules/log/route';
+export { default as EmitLogPattern } from './rules/log/emit';
 
 export { default as EmitTokenRoute } from './rules/token/route';
 export { default as EmitTokenPattern } from './rules/token/emit';

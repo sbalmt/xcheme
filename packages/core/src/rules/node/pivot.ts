@@ -1,9 +1,9 @@
 import type { Types } from '../../core/types';
 
 import { Node, NodeDirection } from '../../core/nodes';
+import { Exception } from '../../core/exception';
 import { Source } from '../../sources';
 
-import Exception from '../../core/exception';
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 

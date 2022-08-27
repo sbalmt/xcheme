@@ -1,7 +1,7 @@
 import type { Types } from '../core/types';
 import type { Source } from '../sources/source';
 
-import Exception from '../core/exception';
+import { Exception } from '../core/exception';
 
 /**
  * Base of any pattern class.

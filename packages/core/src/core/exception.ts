@@ -1,4 +1,4 @@
 /**
  * Core exceptions.
  */
-export default class Exception extends Error {}
+export class Exception extends Error {}

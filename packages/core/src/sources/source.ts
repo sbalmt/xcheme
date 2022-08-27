@@ -1,13 +1,13 @@
 import type { Fragment } from '../core/coordinates';
 import type { Types } from '../core/types';
-import type Context from '../core/context';
+import type { Context } from '../core/context';
 
+import { Exception } from '../core/exception';
 import { Token } from '../core/tokens';
 import { Node, NodeDirection } from '../core/nodes';
 import { SymbolTable, SymbolRecord } from '../core/symbols';
-import { Error } from '../core/errors';
-
-import Exception from '../core/exception';
+import { LogRecord } from '../core/logs';
+import { Options } from '../core/options';
 
 /**
  * Source output structure.
@@ -86,6 +86,13 @@ export class Source<T extends Types> {
   }
 
   /**
+   * Get the source context options.
+   */
+  get options(): Options {
+    return this.#context.options;
+  }
+
+  /**
    * Get the current source output.
    */
   get output(): Output<T> {
@@ -153,16 +160,16 @@ export class Source<T extends Types> {
    * @param product Input product.
    * @throws Throws an error when the given product isn't supported.
    */
-  emit(product: Error | Token<T> | Node<T> | SymbolRecord<T>): void {
-    if (product instanceof Error) {
-      this.#context.errors.insert(product);
-    } else if (product instanceof Token) {
+  emit(product: Token<T> | Node<T> | SymbolRecord<T> | LogRecord): void {
+    if (product instanceof Token) {
       this.#context.tokens.insert(product);
     } else if (product instanceof Node) {
       const root = this.#context.node.lowest(NodeDirection.Next) ?? this.#context.node;
       root.set(NodeDirection.Next, product);
     } else if (product instanceof SymbolRecord) {
       this.#table.insert(product);
+    } else if (product instanceof LogRecord) {
+      this.#context.logs.insert(product);
     } else {
       throw new Exception(`Unsupported product type.`);
     }

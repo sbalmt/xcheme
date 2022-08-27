@@ -1,13 +1,13 @@
 import type { Types } from '../../core/types';
 
-import { Error } from '../../core/errors';
+import { LogRecord, LogType } from '../../core/logs';
 import { Source } from '../../sources';
 
 import Expect from '../flow/expect';
 import Pattern from '../pattern';
 
 /**
- * Consume all the given patterns and, in case of success, it will emit a new error into the current error list.
+ * Consume all the given patterns and, in case of success, it will emit a new log into the current log list.
  */
 export default class Emit<T extends Types> extends Pattern<T> {
   /**
@@ -16,18 +16,25 @@ export default class Emit<T extends Types> extends Pattern<T> {
   #target: Pattern<T>;
 
   /**
-   * Error value.
+   * Log type.
+   */
+  #type: LogType;
+
+  /**
+   * Log value.
    */
   #value: number;
 
   /**
    * Default constructor.
-   * @param value Error value.
+   * @param type Log type.
+   * @param value Log value.
    * @param patterns Sequence of patterns.
    */
-  constructor(value: number, ...patterns: Pattern<T>[]) {
+  constructor(type: LogType, value: number, ...patterns: Pattern<T>[]) {
     super();
     this.#target = new Expect<T>(...patterns);
+    this.#type = type;
     this.#value = value;
   }
 
@@ -42,8 +49,8 @@ export default class Emit<T extends Types> extends Pattern<T> {
     if (status) {
       const { value } = source.output;
       const result = this.#value === Source.Output ? value ?? -1 : this.#value;
-      const error = new Error(source.fragment, result);
-      source.emit(error);
+      const record = new LogRecord(this.#type, source.fragment, result);
+      source.emit(record);
     }
     source.discard();
     return status;

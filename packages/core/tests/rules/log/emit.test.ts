@@ -1,9 +1,9 @@
-import { Context, TextSource, EmitErrorPattern, ExpectUnitPattern } from '../../../src/index';
+import { Context, TextSource, EmitLogPattern, ExpectUnitPattern, LogType } from '../../../src/index';
 
 /**
- * It can consume a sequence of characters 'a', 'b' and 'c', and emits a new error into the error list.
+ * It can consume a sequence of characters 'a', 'b' and 'c', and emits a new log.
  */
-const pattern = new EmitErrorPattern(0xabc, new ExpectUnitPattern('a', 'b', 'c'));
+const pattern = new EmitLogPattern(LogType.ERROR, 0xabc, new ExpectUnitPattern('a', 'b', 'c'));
 
 test('Consume success', () => {
   const context = new Context('test');
@@ -14,11 +14,12 @@ test('Consume success', () => {
   expect(source.offset).toBe(3);
   expect(source.length).toBe(0);
 
-  // Check the error list.
-  expect(context.errors).toHaveLength(1);
+  // Check the log list.
+  expect(context.logs).toHaveLength(1);
 
-  const error = context.errors.get(0);
-  expect(error.value).toBe(0xabc);
+  const log = context.logs.get(0);
+  expect(log.type).toBe(LogType.ERROR);
+  expect(log.value).toBe(0xabc);
 });
 
 test('Consume failure', () => {
@@ -31,7 +32,7 @@ test('Consume failure', () => {
   expect(source.length).toBe(2);
 
   // Check the error list.
-  expect(context.errors).toHaveLength(0);
+  expect(context.logs).toHaveLength(0);
 });
 
 test('Consume eof', () => {
@@ -44,5 +45,5 @@ test('Consume eof', () => {
   expect(source.length).toBe(0);
 
   // Check the error list.
-  expect(context.errors).toHaveLength(0);
+  expect(context.logs).toHaveLength(0);
 });

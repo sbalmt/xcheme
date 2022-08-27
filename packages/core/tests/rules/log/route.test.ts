@@ -1,9 +1,12 @@
-import { Context, TextSource, MapFlowPattern, EmitErrorRoute, ExpectUnitPattern } from '../../../src/index';
+import { Context, TextSource, MapFlowPattern, EmitLogRoute, ExpectUnitPattern, LogType } from '../../../src/index';
 
 /**
  * Routes map.
  */
-const pattern = new MapFlowPattern(new EmitErrorRoute(0x1aa, 'a'), new EmitErrorRoute(0x2bb, new ExpectUnitPattern('c'), 'b'));
+const pattern = new MapFlowPattern(
+  new EmitLogRoute(LogType.ERROR, 0x1aa, 'a'),
+  new EmitLogRoute(LogType.WARNING, 0x2bb, new ExpectUnitPattern('c'), 'b')
+);
 
 test('Consume success', () => {
   const context = new Context('test');
