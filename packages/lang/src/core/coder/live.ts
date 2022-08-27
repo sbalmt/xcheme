@@ -338,4 +338,12 @@ export class Live extends Base {
   emitRangePattern(from: string | number, to: string | number): Types.Pattern {
     return new Core.RangeUnitPattern(from, to);
   }
+
+  /**
+   * Get a new EoS pattern.
+   * @returns Returns the pattern.
+   */
+  emitEoSPattern(): Types.Pattern {
+    return new Core.StopFlowPattern();
+  }
 }

@@ -56,6 +56,8 @@ export const consume = (
       return Range.consume(project, node, state);
     case Parser.Nodes.Map:
       return Map.consume(project, node, state);
+    case Parser.Nodes.EoS:
+      return project.coder.emitEoSPattern();
     case Parser.Nodes.Access:
       return Access.consume(project, node);
     case Parser.Nodes.Then:

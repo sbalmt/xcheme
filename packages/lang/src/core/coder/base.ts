@@ -330,4 +330,12 @@ export class Base {
   emitRangePattern(from: string | number, to: string | number): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
+
+  /**
+   * Should be implemented to return an EoS pattern.
+   * @returns Should return the pattern.
+   */
+  emitEoSPattern(): Pattern {
+    throw new Exception("Method doesn't implemented.");
+  }
 }

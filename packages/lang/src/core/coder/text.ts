@@ -407,4 +407,12 @@ export class Text extends Base {
   emitRangePattern(from: string | number, to: string | number): string {
     return this.#getPattern('RangeUnitPattern', ...this.#getUnits([from, to]));
   }
+
+  /**
+   * Get a new EoS pattern.
+   * @returns Returns the pattern.
+   */
+  emitEoSPattern(): string {
+    return this.#getPattern('StopFlowPattern');
+  }
 }
