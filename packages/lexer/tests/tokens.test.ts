@@ -45,13 +45,16 @@ const tokens = [
     { name: 'scope', value: Lexer.Tokens.Scope },
     // Error
     { name: 'error', value: Lexer.Tokens.Error },
+    { name: 'warn', value: Lexer.Tokens.Warn },
     // State
     { name: 'has', value: Lexer.Tokens.Has },
     { name: 'set', value: Lexer.Tokens.Set },
     // Transformation
     { name: 'uncase', value: Lexer.Tokens.Uncase },
     // Test
-    { name: 'peek', value: Lexer.Tokens.Peek }
+    { name: 'peek', value: Lexer.Tokens.Peek },
+    // Stop (End of Data Source)
+    { name: 'stop', value: Lexer.Tokens.Stop }
   ],
   // Directives
   ...[
@@ -91,7 +94,7 @@ test('Consume all expected tokens', () => {
   expect(Lexer.consumeText(text, context)).toBeTruthy();
 
   // Check the consumption errors.
-  expect(context.errors).toHaveLength(0);
+  expect(context.logs).toHaveLength(0);
 
   // For every token, it checks the corresponding value.
   const length = tokens.length;
@@ -113,12 +116,12 @@ test('Consume an unexpected token', () => {
   expect(context.tokens).toHaveLength(1);
 
   // Check the consumption errors.
-  expect(context.errors).toHaveLength(1);
+  expect(context.logs).toHaveLength(1);
 
-  const error = context.errors.get(0);
-  expect(error.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
+  const log = context.logs.get(0);
+  expect(log.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
 
-  const fragment = error.fragment;
+  const fragment = log.fragment;
   expect(fragment).toBeDefined();
   expect(fragment.data).toBe('@');
   expect(fragment.begin).toBe(4);
@@ -142,12 +145,12 @@ test('Consume an unexpected token (empty string)', () => {
   expect(context.tokens).toHaveLength(1);
 
   // Check the consumption errors.
-  expect(context.errors).toHaveLength(1);
+  expect(context.logs).toHaveLength(1);
 
-  const error = context.errors.get(0);
-  expect(error.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
+  const log = context.logs.get(0);
+  expect(log.value).toBe(Lexer.Errors.UNEXPECTED_TOKEN);
 
-  const fragment = error.fragment;
+  const fragment = log.fragment;
   expect(fragment).toBeDefined();
   expect(fragment.data).toBe("'");
   expect(fragment.begin).toBe(6);

@@ -26,5 +26,5 @@ export const Lexer = new Core.ExpectFlowPattern(
       )
     )
   ),
-  new Core.EndFlowPattern()
+  new Core.StopFlowPattern()
 );

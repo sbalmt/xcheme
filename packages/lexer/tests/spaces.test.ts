@@ -9,6 +9,6 @@ test('Consume all supported whites-spaces', () => {
   expect(Lexer.consumeText(text, context)).toBeTruthy();
 
   // Check the consumption results.
-  expect(context.errors).toHaveLength(0);
   expect(context.tokens).toHaveLength(0);
+  expect(context.logs).toHaveLength(0);
 });

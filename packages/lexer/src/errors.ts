@@ -1,9 +1,7 @@
-import * as Core from '@xcheme/core';
-
 /**
  * All lexer errors.
  */
 export const enum Errors {
-  DUPLICATE_IDENTIFIER = Core.InternalErrors.DUPLICATE_IDENTIFIER,
+  DUPLICATE_IDENTIFIER = 0x1000,
   UNEXPECTED_TOKEN
 }

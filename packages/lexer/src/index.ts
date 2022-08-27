@@ -24,7 +24,7 @@ export const consume = <T extends Core.Types>(source: Core.Source<T>): boolean =
 export const consumeText = <T extends Core.Types>(text: string, context: Core.Context<T>): boolean => {
   const source = new Core.TextSource<T>(text, context);
   if (!consume(source)) {
-    context.errors.emplace(source.fragment, Errors.UNEXPECTED_TOKEN);
+    context.logs.emplace(Core.LogType.ERROR, source.fragment, Errors.UNEXPECTED_TOKEN);
     return false;
   }
   return true;
