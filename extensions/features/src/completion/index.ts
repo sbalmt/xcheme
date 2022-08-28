@@ -229,7 +229,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
           return [Items.tokenItem, Items.nodeItem];
         case Lexer.Tokens.Token:
         case Lexer.Tokens.Node:
-          return [Items.identityItem, Items.identifierItem];
+          return [Items.identityItem];
         case Lexer.Tokens.From:
           return [Items.wordItem];
         case Lexer.Tokens.To:
