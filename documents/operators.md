@@ -45,6 +45,7 @@ The following table lists the precedence and associativity of all operators from
 | 3️⃣         | [Has state](#has-operator)           | Right to Left | has<…> …        |
 | 3️⃣         | [Set state](#set-operator)           | Right to Left | set<…> …        |
 | 3️⃣         | [User error](#error-operator)        | Right to Left | error<…> …      |
+| 3️⃣         | [User warning](#warn-operator)       | Right to Left | warn<…> …       |
 | 3️⃣         | [Symbol scope](#scope-operator)      | Right to Left | scope …         |
 | 3️⃣         | [Symbol record](#symbol-operator)    | Right to Left | symbol …        |
 | 3️⃣         | [AST pivot](#pivot-operator)         | Right to Left | pivot …         |
@@ -406,7 +407,7 @@ node <0> N_FOOBAR as N_FOO & scope N_BAR;
 
 ## Error operator
 
-The `error` operator is a unary operator used to emit an error after evaluating its operand as `true`, it doesn't stop the parsing process.
+The `error` operator is a unary operator used to emit an error after evaluating its operand as `true`, it doesn't stop the analysis process.
 
 Syntax:
 
@@ -423,7 +424,30 @@ token <0> T_FOO as FOO;
 node  <0> N_FOO as error<1000> T_FOO;
 ```
 
-> Emit an error with the code `1000` when `T_FOO` is found.
+> Emit a new error (with code `1000`) every time the `T_FOO` token is found.
+
+[Back to table](#operator-precedence)
+
+## Warn operator
+
+The `warn` operator is a unary operator used to emit a warning after evaluating its operand as `true`, it doesn't stop the analysis process.
+
+Syntax:
+
+```xcm
+warn <code> FOO
+```
+
+> Note: `code` must be a number.
+
+Example:
+
+```xcm
+token <0> T_FOO as FOO;
+node  <0> N_FOO as warn<1500> T_FOO;
+```
+
+> Emit a new warning (with code `1500`) every time the `T_FOO` token is found.
 
 [Back to table](#operator-precedence)
 

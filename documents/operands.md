@@ -6,13 +6,14 @@ In XCHEME all expressions are composed of operands and [operators](./operators.m
 
 The following table lists all the available operands. Click on the description to know about the respective operand.
 
-| Description                     | Operand         |
-| ------------------------------- | --------------- |
-| [Any](#any-operand)             | any             |
-| [Range](#range-operand)         | from '…' to '…' |
-| [String](#string-operand)       | '…'             |
-| [Reference](#reference-operand) | …               |
-| [Map](#map-operand)             | map { … }       |
+| Description                             | Operand         |
+| --------------------------------------- | --------------- |
+| [Any](#any-operand)                     | any             |
+| [Range](#range-operand)                 | from '…' to '…' |
+| [String](#string-operand)               | '…'             |
+| [Reference](#reference-operand)         | …               |
+| [Map](#map-operand)                     | map { … }       |
+| [End of Source](#end-of-source-operand) | eos             |
 
 ## Any operand
 
@@ -172,6 +173,32 @@ node <auto> N_FOO_OR_BAR as map {
 ```
 
 > A new node will be generated for each occurrence of its respective token.
+
+## End of Source operand
+
+The `eos` (End of Source) operand is used to accept only the end of source in a directive.
+
+Syntax:
+
+```xcm
+eos
+```
+
+Token example:
+
+```xcm
+token <0> T_FOO as 'foo' & eos;
+```
+
+> It generates a new `T_FOO` token for a `'foo'` string followed by the end of the source.
+
+Node example:
+
+```xcm
+node <0> N_FOO as T_FOO & eos;
+```
+
+> It generates a new `N_FOO` node for a `T_FOO` token followed by the end of the source.
 
 ## Next steps
 
