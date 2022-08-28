@@ -160,7 +160,11 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
     const list = [];
     for (const name of table.names) {
       const record = table.get(name)!;
-      if (record.data.origin === Lang.Types.Origins.User && types.includes(record.value as Parser.Symbols)) {
+      if (
+        record.assigned &&
+        record.data.origin === Lang.Types.Origins.User &&
+        types.includes(record.value as Parser.Symbols)
+      ) {
         const link = !!record.table;
         const item = Items.getItem(name, `Insert the ${name} reference.`, {
           kind: this.#getItemKind(record),
