@@ -5,6 +5,8 @@ import * as Help from './actions/help';
 import * as Version from './actions/version';
 import * as Make from './actions/make';
 
+import { Logging } from './core/console';
+
 try {
   const flags = Options.getFlags(process.argv.slice(2));
   if (flags.help) {
@@ -23,6 +25,6 @@ try {
     }
   }
 } catch (ex: any) {
-  console.error(`Unexpected Error: ${ex.message ?? ex}`);
+  Logging.printLine(`Unexpected Error: ${ex.message ?? ex}`);
   process.exit(1);
 }
