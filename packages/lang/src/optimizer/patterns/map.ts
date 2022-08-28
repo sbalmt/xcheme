@@ -10,20 +10,52 @@ import * as Loose from '../loose';
 
 import { Errors } from '../../core/errors';
 
+import * as Nodes from '../../core/nodes';
 import * as Expression from './expression';
 
 /**
- * Determines whether or not the given node is routable.
+ * Determines whether or not the given node is a valid SKIP or TOKEN route.
+ * @param node Route node.
+ * @returns Returns true when the route is valid, false otherwise.
+ */
+const isValidSkipOrTokenRoute = (node: Types.Node): boolean => {
+  if (node.value === Parser.Nodes.And) {
+    return node.assigned && node.data.type === Types.Nodes.StringSequence;
+  }
+  return node.value === Parser.Nodes.String;
+};
+
+/**
+ * Determines whether or not the given node is a valid NODE route.
+ * @param node Route node.
+ * @returns Returns true when the route is valid, false otherwise.
+ */
+const isValidNodeRoute = (node: Types.Node): boolean => {
+  if (node.value === Parser.Nodes.Reference) {
+    return node.assigned && Nodes.isToken(node);
+  }
+  if (node.value === Parser.Nodes.Access) {
+    return Nodes.isToken(node.lowest(Core.NodeDirection.Right)!);
+  }
+  return false;
+};
+
+/**
+ * Determines whether or not the given node is a valid route.
  * @param type Directive type.
  * @param node Route node.
- * @returns Returns true when the node is routable, false otherwise.
+ * @returns Returns true when the node is a valid route, false otherwise.
  */
-const isRoutable = (type: Types.Directives, node: Types.Node): boolean => {
-  return (
-    ((node.value === Parser.Nodes.Reference || node.value === Parser.Nodes.Access) && type === Types.Directives.Node) ||
-    node.value === Parser.Nodes.String ||
-    (node.assigned && (node.data.record !== void 0 || node.data.sequence !== void 0))
-  );
+const isValidRoute = (type: Types.Directives, node: Types.Node): boolean => {
+  if (type === Types.Directives.Skip || type === Types.Directives.Token) {
+    return isValidSkipOrTokenRoute(node);
+  }
+  if (node.value === Parser.Nodes.And) {
+    return (
+      node.assigned && node.data.type === Types.Nodes.ReferenceSequence && node.data.sequence!.every(isValidNodeRoute)
+    );
+  }
+  return isValidNodeRoute(node);
 };
 
 /**
@@ -45,7 +77,7 @@ const extractRoute = (
   ): Types.Node | undefined => {
     const node = parent.get(direction)!;
     if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
-      if (isRoutable(type, node)) {
+      if (isValidRoute(type, node)) {
         if (ancestor && parent) {
           ancestor.parent.set(ancestor.direction!, parent.right);
         }
@@ -77,7 +109,13 @@ const assignRoute = (
 ): void => {
   const route = extractRoute(state.type, Core.NodeDirection.Right, member);
   if (!route) {
-    project.logs.emplace(Core.LogType.ERROR, entry.fragment, Errors.INVALID_MAP_ENTRY);
+    if (state.type === Types.Directives.Token) {
+      project.logs.emplace(Core.LogType.ERROR, entry.fragment, Errors.INVALID_TOKEN_MAP_ENTRY);
+    } else if (state.type === Types.Directives.Node) {
+      project.logs.emplace(Core.LogType.ERROR, entry.fragment, Errors.INVALID_NODE_MAP_ENTRY);
+    } else {
+      project.logs.emplace(Core.LogType.ERROR, entry.fragment, Errors.INVALID_SKIP_MAP_ENTRY);
+    }
   } else {
     if (route.value === Parser.Nodes.String) {
       Loose.collision(project, route.fragment.data, route);

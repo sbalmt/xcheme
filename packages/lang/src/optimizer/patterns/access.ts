@@ -86,7 +86,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     if (lastRecord) {
       const identifier = Nodes.getPath(nodes, '@');
       Records.resolve(project, identifier, lastRecord, () => {
-        if (state.type !== Types.Directives.Node || lastRecord.data.type === Types.Directives.Node) {
+        if (state.type !== Types.Directives.Node || Records.isNode(lastRecord)) {
           project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
         } else if (Records.isDynamic(lastRecord)) {
           project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_REFERENCE);

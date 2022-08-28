@@ -140,11 +140,11 @@ const resolve = (
   const location = template.fragment.location;
   const expression = clone(project, template.right!, args, { table });
   const identity = template.left ? clone(project, template.left, args, { table }) : void 0;
-  const type = record.data.type === Types.Directives.Token ? Tree.Directives.AliasToken : Tree.Directives.AliasNode;
+  const type = Records.isToken(record) ? Tree.Directives.AliasToken : Tree.Directives.AliasNode;
   const identifier = Tree.getIdentifier(type, location, table, name, identity?.left?.fragment.data);
   const directive = Tree.getDirective(type, table, identifier, expression);
   const temp = Context.getNewState(state.anchor);
-  if (record.data.type === Types.Directives.Token) {
+  if (Records.isToken(record)) {
     Token.consume(project, directive.right!, temp);
   } else {
     Node.consume(project, directive.right!, temp);

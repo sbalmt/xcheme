@@ -20,7 +20,34 @@ export const getRecord = (node: Types.Node): Types.SymbolRecord => {
 };
 
 /**
- * Determines whether or not the given node is an alias directive.
+ * Determines whether or not the given node is a SKIP directive.
+ * @param node Source node.
+ * @returns Returns true when the node is a skip, false otherwise.
+ */
+export const isSkip = (node: Types.Node): boolean => {
+  return Records.isSkip(getRecord(node));
+};
+
+/**
+ * Determines whether or not the given node is a TOKEN directive.
+ * @param node Source node.
+ * @returns Returns true when the node is a token, false otherwise.
+ */
+export const isToken = (node: Types.Node): boolean => {
+  return Records.isToken(getRecord(node));
+};
+
+/**
+ * Determines whether or not the given node is a NODE directive.
+ * @param node Source node.
+ * @returns Returns true when the node is a node, false otherwise.
+ */
+export const isNode = (node: Types.Node): boolean => {
+  return Records.isNode(getRecord(node));
+};
+
+/**
+ * Determines whether or not the given node is an ALIAS directive.
  * @param node Source node.
  * @returns Returns true when the node is an alias, false otherwise.
  */

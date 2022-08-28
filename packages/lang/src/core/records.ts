@@ -6,7 +6,34 @@ import * as Project from './project';
 import * as Types from './types';
 
 /**
- * Determines whether or not the given record is an alias directive.
+ * Determines whether or not the given record is a SKIP directive.
+ * @param record Symbol record.
+ * @returns Returns true when the record is a skip, false otherwise.
+ */
+export const isSkip = (record: Types.SymbolRecord): boolean => {
+  return record.data.type === Types.Directives.Skip;
+};
+
+/**
+ * Determines whether or not the given record is a TOKEN directive.
+ * @param record Symbol record.
+ * @returns Returns true when the record is a token, false otherwise.
+ */
+export const isToken = (record: Types.SymbolRecord): boolean => {
+  return record.data.type === Types.Directives.Token;
+};
+
+/**
+ * Determines whether or not the given record is a NODE directive.
+ * @param record Symbol record.
+ * @returns Returns true when the record is a node, false otherwise.
+ */
+export const isNode = (record: Types.SymbolRecord): boolean => {
+  return record.data.type === Types.Directives.Node;
+};
+
+/**
+ * Determines whether or not the given record is an ALIAS directive.
  * @param record Symbol record.
  * @returns Returns true when the record is an alias, false otherwise.
  */
@@ -113,8 +140,6 @@ export const resolve = (
 
 /**
  * Connect the given source as a dependency of the target and the given target as a dependent of the source.
- * @param project Project context.
- * @param identifier Target identifier.
  * @param source Target record.
  * @param target Source record.
  */
