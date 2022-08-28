@@ -275,6 +275,16 @@ export const errorItem = getItem('error', 'Create a new error when the next cons
 });
 
 /**
+ * Completion item for a 'WARN' keyword operator.
+ */
+export const warnItem = getItem('warn', 'Create a new warning when the next consumption is successful.', {
+  kind: VSCode.CompletionItemKind.Keyword,
+  text: 'warn <${1}>',
+  commit: ['>'],
+  space: true
+});
+
+/**
  * Completion item for a 'HAS' keyword operator.
  */
 export const hasItem = getItem('has', 'Perform the next consumption when the expected state matches.', {
@@ -337,6 +347,14 @@ export const anyItem = getItem('any', 'Accept any unit.', {
 });
 
 /**
+ * Completion item for an 'End of Source' operand.
+ */
+export const eosItem = getItem('eos', 'Accept only the end of source.', {
+  kind: VSCode.CompletionItemKind.Constant,
+  text: 'eos'
+});
+
+/**
  * Completion item for a 'FROM/TO' operand.
  */
 export const rangeItem = getItem('from to', 'Accept an unit range.', {
@@ -364,6 +382,7 @@ export const unaryOperatorList = [
   symbolItem,
   scopeItem,
   errorItem,
+  warnItem,
   hasItem,
   setItem,
   uncaseItem,
@@ -378,4 +397,4 @@ export const directionList = [leftItem, rightItem, nextItem];
 /**
  * Completion list containing all operands.
  */
-export const operandList = [wordItem, anyItem, rangeItem];
+export const operandList = [wordItem, anyItem, rangeItem, eosItem];

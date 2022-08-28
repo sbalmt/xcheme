@@ -207,7 +207,8 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
     offset: number
   ): CompletionItems | undefined {
     if (offset > -1) {
-      switch (tokens.at(offset--)!.value) {
+      const token = tokens.get(offset--);
+      switch (token.value) {
         case Lexer.Tokens.Import:
           return this.#getFileList(document);
         case Lexer.Tokens.Export:
@@ -231,6 +232,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lexer.Tokens.Asterisk:
         case Lexer.Tokens.CloseBraces:
         case Lexer.Tokens.CloseParenthesis:
+        case Lexer.Tokens.EoS:
           return Items.binaryOperatorList;
         case Lexer.Tokens.Comma:
         case Lexer.Tokens.OpenBraces:
@@ -260,6 +262,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lexer.Tokens.Symbol:
         case Lexer.Tokens.Scope:
         case Lexer.Tokens.Error:
+        case Lexer.Tokens.Warn:
         case Lexer.Tokens.Has:
         case Lexer.Tokens.Set:
         case Lexer.Tokens.OpenParenthesis:
