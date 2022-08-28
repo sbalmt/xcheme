@@ -16,6 +16,7 @@ test('Consume success', () => {
 
   // Check the log list.
   expect(context.logs).toHaveLength(1);
+  expect(context.logs.count(LogType.ERROR)).toBe(1);
 
   const log = context.logs.get(0);
   expect(log.type).toBe(LogType.ERROR);
