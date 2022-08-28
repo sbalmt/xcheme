@@ -18,9 +18,11 @@ try {
     }
     const source = flags.source ?? 0;
     const target = flags.target ?? (run ? 0 : 1);
-    Make.perform(source, target, run, flags.debug);
+    if (!Make.perform(source, target, run, flags.debug)) {
+      process.exit(1);
+    }
   }
 } catch (ex: any) {
-  console.error(ex.message ?? ex);
+  console.error(`Unexpected Error: ${ex.message ?? ex}`);
   process.exit(1);
 }

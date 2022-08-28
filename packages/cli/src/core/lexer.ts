@@ -1,8 +1,9 @@
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
-import * as Console from './console';
 import * as Tokens from './tokens';
+
+import { Logging } from './console';
 
 /**
  * Tokenize the given input source into the specified consumption context.
@@ -19,14 +20,14 @@ export const consume = (
   tokens: boolean
 ): boolean => {
   const source = new Core.TextSource<Lang.Types.Metadata>(text, context);
-  Console.printLine('Tokenizing...');
+  Logging.printLine('Tokenizing...');
   if (!lexer.consume(source)) {
     context.logs.emplace(Core.LogType.ERROR, source.fragment, Lang.Errors.UNEXPECTED_TOKEN);
   } else {
-    Console.clearLine();
+    Logging.clearLine();
   }
   if (tokens) {
     Tokens.print(context.tokens);
   }
-  return !context.logs.length;
+  return !context.logs.count(Core.LogType.ERROR);
 };

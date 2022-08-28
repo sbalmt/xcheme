@@ -1,15 +1,15 @@
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
-import * as Console from './console';
+import { Logging } from './console';
 
 /**
  * All supported log types.
  */
 const logTypes = {
   [Core.LogType.ERROR]: 'ERROR',
-  [Core.LogType.WARNING]: 'WARNING',
-  [Core.LogType.INFORMATION]: 'INFORMATION'
+  [Core.LogType.WARNING]: 'WARN ',
+  [Core.LogType.INFORMATION]: 'INFO '
 };
 
 /**
@@ -45,19 +45,23 @@ const logMessages = {
 };
 
 /**
- * Get the corresponding log message based on the given log record.
- * @param record Log record.
+ * Get the corresponding log message from on the given log record.
+ * @param log Log record.
+ * @param custom Determines whether or not there are custom errors in the given logs list.
  * @returns Returns the corresponding log message.
  * @throws Throws an error when the specified log value isn't supported.
  */
-export const getMessage = (record: Core.LogRecord): string => {
-  const template = logMessages[record.value as Lang.Errors];
-  if (!template) {
-    throw `Log value '${record.value}' isn't supported.`;
+export const getMessage = (log: Core.LogRecord, custom: boolean): string => {
+  const message = logMessages[log.value as Lang.Errors];
+  if (!message) {
+    if (!custom) {
+      throw `Log message (code: ${log.value}) doesn't found.`;
+    }
+    return `Custom (${log.value})`;
   }
-  const fragment = record.fragment;
+  const fragment = log.fragment;
   const location = fragment.location;
-  return template.replace(/(\{[0-2]\})/g, (match: string): string => {
+  return message.replace(/(\{[0-2]\})/g, (match: string): string => {
     switch (match) {
       case '{0}':
         return fragment.data.replace(/\n/g, '\\n');
@@ -71,16 +75,19 @@ export const getMessage = (record: Core.LogRecord): string => {
 };
 
 /**
- * Print all the given log list.
+ * Print all logs in the specified log list.
  * @param logs Log list.
+ * @param custom Determines whether or not there are custom errors in the given logs list.
  */
-export const print = (logs: Core.LogList): void => {
-  Console.printLine('Problems:');
-  for (const log of logs) {
-    const type = logTypes[log.type];
-    const location = log.fragment.location.name;
-    const message = getMessage(log);
-    Console.printLine(`  ${type}: [${location}] ${message}`);
+export const printList = (logs: Core.LogList, custom: boolean = false): void => {
+  if (logs.length > 0) {
+    Logging.printLine('');
+    for (const log of logs) {
+      const type = logTypes[log.type];
+      const location = log.fragment.location.name;
+      const message = getMessage(log, custom);
+      Logging.printLine(`  ${type} [${location}]: ${message}`);
+    }
+    Logging.printLine('');
   }
-  Console.printLine('');
 };

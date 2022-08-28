@@ -1,8 +1,9 @@
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
-import * as Console from './console';
 import * as Fragment from './fragment';
+
+import { Logging } from './console';
 
 /**
  * Get the node direction name based on the given direction value.
@@ -51,7 +52,7 @@ const printTree = (direction: Core.NodeDirection, parent: Lang.Types.Node, ...de
     const fragment = Fragment.getMessage(current.fragment);
     const connector = children ? (direction === Core.NodeDirection.Next ? '   ' : connected ? '├─ ' : '└─ ') : '';
     const value = current.value.toString();
-    Console.printLine(` ${location} ${padding}${connector}${name} ${value} "${fragment}"`);
+    Logging.printLine(` ${location} ${padding}${connector}${name} ${value} "${fragment}"`);
     if (current.left) {
       printTree(Core.NodeDirection.Left, current, ...depth, current.right !== void 0 || current.next !== void 0);
     }
@@ -68,8 +69,8 @@ const printTree = (direction: Core.NodeDirection, parent: Lang.Types.Node, ...de
  */
 export const print = (node: Lang.Types.Node): void => {
   if (node.next) {
-    Console.printLine('Nodes:\n');
+    Logging.printLine('Nodes:\n');
     printTree(Core.NodeDirection.Next, node);
-    Console.printLine('');
+    Logging.printLine('');
   }
 };

@@ -1,9 +1,10 @@
 import * as Core from '@xcheme/core';
 import * as Lang from '@xcheme/lang';
 
-import * as Console from './console';
 import * as Symbols from './symbols';
 import * as Nodes from './nodes';
+
+import { Logging } from './console';
 
 /**
  * Parse the given input tokens into the specified consumption context.
@@ -22,12 +23,12 @@ export const consume = (
   nodes: boolean
 ): boolean => {
   const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
-  Console.printLine('Parsing...');
+  Logging.printLine('Parsing...');
   if (!parser.consume(source)) {
     const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
     context.logs.emplace(Core.LogType.ERROR, fragment, Lang.Errors.UNEXPECTED_SYNTAX);
   } else {
-    Console.clearLine();
+    Logging.clearLine();
   }
   if (symbols) {
     Symbols.print(context.table);
@@ -35,5 +36,5 @@ export const consume = (
   if (nodes) {
     Nodes.print(context.node);
   }
-  return !context.logs.length;
+  return !context.logs.count(Core.LogType.ERROR);
 };

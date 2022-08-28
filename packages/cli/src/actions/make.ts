@@ -10,8 +10,9 @@ import * as GenericLexer from '../core/lexer';
 import * as GenericParser from '../core/parser';
 
 import * as Options from '../core/options';
-import * as Console from '../core/console';
 import * as Logs from '../core/logs';
+
+import { Logging } from '../core/console';
 
 /**
  * Global language options.
@@ -33,12 +34,13 @@ const globalOptions: Lang.Project.Options = {
  * @returns Returns true in case of success, false otherwise.
  */
 const optimize = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => {
-  Console.printLine('Optimizing...');
+  Logging.printLine('Optimizing...');
   if (Lang.Optimizer.consumeNodes(project, node)) {
-    Console.clearLine();
+    if (project.logs.length === 0) {
+      Logging.clearLine();
+    }
     return true;
   }
-  Logs.print(project.logs);
   return false;
 };
 
@@ -49,12 +51,13 @@ const optimize = (project: Lang.Project.Context, node: Lang.Types.Node): boolean
  * @returns Returns true in case of success, false otherwise.
  */
 const make = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => {
-  Console.printLine('Making...');
+  Logging.printLine('Making...');
   if (Lang.Maker.consumeNodes(project, node)) {
-    Console.clearLine();
+    if (project.logs.length === 0) {
+      Logging.clearLine();
+    }
     return true;
   }
-  Logs.print(project.logs);
   return false;
 };
 
@@ -63,19 +66,20 @@ const make = (project: Lang.Project.Context, node: Lang.Types.Node): boolean => 
  * @param project Input project.
  * @param source Input source.
  * @param state Debug state.
- * @returns Returns true in case of success, otherwise returns false.
+ * @returns Returns true when the test was successful, false otherwise.
  */
 const test = (project: Lang.Project.Context, source: string, state: Options.Debug): boolean => {
   const context = new Core.Context<Lang.Types.Metadata>('runner');
+  Logging.printLine('Running...');
   if (GenericLexer.consume(project.lexer as Lang.Types.Pattern, source, context, state.tokens!)) {
     if (
       GenericParser.consume(project.parser as Lang.Types.Pattern, context.tokens, context, state.symbols!, state.nodes!)
     ) {
-      Console.printLine('Done!');
+      Logs.printList(context.logs, true);
       return true;
     }
   }
-  Logs.print(context.logs);
+  Logs.printList(context.logs, true);
   return false;
 };
 
@@ -87,9 +91,7 @@ const test = (project: Lang.Project.Context, source: string, state: Options.Debu
 const save = (project: Lang.Project.Context, path: string | number): void => {
   const lib = "const Core = require('@xcheme/core');";
   FS.writeFileSync(path, `${lib}\n${project.lexer}\n${project.parser}\n`);
-  if (path !== 1) {
-    Console.printLine('Done!');
-  }
+  Logging.printLine('Done!');
 };
 
 /**
@@ -110,7 +112,7 @@ const initialize = (source: string | number): void => {
  * @param target Target file.
  * @param run Determines whether or not the project should consume the target.
  * @param state Debug state options.
- * @returns Returns true in case of success, false otherwise.
+ * @return Returns true when the performance was successful, false otherwise.
  */
 export const perform = (
   source: string | number,
@@ -118,28 +120,36 @@ export const perform = (
   run: boolean,
   state: Options.Debug
 ): boolean => {
-  const text = FS.readFileSync(source).toString();
+  const code = FS.readFileSync(source).toString();
   const context = new Core.Context<Lang.Types.Metadata>('maker');
   initialize(source);
-  if (GenericLexer.consume(Lexer, text, context, !run && state.tokens!)) {
+  if (GenericLexer.consume(Lexer, code, context, !run && state.tokens!)) {
     if (GenericParser.consume(Parser, context.tokens, context, !run && state.symbols!, !run && state.nodes!)) {
       const path = Path.join('', source.toString());
+      const node = context.node;
       if (run) {
         const project = new Lang.Project.Context(path, new Lang.LiveCoder(), globalOptions);
-        if (optimize(project, context.node) && make(project, context.node)) {
+        const status = optimize(project, node) && make(project, node);
+        Logs.printList(project.logs);
+        if (status) {
           const content = FS.readFileSync(target).toString();
-          test(project, content, state);
-          return true;
+          if (test(project, content, state)) {
+            Logging.printLine('Success!');
+            return true;
+          }
         }
       } else {
         const project = new Lang.Project.Context(path, new Lang.TextCoder(), globalOptions);
-        if (optimize(project, context.node) && make(project, context.node)) {
+        const status = optimize(project, node) && make(project, node);
+        Logs.printList(project.logs);
+        if (status) {
           save(project, target);
           return true;
         }
       }
     }
   }
-  Logs.print(context.logs);
+  Logs.printList(context.logs);
+  Logging.printLine('Failure!');
   return false;
 };
