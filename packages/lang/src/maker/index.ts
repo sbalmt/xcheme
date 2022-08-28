@@ -1,3 +1,4 @@
+import * as Core from '@xcheme/core';
 import * as Parser from '@xcheme/parser';
 
 import * as Nodes from '../core/nodes';
@@ -75,5 +76,5 @@ export const consumeNodes = (project: Project.Context, node: Types.Node): boolea
       resolveMain(project, node);
     }
   }
-  return project.logs.length === 0;
+  return !project.logs.count(Core.LogType.ERROR);
 };
