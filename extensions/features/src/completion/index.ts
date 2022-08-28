@@ -211,7 +211,7 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
     offset: number
   ): CompletionItems | undefined {
     if (offset > -1) {
-      const token = tokens.get(offset--);
+      const token = tokens.at(offset--)!;
       switch (token.value) {
         case Lexer.Tokens.Import:
           return this.#getFileList(document);
@@ -220,7 +220,9 @@ export class Provider implements VSCode.CompletionItemProvider<VSCode.Completion
         case Lexer.Tokens.CloseChevron:
           return this.#isIdentity(tokens, offset) ? [Items.identifierItem] : [];
         case Lexer.Tokens.Identifier:
-          return this.#isIdentifier(tokens, offset) ? [Items.asItem] : Items.binaryOperatorList;
+          return this.#isIdentifier(tokens, offset)
+            ? [Items.asItem]
+            : [...this.#getSymbolList(table, this.#getSymbolFilters(tokens, offset)), ...Items.binaryOperatorList];
         case Lexer.Tokens.Skip:
           return Items.operandList;
         case Lexer.Tokens.Alias:
