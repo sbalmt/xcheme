@@ -24,21 +24,16 @@ const template = (
   record: Types.SymbolRecord,
   state: Context.State
 ): void => {
-  let identifier = node.fragment.data;
-  const action = () => {
+  const identifier = node.fragment.data;
+  Records.resolve(project, identifier, record, () => {
     if (record.data.template) {
       const reference = Generic.Template.consume(project, node, record, state);
-      identifier = reference.fragment.data;
+      const identifier = reference.fragment.data;
       record = node.table.find(identifier)!;
       node.swap(reference);
     }
-    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
-  };
-  if (!record.assigned) {
-    project.symbols.listen(identifier, action);
-  } else {
-    action();
-  }
+    Records.connect(record, state.record!);
+  });
 };
 
 /**
@@ -55,19 +50,14 @@ const upgrade = (
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
-  const action = () => {
+  Records.resolve(project, identifier, record, () => {
     if (Records.isDynamic(record)) {
       project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_MAP_REFERENCE);
     } else {
-      Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
+      Records.connect(record, state.record!);
       Types.assignNode(node, { type: Types.Nodes.Reference, record });
     }
-  };
-  if (!record.assigned) {
-    project.symbols.listen(identifier, action);
-  } else {
-    action();
-  }
+  });
 };
 
 /**
