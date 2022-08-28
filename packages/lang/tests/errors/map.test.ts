@@ -178,6 +178,89 @@ test('SKIP referring an ALIAS NODE map entry (reference error)', () => {
   );
 });
 
+test('SKIP map using an invalid TOKEN entry', () => {
+  Assert.error(
+    `
+    token <100> TOKEN as '@';
+    skip map {
+      TOKEN
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_TOKEN_REFERENCE,
+        column: [6, 11],
+        line: [3, 3]
+      },
+      {
+        code: Lang.Errors.INVALID_SKIP_MAP_ENTRY,
+        column: [6, 11],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('SKIP map using an invalid ALIAS TOKEN entry', () => {
+  Assert.error(
+    `
+    alias token ALIAS as '@';
+    skip map {
+      ALIAS
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_SKIP_MAP_ENTRY,
+        column: [6, 11],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('SKIP map using an invalid NODE entry', () => {
+  Assert.error(
+    `
+    node <200> NODE as '@';
+    skip map {
+      NODE
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_NODE_REFERENCE,
+        column: [6, 10],
+        line: [3, 3]
+      },
+      {
+        code: Lang.Errors.INVALID_SKIP_MAP_ENTRY,
+        column: [6, 10],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('SKIP map using an invalid ALIAS NODE entry', () => {
+  Assert.error(
+    `
+    alias node ALIAS as '@';
+    skip map {
+      ALIAS
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_ALIAS_NODE_REFERENCE,
+        column: [6, 11],
+        line: [3, 3]
+      },
+      {
+        code: Lang.Errors.INVALID_SKIP_MAP_ENTRY,
+        column: [6, 11],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
 test('TOKEN referring a TOKEN map entry (reference error)', () => {
   Assert.error(
     `
@@ -241,6 +324,84 @@ test('TOKEN referring an ALIAS NODE map entry (reference error)', () => {
         code: Lang.Errors.INVALID_MAP_ENTRY_REFERENCE,
         column: [30, 31],
         line: [4, 4]
+      }
+    ]
+  );
+});
+
+test('TOKEN map using an invalid TOKEN entry', () => {
+  Assert.error(
+    `
+    token <100> TOKEN1 as '@';
+    token <101> TOKEN2 as map {
+      TOKEN1
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_TOKEN_MAP_ENTRY,
+        column: [6, 12],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('TOKEN map using an invalid ALIAS TOKEN entry', () => {
+  Assert.error(
+    `
+    alias token ALIAS as '@';
+    token <100> TOKEN as map {
+      ALIAS
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_TOKEN_MAP_ENTRY,
+        column: [6, 11],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('TOKEN map using an invalid NODE entry', () => {
+  Assert.error(
+    `
+    node <200> NODE as '@';
+    token <100> TOKEN as map {
+      NODE
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_NODE_REFERENCE,
+        column: [6, 10],
+        line: [3, 3]
+      },
+      {
+        code: Lang.Errors.INVALID_TOKEN_MAP_ENTRY,
+        column: [6, 10],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('TOKEN map using an invalid ALIAS NODE entry', () => {
+  Assert.error(
+    `
+    alias node ALIAS as '@';
+    token <100> TOKEN as map {
+      ALIAS
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_ALIAS_NODE_REFERENCE,
+        column: [6, 11],
+        line: [3, 3]
+      },
+      {
+        code: Lang.Errors.INVALID_TOKEN_MAP_ENTRY,
+        column: [6, 11],
+        line: [3, 3]
       }
     ]
   );
@@ -395,6 +556,62 @@ test('NODE referring a loose TOKEN map already defined (token collision)', () =>
       {
         code: Lang.Errors.TOKEN_COLLISION,
         column: [6, 9],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('NODE map using an invalid ALIAS TOKEN entry', () => {
+  Assert.error(
+    `
+    alias token ALIAS as '@';
+    node <200> NODE as map {
+      ALIAS
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_ALIAS_TOKEN_REFERENCE,
+        column: [6, 11],
+        line: [3, 3]
+      },
+      {
+        code: Lang.Errors.INVALID_NODE_MAP_ENTRY,
+        column: [6, 11],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('NODE map using an invalid NODE entry', () => {
+  Assert.error(
+    `
+    node <200> NODE1 as '@';
+    node <201> NODE2 as map {
+      NODE2
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_NODE_MAP_ENTRY,
+        column: [6, 11],
+        line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('NODE map using an invalid ALIAS NODE entry', () => {
+  Assert.error(
+    `
+    alias node ALIAS as '@';
+    node <200> NODE as map {
+      ALIAS
+    };`,
+    [
+      {
+        code: Lang.Errors.INVALID_NODE_MAP_ENTRY,
+        column: [6, 11],
         line: [3, 3]
       }
     ]
