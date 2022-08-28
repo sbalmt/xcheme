@@ -14,25 +14,30 @@ import * as Expression from './expression';
 
 /**
  * Determines whether or not the given node is routable.
+ * @param type Directive type.
  * @param node Route node.
  * @returns Returns true when the node is routable, false otherwise.
  */
-const isRoutable = (node: Types.Node): boolean => {
+const isRoutable = (type: Types.Directives, node: Types.Node): boolean => {
   return (
-    node.value === Parser.Nodes.Reference ||
+    ((node.value === Parser.Nodes.Reference || node.value === Parser.Nodes.Access) && type === Types.Directives.Node) ||
     node.value === Parser.Nodes.String ||
-    node.value === Parser.Nodes.Access ||
     (node.assigned && (node.data.record !== void 0 || node.data.sequence !== void 0))
   );
 };
 
 /**
  * Extract the corresponding route from the given direction and member node.
+ * @param type Directive type.
  * @param direction Child node direction.
  * @param member Member node.
  * @returns Returns the corresponding route or undefined when there's no route.
  */
-const extractRoute = (direction: Core.NodeDirection, member: Types.Node): Types.Node | undefined => {
+const extractRoute = (
+  type: Types.Directives,
+  direction: Core.NodeDirection,
+  member: Types.Node
+): Types.Node | undefined => {
   const action = (
     direction: Core.NodeDirection,
     parent: Types.Node,
@@ -40,7 +45,7 @@ const extractRoute = (direction: Core.NodeDirection, member: Types.Node): Types.
   ): Types.Node | undefined => {
     const node = parent.get(direction)!;
     if (node.value !== Parser.Nodes.Then && node.value !== Parser.Nodes.Or) {
-      if (isRoutable(node)) {
+      if (isRoutable(type, node)) {
         if (ancestor && parent) {
           ancestor.parent.set(ancestor.direction!, parent.right);
         }
@@ -61,9 +66,16 @@ const extractRoute = (direction: Core.NodeDirection, member: Types.Node): Types.
  * @param entry Entry node.
  * @param member Entry member node.
  * @param identity Route identity.
+ * @param state Consumption state.
  */
-const assignRoute = (project: Project.Context, entry: Types.Node, member: Types.Node, identity: number): void => {
-  const route = extractRoute(Core.NodeDirection.Right, member);
+const assignRoute = (
+  project: Project.Context,
+  entry: Types.Node,
+  member: Types.Node,
+  identity: number,
+  state: Context.State
+): void => {
+  const route = extractRoute(state.type, Core.NodeDirection.Right, member);
   if (!route) {
     project.logs.emplace(Core.LogType.ERROR, entry.fragment, Errors.INVALID_MAP_ENTRY);
   } else {
@@ -96,13 +108,13 @@ const consumeAnonymous = (project: Project.Context, entry: Types.Node, state: Co
       Project.Context.identity.increment(project.coder, project.options.identity)
     );
     Expression.consume(project, member.right!, state);
-    assignRoute(project, entry, member, identity);
+    assignRoute(project, entry, member, identity, state);
   } else {
     const identity = Records.isDynamic(state.record!)
       ? Project.Context.identity.increment(project.coder, project.options.identity)
       : Core.Source.Output;
     Expression.consume(project, member, state);
-    assignRoute(project, entry, entry, identity);
+    assignRoute(project, entry, entry, identity, state);
   }
 };
 
@@ -134,7 +146,7 @@ const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state:
     Records.resolve(project, identifier, state.record, () => Records.connect(state.record!, previousRecord));
     project.symbols.add(state.record);
     Expression.consume(project, member.right!, state);
-    assignRoute(project, entry, member, identity);
+    assignRoute(project, entry, member, identity, state);
     state.record = previousRecord;
   }
 };
