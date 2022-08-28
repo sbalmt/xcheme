@@ -2,7 +2,7 @@ import * as Lang from '@xcheme/lang';
 
 import * as Fragment from './fragment';
 
-import { Logging } from './console';
+import { Output } from './console';
 
 /**
  * Get the depth indentation string.
@@ -31,7 +31,7 @@ const printTable = (table: Lang.Types.SymbolTable, ...depth: boolean[]): void =>
     const fragment = Fragment.getMessage(record.fragment);
     const connector = depth.length > 0 ? (ending ? '└─ ' : '├─ ') : '';
     const value = record.value.toString().padStart(4, '0');
-    Logging.printLine(`${location} ${value} ${padding}${connector}${fragment}`);
+    Output.printLine(`${location} ${value} ${padding}${connector}${fragment}`);
     if (record.table) {
       printTable(record.table, ...depth, !ending);
     }
@@ -44,8 +44,8 @@ const printTable = (table: Lang.Types.SymbolTable, ...depth: boolean[]): void =>
  * @param table Symbol table.
  */
 export const print = (table: Lang.Types.SymbolTable): void => {
-  Logging.printLine('Symbols:\n');
-  Logging.printLine('          Code Identifier');
+  Output.printLine('Symbols:\n');
+  Output.printLine('          Code Identifier');
   printTable(table);
-  Logging.printLine('');
+  Output.printLine('');
 };

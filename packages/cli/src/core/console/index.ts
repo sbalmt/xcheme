@@ -1,2 +1,2 @@
-export * as Output from './output';
 export * as Logging from './logging';
+export * as Output from './output';
