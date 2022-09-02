@@ -75,8 +75,8 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
       Access.consume(project, node, state);
       break;
     default:
-      if (node.right) {
-        consume(project, node.right, state);
-      }
+      node.left && consume(project, node.left, state);
+      node.right && consume(project, node.right, state);
+      node.next && consume(project, node.next, state);
   }
 };
