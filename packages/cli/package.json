@@ -15,7 +15,8 @@
 	},
 	"main": "bin/xcm.js",
 	"bin": {
-		"xcm": "./bin/xcm.js"
+		"xcm": "./bin/xcm.js",
+		"xcheme": "./bin/xcm.js"
 	},
 	"scripts": {
 		"prepublishOnly": "npm run package",
