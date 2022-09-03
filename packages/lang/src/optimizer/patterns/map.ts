@@ -35,7 +35,8 @@ const isValidNodeRoute = (node: Types.Node): boolean => {
     return node.assigned && Nodes.isToken(node);
   }
   if (node.value === Parser.Nodes.Access) {
-    return Nodes.isToken(node.lowest(Core.NodeDirection.Right)!);
+    const member = node.lowest(Core.NodeDirection.Right)!;
+    return member.assigned && Nodes.isToken(member);
   }
   return false;
 };

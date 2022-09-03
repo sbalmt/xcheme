@@ -54,7 +54,7 @@ const getRecord = (
     const node = nodes[index];
     if (!(member = member.table?.get(node.fragment.data))) {
       project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTIFIER);
-      break;
+      return void 0;
     }
     if (member.assigned) {
       assign(node, member);
