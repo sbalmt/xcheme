@@ -178,6 +178,27 @@ test('SKIP referring an ALIAS NODE map entry (reference error)', () => {
   );
 });
 
+test('SKIP map using an undefined entry', () => {
+  Assert.error(
+    `
+    skip map {
+      UNDEFINED
+    };`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTIFIER,
+        column: [6, 15],
+        line: [2, 2]
+      },
+      {
+        code: Lang.Errors.INVALID_SKIP_MAP_ENTRY,
+        column: [6, 15],
+        line: [2, 2]
+      }
+    ]
+  );
+});
+
 test('SKIP map using an invalid TOKEN entry', () => {
   Assert.error(
     `
@@ -324,6 +345,27 @@ test('TOKEN referring an ALIAS NODE map entry (reference error)', () => {
         code: Lang.Errors.INVALID_MAP_ENTRY_REFERENCE,
         column: [30, 31],
         line: [4, 4]
+      }
+    ]
+  );
+});
+
+test('TOKEN map using an undefined entry', () => {
+  Assert.error(
+    `
+    token <100> TOKEN as map {
+      UNDEFINED
+    };`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTIFIER,
+        column: [6, 15],
+        line: [2, 2]
+      },
+      {
+        code: Lang.Errors.INVALID_TOKEN_MAP_ENTRY,
+        column: [6, 15],
+        line: [2, 2]
       }
     ]
   );
@@ -557,6 +599,51 @@ test('NODE referring a loose TOKEN map already defined (token collision)', () =>
         code: Lang.Errors.TOKEN_COLLISION,
         column: [6, 9],
         line: [3, 3]
+      }
+    ]
+  );
+});
+
+test('NODE map using an undefined entry', () => {
+  Assert.error(
+    `
+    node <200> NODE as map {
+      UNDEFINED
+    };`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTIFIER,
+        column: [6, 15],
+        line: [2, 2]
+      },
+      {
+        code: Lang.Errors.INVALID_NODE_MAP_ENTRY,
+        column: [6, 15],
+        line: [2, 2]
+      }
+    ]
+  );
+});
+
+test('NODE map using an undefined TOKEN entry', () => {
+  Assert.error(
+    `
+    token <100> TOKEN as map {
+      A as 'a'
+    };
+    node <200> NODE as map {
+      TOKEN.UNDEFINED
+    };`,
+    [
+      {
+        code: Lang.Errors.UNDEFINED_IDENTIFIER,
+        column: [12, 21],
+        line: [5, 5]
+      },
+      {
+        code: Lang.Errors.INVALID_NODE_MAP_ENTRY,
+        column: [6, 21],
+        line: [5, 5]
       }
     ]
   );
