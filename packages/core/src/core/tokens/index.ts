@@ -1,2 +1,2 @@
-export { TokenList, ReadOnlyTokenList } from './list';
+export { TokenList } from './list';
 export { Token } from './token';

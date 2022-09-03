@@ -1,7 +1,7 @@
 import type { Fragment } from '../coordinates';
 import type { Types } from '../types';
 
-import { List, ReadOnlyList } from '../collections';
+import { List } from '../collections';
 import { Token } from './token';
 
 /**
@@ -20,8 +20,3 @@ export class TokenList<T extends Types> extends List<Token<T>> {
     return token;
   }
 }
-
-/**
- * Read-only token list class.
- */
-export class ReadOnlyTokenList<T extends Types> extends ReadOnlyList<Token<T>> {}

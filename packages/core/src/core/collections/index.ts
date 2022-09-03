@@ -1,2 +1,2 @@
-export { List, ReadOnlyList } from './list';
+export { List } from './list';
 export { Data } from './data';

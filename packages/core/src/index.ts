@@ -1,8 +1,8 @@
 export { Types, TokenType, NodeType, RecordType } from './core/types';
 
 export { Fragment, Location, Range } from './core/coordinates';
-export { LogList, ReadOnlyLogList, LogRecord, LogType } from './core/logs';
-export { TokenList, ReadOnlyTokenList, Token } from './core/tokens';
+export { LogList, LogRecord, LogType } from './core/logs';
+export { TokenList, Token } from './core/tokens';
 export { NodeDirection, Node } from './core/nodes';
 export { SymbolTable, SymbolRecord } from './core/symbols';
 export { Source, TextSource, TokenSource } from './sources';

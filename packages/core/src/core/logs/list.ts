@@ -1,6 +1,6 @@
 import type { Fragment } from '../coordinates';
 
-import { List, ReadOnlyList } from '../collections';
+import { List } from '../collections';
 import { LogRecord } from './record';
 import { LogType } from './type';
 
@@ -36,8 +36,3 @@ export class LogList extends List<LogRecord> {
     return total;
   }
 }
-
-/**
- * Read-only log list class.
- */
-export class ReadOnlyLogList extends ReadOnlyList<LogRecord> {}
