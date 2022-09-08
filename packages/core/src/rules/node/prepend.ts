@@ -73,9 +73,8 @@ export default class Prepend<T extends Types> extends Pattern<T> {
     if (status) {
       const fragment = source.fragment;
       if ((status = this.#target.consume(source))) {
-        const { table, value } = output;
-        const result = this.#value === Source.Output ? value ?? -1 : this.#value;
-        const child = new Node<T>(fragment, result, table);
+        const result = this.#value === Source.Output ? output.value ?? -1 : this.#value;
+        const child = new Node<T>(fragment, result, source.scope.table);
         child.set(this.#output, output.node);
         if (current) {
           const parent = child.lowest(this.#current) ?? child;

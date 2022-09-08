@@ -36,8 +36,7 @@ test('Consume success', () => {
   expect(source.length).toBe(0);
 
   // Check the generated symbol record.
-  const table = source.output.table!;
-  expect(table).toBeDefined();
+  const table = source.scope.table;
   expect(table).toHaveLength(1);
   expect(table.has('b')).toBeTruthy();
 

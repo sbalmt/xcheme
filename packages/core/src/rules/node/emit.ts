@@ -49,9 +49,8 @@ export default class Emit<T extends Types> extends Pattern<T> {
     source.save();
     const status = this.#target.consume(source);
     if (status) {
-      const { table, value } = source.output;
-      const result = this.#value === Source.Output ? value ?? -1 : this.#value;
-      const node = new Node<T>(source.fragment, result, table);
+      const result = this.#value === Source.Output ? source.output.value ?? -1 : this.#value;
+      const node = new Node<T>(source.fragment, result, source.scope.table);
       node.set(this.#output, source.output.node);
       source.output.node = void 0;
       source.emit(node);

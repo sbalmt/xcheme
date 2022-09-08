@@ -73,9 +73,10 @@ export default class Pivot<T extends Types> extends Pattern<T> {
     let status = this.#head.consume(source);
     if (status) {
       const output = source.output;
-      const { table, value } = output;
       const fragment = source.fragment;
       const current = output.node;
+      const value = output.value;
+      const table = source.scope.table;
       output.node = void 0;
       if (!(status = this.#target.consume(source))) {
         output.node = current;

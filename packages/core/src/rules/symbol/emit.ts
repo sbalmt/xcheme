@@ -46,17 +46,18 @@ export default class Emit<T extends Types> extends Pattern<T> {
    */
   consume(source: Source<T>): boolean {
     source.save();
-    let link = source.output.link;
-    source.output.link = void 0;
+    let link = source.scope.link;
+    source.scope.link = void 0;
     let status = this.#test.consume(source);
     if (status) {
-      const { node, table, value } = source.output;
+      const { node, value } = source.output;
       const fragment = source.fragment;
+      const table = source.scope.table;
       if ((status = this.#target.consume(source))) {
-        if (link && source.output.link) {
-          link.assign(source.output.link);
-        } else if (source.output.link) {
-          link = source.output.link;
+        if (link && source.scope.link) {
+          link.assign(source.scope.link);
+        } else if (source.scope.link) {
+          link = source.scope.link;
         }
         if (table.has(fragment)) {
           const { errors } = source.options;
@@ -65,13 +66,13 @@ export default class Emit<T extends Types> extends Pattern<T> {
         } else {
           const result = this.#value === Source.Output ? value ?? -1 : this.#value;
           const record = new SymbolRecord<T>(fragment, result, node, link);
-          source.output.link = void 0;
-          source.emit(record);
+          source.scope.link = void 0;
+          source.scope.emit(record);
         }
       }
     }
     if (!status) {
-      source.output.link = link;
+      source.scope.link = link;
     }
     source.discard();
     return status;

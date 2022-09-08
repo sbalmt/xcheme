@@ -25,7 +25,6 @@ test('Default source state', () => {
   // Test the default output state.
   const output = source.output;
   expect(output).toBeDefined();
-  expect(output.table).toBeDefined();
   expect(output.value).toBeUndefined();
   expect(output.node).toBeUndefined();
 });
@@ -202,18 +201,18 @@ test('Open/Close symbol table', () => {
   expect(table.names).toHaveLength(0);
 
   // Open symbol table.
-  source.expand();
+  source.scope.push();
 
   // Emit a new record to the output symbol table.
-  source.emit(new SymbolRecord(source.fragment, 123, context.node));
+  source.scope.emit(new SymbolRecord(source.fragment, 123, context.node));
 
   // Test the output symbol table state.
-  table = source.output.table!;
+  table = source.scope.table;
   expect(table.parent).toBeDefined();
   expect(table.names).toHaveLength(1);
 
   // Close the current symbol table.
-  source.collapse();
+  source.scope.pop();
 
   // Test the default symbol table state.
   table = context.table;
@@ -221,7 +220,7 @@ test('Open/Close symbol table', () => {
   expect(table.names).toHaveLength(0);
 
   // Test no more symbol tabes to close.
-  expect(() => source.collapse()).toThrow(new Exception("There's no table to collapse."));
+  expect(() => source.scope.pop()).toThrow(new Exception("There's no scope to remove."));
 });
 
 test('Emit token', () => {
@@ -284,7 +283,7 @@ test('Emit record', () => {
   const source = new TextSource('abc', context);
 
   // Test record emission.
-  source.emit(new SymbolRecord(source.fragment, 123, context.node));
+  source.scope.emit(new SymbolRecord(source.fragment, 123, context.node));
 
   // Test symbol table state.
   const table = context.table;
@@ -310,7 +309,7 @@ test('Emit record', () => {
   expect(location.column.end).toBe(0);
 
   // Test duplicate record.
-  expect(() => source.emit(new SymbolRecord(source.fragment, 123, context.node))).toThrow(
+  expect(() => source.scope.emit(new SymbolRecord(source.fragment, 123, context.node))).toThrow(
     new Exception('Unable to add records with duplicate name.')
   );
 });

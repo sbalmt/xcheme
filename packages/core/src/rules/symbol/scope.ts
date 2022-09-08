@@ -28,14 +28,9 @@ export default class Scope<T extends Types> extends Pattern<T> {
    * @returns Returns true when the source was consumed, otherwise returns false.
    */
   consume(source: Source<T>): boolean {
-    const link = source.output.link;
-    source.expand();
-    if (link) {
-      source.output.table.assign(link);
-      source.output.link = void 0;
-    }
+    source.scope.push();
     const status = this.#target.consume(source);
-    source.collapse();
+    source.scope.pop();
     return status;
   }
 }

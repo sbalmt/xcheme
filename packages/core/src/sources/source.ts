@@ -1,13 +1,13 @@
 import type { Fragment } from '../core/coordinates';
-import type { Types } from '../core/types';
 import type { Context } from '../core/context';
+import type { Types } from '../core/types';
 
 import { Exception } from '../core/exception';
 import { Token } from '../core/tokens';
 import { Node, NodeDirection } from '../core/nodes';
-import { SymbolTable, SymbolRecord } from '../core/symbols';
 import { LogRecord } from '../core/logs';
 import { Options } from '../core/options';
+import { Scope } from './scope';
 
 /**
  * Source output structure.
@@ -17,16 +17,6 @@ type Output<T extends Types> = {
    * Output state.
    */
   state: number;
-
-  /**
-   * Output symbol table.
-   */
-  table: SymbolTable<T>;
-
-  /**
-   * Linked symbol table.
-   */
-  link?: SymbolTable<T>;
 
   /**
    * Output value.
@@ -49,11 +39,6 @@ export class Source<T extends Types> {
   #context: Context<T>;
 
   /**
-   * Current symbol table.
-   */
-  #table: SymbolTable<T>;
-
-  /**
    * Current output.
    */
   #output: Output<T>;
@@ -66,15 +51,19 @@ export class Source<T extends Types> {
   }
 
   /**
+   * Symbol table scope.
+   */
+  #scope: Scope<T>;
+
+  /**
    * Default constructor.
    * @param context Source context.
    */
   constructor(context: Context<T>) {
     this.#context = context;
-    this.#table = context.table;
+    this.#scope = new Scope<T>(context.table);
     this.#output = {
-      state: 0,
-      table: this.#table
+      state: 0
     };
   }
 
@@ -97,6 +86,13 @@ export class Source<T extends Types> {
    */
   get output(): Output<T> {
     return this.#output;
+  }
+
+  /**
+   * Get the symbol scope.
+   */
+  get scope(): Scope<T> {
+    return this.#scope;
   }
 
   /**
@@ -160,41 +156,16 @@ export class Source<T extends Types> {
    * @param product Input product.
    * @throws Throws an error when the given product isn't supported.
    */
-  emit(product: Token<T> | Node<T> | SymbolRecord<T> | LogRecord): void {
+  emit(product: Token<T> | Node<T> | LogRecord): void {
     if (product instanceof Token) {
       this.#context.tokens.insert(product);
     } else if (product instanceof Node) {
       const root = this.#context.node.lowest(NodeDirection.Next) ?? this.#context.node;
       root.set(NodeDirection.Next, product);
-    } else if (product instanceof SymbolRecord) {
-      this.#table.insert(product);
     } else if (product instanceof LogRecord) {
       this.#context.logs.insert(product);
     } else {
       throw new Exception(`Unsupported product type.`);
     }
-  }
-
-  /**
-   * Open a new symbol table.
-   */
-  expand(): void {
-    this.#table = new SymbolTable(this.#table);
-    this.#output.table = this.#table;
-  }
-
-  /**
-   * Close the current symbol table.
-   * @throws Throws an error when there's no parent symbol table to be collapsed.
-   */
-  collapse(): void {
-    if (!this.#table.parent) {
-      throw new Exception(`There's no table to collapse.`);
-    }
-    if (this.#table.length > 0) {
-      this.#output.link = this.#table;
-    }
-    this.#table = this.#table.parent;
-    this.#output.table = this.#table;
   }
 }
