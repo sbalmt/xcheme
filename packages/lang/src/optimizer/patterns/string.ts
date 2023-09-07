@@ -12,7 +12,7 @@ import * as Generic from './generic';
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   if (state.type === Types.Directives.Node) {
-    const string = node.fragment.data;
-    Generic.Loose.consume(project, node, string, state);
+    const identifier = node.fragment.data;
+    Generic.Loose.consume(project, node, identifier, state);
   }
 };

@@ -28,11 +28,13 @@ export type Arguments = {
  */
 const getParameters = (table: Types.SymbolTable): string[] => {
   const list = [];
+
   for (const record of table) {
     if (record.value === Parser.Symbols.AliasParameter) {
       list.push(record.fragment.data);
     }
   }
+
   return list;
 };
 
@@ -89,6 +91,7 @@ const clone = (
 ): Types.Node => {
   const previous = state.table;
   let current = previous;
+
   if (node.value === Parser.Nodes.Map) {
     state.table = new Core.SymbolTable<Types.Metadata>(node.table.parent);
   } else if (node.value === Parser.Nodes.Reference) {
@@ -98,6 +101,7 @@ const clone = (
       current = node.table;
     }
   }
+
   const result = new Core.Node<Types.Metadata>(node.fragment, node.value, current);
   for (const direction of [Core.NodeDirection.Left, Core.NodeDirection.Right, Core.NodeDirection.Next]) {
     const child = node.get(direction);
@@ -105,6 +109,7 @@ const clone = (
       result.set(direction, clone(project, child, args, state));
     }
   }
+
   if (result.value === Parser.Nodes.MapMember) {
     const identifier = result.right!;
     if (identifier.value === Parser.Nodes.Identifier) {
@@ -113,9 +118,11 @@ const clone = (
       state.link = void 0;
     }
   }
+
   if (state.table !== previous) {
     state.link = state.table;
   }
+
   state.table = previous;
   return result;
 };
@@ -144,11 +151,13 @@ const resolve = (
   const identifier = Tree.getIdentifier(type, location, table, name, identity?.left?.fragment.data);
   const directive = Tree.getDirective(type, table, identifier, expression);
   const temp = Context.getNewState(state.anchor);
+
   if (Records.isToken(record)) {
     Token.consume(project, directive.right!, temp);
   } else {
     Node.consume(project, directive.right!, temp);
   }
+
   if (Records.fromSameLocation(record, state.record!) && record.data.order > state.record!.data.order) {
     directive.set(Core.NodeDirection.Next, state.anchor.next!.next);
     state.anchor.next!.set(Core.NodeDirection.Next, directive);
@@ -175,16 +184,19 @@ export const consume = (
   state: Context.State
 ): Types.Node => {
   const args = getArguments(project, node, getParameters(record.table!));
+
   if (!args) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.ARGUMENTS_MISSING);
-  } else {
-    const location = node.fragment.location;
-    const identifier = `@${Nodes.getPath([node, ...Object.values(args)], ':')}`;
-    const reference = Tree.getReference(identifier, location, node.table);
-    if (!project.symbols.has(identifier)) {
-      resolve(project, identifier, record, args, state);
-    }
-    return reference;
+    return node;
   }
-  return node;
+
+  const location = node.fragment.location;
+  const identifier = `@${Nodes.getPath([node, ...Object.values(args)], ':')}`;
+  const reference = Tree.getReference(identifier, location, node.table);
+
+  if (!project.symbols.has(identifier)) {
+    resolve(project, identifier, record, args, state);
+  }
+
+  return reference;
 };

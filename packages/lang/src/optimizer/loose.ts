@@ -22,11 +22,16 @@ const emit = (project: Project.Context, node: Types.Node, state: Context.State):
   const identifier = Tree.getIdentifier(Tree.Directives.Token, location, node.table, `@REF${identity}`, identity);
   const token = Tree.getDirective(Tree.Directives.Token, node.table, identifier, node.clone());
   const temp = Context.getNewState(state.anchor);
+
   temp.origin = Types.Origins.Loose;
+
   Token.consume(project, token.right!, temp);
+
   token.set(Core.NodeDirection.Next, state.anchor.next);
   state.anchor.set(Core.NodeDirection.Next, token);
+
   state.anchor = token;
+
   return temp.record!;
 };
 
@@ -42,6 +47,7 @@ export const collision = (project: Project.Context, identifier: string, node: Ty
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.TOKEN_COLLISION);
     return true;
   }
+
   return false;
 };
 
@@ -60,11 +66,14 @@ export const resolve = (
   state: Context.State
 ): Types.SymbolRecord => {
   const record = project.symbols.get(identifier);
-  if (record) {
-    if (record.data.origin === Types.Origins.User) {
-      project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.TOKEN_COLLISION);
-    }
-    return record;
+
+  if (!record) {
+    return emit(project, node, state);
   }
-  return emit(project, node, state);
+
+  if (record.data.origin === Types.Origins.User) {
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.TOKEN_COLLISION);
+  }
+
+  return record;
 };
