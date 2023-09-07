@@ -33,7 +33,9 @@ const getIdentity = (name: string, location: Core.Location, table: Types.SymbolT
   const fragment = new Core.Fragment(name, 0, name.length, location);
   const argument = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Arguments, table);
   const identity = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Identity, table);
+
   argument.set(Core.NodeDirection.Left, identity);
+
   return argument;
 };
 
@@ -56,10 +58,12 @@ export const getIdentifier = (
   const fragment = new Core.Fragment(name, 0, name.length, location);
   const identifier = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Identifier, table);
   const record = new Core.SymbolRecord<Types.Metadata>(fragment, getRecordType(type), identifier);
+
   if (id !== void 0) {
     const identity = getIdentity(`${id}`, location, table);
     identifier.set(Core.NodeDirection.Left, identity);
   }
+
   table.insert(record);
   return identifier;
 };
@@ -80,8 +84,10 @@ export const getDirective = (
 ): Types.Node => {
   const fragment = new Core.Fragment('directive', 0, 9, identifier.fragment.location);
   const directive = new Core.Node<Types.Metadata>(fragment, type, table);
+
   directive.set(Core.NodeDirection.Right, identifier);
   identifier.set(Core.NodeDirection.Right, expression);
+
   return directive;
 };
 
@@ -95,5 +101,6 @@ export const getDirective = (
 export const getReference = (name: string, location: Core.Location, table: Types.SymbolTable): Types.Node => {
   const fragment = new Core.Fragment(name, 0, name.length, location);
   const reference = new Core.Node<Types.Metadata>(fragment, Parser.Nodes.Reference, table);
+
   return reference;
 };

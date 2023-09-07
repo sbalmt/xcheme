@@ -195,6 +195,7 @@ export const assignNode = (node: Node, data: Metadata['node']): Node => {
     sequence: data.sequence,
     route: data.route
   });
+
   return node;
 };
 
@@ -221,5 +222,6 @@ export const assignRecord = (project: Project.Context, record: SymbolRecord, dat
     dependents: [],
     pattern: void 0
   });
+
   return record;
 };

@@ -16,6 +16,7 @@ import * as Expression from '../expression';
 export const consume = (project: Project.Context, node: Types.Node, identifier: string, state: Context.State): void => {
   const record = Loose.resolve(project, identifier, node, state);
   const reference = Tree.getReference(record.data.identifier, node.fragment.location, node.table);
+
   Expression.consume(project, reference, state);
   node.swap(reference);
 };

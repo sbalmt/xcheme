@@ -13,6 +13,7 @@ import * as Expression from './expression';
 export const consume = (project: Project.Context, state: Context.State): void => {
   const directive = state.directive;
   const record = Nodes.getRecord(directive);
+
   if (!record.data.template) {
     let expression = Expression.consume(project, directive.right!, state);
     if (expression) {
