@@ -21,28 +21,37 @@ import * as Generic from './generic';
  * @param state Context state.
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
+  const notInTemplate = !state.record?.data.template;
+
   switch (node.value) {
     case Parser.Nodes.Reference:
       Reference.consume(project, node, state);
       break;
+
     case Parser.Nodes.Identity:
       project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNSUPPORTED_ARGUMENT);
       break;
+
     case Parser.Nodes.String:
-      String.consume(project, node, state);
+      notInTemplate && String.consume(project, node, state);
       break;
+
     case Parser.Nodes.Range:
-      Range.consume(project, node, state);
+      notInTemplate && Range.consume(project, node, state);
       break;
+
     case Parser.Nodes.Map:
-      Map.consume(project, node, state);
+      notInTemplate && Map.consume(project, node, state);
       break;
+
     case Parser.Nodes.Or:
       Generic.Sequence.consume(project, node, Parser.Nodes.Or, state);
       break;
+
     case Parser.Nodes.And:
       Generic.Sequence.consume(project, node, Parser.Nodes.And, state);
       break;
+
     case Parser.Nodes.AppendRTL:
     case Parser.Nodes.AppendRTR:
     case Parser.Nodes.AppendRTN:
@@ -63,17 +72,20 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     case Parser.Nodes.PrependNTN:
     case Parser.Nodes.Pivot:
     case Parser.Nodes.Symbol:
-      Generic.Identity.consume(project, node, state);
+      notInTemplate && Generic.Identity.consume(project, node, state);
       break;
+
     case Parser.Nodes.Error:
     case Parser.Nodes.Warn:
     case Parser.Nodes.Has:
     case Parser.Nodes.Set:
-      Generic.State.consume(project, node, state);
+      notInTemplate && Generic.State.consume(project, node, state);
       break;
+
     case Parser.Nodes.Access:
-      Access.consume(project, node, state);
+      notInTemplate && Access.consume(project, node, state);
       break;
+
     default:
       node.left && consume(project, node.left, state);
       node.right && consume(project, node.right, state);

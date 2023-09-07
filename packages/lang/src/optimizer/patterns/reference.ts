@@ -12,51 +12,63 @@ import { Exception } from '../../core/exception';
 import * as Generic from './generic';
 
 /**
- * Process the corresponding template for the given node and record.
+ * Resolve the corresponding alias reference for the given node and record.
  * @param project Project context.
  * @param node Reference node.
  * @param record Reference record.
  * @param state Consumption state.
  */
-const template = (
+const resolveAliasReference = (
   project: Project.Context,
   node: Types.Node,
   record: Types.SymbolRecord,
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
+
   Records.resolve(project, identifier, record, () => {
-    if (record.data.template) {
+    const { template } = record.data;
+
+    if (template) {
       const reference = Generic.Template.consume(project, node, record, state);
       const identifier = reference.fragment.data;
+
       record = node.table.find(identifier)!;
+
       node.swap(reference);
     }
+
     Records.connect(record, state.record!);
   });
 };
 
 /**
- * Upgrade the specified node for an optimized one after resolving its reference.
+ * Resolve the corresponding token reference for the given node as record.
  * @param project Project context.
  * @param node Reference node.
  * @param record Reference record.
  * @param state Consumption state.
  */
-const upgrade = (
+const resolveTokenReference = (
   project: Project.Context,
   node: Types.Node,
   record: Types.SymbolRecord,
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
+
   Records.resolve(project, identifier, record, () => {
     if (Records.isDynamic(record)) {
       project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_MAP_REFERENCE);
-    } else {
-      Records.connect(record, state.record!);
-      Types.assignNode(node, { type: Types.Nodes.Reference, record });
+      return;
     }
+
+    Records.connect(record, state.record!);
+
+    Types.assignNode(node, {
+      type: Types.Nodes.Reference,
+      record
+    });
   });
 };
 
@@ -74,8 +86,10 @@ const resolveSkip = (
   record: Types.SymbolRecord,
   state: Context.State
 ): void => {
+  const { template } = state.record!.data;
+
   if (record.value === Parser.Symbols.AliasToken) {
-    template(project, node, record, state);
+    !template && resolveAliasReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_TOKEN_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -102,10 +116,12 @@ const resolveToken = (
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
+  const { template } = state.record!.data;
+
   if (record.value === Parser.Symbols.Token) {
-    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
+    !template && Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
   } else if (record.value === Parser.Symbols.AliasToken) {
-    template(project, node, record, state);
+    !template && resolveAliasReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.Node) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -130,12 +146,14 @@ const resolveNode = (
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
+  const { template } = state.record!.data;
+
   if (record.value === Parser.Symbols.Node) {
-    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
+    !template && Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
   } else if (record.value === Parser.Symbols.AliasNode) {
-    template(project, node, record, state);
+    !template && resolveAliasReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
-    upgrade(project, node, record, state);
+    !template && resolveTokenReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.AliasToken) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
   } else {
@@ -153,21 +171,28 @@ const resolveNode = (
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const identifier = node.fragment.data;
   const record = node.table.find(identifier);
+
   if (!record) {
-    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTIFIER);
-  } else {
-    switch (state.type) {
-      case Types.Directives.Skip:
-        resolveSkip(project, node, record, state);
-        break;
-      case Types.Directives.Token:
-        resolveToken(project, node, record, state);
-        break;
-      case Types.Directives.Node:
-        resolveNode(project, node, record, state);
-        break;
-      default:
-        throw new Exception(`Unsupported state type: ${state.type}`);
+    if (!state.record!.table?.find(identifier)) {
+      project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTIFIER);
     }
+    return;
+  }
+
+  switch (state.type) {
+    case Types.Directives.Skip:
+      resolveSkip(project, node, record, state);
+      break;
+
+    case Types.Directives.Token:
+      resolveToken(project, node, record, state);
+      break;
+
+    case Types.Directives.Node:
+      resolveNode(project, node, record, state);
+      break;
+
+    default:
+      throw new Exception(`Unsupported state type: ${state.type}`);
   }
 };

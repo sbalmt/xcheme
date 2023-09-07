@@ -28,11 +28,18 @@ const assign = (node: Types.Node, identity: number): void => {
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const expression = node.right!;
   const { identity, template } = state.record!.data;
+
   if (expression.value === Parser.Nodes.Arguments) {
     Expression.consume(project, expression.right!, state);
-    assign(node, Identity.consume(project, expression, template, identity));
+
+    if (!template) {
+      assign(node, Identity.consume(project, expression, false, identity));
+    }
   } else {
     Expression.consume(project, expression, state);
-    assign(node, identity);
+
+    if (!template) {
+      assign(node, identity);
+    }
   }
 };

@@ -19,8 +19,10 @@ import * as Expression from './expression';
  */
 const assign = (project: Project.Context, node: Types.Node, record: Types.SymbolRecord, state: Context.State): void => {
   const template = Records.isTemplate(record);
+
   state.type = Types.Directives.Node;
   state.record = record;
+
   Types.assignRecord(project, record, {
     type: state.type,
     origin: state.origin,
@@ -28,6 +30,7 @@ const assign = (project: Project.Context, node: Types.Node, record: Types.Symbol
     identifier: node.fragment.data,
     template
   });
+
   Types.assignNode(node, {
     type: Types.Nodes.Directive,
     record
@@ -42,18 +45,22 @@ const assign = (project: Project.Context, node: Types.Node, record: Types.Symbol
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const identifier = node.fragment.data;
+
   if (project.symbols.has(identifier)) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.DUPLICATE_IDENTIFIER);
-  } else {
-    const record = node.table.get(identifier)!;
-    assign(project, node, record, state);
-    if (!Records.isAlias(record) && Records.isEmpty(record)) {
-      project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTITY);
-    } else {
-      project.symbols.add(record);
-      if (!record.data.template) {
-        Expression.consume(project, node.right!, state);
-      }
-    }
+    return;
   }
+
+  const record = node.table.get(identifier)!;
+  const expression = node.right!;
+
+  assign(project, node, record, state);
+
+  if (!Records.isAlias(record) && Records.isEmpty(record)) {
+    project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.UNDEFINED_IDENTITY);
+    return;
+  }
+
+  project.symbols.add(record);
+  Expression.consume(project, expression, state);
 };

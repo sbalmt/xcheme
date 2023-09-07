@@ -35,7 +35,7 @@ const isReferenceSequence = (node: Types.Node, operator: Parser.Nodes): boolean 
     }
     return true;
   }
-  return node.value === Parser.Nodes.Access || node.assigned && node.data.type === Types.Nodes.Reference;
+  return node.value === Parser.Nodes.Access || (node.assigned && node.data.type === Types.Nodes.Reference);
 };
 
 /**
@@ -104,9 +104,15 @@ export const consume = (
 ): void => {
   if (node.value !== operator) {
     Expression.consume(project, node, state);
-  } else {
-    Expression.consume(project, node.left!, state);
-    Expression.consume(project, node.right!, state);
+    return;
+  }
+
+  const { template } = state.record!.data;
+
+  Expression.consume(project, node.left!, state);
+  Expression.consume(project, node.right!, state);
+
+  if (!template) {
     if (state.type === Types.Directives.Node) {
       consumeReferences(node, operator);
     } else {
