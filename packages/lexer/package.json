@@ -1,6 +1,6 @@
 {
 	"name": "@xcheme/lexer",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "Lexer component for XCHEME Lang",
 	"license": "MIT",
 	"keywords": [
@@ -26,7 +26,7 @@
 	},
 	"devDependencies": {
 		"@types/jest": "^27.0.1",
-		"@xcheme/core": "^0.0.12",
+		"@xcheme/core": "^0.0.13",
 		"jest": "^27.0.6",
 		"ts-jest": "^27.0.5",
 		"typescript": "^4.3.5"
