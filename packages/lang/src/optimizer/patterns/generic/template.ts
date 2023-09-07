@@ -54,7 +54,7 @@ const getArguments = (project: Project.Context, node: Types.Node, parameters: st
       if (!parameter) {
         project.logs.emplace(Core.LogType.ERROR, current.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
       } else {
-        switch (node.value) {
+        switch (current.value) {
           case Parser.Nodes.Reference:
           case Parser.Nodes.Identity:
             args[parameter] = current;
