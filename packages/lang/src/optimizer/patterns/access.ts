@@ -92,7 +92,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   }
 
   const identifier = Nodes.getPath(nodes, '@');
-  const notInTemplate = !state.record!.data.template;
+  const { template } = state.record!.data;
 
   Records.resolve(project, identifier, lastRecord, () => {
     if (state.type !== Types.Directives.Node || Records.isNode(lastRecord)) {
@@ -102,7 +102,7 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     } else if (firstRecord.value === Parser.Symbols.AliasToken) {
       project.logs.emplace(Core.LogType.ERROR, firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
     } else {
-      notInTemplate && Records.connect(firstRecord, state.record!);
+      !template && Records.connect(firstRecord, state.record!);
     }
   });
 };

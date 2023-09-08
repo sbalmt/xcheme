@@ -46,32 +46,37 @@ const getParameters = (table: Types.SymbolTable): string[] => {
  * @returns Returns the argument map.
  */
 const getArguments = (project: Project.Context, node: Types.Node, parameters: string[]): Arguments | undefined => {
-  if (node.right) {
-    const args: Arguments = {};
-    let current = node.right.left!;
-    let index = 0;
-    while (current) {
-      const parameter = parameters[index++];
-      const next = current.next;
-      if (!parameter) {
-        project.logs.emplace(Core.LogType.ERROR, current.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
-      } else {
-        switch (current.value) {
-          case Parser.Nodes.Reference:
-          case Parser.Nodes.Identity:
-            args[parameter] = current;
-            break;
-          default:
-            throw new Exception(`Unsupported argument node: ${current.value}`);
-        }
+  const args: Arguments = {};
+
+  let current = node.left!;
+  let index = 0;
+
+  while (current) {
+    const parameter = parameters[index++];
+    const next = current.next;
+
+    if (!parameter) {
+      project.logs.emplace(Core.LogType.ERROR, current.fragment, Errors.UNEXPECTED_EXTRA_ARGUMENT);
+    } else {
+      switch (current.value) {
+        case Parser.Nodes.Reference:
+        case Parser.Nodes.Identity:
+          args[parameter] = current;
+          break;
+
+        default:
+          throw new Exception(`Unsupported argument node: ${current.value}`);
       }
-      current.set(Core.NodeDirection.Next, void 0);
-      current = next!;
     }
-    if (!parameters[index]) {
-      return args;
-    }
+
+    current.set(Core.NodeDirection.Next, void 0);
+    current = next!;
   }
+
+  if (!parameters[index]) {
+    return args;
+  }
+
   return void 0;
 };
 
@@ -95,7 +100,9 @@ const clone = (
   if (node.value === Parser.Nodes.Map) {
     state.table = new Core.SymbolTable<Types.Metadata>(node.table.parent);
   } else if (node.value === Parser.Nodes.Reference) {
-    const argument = args[node.fragment.data];
+    const identifier = node.fragment.data;
+    const argument = args[identifier];
+
     if (argument) {
       node = argument;
       current = node.table;
@@ -103,8 +110,10 @@ const clone = (
   }
 
   const result = new Core.Node<Types.Metadata>(node.fragment, node.value, current);
+
   for (const direction of [Core.NodeDirection.Left, Core.NodeDirection.Right, Core.NodeDirection.Next]) {
     const child = node.get(direction);
+
     if (child && child.value !== Parser.Nodes.Parameters) {
       result.set(direction, clone(project, child, args, state));
     }
@@ -112,6 +121,7 @@ const clone = (
 
   if (result.value === Parser.Nodes.MapMember) {
     const identifier = result.right!;
+
     if (identifier.value === Parser.Nodes.Identifier) {
       const record = new Core.SymbolRecord(identifier.fragment, Parser.Symbols.MapMember, identifier, state.link);
       state.table.insert(record);
@@ -163,8 +173,10 @@ const resolve = (
     state.anchor.next!.set(Core.NodeDirection.Next, directive);
   } else {
     table.get(name)!.data.order = record.data.order;
+
     directive.set(Core.NodeDirection.Next, state.anchor.next);
     state.anchor.set(Core.NodeDirection.Next, directive);
+
     state.anchor = directive;
   }
 };
@@ -183,7 +195,7 @@ export const consume = (
   record: Types.SymbolRecord,
   state: Context.State
 ): Types.Node => {
-  const args = getArguments(project, node, getParameters(record.table!));
+  const args = node.right && getArguments(project, node.right, getParameters(record.table!));
 
   if (!args) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.ARGUMENTS_MISSING);
