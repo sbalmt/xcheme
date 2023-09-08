@@ -9,9 +9,11 @@ import * as Core from '@xcheme/core';
  */
 export const getDirectory = (document: VSCode.TextDocument): string => {
   const path = Path.dirname(document.uri.fsPath);
+
   if (path === '.' && VSCode.workspace.workspaceFolders) {
     return VSCode.workspace.workspaceFolders[0].uri.fsPath;
   }
+
   return path;
 };
 
@@ -23,5 +25,6 @@ export const getDirectory = (document: VSCode.TextDocument): string => {
 export const getRange = (location: Core.Location): VSCode.Range => {
   const begin = new VSCode.Position(location.line.begin, location.column.begin);
   const end = new VSCode.Position(location.line.end, location.column.end);
+
   return new VSCode.Range(begin, end);
 };

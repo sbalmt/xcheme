@@ -20,7 +20,6 @@ const DiagnosticCache: Diagnostics.Cache = {};
  * @param collection Diagnostic collection.
  */
 const updateDiagnostics = (document: VSCode.TextDocument, collection: VSCode.DiagnosticCollection): void => {
-  collection.clear();
   if (document.languageId === LanguageId) {
     DiagnosticCache.last = Diagnostics.update(document, collection);
   }

@@ -45,25 +45,40 @@ const errorMessages = {
  */
 const getMessage = (log: Core.LogRecord): string => {
   const message = errorMessages[log.value as Lang.Errors];
+
   if (!message) {
     throw new Error(`Error value '${log.value}' isn't supported.`);
   }
+
   return message;
 };
 
 /**
  * Get a new diagnostics list containing only errors from the given log list.
+ * @param path Log path.
  * @param logs Log list.
  * @returns Returns the diagnostics list.
  */
-export const getDiagnostics = (logs: Core.LogList): VSCode.Diagnostic[] => {
+export const getDiagnostics = (path: string, logs: Core.LogList): VSCode.Diagnostic[] => {
   const list = [];
+
   for (const log of logs) {
-    if (log.type === Core.LogType.ERROR) {
-      const severity = VSCode.DiagnosticSeverity.Error;
-      const range = Utils.getRange(log.fragment.location);
-      list.push(new VSCode.Diagnostic(range, getMessage(log), severity));
+    if (log.type !== Core.LogType.ERROR) {
+      continue;
     }
+
+    const location = log.fragment.location;
+
+    if (location.name !== path) {
+      continue;
+    }
+
+    const range = Utils.getRange(location);
+    const severity = VSCode.DiagnosticSeverity.Error;
+    const diagnostic = new VSCode.Diagnostic(range, getMessage(log), severity);
+
+    list.push(diagnostic);
   }
+
   return list;
 };

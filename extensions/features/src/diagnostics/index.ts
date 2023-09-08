@@ -39,6 +39,7 @@ const loadFile = (file: string): string | undefined => {
   if (FS.existsSync(file)) {
     return FS.readFileSync(file, { encoding: 'utf-8' });
   }
+
   return void 0;
 };
 
@@ -50,10 +51,13 @@ const loadFile = (file: string): string | undefined => {
 const getSource = (document: VSCode.TextDocument): Lang.Types.Context => {
   const begin = document.lineAt(0).range.start;
   const end = document.lineAt(document.lineCount - 1).range.end;
+
   const text = document.getText(new VSCode.Range(begin, end));
   const source = new Core.Context<Lang.Types.Metadata>(document.uri.path);
+
   Lexer.consumeText(text, source);
   Parser.consumeTokens(source.tokens, source);
+
   return source;
 };
 
@@ -65,11 +69,19 @@ const getSource = (document: VSCode.TextDocument): Lang.Types.Context => {
 export const update = (document: VSCode.TextDocument, collection: VSCode.DiagnosticCollection): Result | undefined => {
   const source = getSource(document);
   const directory = Utils.getDirectory(document);
+  const path = document.uri.fsPath;
+
   const project = new Lang.Project.Context('editor', new Lang.TextCoder(), {
     loadFileHook: directory ? loadFile : void 0,
     directory
   });
+
   Lang.Optimizer.consumeNodes(project, source.node);
-  collection.set(document.uri, [...Errors.getDiagnostics(source.logs), ...Errors.getDiagnostics(project.logs)]);
+
+  collection.set(document.uri, [
+    ...Errors.getDiagnostics(path, source.logs),
+    ...Errors.getDiagnostics(path, project.logs)
+  ]);
+
   return { project, source };
 };
