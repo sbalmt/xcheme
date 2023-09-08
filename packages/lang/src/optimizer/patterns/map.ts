@@ -111,7 +111,7 @@ const assignRoute = (
   project: Project.Context,
   entry: Types.Node,
   member: Types.Node,
-  identity: number | undefined,
+  identity: number,
   state: Context.State
 ): void => {
   const transform = !state.record!.data.template;
@@ -154,29 +154,22 @@ const assignRoute = (
  */
 const consumeAnonymous = (project: Project.Context, entry: Types.Node, state: Context.State): void => {
   const member = entry.right!;
-  const { template } = state.record!.data;
-
-  let identity;
 
   if (member.value === Parser.Nodes.Arguments) {
+    const { template } = state.record!.data;
+
+    const identity = Identity.consume(project, member, template, () =>
+      Project.Context.identity.increment(project.coder, project.options.identity)
+    );
+
     Expression.consume(project, member.right!, state);
-
-    if (!template) {
-      identity = Identity.consume(project, member, false, () =>
-        Project.Context.identity.increment(project.coder, project.options.identity)
-      );
-    }
-
     assignRoute(project, entry, member, identity, state);
   } else {
+    const identity = Records.isDynamic(state.record!)
+      ? Project.Context.identity.increment(project.coder, project.options.identity)
+      : Core.Source.Output;
+
     Expression.consume(project, member, state);
-
-    if (!template) {
-      identity = Records.isDynamic(state.record!)
-        ? Project.Context.identity.increment(project.coder, project.options.identity)
-        : Core.Source.Output;
-    }
-
     assignRoute(project, entry, entry, identity, state);
   }
 };
@@ -203,20 +196,23 @@ const consumeIdentifiable = (project: Project.Context, entry: Types.Node, state:
 
   state.record = entry.table.get(member.fragment.data)!;
 
+  identity = Identity.consume(project, member.left, template, () =>
+    Project.Context.identity.increment(project.coder, project.options.identity)
+  );
+
+  Types.assignRecord(project, state.record, {
+    type: state.type,
+    origin: state.origin,
+    identity,
+    identifier,
+    template
+  });
+
+  Records.resolve(project, identifier, state.record, () => {
+    Records.connect(state.record!, previousRecord);
+  });
+
   if (!template) {
-    identity = Identity.consume(project, member.left, template, () =>
-      Project.Context.identity.increment(project.coder, project.options.identity)
-    );
-
-    Types.assignRecord(project, state.record, {
-      type: state.type,
-      origin: state.origin,
-      identity,
-      identifier,
-      template
-    });
-
-    Records.resolve(project, identifier, state.record, () => Records.connect(state.record!, previousRecord));
     project.symbols.add(state.record);
   }
 

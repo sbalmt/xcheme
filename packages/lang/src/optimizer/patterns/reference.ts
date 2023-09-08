@@ -25,11 +25,10 @@ const resolveAliasReference = (
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
+  const { template } = state.record!.data;
 
   Records.resolve(project, identifier, record, () => {
-    const { template } = record.data;
-
-    if (template) {
+    if (!template && record.data.template) {
       const reference = Generic.Template.consume(project, node, record, state);
       const identifier = reference.fragment.data;
 
@@ -86,10 +85,8 @@ const resolveSkip = (
   record: Types.SymbolRecord,
   state: Context.State
 ): void => {
-  const { template } = state.record!.data;
-
   if (record.value === Parser.Symbols.AliasToken) {
-    !template && resolveAliasReference(project, node, record, state);
+    resolveAliasReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_TOKEN_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -116,12 +113,11 @@ const resolveToken = (
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
-  const { template } = state.record!.data;
 
   if (record.value === Parser.Symbols.Token) {
-    !template && Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
+    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
   } else if (record.value === Parser.Symbols.AliasToken) {
-    !template && resolveAliasReference(project, node, record, state);
+    resolveAliasReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.Node) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_NODE_REFERENCE);
   } else if (record.value === Parser.Symbols.AliasNode) {
@@ -146,14 +142,13 @@ const resolveNode = (
   state: Context.State
 ): void => {
   const identifier = node.fragment.data;
-  const { template } = state.record!.data;
 
   if (record.value === Parser.Symbols.Node) {
-    !template && Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
+    Records.resolve(project, identifier, record, () => Records.connect(record, state.record!));
   } else if (record.value === Parser.Symbols.AliasNode) {
-    !template && resolveAliasReference(project, node, record, state);
+    resolveAliasReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.Token) {
-    !template && resolveTokenReference(project, node, record, state);
+    resolveTokenReference(project, node, record, state);
   } else if (record.value === Parser.Symbols.AliasToken) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_ALIAS_TOKEN_REFERENCE);
   } else {

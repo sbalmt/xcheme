@@ -15,11 +15,9 @@ import { Errors } from '../../../core/errors';
  * @param state Consumption state.
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
-  const { template } = state.record!.data;
-
   Argument.consume(project, node, state);
 
-  if (!template && Nodes.isDynamic(node)) {
+  if (Nodes.isDynamic(node)) {
     project.logs.emplace(Core.LogType.ERROR, node.fragment, Errors.INVALID_AUTO_IDENTITY);
   }
 };

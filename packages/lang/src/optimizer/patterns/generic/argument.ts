@@ -31,15 +31,9 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
 
   if (expression.value === Parser.Nodes.Arguments) {
     Expression.consume(project, expression.right!, state);
-
-    if (!template) {
-      assign(node, Identity.consume(project, expression, false, identity));
-    }
+    assign(node, Identity.consume(project, expression, template, identity));
   } else {
     Expression.consume(project, expression, state);
-
-    if (!template) {
-      assign(node, identity);
-    }
+    assign(node, identity);
   }
 };
