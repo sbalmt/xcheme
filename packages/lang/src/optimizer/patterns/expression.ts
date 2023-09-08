@@ -21,7 +21,7 @@ import * as Generic from './generic';
  * @param state Context state.
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
-  const notInTemplate = !state.record?.data.template;
+  const notInTemplate = !state.record!.data.template;
 
   switch (node.value) {
     case Parser.Nodes.Reference:
@@ -72,18 +72,18 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
     case Parser.Nodes.PrependNTN:
     case Parser.Nodes.Pivot:
     case Parser.Nodes.Symbol:
-      notInTemplate && Generic.Identity.consume(project, node, state);
+      Generic.Identity.consume(project, node, state);
       break;
 
     case Parser.Nodes.Error:
     case Parser.Nodes.Warn:
     case Parser.Nodes.Has:
     case Parser.Nodes.Set:
-      notInTemplate && Generic.State.consume(project, node, state);
+      Generic.State.consume(project, node, state);
       break;
 
     case Parser.Nodes.Access:
-      notInTemplate && Access.consume(project, node, state);
+      Access.consume(project, node, state);
       break;
 
     default:

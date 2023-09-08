@@ -78,24 +78,31 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
   const nodes = getAllNodes(node);
   const [firstNode, ...members] = nodes;
   const firstRecord = node.table.find(firstNode.fragment.data);
+
   if (!firstRecord) {
     project.logs.emplace(Core.LogType.ERROR, firstNode.fragment, Errors.UNDEFINED_IDENTIFIER);
-  } else {
-    const lastNode = members[members.length - 1];
-    const lastRecord = getRecord(project, firstRecord, members);
-    if (lastRecord) {
-      const identifier = Nodes.getPath(nodes, '@');
-      Records.resolve(project, identifier, lastRecord, () => {
-        if (state.type !== Types.Directives.Node || Records.isNode(lastRecord)) {
-          project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-        } else if (Records.isDynamic(lastRecord)) {
-          project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_REFERENCE);
-        } else if (firstRecord.value === Parser.Symbols.AliasToken) {
-          project.logs.emplace(Core.LogType.ERROR, firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
-        } else {
-          Records.connect(firstRecord, state.record!);
-        }
-      });
-    }
+    return;
   }
+
+  const lastNode = members[members.length - 1];
+  const lastRecord = getRecord(project, firstRecord, members);
+
+  if (!lastRecord) {
+    return;
+  }
+
+  const identifier = Nodes.getPath(nodes, '@');
+  const notInTemplate = !state.record!.data.template;
+
+  Records.resolve(project, identifier, lastRecord, () => {
+    if (state.type !== Types.Directives.Node || Records.isNode(lastRecord)) {
+      project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+    } else if (Records.isDynamic(lastRecord)) {
+      project.logs.emplace(Core.LogType.ERROR, lastNode.fragment, Errors.INVALID_MAP_REFERENCE);
+    } else if (firstRecord.value === Parser.Symbols.AliasToken) {
+      project.logs.emplace(Core.LogType.ERROR, firstNode.fragment, Errors.INVALID_MAP_ENTRY_REFERENCE);
+    } else {
+      notInTemplate && Records.connect(firstRecord, state.record!);
+    }
+  });
 };

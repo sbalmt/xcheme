@@ -51,11 +51,14 @@ export const consume = (
       }
     }
   }
+
   if (value instanceof Function) {
     return value();
   }
+
   if (value === void 0) {
     return NaN;
   }
+
   return value;
 };

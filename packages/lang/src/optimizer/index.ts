@@ -22,16 +22,19 @@ import { Exception } from '../core/exception';
  */
 const resolve = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const directive = node.right!;
+
   if (!directive.assigned) {
     switch (node.value) {
       case Parser.Nodes.Token:
       case Parser.Nodes.AliasToken:
         Token.consume(project, directive, state);
         break;
+
       case Parser.Nodes.Node:
       case Parser.Nodes.AliasNode:
         Node.consume(project, directive, state);
         break;
+
       default:
         throw new Exception(`Unsupported directive: "${node.fragment.data}" (${node.value}).`);
     }
@@ -47,23 +50,29 @@ const resolve = (project: Project.Context, node: Types.Node, state: Context.Stat
 export const consumeNodes = (project: Project.Context, node: Types.Node): boolean => {
   for (let current; (current = node.next); ) {
     const state = Context.getNewState(node);
+
     switch (current.value) {
       case Parser.Nodes.Import:
         Import.consume(project, current);
         break;
+
       case Parser.Nodes.Export:
         if (!Export.consume(project, current)) {
           resolve(project, current.right!, state);
           state.record!.data.exported = true;
         }
         break;
+
       case Parser.Nodes.Skip:
         Skip.consume(project, current, state);
         break;
+
       default:
         resolve(project, current, state);
     }
+
     node = state.anchor.next!;
   }
+
   return !project.logs.count(Core.LogType.ERROR);
 };

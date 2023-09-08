@@ -17,10 +17,11 @@ import { Errors } from '../../../core/errors';
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): void => {
   const record = state.record!;
+  const { template } = record.data;
 
   Argument.consume(project, node, state);
 
-  if (Records.isEmpty(record) && Nodes.isEmpty(node)) {
+  if (!template && Records.isEmpty(record) && Nodes.isEmpty(node)) {
     if (record.data.type !== Types.Directives.Skip) {
       project.logs.emplace(Core.LogType.ERROR, record.fragment, Errors.UNDEFINED_IDENTITY);
     }
