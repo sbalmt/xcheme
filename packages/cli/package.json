@@ -1,6 +1,6 @@
 {
 	"name": "@xcheme/cli",
-	"version": "0.0.15",
+	"version": "0.0.16",
 	"description": "XCHEME command line interface.",
 	"license": "MIT",
 	"keywords": [
@@ -26,7 +26,7 @@
 		"package": "webpack --mode production --devtool hidden-source-map"
 	},
 	"devDependencies": {
-		"@xcheme/lang": "^0.0.15",
+		"@xcheme/lang": "^0.0.16",
 		"@xcheme/lexer": "^0.0.4",
 		"@xcheme/parser": "^0.0.5",
 		"ts-loader": "^9.2.5",
