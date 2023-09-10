@@ -5,17 +5,17 @@ import './lexer';
 
 // Skip
 skip ' ' | '\t' | '\v' | '\f' | '\r' | '\n';
-skip '/*' & opt repeat (not '*/' then *) & '*/';
-skip '//' & opt repeat (not '\n' then *);
+skip '/*' & opt repeat (not '*/' then any) & '*/';
+skip '//' & opt repeat (not '\n' then any);
 
 // Parser
-alias node <auto> ARGUMENT_OPERANDS as map {
-  <201> T_IDENTIFIER,
+alias node ARGUMENT_OPERANDS as append <auto> next map {
   <202> T_NUMBER,
   <202> T_KEYWORDS.AUTO
 };
 
-alias node ARGUMENT_LIST as append <auto> next ARGUMENT_OPERANDS & opt (T_SYMBOLS.COMMA & ARGUMENT_LIST);
+alias node ARGUMENT_REFERENCE as append <201> next (T_IDENTIFIER & opt ARGUMENTS);
+alias node ARGUMENT_LIST as (ARGUMENT_OPERANDS | ARGUMENT_REFERENCE) & opt (T_SYMBOLS.COMMA & ARGUMENT_LIST);
 alias node ARGUMENTS_EXPRESSION as T_SYMBOLS.CHEVRON_OPEN & ARGUMENT_LIST & T_SYMBOLS.CHEVRON_CLOSE;
 alias node ARGUMENTS as left prepend <248> next ARGUMENTS_EXPRESSION;
 
@@ -24,21 +24,21 @@ alias node PARAMETERS_EXPRESSION as scope (T_SYMBOLS.CHEVRON_OPEN & PARAMETER_LI
 alias node PARAMETERS as left append <247> right PARAMETERS_EXPRESSION;
 
 alias node EXPRESSION as OR & opt THEN;
-alias node GROUP      as place (T_SYMBOLS.GROUP_OPEN & EXPRESSION & T_SYMBOLS.GROUP_CLOSE);
-alias node OPERAND    as MAP | RANGE | REFERENCE | ANY | EOS | STRING | GROUP;
+alias node GROUP as place (T_SYMBOLS.GROUP_OPEN & EXPRESSION & T_SYMBOLS.GROUP_CLOSE);
+alias node OPERAND as MAP | RANGE | REFERENCE | ANY | EOS | STRING | GROUP;
 
 alias <SYMBOL>
 node IDENTIFIER as symbol <SYMBOL> (pivot <200> (T_IDENTIFIER & peek T_KEYWORDS.AS) & T_KEYWORDS.AS & place EXPRESSION);
 
-alias node REFERENCE    as append <201> (T_IDENTIFIER & opt ARGUMENTS);
-alias node STRING       as append <203> T_STRING;
-alias node ANY          as append <204> (T_KEYWORDS.ANY | T_SYMBOLS.ASTERISK);
-alias node EOS          as append <208> T_KEYWORDS.EOS;
-alias node RANGE        as place (T_KEYWORDS.FROM & STRING & pivot <205> (T_KEYWORDS.TO & STRING));
-alias node MAP          as scope (T_KEYWORDS.MAP & append <206> MAP_BLOCK);
-alias node MAP_ENTRY    as (ARGUMENTS & (IDENTIFIER <306> | place EXPRESSION)) | IDENTIFIER <306> | EXPRESSION;
-alias node MAP_MEMBERS  as append <207> next MAP_ENTRY & opt (T_SYMBOLS.COMMA & MAP_MEMBERS);
-alias node MAP_BLOCK    as T_SYMBOLS.OPEN_BRACES & MAP_MEMBERS & T_SYMBOLS.CLOSE_BRACES;
+alias node REFERENCE as append <201> (T_IDENTIFIER & opt ARGUMENTS);
+alias node STRING as append <203> T_STRING;
+alias node ANY as append <204> (T_KEYWORDS.ANY | T_SYMBOLS.ASTERISK);
+alias node EOS as append <208> T_KEYWORDS.EOS;
+alias node RANGE as place (T_KEYWORDS.FROM & STRING & pivot <205> (T_KEYWORDS.TO & STRING));
+alias node MAP as scope (T_KEYWORDS.MAP & append <206> MAP_BLOCK);
+alias node MAP_ENTRY as (ARGUMENTS & (IDENTIFIER <306> | place EXPRESSION)) | IDENTIFIER <306> | EXPRESSION;
+alias node MAP_MEMBERS as append <207> next MAP_ENTRY & opt (T_SYMBOLS.COMMA & MAP_MEMBERS);
+alias node MAP_BLOCK as T_SYMBOLS.OPEN_BRACES & MAP_MEMBERS & T_SYMBOLS.CLOSE_BRACES;
 
 alias <DEFAULT, L, R, N>
 node <DEFAULT> DIRECTIONAL_OPERATOR as opt map {
@@ -82,10 +82,10 @@ alias node <auto> UNARY as opt repeat append <auto> map {
 } & place ACCESS;
 
 alias node ACCESS as OPERAND & opt repeat pivot <246> (T_SYMBOLS.PERIOD & OPERAND);
-alias node AND    as UNARY & opt repeat pivot <212> ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
-alias node OR     as AND & opt repeat pivot <211> ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
-alias node ELSE   as pivot <210> (T_KEYWORDS.ELSE & EXPRESSION);
-alias node THEN   as pivot <209> (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
+alias node AND as UNARY & opt repeat pivot <212> ((T_KEYWORDS.AND | T_SYMBOLS.AMPERSAND) & UNARY);
+alias node OR as AND & opt repeat pivot <211> ((T_KEYWORDS.OR | T_SYMBOLS.VERTICAL_BAR) & AND);
+alias node ELSE as pivot <210> (T_KEYWORDS.ELSE & EXPRESSION);
+alias node THEN as pivot <209> (T_KEYWORDS.THEN & EXPRESSION & opt ELSE);
 
 alias node <auto> ALIASES as opt PARAMETERS & map {
   <252> T_KEYWORDS.TOKEN & opt ARGUMENTS & IDENTIFIER <303>,
