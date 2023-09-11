@@ -291,6 +291,16 @@ export class Live extends Base {
   }
 
   /**
+   * Get a new use pattern.
+   * @param identity New identity.
+   * @param patterns Expected patterns.
+   * @returns Returns the pattern.
+   */
+  emitUsePattern(identity: number, ...patterns: Types.Pattern[]): Types.Pattern {
+    return new Core.UseValuePattern(identity, ...patterns);
+  }
+
+  /**
    * Get a new uncase pattern.
    * @param patterns Expected patterns.
    * @returns Returns the pattern.

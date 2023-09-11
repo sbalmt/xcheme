@@ -17,11 +17,13 @@ import { Exception } from '../../core/exception';
  * @returns Returns the corresponding reference pattern.
  */
 const resolve = (project: Project.Context, record: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
-  const { identity } = record.data;
   const reference = project.coder.emitReferencePattern(record);
+  const { identity } = record.data;
+
   if (state.dynamic && !Records.isEmpty(record) && !Records.isDynamic(record)) {
     return project.coder.emitIdentityPattern(identity, reference);
   }
+
   return reference;
 };
 
@@ -37,6 +39,7 @@ const resolveSkip = (project: Project.Context, target: Types.SymbolRecord, state
   if (target.value !== Parser.Symbols.AliasToken) {
     throw new Exception('SKIP directive can only accept ALIAS TOKEN references.');
   }
+
   return resolve(project, target, state);
 };
 
@@ -52,6 +55,7 @@ const resolveToken = (project: Project.Context, target: Types.SymbolRecord, stat
   if (target.value !== Parser.Symbols.Token && target.value !== Parser.Symbols.AliasToken) {
     throw new Exception('TOKEN directive can only accept TOKEN and ALIAS TOKEN references.');
   }
+
   return resolve(project, target, state);
 };
 
@@ -74,8 +78,10 @@ const resolveNode = (
     if (!node.assigned || !Nodes.hasIdentity(node)) {
       throw new Exception('NODE directive can only accept TOKEN, NODE and ALIAS NODE references.');
     }
+
     return project.coder.emitExpectUnitsPattern([Nodes.getIdentity(node)]);
   }
+
   return resolve(project, target, state);
 };
 
@@ -90,17 +96,23 @@ const resolveNode = (
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): Coder.Pattern => {
   const identifier = node.fragment.data;
   const target = node.table.find(identifier);
+
   if (!target) {
     throw new Exception(`Reference node '${identifier}' doesn't exists.`);
   }
+
   const { type } = Nodes.getRecord(state.directive).data;
+
   switch (type) {
     case Types.Directives.Skip:
       return resolveSkip(project, target, state);
+
     case Types.Directives.Token:
       return resolveToken(project, target, state);
+
     case Types.Directives.Node:
       return resolveNode(project, node, target, state);
+
     default:
       throw new Exception(`Unsupported directive type (${type}).`);
   }

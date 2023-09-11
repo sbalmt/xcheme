@@ -7,11 +7,11 @@ import * as Context from '../context';
 import * as Generic from './generic';
 
 /**
- * Consume the given node making the SYMBOL pattern.
+ * Consume the given node making an USE pattern.
  * @param project Project context.
- * @param node SYMBOL node.
+ * @param node USE node.
  * @param state Consumption state.
- * @returns Returns the pattern or undefined when the node is invalid.
+ * @returns Returns the pattern or undefined when the given node is invalid.
  */
 export const consume = (
   project: Project.Context,
@@ -21,10 +21,8 @@ export const consume = (
   const patterns = Generic.Identity.consume(project, node, state);
 
   if (patterns) {
-    const [test, ...remaining] = patterns;
     const identity = Nodes.getIdentity(node);
-
-    return project.coder.emitSymbolPattern(identity, test, ...remaining);
+    return project.coder.emitUsePattern(identity, ...patterns);
   }
 
   return void 0;

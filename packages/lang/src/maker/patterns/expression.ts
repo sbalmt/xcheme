@@ -29,6 +29,7 @@ import * as Error from './error';
 import * as Warn from './warn';
 import * as Has from './has';
 import * as Set from './set';
+import * as Use from './use';
 import * as Uncase from './uncase';
 import * as Peek from './peek';
 
@@ -48,90 +49,136 @@ export const consume = (
   switch (node.value) {
     case Parser.Nodes.Reference:
       return Reference.consume(project, node, state);
+
     case Parser.Nodes.String:
       return String.consume(project, node, state);
+
     case Parser.Nodes.Any:
       return project.coder.emitAnyPattern();
+
     case Parser.Nodes.Range:
       return Range.consume(project, node, state);
+
     case Parser.Nodes.Map:
       return Map.consume(project, node, state);
+
     case Parser.Nodes.EoS:
       return project.coder.emitEoSPattern();
+
     case Parser.Nodes.Access:
       return Access.consume(project, node);
+
     case Parser.Nodes.Then:
       return Condition.consume(project, node, state);
+
     case Parser.Nodes.Or:
       return Or.consume(project, node, state);
+
     case Parser.Nodes.And:
       return And.consume(project, node, state);
+
     case Parser.Nodes.Not:
       return Not.consume(project, node, state);
+
     case Parser.Nodes.Opt:
       return Option.consume(project, node, state);
+
     case Parser.Nodes.Repeat:
       return Repeat.consume(project, node, state);
+
     case Parser.Nodes.PlaceLeft:
       return Place.consume(project, node, state, Core.NodeDirection.Left);
+
     case Parser.Nodes.PlaceRight:
       return Place.consume(project, node, state, Core.NodeDirection.Right);
+
     case Parser.Nodes.PlaceNext:
       return Place.consume(project, node, state, Core.NodeDirection.Next);
+
     case Parser.Nodes.AppendRTL:
       return Append.consume(project, node, state, Core.NodeDirection.Right, Core.NodeDirection.Left);
+
     case Parser.Nodes.AppendRTR:
       return Append.consume(project, node, state, Core.NodeDirection.Right, Core.NodeDirection.Right);
+
     case Parser.Nodes.AppendRTN:
       return Append.consume(project, node, state, Core.NodeDirection.Right, Core.NodeDirection.Next);
+
     case Parser.Nodes.AppendLTL:
       return Append.consume(project, node, state, Core.NodeDirection.Left, Core.NodeDirection.Left);
+
     case Parser.Nodes.AppendLTR:
       return Append.consume(project, node, state, Core.NodeDirection.Left, Core.NodeDirection.Right);
+
     case Parser.Nodes.AppendLTN:
       return Append.consume(project, node, state, Core.NodeDirection.Left, Core.NodeDirection.Next);
+
     case Parser.Nodes.AppendNTL:
       return Append.consume(project, node, state, Core.NodeDirection.Next, Core.NodeDirection.Left);
+
     case Parser.Nodes.AppendNTR:
       return Append.consume(project, node, state, Core.NodeDirection.Next, Core.NodeDirection.Right);
+
     case Parser.Nodes.AppendNTN:
       return Append.consume(project, node, state, Core.NodeDirection.Next, Core.NodeDirection.Next);
+
     case Parser.Nodes.PrependRTL:
       return Prepend.consume(project, node, state, Core.NodeDirection.Right, Core.NodeDirection.Left);
+
     case Parser.Nodes.PrependRTR:
       return Prepend.consume(project, node, state, Core.NodeDirection.Right, Core.NodeDirection.Right);
+
     case Parser.Nodes.PrependRTN:
       return Prepend.consume(project, node, state, Core.NodeDirection.Right, Core.NodeDirection.Next);
+
     case Parser.Nodes.PrependLTL:
       return Prepend.consume(project, node, state, Core.NodeDirection.Left, Core.NodeDirection.Left);
+
     case Parser.Nodes.PrependLTR:
       return Prepend.consume(project, node, state, Core.NodeDirection.Left, Core.NodeDirection.Right);
+
     case Parser.Nodes.PrependLTN:
       return Prepend.consume(project, node, state, Core.NodeDirection.Left, Core.NodeDirection.Next);
+
     case Parser.Nodes.PrependNTL:
       return Prepend.consume(project, node, state, Core.NodeDirection.Next, Core.NodeDirection.Left);
+
     case Parser.Nodes.PrependNTR:
       return Prepend.consume(project, node, state, Core.NodeDirection.Next, Core.NodeDirection.Right);
+
     case Parser.Nodes.PrependNTN:
       return Prepend.consume(project, node, state, Core.NodeDirection.Next, Core.NodeDirection.Next);
+
     case Parser.Nodes.Pivot:
       return Pivot.consume(project, node, state);
+
     case Parser.Nodes.Symbol:
       return Symbol.consume(project, node, state);
+
     case Parser.Nodes.Scope:
       return Scope.consume(project, node, state);
+
+    case Parser.Nodes.Use:
+      return Use.consume(project, node, state);
+
     case Parser.Nodes.Error:
       return Error.consume(project, node, state);
+
     case Parser.Nodes.Warn:
       return Warn.consume(project, node, state);
+
     case Parser.Nodes.Has:
       return Has.consume(project, node, state);
+
     case Parser.Nodes.Set:
       return Set.consume(project, node, state);
+
     case Parser.Nodes.Uncase:
       return Uncase.consume(project, node, state);
+
     case Parser.Nodes.Peek:
       return Peek.consume(project, node, state);
+
     default:
       throw new Exception(`Unsupported expression: "${node.fragment.data}" (${node.value}).`);
   }

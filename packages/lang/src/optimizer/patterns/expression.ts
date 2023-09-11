@@ -75,6 +75,10 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
       Generic.Identity.consume(project, node, state);
       break;
 
+    case Parser.Nodes.Use:
+      Generic.Identity.consume(project, node, state, false);
+      break;
+
     case Parser.Nodes.Error:
     case Parser.Nodes.Warn:
     case Parser.Nodes.Has:

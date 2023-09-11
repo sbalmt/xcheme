@@ -287,6 +287,16 @@ export class Base {
   }
 
   /**
+   * Should be implemented to return an use pattern.
+   * @param identity New identity.
+   * @param patterns Expected patterns.
+   * @returns Should return the pattern.
+   */
+  emitUsePattern(identity: number, ...patterns: Pattern[]): Pattern {
+    throw new Exception("Method doesn't implemented.");
+  }
+
+  /**
    * Should be implemented to return an uncase pattern.
    * @param patterns Expected patterns.
    * @returns Should return the pattern.
