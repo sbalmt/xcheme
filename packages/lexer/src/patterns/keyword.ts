@@ -34,6 +34,7 @@ export const Keyword = new Core.MapFlowPattern(
   new Core.SetValueRoute(Tokens.Right, NotCharacter, 'r', 'i', 'g', 'h', 't'),
   new Core.SetValueRoute(Tokens.Symbol, NotCharacter, 's', 'y', 'm', 'b', 'o', 'l'),
   new Core.SetValueRoute(Tokens.Scope, NotCharacter, 's', 'c', 'o', 'p', 'e'),
+  new Core.SetValueRoute(Tokens.Use, NotCharacter, 'u', 's', 'e'),
   new Core.SetValueRoute(Tokens.Error, NotCharacter, 'e', 'r', 'r', 'o', 'r'),
   new Core.SetValueRoute(Tokens.Warn, NotCharacter, 'w', 'a', 'r', 'n'),
   new Core.SetValueRoute(Tokens.Has, NotCharacter, 'h', 'a', 's'),

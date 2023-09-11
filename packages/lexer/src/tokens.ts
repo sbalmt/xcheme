@@ -26,6 +26,7 @@ export const enum Tokens {
   Right,
   Symbol,
   Scope,
+  Use,
   Error,
   Warn,
   Has,

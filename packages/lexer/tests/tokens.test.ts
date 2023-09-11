@@ -45,6 +45,8 @@ const tokens = [
     // Symbol
     { name: 'symbol', value: Lexer.Tokens.Symbol },
     { name: 'scope', value: Lexer.Tokens.Scope },
+    // Identity
+    { name: 'use', value: Lexer.Tokens.Use },
     // Error
     { name: 'error', value: Lexer.Tokens.Error },
     { name: 'warn', value: Lexer.Tokens.Warn },

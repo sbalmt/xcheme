@@ -1,6 +1,6 @@
 {
 	"name": "@xcheme/lexer",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"description": "Lexer component for XCHEME Lang",
 	"license": "MIT",
 	"keywords": [
