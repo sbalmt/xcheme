@@ -101,7 +101,7 @@ test('Output a MAP pattern with a template reference', () => {
       '@SKIP0':
         `new Core.MapFlowPattern(` +
         /**/ `new Core.FlowRoute(` +
-        /******/ `new Core.UseValuePattern(10, new Core.ExpectUnitPattern('f', 'o', 'o')), 'b', 'a', 'r'` +
+        /******/ `new Core.SetValuePattern(10, new Core.ExpectUnitPattern('f', 'o', 'o')), 'b', 'a', 'r'` +
         /**/ `)` +
         `)`
     }

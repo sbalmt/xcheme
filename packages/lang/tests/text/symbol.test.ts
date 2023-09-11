@@ -20,7 +20,7 @@ test('Output a SYMBOL pattern with an auto identity', () => {
     {
       '@SKIP0':
         `new Core.EmitSymbolPattern(${Core.Source.Output}, ` +
-        /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('@'))` +
+        /**/ `new Core.SetValuePattern(50, new Core.ExpectUnitPattern('@'))` +
         `)`
     }
   );

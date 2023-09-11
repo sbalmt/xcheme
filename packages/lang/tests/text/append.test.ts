@@ -20,7 +20,7 @@ test('Output an APPEND pattern with an auto identity', () => {
     {
       '@SKIP0':
         `new Core.AppendNodePattern(${Core.Source.Output}, 1, 1, ` +
-        /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('f', 'o', 'o'))` +
+        /**/ `new Core.SetValuePattern(50, new Core.ExpectUnitPattern('f', 'o', 'o'))` +
         `)`
     }
   );

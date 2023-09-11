@@ -20,7 +20,7 @@ test('Output a PIVOT pattern with an auto identity', () => {
     {
       '@SKIP0':
         `new Core.PivotNodePattern(${Core.Source.Output}, 1, 0, ` +
-        /**/ `new Core.UseValuePattern(50, new Core.ExpectUnitPattern('@'))` +
+        /**/ `new Core.SetValuePattern(50, new Core.ExpectUnitPattern('@'))` +
         `)`
     }
   );
