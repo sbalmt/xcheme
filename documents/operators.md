@@ -42,8 +42,9 @@ The following table lists the precedence and associativity of all operators from
 | 2️⃣         | [Member access](#access-operator)    | Left to Right | … . …           |
 | 3️⃣         | [Uncase](#uncase-operator)           | Right to Left | uncase …        |
 | 3️⃣         | [Peek](#peek-operator)               | Right to Left | peek …          |
-| 3️⃣         | [Has state](#has-operator)           | Right to Left | has<…> …        |
 | 3️⃣         | [Set state](#set-operator)           | Right to Left | set<…> …        |
+| 3️⃣         | [Has state](#has-operator)           | Right to Left | has<…> …        |
+| 3️⃣         | [Use identity](#use-operator)        | Right to Left | use<…> …        |
 | 3️⃣         | [User error](#error-operator)        | Right to Left | error<…> …      |
 | 3️⃣         | [User warning](#warn-operator)       | Right to Left | warn<…> …       |
 | 3️⃣         | [Symbol scope](#scope-operator)      | Right to Left | scope …         |
@@ -497,6 +498,28 @@ token <1> T_BAR as has<99> BAR;
 ```
 
 > Look for `BAR` only when the state `99` is defined, and the state `99` is set only after finding `FOO` during the expression evaluation.
+
+[Back to table](#operator-precedence)
+
+#### Use operator
+
+The `use` operator is a unary operator used to set a default identity in the parser.
+
+Syntax:
+
+```xcm
+use <identity> FOO
+```
+
+> Note: `identity` must be a number.
+
+Example:
+
+```xcm
+token <auto> T_FOO as use <0> FOO;
+```
+
+> Set identity `0` before trying to consume `FOO`, if no other identity was defined when consuming `FOO`, the generated token will assume this default one.
 
 [Back to table](#operator-precedence)
 

@@ -24,17 +24,21 @@ export const consume = (
 ): boolean => {
   const source = new Core.TokenSource<Lang.Types.Metadata>(tokens, context);
   Logging.printLine('Parsing...');
+
   if (!parser.consume(source)) {
     const fragment = tokens.at(source.longestState.offset)?.fragment ?? source.fragment;
     context.logs.emplace(Core.LogType.ERROR, fragment, Lang.Errors.UNEXPECTED_SYNTAX);
   } else {
     Logging.clearLine();
   }
+
   if (symbols) {
     Symbols.print(context.table);
   }
+
   if (nodes) {
     Nodes.print(context.node);
   }
+
   return !context.logs.count(Core.LogType.ERROR);
 };
