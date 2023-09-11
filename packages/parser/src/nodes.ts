@@ -42,6 +42,7 @@ export const enum Nodes {
   Pivot,
   Symbol,
   Scope,
+  Use,
   Error,
   Warn,
   Has,

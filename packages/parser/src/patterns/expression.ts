@@ -15,7 +15,6 @@ import { getMapOperand } from './operand-map';
 /**
  * Get a direction prefix pattern for the given parameters.
  * @param expression Expression pattern.
- * @param ready Ready route value.
  * @param left Left route value.
  * @param right Right route value.
  * @param next Next route value.
@@ -23,7 +22,6 @@ import { getMapOperand } from './operand-map';
  */
 const getDirectionPrefix = <T extends Core.Types>(
   expression: Core.Pattern<T>,
-  ready: Nodes,
   left: Nodes,
   right: Nodes,
   next: Nodes
@@ -31,7 +29,7 @@ const getDirectionPrefix = <T extends Core.Types>(
   new Core.ExpectFlowPattern(
     new Core.OptFlowPattern(expression),
     new Core.UseValuePattern(
-      ready,
+      right,
       new Core.OptFlowPattern(
         new Core.MapFlowPattern(
           new Core.SetValueRoute(left, Lexer.Tokens.Left),
@@ -45,68 +43,32 @@ const getDirectionPrefix = <T extends Core.Types>(
 /**
  * Left-Append operator pattern.
  */
-const LeftAppendOperator = getDirectionPrefix(
-  Arguments,
-  Nodes.AppendLTR,
-  Nodes.AppendLTL,
-  Nodes.AppendLTR,
-  Nodes.AppendLTN
-);
+const LeftAppendOperator = getDirectionPrefix(Arguments, Nodes.AppendLTL, Nodes.AppendLTR, Nodes.AppendLTN);
 
 /**
  * Right-Append operator pattern.
  */
-const RightAppendOperator = getDirectionPrefix(
-  Arguments,
-  Nodes.AppendRTR,
-  Nodes.AppendRTL,
-  Nodes.AppendRTR,
-  Nodes.AppendRTN
-);
+const RightAppendOperator = getDirectionPrefix(Arguments, Nodes.AppendRTL, Nodes.AppendRTR, Nodes.AppendRTN);
 
 /**
  * Next-Append operator pattern.
  */
-const NextAppendOperator = getDirectionPrefix(
-  Arguments,
-  Nodes.AppendNTR,
-  Nodes.AppendNTL,
-  Nodes.AppendNTR,
-  Nodes.AppendNTN
-);
+const NextAppendOperator = getDirectionPrefix(Arguments, Nodes.AppendNTL, Nodes.AppendNTR, Nodes.AppendNTN);
 
 /**
  * Left-Prepend operator patten.
  */
-const LeftPrependOperator = getDirectionPrefix(
-  Arguments,
-  Nodes.PrependLTR,
-  Nodes.PrependLTL,
-  Nodes.PrependLTR,
-  Nodes.PrependLTN
-);
+const LeftPrependOperator = getDirectionPrefix(Arguments, Nodes.PrependLTL, Nodes.PrependLTR, Nodes.PrependLTN);
 
 /**
  * Right-Prepend operator patten.
  */
-const RightPrependOperator = getDirectionPrefix(
-  Arguments,
-  Nodes.PrependRTR,
-  Nodes.PrependRTL,
-  Nodes.PrependRTR,
-  Nodes.PrependRTN
-);
+const RightPrependOperator = getDirectionPrefix(Arguments, Nodes.PrependRTL, Nodes.PrependRTR, Nodes.PrependRTN);
 
 /**
  * Next-Prepend operator patten.
  */
-const NextPrependOperator = getDirectionPrefix(
-  Arguments,
-  Nodes.PrependNTR,
-  Nodes.PrependNTL,
-  Nodes.PrependNTR,
-  Nodes.PrependNTN
-);
+const NextPrependOperator = getDirectionPrefix(Arguments, Nodes.PrependNTL, Nodes.PrependNTR, Nodes.PrependNTN);
 
 /**
  * Unary operators pattern.
@@ -130,6 +92,7 @@ const UnaryOperators = new Core.MapFlowPattern(
   new Core.SetValueRoute(Nodes.Pivot, new Core.OptFlowPattern(Arguments), Lexer.Tokens.Pivot),
   new Core.SetValueRoute(Nodes.Symbol, new Core.OptFlowPattern(Arguments), Lexer.Tokens.Symbol),
   new Core.SetValueRoute(Nodes.Scope, Lexer.Tokens.Scope),
+  new Core.SetValueRoute(Nodes.Use, Arguments, Lexer.Tokens.Use),
   new Core.SetValueRoute(Nodes.Error, Arguments, Lexer.Tokens.Error),
   new Core.SetValueRoute(Nodes.Warn, Arguments, Lexer.Tokens.Warn),
   new Core.SetValueRoute(Nodes.Has, Arguments, Lexer.Tokens.Has),
