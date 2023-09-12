@@ -30,40 +30,40 @@ const resolve = (project: Project.Context, record: Types.SymbolRecord, state: Co
 /**
  * Resolve the corresponding reference for the specified symbol in a SKIP directive.
  * @param project Project context.
- * @param target Target record.
+ * @param record Target record.
  * @param state Consumption state.
  * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveSkip = (project: Project.Context, target: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
-  if (target.value !== Parser.Symbols.AliasToken) {
+const resolveSkip = (project: Project.Context, record: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
+  if (record.value !== Parser.Symbols.AliasToken) {
     throw new Exception('SKIP directive can only accept ALIAS TOKEN references.');
   }
 
-  return resolve(project, target, state);
+  return resolve(project, record, state);
 };
 
 /**
  * Resolve the corresponding reference for the specified record in a TOKEN directive.
  * @param project Project context.
- * @param target Target record.
+ * @param record Target record.
  * @param state Consumption state.
  * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
  */
-const resolveToken = (project: Project.Context, target: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
-  if (target.value !== Parser.Symbols.Token && target.value !== Parser.Symbols.AliasToken) {
+const resolveToken = (project: Project.Context, record: Types.SymbolRecord, state: Context.State): Coder.Pattern => {
+  if (record.value !== Parser.Symbols.Token && record.value !== Parser.Symbols.AliasToken) {
     throw new Exception('TOKEN directive can only accept TOKEN and ALIAS TOKEN references.');
   }
 
-  return resolve(project, target, state);
+  return resolve(project, record, state);
 };
 
 /**
  * Resolve the corresponding reference for the specified record in a NODE directive.
  * @param project Project context.
  * @param node Reference node.
- * @param target Target record.
+ * @param record Target record.
  * @param state Consumption state.
  * @returns Returns the resolved reference pattern.
  * @throws Throws an exception when the given node isn't valid.
@@ -71,10 +71,10 @@ const resolveToken = (project: Project.Context, target: Types.SymbolRecord, stat
 const resolveNode = (
   project: Project.Context,
   node: Types.Node,
-  target: Types.SymbolRecord,
+  record: Types.SymbolRecord,
   state: Context.State
 ): Coder.Pattern => {
-  if (target.value !== Parser.Symbols.Node && target.value !== Parser.Symbols.AliasNode) {
+  if (record.value !== Parser.Symbols.Node && record.value !== Parser.Symbols.AliasNode) {
     if (!node.assigned || !Nodes.hasIdentity(node)) {
       throw new Exception('NODE directive can only accept TOKEN, NODE and ALIAS NODE references.');
     }
@@ -82,7 +82,7 @@ const resolveNode = (
     return project.coder.emitExpectUnitsPattern([Nodes.getIdentity(node)]);
   }
 
-  return resolve(project, target, state);
+  return resolve(project, record, state);
 };
 
 /**
@@ -95,9 +95,9 @@ const resolveNode = (
  */
 export const consume = (project: Project.Context, node: Types.Node, state: Context.State): Coder.Pattern => {
   const identifier = node.fragment.data;
-  const target = node.table.find(identifier);
+  const record = node.table.find(identifier);
 
-  if (!target) {
+  if (!record) {
     throw new Exception(`Reference node '${identifier}' doesn't exists.`);
   }
 
@@ -105,13 +105,13 @@ export const consume = (project: Project.Context, node: Types.Node, state: Conte
 
   switch (type) {
     case Types.Directives.Skip:
-      return resolveSkip(project, target, state);
+      return resolveSkip(project, record, state);
 
     case Types.Directives.Token:
-      return resolveToken(project, target, state);
+      return resolveToken(project, record, state);
 
     case Types.Directives.Node:
-      return resolveNode(project, node, target, state);
+      return resolveNode(project, node, record, state);
 
     default:
       throw new Exception(`Unsupported directive type (${type}).`);

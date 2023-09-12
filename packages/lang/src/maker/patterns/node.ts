@@ -18,10 +18,12 @@ export const consume = (project: Project.Context, state: Context.State): void =>
 
   if (!record.data.template) {
     let expression = Expression.consume(project, directive.right!, state);
+
     if (expression) {
       if (!Records.isAlias(record)) {
         expression = project.coder.emitNodePattern(record.data.identity, Core.NodeDirection.Right, expression);
       }
+
       record.data.pattern = expression;
     }
   }

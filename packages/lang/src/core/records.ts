@@ -94,10 +94,12 @@ export const isTemplate = (record: Types.SymbolRecord): boolean => {
 export const isReferenced = (record: Types.SymbolRecord, ...types: Types.Directives[]): boolean => {
   const { order, dependents, dependencies } = record.data;
   let counter = 0;
+
   for (const dependent of dependents) {
     if (counter > 1 || dependent === record || dependencies.includes(dependent)) {
       return true;
     }
+
     if (types.includes(dependent.data.type)) {
       if (order > dependent.data.order) {
         return true;
@@ -105,6 +107,7 @@ export const isReferenced = (record: Types.SymbolRecord, ...types: Types.Directi
       counter++;
     }
   }
+
   return counter > 1;
 };
 

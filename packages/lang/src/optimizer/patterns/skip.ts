@@ -23,6 +23,7 @@ const counter = new Counter.Context();
 const assign = (project: Project.Context, node: Types.Node, record: Types.SymbolRecord, state: Context.State): void => {
   state.type = Types.Directives.Skip;
   state.record = record;
+
   Types.assignRecord(project, record, {
     type: state.type,
     origin: state.origin,
@@ -30,6 +31,7 @@ const assign = (project: Project.Context, node: Types.Node, record: Types.Symbol
     identity: NaN,
     template: false
   });
+
   Types.assignNode(node, {
     type: Types.Nodes.Directive,
     record
