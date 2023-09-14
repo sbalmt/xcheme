@@ -21,7 +21,7 @@ import * as Token from './token';
 const consumeReference = (project: Project.Context, record: Types.SymbolRecord, state: Context.State): void => {
   const directive = record.node!;
 
-  if (!state.context.hasState(directive)) {
+  if (!state.context.hasState(directive) && record.data.order < state.record.data.order) {
     const { type } = record.data;
 
     if (type === Types.Directives.Node) {

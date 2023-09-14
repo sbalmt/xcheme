@@ -73,4 +73,11 @@ export class State {
   get directive(): Types.Node {
     return this.#directive;
   }
+
+  /**
+   * Current directive record.
+   */
+  get record(): Types.SymbolRecord {
+    return this.directive.data.record!;
+  }
 }
