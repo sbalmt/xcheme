@@ -136,17 +136,22 @@ const process = (
   const directory = Path.dirname(path);
   const external = new Project.Context(path, project.coder, { ...project.options, directory });
   const context = new Core.Context<Types.Metadata>(path);
+
   importingFiles.add(project.coder, path);
+
   if (!compile(external, context, content)) {
     project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_FAILURE);
     project.logs.insert(...external.logs);
   } else {
     const exported = getExportedRecords(external.symbols);
     const unreferenced = getUnreferencedRecords(exported);
+
     purgeRecords(exported, unreferenced);
     integrate(project, table, external.symbols);
+
     processedFiles.add(project.coder, path, external);
   }
+
   importingFiles.delete(project.coder, path);
 };
 
@@ -162,6 +167,7 @@ const resolve = (project: Project.Context, location: Types.Node, table: Types.Sy
     project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_CYCLIC);
   } else {
     const content = project.options.loadFileHook!(path);
+
     if (!content) {
       project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_NOT_FOUND);
     } else {
@@ -177,12 +183,14 @@ const resolve = (project: Project.Context, location: Types.Node, table: Types.Sy
  */
 export const consume = (project: Project.Context, node: Types.Node): void => {
   const location = node.right!;
+
   if (!project.options.loadFileHook) {
     project.logs.emplace(Core.LogType.ERROR, location.fragment, Errors.IMPORT_DISABLED);
   } else {
     const filePath = `${String.extract(location.fragment.data)}.xcm`;
     const fullPath = Path.join(project.options.directory ?? '', filePath);
     const external = processedFiles.get(project.coder, fullPath);
+
     if (external) {
       integrate(project, node.table, external.symbols);
     } else {
