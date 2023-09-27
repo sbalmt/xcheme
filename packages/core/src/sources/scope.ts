@@ -5,9 +5,29 @@ import { Exception } from '../core/exception';
 import { Stack } from '../core/collections';
 
 /**
+ * Internal source state.
+ */
+type State<T extends Types> = {
+  /**
+   * Symbol table snapshot.
+   */
+  table?: SymbolTable<T>;
+
+  /**
+   * Link table reference.
+   */
+  link?: SymbolTable<T>;
+};
+
+/**
  * Symbol table scope class.
  */
 export class Scope<T extends Types> {
+  /**
+   * Scope states.
+   */
+  #states: State<T>[] = [];
+
   /**
    * Internal symbol tables stack.
    */
@@ -31,6 +51,34 @@ export class Scope<T extends Types> {
    */
   get table(): SymbolTable<T> {
     return this.#stack.current!;
+  }
+
+  save(): void {
+    const table = this.#stack.current!;
+    if (!table) {
+      this.#states.push({ link: this.link });
+    } else {
+      const snapshot = table.clone();
+      this.#states.push({ table: snapshot, link: this.link });
+      for (const record of snapshot) {
+        record.swap(record.clone());
+      }
+    }
+  }
+
+  restore(): void {
+    const state = this.#states[this.#states.length - 1];
+    if (!state) {
+      throw new Exception(`There's no state to restore.`);
+    }
+    this.link = state.link;
+    if (state.table) {
+      this.#stack.current!.swap(state.table);
+    }
+  }
+
+  discard(): void {
+    this.#states.pop();
   }
 
   /**

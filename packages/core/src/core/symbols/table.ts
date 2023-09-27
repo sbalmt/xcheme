@@ -119,6 +119,18 @@ export class SymbolTable<T extends Types> implements Iterable<SymbolRecord<T>> {
   }
 
   /**
+   * Get a shallow copy of the table.
+   * @returns Returns the generated table.
+   */
+  clone(): SymbolTable<T> {
+    const result = new SymbolTable(this.#parent);
+    result.#records = this.#records;
+    result.#parent = this.#parent;
+    result.#length = this.#length;
+    return result;
+  }
+
+  /**
    * Swap all contents of the given table.
    * @param table Symbol table instance.
    */

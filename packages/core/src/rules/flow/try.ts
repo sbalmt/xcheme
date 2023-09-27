@@ -29,10 +29,13 @@ export default class Try<T extends Types> extends Pattern<T> {
    */
   consume(source: Source<T>): boolean {
     source.save();
+    source.scope.save();
     const status = this.#target.consume(source);
     if (!status) {
+      source.scope.restore();
       source.restore();
     }
+    source.scope.discard();
     source.discard();
     return status;
   }
