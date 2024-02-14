@@ -317,9 +317,10 @@ export class Base {
   /**
    * Should be implemented to return a reference pattern.
    * @param record Referenced record.
+   * @param target Optional target record.
    * @returns Should return the pattern.
    */
-  emitReferencePattern(record: Types.SymbolRecord): Pattern {
+  emitReferencePattern(record: Types.SymbolRecord, target?: Types.SymbolRecord): Pattern {
     throw new Exception("Method doesn't implemented.");
   }
 

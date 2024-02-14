@@ -387,11 +387,12 @@ export class Text extends Base {
   /**
    * Get a new reference pattern.
    * @param record Referenced record.
+   * @param target Optional target record.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(record: Types.SymbolRecord): string {
+  emitReferencePattern(record: Types.SymbolRecord, target?: Types.SymbolRecord): string {
     const data = record.data;
-    if (!data.pattern) {
+    if (!data.pattern || (target && target.data.order <= record.data.order)) {
       return this.#getPattern('RunFlowPattern', `() => ${this.#getIdentifier(data.name)}`);
     } else if (Records.isReferenced(record, data.type)) {
       return this.#getIdentifier(data.name);

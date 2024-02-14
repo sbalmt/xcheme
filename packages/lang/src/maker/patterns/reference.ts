@@ -44,7 +44,7 @@ const resolveReference = (
   record: Types.SymbolRecord,
   state: Context.State
 ): Coder.Pattern => {
-  const reference = project.coder.emitReferencePattern(record);
+  const reference = project.coder.emitReferencePattern(record, state.record);
 
   if (state.dynamic && !Records.isEmpty(record) && !Records.isDynamic(record)) {
     return project.coder.emitIdentityPattern(record.data.identity, reference);

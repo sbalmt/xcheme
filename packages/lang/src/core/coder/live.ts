@@ -321,9 +321,10 @@ export class Live extends Base {
   /**
    * Get a new reference pattern.
    * @param record Referenced record.
+   * @param target Optional target record.
    * @returns Returns the pattern.
    */
-  emitReferencePattern(record: Types.SymbolRecord): Types.Pattern {
+  emitReferencePattern(record: Types.SymbolRecord, target?: Types.SymbolRecord): Types.Pattern {
     const data = record.data;
     if (!data.pattern) {
       return new Core.RunFlowPattern(() => data.pattern as Types.Pattern);

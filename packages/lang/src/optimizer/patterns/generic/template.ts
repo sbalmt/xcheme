@@ -150,9 +150,9 @@ const resolve = (
   name: string,
   record: Types.SymbolRecord,
   args: Arguments,
+  table: Types.SymbolTable,
   state: Context.State
 ): void => {
-  const table = state.anchor.table;
   const template = record.node!;
   const location = template.fragment.location;
   const expression = clone(project, template.right!, args, { table });
@@ -182,6 +182,21 @@ const resolve = (
 };
 
 /**
+ * Get the anchor table for the corresponding table.
+ * @param table Table reference.
+ * @returns Returns the anchor table.
+ */
+const getAnchorTable = (table: Types.SymbolTable) => {
+  let current = table;
+
+  while (current.parent) {
+    current = current.parent;
+  }
+
+  return current;
+};
+
+/**
  * Consume the given node and generate a new directive based on its corresponding TEMPLATE pattern.
  * @param project Project context.
  * @param node Reference node.
@@ -207,7 +222,8 @@ export const consume = (
   const reference = Tree.getReference(identifier, location, node.table);
 
   if (!project.symbols.has(identifier)) {
-    resolve(project, identifier, record, args, state);
+    const table = getAnchorTable(node.table);
+    resolve(project, identifier, record, args, table, state);
   }
 
   return reference;
