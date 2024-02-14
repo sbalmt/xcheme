@@ -80,9 +80,14 @@ test('Output a TOKEN pattern with a template alias token reference', () => {
     token <100> TOKEN as TEMPLATE <50, ALIAS>;`,
     {
       TEMPLATE: void 0,
-      '@TEMPLATE:50:ALIAS': `new Core.SetStatePattern(50, new Core.RepeatFlowPattern(L0_ALIAS))`,
+      '@TEMPLATE:50:ALIAS': `new Core.SetStatePattern(50, new Core.RepeatFlowPattern(new Core.RunFlowPattern(() => L0_ALIAS)))`,
       ALIAS: `new Core.ExpectUnitPattern('f', 'o', 'o')`,
-      TOKEN: `new Core.EmitTokenPattern(100, new Core.SetStatePattern(50, new Core.RepeatFlowPattern(L0_ALIAS)))`
+      TOKEN:
+        `new Core.EmitTokenPattern(100, ` +
+        /**/ `new Core.SetStatePattern(50, ` +
+        /******/ `new Core.RepeatFlowPattern(new Core.RunFlowPattern(() => L0_ALIAS))` +
+        /**/ `)` +
+        `)`
     }
   );
 });

@@ -105,9 +105,14 @@ test('Output a NODE pattern with a template alias node reference', () => {
     node <200> NODE  as TEMPLATE <50, ALIAS>;`,
     {
       TEMPLATE: void 0,
-      '@TEMPLATE:50:ALIAS': `new Core.SetStatePattern(50, new Core.RepeatFlowPattern(L0_ALIAS))`,
+      '@TEMPLATE:50:ALIAS': `new Core.SetStatePattern(50, new Core.RepeatFlowPattern(new Core.RunFlowPattern(() => L0_ALIAS)))`,
       ALIAS: `new Core.ExpectUnitPattern(0)`,
-      NODE: `new Core.EmitNodePattern(200, 1, new Core.SetStatePattern(50, new Core.RepeatFlowPattern(L0_ALIAS)))`
+      NODE:
+        `new Core.EmitNodePattern(200, 1, ` +
+        /**/ `new Core.SetStatePattern(50, ` +
+        /******/ `new Core.RepeatFlowPattern(new Core.RunFlowPattern(() => L0_ALIAS))` +
+        /**/ `)` +
+        `)`
     }
   );
 });

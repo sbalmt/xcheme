@@ -66,7 +66,7 @@ test('IMPORT directive with a dependent template reference', () => {
       /**************/ `new Core.EmitTokenPattern(100, ` +
       /******************/ `new Core.ExpectFlowPattern(` +
       /**********************/ `new Core.AppendNodePattern(200, 1, 1, new Core.ExpectUnitPattern('f', 'o', 'o')), ` +
-      /**********************/ `L0_ALIAS` +
+      /**********************/ `new Core.RunFlowPattern(() => L0_ALIAS)` +
       /******************/ `)` +
       /**************/ `)` +
       /**********/ `)` +
